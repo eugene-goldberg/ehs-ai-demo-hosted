@@ -1,0 +1,224 @@
+================================================================================
+EHS Data Extraction Report - QueryType.WATER_CONSUMPTION
+================================================================================
+
+Generated: 2025-08-18T02:34:27.591802
+Query Type: QueryType.WATER_CONSUMPTION
+
+SUMMARY
+----------------------------------------
+Total Queries: 4
+Successful: 3
+Failed: 1
+Total Records: 3
+
+GRAPH OBJECTS
+----------------------------------------
+[
+  {
+    "nodes": [
+      {
+        "labels": [
+          "__Node__",
+          "__Entity__",
+          "entity"
+        ],
+        "count": 16
+      },
+      {
+        "labels": [
+          "__Node__",
+          "Chunk"
+        ],
+        "count": 2
+      },
+      {
+        "labels": [
+          "Document",
+          "Waterbill"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "WaterBill"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Facility"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Customer"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "UtilityProvider"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Meter"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Emission"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "DocumentChunk"
+        ],
+        "count": 1
+      }
+    ],
+    "relationships": [
+      {
+        "type": "MENTIONS",
+        "count": 16
+      },
+      {
+        "type": "Is",
+        "count": 8
+      },
+      {
+        "type": "SOURCE",
+        "count": 1
+      },
+      {
+        "type": "EXTRACTED_TO",
+        "count": 1
+      },
+      {
+        "type": "BILLED_TO",
+        "count": 1
+      },
+      {
+        "type": "BILLED_FOR",
+        "count": 1
+      },
+      {
+        "type": "PROVIDED_BY",
+        "count": 1
+      },
+      {
+        "type": "MONITORS",
+        "count": 1
+      },
+      {
+        "type": "RECORDED_IN",
+        "count": 1
+      },
+      {
+        "type": "RESULTED_IN",
+        "count": 1
+      }
+    ],
+    "total_nodes": 26,
+    "total_relationships": 32
+  }
+]
+
+QUERY RESULTS
+================================================================================
+
+Query 1
+----------------------------------------
+Query: 
+                MATCH (d:Document:Waterbill)-[:EXTRACTED_TO]->(w:WaterBill)
+                RETURN d, w
+                ORDER BY w.billing_period_end DESC
+                
+Status: success
+Records: 1
+Results (first 5):
+  1: {
+  "d": {
+    "labels": [
+      "Document",
+      "Waterbill"
+    ],
+    "properties": {
+      "file_path": "data/water_bill.pdf",
+      "uploaded_at": "2025-08-18T02:28:54.195219",
+      "id": "water_bill_20250817_212829",
+      "source": "test",
+      "type": "water_bill",
+      "document_type": "water_bill"
+    }
+  },
+  "w": {
+    "labels": [
+      "WaterBill"
+    ],
+    "properties": {
+      "stormwater_fee": 125.0,
+      "total_cost": 4891.5,
+      "sewer_service_charge": 950.0,
+      "due_date": "2025-08-05",
+      "billing_period_end": "2025-06-30",
+      "water_consumption_cost": 3750.0,
+      "total_gallons": 250000,
+      "billing_period_start": "2025-06-01",
+      "id": "water_bill_water_bill_20250817_212829",
+      "infrastructure_surcharge": 5.0,
+      "conservation_tax": 61.5
+    }
+  }
+}
+
+Query 2
+----------------------------------------
+Query: 
+                MATCH (w:WaterBill)
+                RETURN w
+                ORDER BY w.billing_period_end DESC
+                
+Status: success
+Records: 1
+Results (first 5):
+  1: {
+  "w": {
+    "labels": [
+      "WaterBill"
+    ],
+    "properties": {
+      "stormwater_fee": 125.0,
+      "total_cost": 4891.5,
+      "sewer_service_charge": 950.0,
+      "due_date": "2025-08-05",
+      "billing_period_end": "2025-06-30",
+      "water_consumption_cost": 3750.0,
+      "total_gallons": 250000,
+      "billing_period_start": "2025-06-01",
+      "id": "water_bill_water_bill_20250817_212829",
+      "infrastructure_surcharge": 5.0,
+      "conservation_tax": 61.5
+    }
+  }
+}
+
+Query 3
+----------------------------------------
+Query: 
+                MATCH (w:WaterBill)-[:BILLED_TO]->(f:Facility)
+                MATCH (w)-[:BILLED_FOR]->(c:Customer)
+                MATCH (w)-[:PROVIDED_BY]->(p:UtilityProvider)
+                OPTIONAL MATCH (w)-[:RESULTED_IN]->(e:Emission)
+                OPTIONAL MATCH (m:Meter)-[:RECORDED_IN]->(w)
+                RETURN w, f, c, p, e, collect(m) as meters
+                ORDER BY w.billing_period_end DESC
+                
+Status: success
+Records: 1
+Results (first 5):

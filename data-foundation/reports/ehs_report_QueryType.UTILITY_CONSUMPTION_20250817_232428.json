@@ -1,0 +1,183 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.UTILITY_CONSUMPTION",
+    "generated_at": "2025-08-17T23:24:28.415535",
+    "query_type": "utility_consumption",
+    "parameters": {
+      "start_date": "2025-06-01",
+      "end_date": "2025-06-30"
+    },
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 2,
+    "successful_queries": 2,
+    "failed_queries": 0,
+    "total_records": 1,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 22
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 4
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 8
+          },
+          {
+            "labels": [
+              "Document",
+              "Utilitybill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "UtilityBill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 22
+          },
+          {
+            "type": "Is",
+            "count": 8
+          },
+          {
+            "type": "Include",
+            "count": 1
+          },
+          {
+            "type": "SOURCE",
+            "count": 4
+          },
+          {
+            "type": "Has previous reading of",
+            "count": 2
+          },
+          {
+            "type": "Has current reading of",
+            "count": 1
+          },
+          {
+            "type": "Parsed by",
+            "count": 1
+          },
+          {
+            "type": "Has document_id",
+            "count": 1
+          },
+          {
+            "type": "Has current reading",
+            "count": 1
+          },
+          {
+            "type": "EXTRACTED_TO",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          },
+          {
+            "type": "For",
+            "count": 1
+          }
+        ],
+        "total_nodes": 37,
+        "total_relationships": 44
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "\n                MATCH (d:Document:UtilityBill)-[:EXTRACTED_TO]->(b:UtilityBill)\n                RETURN d, b\n                ORDER BY b.billing_period_end DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      }
+    },
+    {
+      "query": "\n                MATCH (b:UtilityBill)\n                WHERE b.billing_period_start >= $start_date \n                  AND b.billing_period_end <= $end_date\n                RETURN SUM(b.total_kwh) as total_consumption,\n                       AVG(b.total_cost) as avg_cost,\n                       COUNT(b) as bill_count\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      }
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (d:Document:UtilityBill)-[:EXTRACTED_TO]->(b:UtilityBill)\n                RETURN d, b\n                ORDER BY b.billing_period_end DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      },
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (b:UtilityBill)\n                WHERE b.billing_period_start >= $start_date \n                  AND b.billing_period_end <= $end_date\n                RETURN SUM(b.total_kwh) as total_consumption,\n                       AVG(b.total_cost) as avg_cost,\n                       COUNT(b) as bill_count\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      },
+      "results": [
+        {
+          "total_consumption": 130000,
+          "avg_cost": 15432.89,
+          "bill_count": 1
+        }
+      ],
+      "record_count": 1,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "Two queries were executed successfully.",
+      "2": "The first query, which was intended to extract utility bill documents, did not return any results.",
+      "3": "The second query, which was intended to calculate total consumption, average cost, and bill count for the specified period, returned one record.",
+      "4": "The total consumption for the period from June 1, 2025, to June 30, 2025, was 130,000 kWh.",
+      "5": "The average cost for the same period was $15,432.89.",
+      "6": "Only one utility bill was recorded for the specified period."
+    },
+    "Patterns or Trends": {
+      "1": "There is no discernible pattern or trend from the available data as only one record was retrieved."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The first query did not return any results, which could indicate a lack of data or an issue with the query itself.",
+      "2": "Only one utility bill was recorded for the specified period, which could indicate missing data if there are usually more bills during a month."
+    },
+    "Recommendations": {
+      "1": "Investigate why the first query did not return any results. This could be due to a lack of data or an issue with the query itself.",
+      "2": "Check if there are usually more utility bills during a month. If so, investigate why only one bill was recorded for the specified period.",
+      "3": "If the average cost of $15,432.89 is higher than usual, investigate the cause of this increase."
+    }
+  },
+  "errors": []
+}

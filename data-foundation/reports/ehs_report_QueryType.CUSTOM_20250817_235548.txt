@@ -1,0 +1,185 @@
+================================================================================
+EHS Data Extraction Report - QueryType.CUSTOM
+================================================================================
+
+Generated: 2025-08-17T23:55:48.124690
+Query Type: QueryType.CUSTOM
+
+SUMMARY
+----------------------------------------
+Total Queries: 2
+Successful: 2
+Failed: 0
+Total Records: 2
+
+GRAPH OBJECTS
+----------------------------------------
+[
+  {
+    "nodes": [
+      {
+        "labels": [
+          "Meter"
+        ],
+        "count": 4
+      },
+      {
+        "labels": [
+          "Emission"
+        ],
+        "count": 2
+      },
+      {
+        "labels": [
+          "DocumentChunk"
+        ],
+        "count": 2
+      },
+      {
+        "labels": [
+          "__Node__",
+          "Chunk"
+        ],
+        "count": 4
+      },
+      {
+        "labels": [
+          "__Node__",
+          "__Entity__",
+          "entity"
+        ],
+        "count": 15
+      },
+      {
+        "labels": [
+          "Document",
+          "Utilitybill"
+        ],
+        "count": 2
+      },
+      {
+        "labels": [
+          "UtilityBill"
+        ],
+        "count": 2
+      },
+      {
+        "labels": [
+          "Facility"
+        ],
+        "count": 1
+      }
+    ],
+    "relationships": [
+      {
+        "type": "MENTIONS",
+        "count": 15
+      },
+      {
+        "type": "Is",
+        "count": 7
+      },
+      {
+        "type": "Include",
+        "count": 1
+      },
+      {
+        "type": "SOURCE",
+        "count": 2
+      },
+      {
+        "type": "EXTRACTED_TO",
+        "count": 2
+      },
+      {
+        "type": "BILLED_TO",
+        "count": 1
+      },
+      {
+        "type": "MONITORS",
+        "count": 4
+      },
+      {
+        "type": "RESULTED_IN",
+        "count": 2
+      }
+    ],
+    "total_nodes": 32,
+    "total_relationships": 34
+  }
+]
+
+QUERY RESULTS
+================================================================================
+
+Query 1
+----------------------------------------
+Query: 
+                MATCH (d:Document:UtilityBill)-[:EXTRACTED_TO]->(b:UtilityBill)-[:BILLED_TO]->(f:Facility)
+                OPTIONAL MATCH (b)-[:RESULTED_IN]->(e:Emission)
+                OPTIONAL MATCH (m:Meter)-[:MONITORS]->(f)
+                RETURN d, b, f, e, m
+                
+Status: success
+Records: 0
+
+Query 2
+----------------------------------------
+Query: 
+                MATCH (b:UtilityBill)
+                RETURN b.billing_period_end as period,
+                       b.total_kwh as consumption,
+                       b.total_cost as cost
+                ORDER BY b.billing_period_end DESC
+                LIMIT 10
+                
+Status: success
+Records: 2
+Results (first 5):
+  1: {
+  "period": "2025-06-30",
+  "consumption": 130000,
+  "cost": 15432.89
+}
+  2: {
+  "period": "2025-06-30",
+  "consumption": 130000,
+  "cost": 15432.89
+}
+
+ANALYSIS
+================================================================================
+{
+  "Key Findings": [
+    {
+      "Finding 1": "Two queries were executed successfully with a total of 2 records retrieved."
+    },
+    {
+      "Finding 2": "The first query, which was designed to retrieve documents related to utility bills, emissions, and meter monitoring at a facility, returned no results."
+    },
+    {
+      "Finding 3": "The second query, which was designed to retrieve the last 10 utility bills, returned 2 records. Both records are for the same billing period (2025-06-30) with the same consumption (130,000 kWh) and cost ($15,432.89)."
+    }
+  ],
+  "Patterns or Trends": [
+    {
+      "Pattern 1": "There is a lack of diversity in the utility bill data retrieved. The same data is repeated for the two records."
+    }
+  ],
+  "Potential Data Quality Issues": [
+    {
+      "Issue 1": "The first query returned no results, which could indicate a lack of data or a problem with the query itself."
+    },
+    {
+      "Issue 2": "The second query returned duplicate records, which could indicate a data entry error or a problem with the query."
+    }
+  ],
+  "Recommendations": [
+    {
+      "Recommendation 1": "Review the first query to ensure it is correctly structured and that the database contains the necessary data."
+    },
+    {
+      "Recommendation 2": "Investigate the source of the duplicate records in the second query. If it is a data entry error, implement measures to prevent such errors in the future. If it is a problem with the query, revise the query to ensure it correctly retrieves unique records."
+    }
+  ]
+}

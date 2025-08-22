@@ -1,0 +1,1 @@
+# Database migrations for EHS Analytics Neo4j schema

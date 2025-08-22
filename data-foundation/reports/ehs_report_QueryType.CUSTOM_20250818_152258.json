@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:22:58.812836",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [],
+        "relationships": [],
+        "total_nodes": 0,
+        "total_relationships": 0
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "Manifest_Transporter_Relationships",
+      "query": "\n                MATCH (m:WasteManifest)-[:TRANSPORTED_BY]->(t:Transporter)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    m.date_shipped as date_shipped,\n                    t.name as transporter_name,\n                    t.epa_id as transporter_epa_id,\n                    t.license_number as license_number\n                ORDER BY m.date_shipped DESC\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (m:WasteManifest)-[:TRANSPORTED_BY]->(t:Transporter)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    m.date_shipped as date_shipped,\n                    t.name as transporter_name,\n                    t.epa_id as transporter_epa_id,\n                    t.license_number as license_number\n                ORDER BY m.date_shipped DESC\n            ",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query was executed successfully.",
+      "2": "The query was designed to retrieve data related to waste manifests and their associated transporters.",
+      "3": "No records were retrieved from the executed query."
+    },
+    "Patterns or Trends": {
+      "1": "No patterns or trends can be identified as no data was retrieved from the query."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The lack of returned data could indicate a potential data quality issue. It could be due to the absence of matching records in the database, or it could be a result of an incorrect or overly specific query.",
+      "2": "The query might not be returning any results due to missing or incorrect data in the 'WasteManifest' or 'Transporter' nodes."
+    },
+    "Recommendations": {
+      "1": "Review the query to ensure it is correctly structured and targeting the right nodes and relationships.",
+      "2": "Check the database to ensure the 'WasteManifest' and 'Transporter' nodes contain the necessary data.",
+      "3": "If the query is correct and the nodes contain data, consider broadening the query parameters to return a larger set of results."
+    }
+  },
+  "errors": []
+}

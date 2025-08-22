@@ -1,0 +1,208 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.UTILITY_CONSUMPTION",
+    "generated_at": "2025-08-18T19:59:02.613599",
+    "query_type": "utility_consumption",
+    "parameters": {
+      "start_date": "2025-06-01",
+      "end_date": "2025-06-30"
+    },
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 2,
+    "successful_queries": 2,
+    "failed_queries": 0,
+    "total_records": 1,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "Document",
+              "Waterbill"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WaterBill"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "Facility"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "Customer"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "UtilityProvider"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "Meter"
+            ],
+            "count": 4
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 6
+          },
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 19
+          },
+          {
+            "labels": [
+              "Document",
+              "Utilitybill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "UtilityBill"
+            ],
+            "count": 1
+          }
+        ],
+        "relationships": [
+          {
+            "type": "EXTRACTED_TO",
+            "count": 3
+          },
+          {
+            "type": "BILLED_TO",
+            "count": 6
+          },
+          {
+            "type": "BILLED_FOR",
+            "count": 6
+          },
+          {
+            "type": "PROVIDED_BY",
+            "count": 4
+          },
+          {
+            "type": "MONITORS",
+            "count": 11
+          },
+          {
+            "type": "RECORDED_IN",
+            "count": 5
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 3
+          },
+          {
+            "type": "MENTIONS",
+            "count": 19
+          },
+          {
+            "type": "Is",
+            "count": 10
+          },
+          {
+            "type": "SOURCE",
+            "count": 3
+          }
+        ],
+        "total_nodes": 50,
+        "total_relationships": 70
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "\n                MATCH (d:Document:UtilityBill)-[:EXTRACTED_TO]->(b:UtilityBill)\n                RETURN d, b\n                ORDER BY b.billing_period_end DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      }
+    },
+    {
+      "query": "\n                MATCH (b:UtilityBill)\n                WHERE b.billing_period_start >= $start_date \n                  AND b.billing_period_end <= $end_date\n                RETURN SUM(b.total_kwh) as total_consumption,\n                       AVG(b.total_cost) as avg_cost,\n                       COUNT(b) as bill_count\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      }
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (d:Document:UtilityBill)-[:EXTRACTED_TO]->(b:UtilityBill)\n                RETURN d, b\n                ORDER BY b.billing_period_end DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      },
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (b:UtilityBill)\n                WHERE b.billing_period_start >= $start_date \n                  AND b.billing_period_end <= $end_date\n                RETURN SUM(b.total_kwh) as total_consumption,\n                       AVG(b.total_cost) as avg_cost,\n                       COUNT(b) as bill_count\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      },
+      "results": [
+        {
+          "total_consumption": 130000,
+          "avg_cost": 15432.89,
+          "bill_count": 1
+        }
+      ],
+      "record_count": 1,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "Two queries were executed successfully.",
+      "2": "The first query, which was intended to extract utility bill documents, did not return any records.",
+      "3": "The second query, which was intended to calculate total consumption, average cost, and bill count for the specified period, returned one record. The total consumption for the period was 130,000 kWh, the average cost was $15,432.89, and there was one bill."
+    },
+    "Patterns or Trends": {
+      "1": "There is no discernible pattern or trend from the data provided as it pertains to a single billing period."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The first query did not return any records. This could indicate a data quality issue, such as missing or incorrectly formatted utility bill documents.",
+      "2": "The second query returned only one record, which could suggest that data for other billing periods is missing or not being captured correctly."
+    },
+    "Recommendations": {
+      "1": "Investigate why the first query did not return any records. This could involve checking the format and completeness of the utility bill documents in the database.",
+      "2": "Ensure that utility consumption data is being captured and stored correctly for all billing periods. This could involve reviewing the data capture and storage processes, and implementing data quality checks."
+    }
+  },
+  "errors": []
+}

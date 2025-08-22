@@ -1,0 +1,209 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:45:18.269947",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 1,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 18
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 2
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 18
+          },
+          {
+            "type": "Is",
+            "count": 9
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          }
+        ],
+        "total_nodes": 30,
+        "total_relationships": 35
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "All_Emission_Nodes",
+      "query": "\n                MATCH (e:Emission)\n                RETURN \n                    e.emission_type as emission_type,\n                    e.amount as amount,\n                    e.unit as unit,\n                    e.emission_factor as emission_factor,\n                    e.calculation_method as calculation_method,\n                    e.date_calculated as date_calculated,\n                    properties(e) as all_properties\n                ORDER BY e.amount DESC\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (e:Emission)\n                RETURN \n                    e.emission_type as emission_type,\n                    e.amount as amount,\n                    e.unit as unit,\n                    e.emission_factor as emission_factor,\n                    e.calculation_method as calculation_method,\n                    e.date_calculated as date_calculated,\n                    properties(e) as all_properties\n                ORDER BY e.amount DESC\n            ",
+      "parameters": {},
+      "results": [
+        {
+          "emission_type": null,
+          "amount": 0.5,
+          "unit": "metric_tons_CO2e",
+          "emission_factor": 0.5,
+          "calculation_method": "waste_disposal_landfill",
+          "date_calculated": null,
+          "all_properties": {
+            "amount": 0.5,
+            "id": "emission_waste_manifest_20250818_104007",
+            "unit": "metric_tons_CO2e",
+            "calculation_method": "waste_disposal_landfill",
+            "emission_factor": 0.5,
+            "source_type": "waste_disposal",
+            "disposal_method": "landfill"
+          }
+        }
+      ],
+      "record_count": 1,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": [
+      {
+        "Finding": "The query was successful and returned one record related to emissions.",
+        "Details": {
+          "Emission Type": "Not specified",
+          "Amount": 0.5,
+          "Unit": "metric_tons_CO2e",
+          "Emission Factor": 0.5,
+          "Calculation Method": "waste_disposal_landfill",
+          "Date Calculated": "Not specified",
+          "Source Type": "waste_disposal",
+          "Disposal Method": "landfill"
+        }
+      }
+    ],
+    "Patterns or Trends": [
+      {
+        "Pattern": "There is no pattern or trend observable from a single data point. More data would be required to identify patterns or trends."
+      }
+    ],
+    "Potential Data Quality Issues": [
+      {
+        "Issue": "Missing data",
+        "Details": {
+          "Emission Type": "The emission type is not specified in the record.",
+          "Date Calculated": "The date when the emission was calculated is not specified in the record."
+        }
+      }
+    ],
+    "Recommendations": [
+      {
+        "Recommendation": "Ensure all relevant fields are filled out for each record to improve data quality and completeness. Specifically, the 'emission_type' and 'date_calculated' fields should be populated."
+      },
+      {
+        "Recommendation": "Consider running more queries or retrieving more records to identify patterns or trends in the data."
+      }
+    ]
+  },
+  "errors": []
+}

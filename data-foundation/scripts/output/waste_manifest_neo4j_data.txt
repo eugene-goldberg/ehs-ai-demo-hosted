@@ -1,0 +1,194 @@
+WASTE MANIFEST NEO4J DATA EXTRACTION
+Generated: 2025-08-18T10:44:11.390990
+================================================================================
+
+
+================================================================================
+QUERY: All_WasteManifest_Nodes
+TIMESTAMP: 2025-08-18T10:44:28.255890
+RESULT COUNT: 1
+================================================================================
+
+Record 1:
+----------------------------------------
+{
+  "manifest_id": null,
+  "date_shipped": null,
+  "quantity": null,
+  "unit": "Open Top Roll-off",
+  "hazardous": null,
+  "waste_code": null,
+  "description": null,
+  "proper_shipping_name": null,
+  "un_number": null,
+  "packing_group": null,
+  "hazard_class": null,
+  "all_properties": {
+    "id": "manifest_waste_manifest_20250818_104007",
+    "unit": "Open Top Roll-off",
+    "status": "Not specified",
+    "total_weight": 1,
+    "issue_date": "2025-07-15",
+    "manifest_tracking_number": "EES-2025-0715-A45",
+    "total_quantity": 1
+  }
+}
+
+
+================================================================================
+QUERY: All_DisposalFacility_Nodes
+TIMESTAMP: 2025-08-18T10:44:55.019587
+RESULT COUNT: 1
+================================================================================
+
+Record 1:
+----------------------------------------
+{
+  "name": "Green Valley Landfill",
+  "epa_id": "CAL000654321",
+  "address": "100 Landfill Lane, Greenville, CA 91102",
+  "city": null,
+  "state": null,
+  "zip_code": null,
+  "disposal_method": null,
+  "permit_number": "",
+  "all_properties": {
+    "id": "disposal_facility_green_valley_landfill",
+    "permit_number": "",
+    "address": "100 Landfill Lane, Greenville, CA 91102",
+    "disposal_methods": "[]",
+    "epa_id": "CAL000654321",
+    "name": "Green Valley Landfill"
+  }
+}
+
+
+================================================================================
+QUERY: All_Transporter_Nodes
+TIMESTAMP: 2025-08-18T10:45:07.779375
+RESULT COUNT: 1
+================================================================================
+
+Record 1:
+----------------------------------------
+{
+  "name": "Evergreen Environmental",
+  "epa_id": null,
+  "address": "",
+  "city": null,
+  "state": null,
+  "license_number": "",
+  "all_properties": {
+    "id": "transporter_evergreen_environmental",
+    "phone": "",
+    "address": "",
+    "license_number": "",
+    "name": "Evergreen Environmental"
+  }
+}
+
+
+================================================================================
+QUERY: All_Emission_Nodes
+TIMESTAMP: 2025-08-18T10:45:18.273933
+RESULT COUNT: 1
+================================================================================
+
+Record 1:
+----------------------------------------
+{
+  "emission_type": null,
+  "amount": 0.5,
+  "unit": "metric_tons_CO2e",
+  "emission_factor": 0.5,
+  "calculation_method": "waste_disposal_landfill",
+  "date_calculated": null,
+  "all_properties": {
+    "amount": 0.5,
+    "id": "emission_waste_manifest_20250818_104007",
+    "unit": "metric_tons_CO2e",
+    "calculation_method": "waste_disposal_landfill",
+    "emission_factor": 0.5,
+    "source_type": "waste_disposal",
+    "disposal_method": "landfill"
+  }
+}
+
+
+================================================================================
+QUERY: All_WasteManifest_Relationships
+TIMESTAMP: 2025-08-18T10:45:39.767609
+RESULT COUNT: 2
+================================================================================
+
+Record 1:
+----------------------------------------
+{
+  "manifest_id": null,
+  "relationship_type": "DOCUMENTS",
+  "connected_node_labels": [
+    "WasteShipment"
+  ],
+  "connected_node_name": "9",
+  "relationship_properties": {},
+  "start_node_id": 8,
+  "end_node_id": 9
+}
+
+Record 2:
+----------------------------------------
+{
+  "manifest_id": null,
+  "relationship_type": "TRACKS",
+  "connected_node_labels": [
+    "Document",
+    "Wastemanifest"
+  ],
+  "connected_node_name": "7",
+  "relationship_properties": {
+    "tracking_date": "2025-08-18T15:40:43.274618"
+  },
+  "start_node_id": 7,
+  "end_node_id": 8
+}
+
+
+================================================================================
+QUERY: BasicWasteGeneration_Query8
+TIMESTAMP: 2025-08-18T10:46:34.328646
+RESULT COUNT: 1
+================================================================================
+
+Record 1:
+----------------------------------------
+{
+  "manifest_status": "Not specified",
+  "manifest_count": 1,
+  "total_waste_quantity": 0,
+  "earliest_date": null,
+  "latest_date": null,
+  "unique_generators": 0,
+  "unique_transporters": 0,
+  "unique_disposal_facilities": 0
+}
+
+
+================================================================================
+QUERY: FilteredWasteGeneration_Query8
+TIMESTAMP: 2025-08-18T10:46:46.164098
+RESULT COUNT: 1
+================================================================================
+
+Record 1:
+----------------------------------------
+{
+  "manifest_status": "Not specified",
+  "manifest_count": 1,
+  "total_waste_quantity": 0,
+  "earliest_date": null,
+  "latest_date": null,
+  "unique_generators": 0,
+  "unique_transporters": 0,
+  "unique_disposal_facilities": 0
+}
+

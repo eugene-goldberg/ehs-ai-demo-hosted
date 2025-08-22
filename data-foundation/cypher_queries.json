@@ -1,0 +1,89 @@
+[
+  {
+    "query": "CREATE (n:Document:UtilityBill {id: $id, type: $type, account_number: $account_number, statement_date: $statement_date, uploaded_at: $uploaded_at}) RETURN n",
+    "parameters": {
+      "id": "electric_bill_20250817_170107",
+      "type": "utility_bill",
+      "account_number": "85-23459-88-1",
+      "statement_date": "July 5, 2025",
+      "uploaded_at": "2025-08-17T17:01:07.848549"
+    }
+  },
+  {
+    "query": "CREATE (n:UtilityBill {id: $id, billing_period_start: $billing_period_start, billing_period_end: $billing_period_end, total_kwh: $total_kwh, peak_kwh: $peak_kwh, off_peak_kwh: $off_peak_kwh, total_cost: $total_cost, due_date: $due_date}) RETURN n",
+    "parameters": {
+      "id": "bill_electric_bill_20250817_170107",
+      "billing_period_start": "June 1, 2025",
+      "billing_period_end": "June 30, 2025",
+      "total_kwh": 130000.0,
+      "peak_kwh": 70000.0,
+      "off_peak_kwh": 60000.0,
+      "total_cost": 15432.89,
+      "due_date": "August 1, 2025"
+    }
+  },
+  {
+    "query": "CREATE (n:Facility {id: $id, name: $name, address: $address}) RETURN n",
+    "parameters": {
+      "id": "facility_apex_plant_a",
+      "name": "Apex Manufacturing - Plant A",
+      "address": "Apex Manufacturing - Plant A, 789 Production Way,"
+    }
+  },
+  {
+    "query": "CREATE (n:Emission {id: $id, amount: $amount, unit: $unit, calculation_method: $calculation_method, emission_factor: $emission_factor}) RETURN n",
+    "parameters": {
+      "id": "emission_electric_bill_20250817_170107",
+      "amount": 52000.0,
+      "unit": "kg_CO2",
+      "calculation_method": "grid_average_factor",
+      "emission_factor": 0.4
+    }
+  },
+  {
+    "query": "CREATE (n:Meter {id: $id, type: $type, previous_reading: $previous_reading, current_reading: $current_reading, usage: $usage}) RETURN n",
+    "parameters": {
+      "id": "MTR-7743-A",
+      "type": "electricity",
+      "previous_reading": 891234.0,
+      "current_reading": 951234.0,
+      "usage": 60000.0
+    }
+  },
+  {
+    "query": "\n        MATCH (a {id: $source_id})\n        MATCH (b {id: $target_id})\n        CREATE (a)-[r:EXTRACTED_TO $properties]->(b)\n        RETURN r\n        ",
+    "parameters": {
+      "source_id": "electric_bill_20250817_170107",
+      "target_id": "bill_electric_bill_20250817_170107",
+      "properties": {
+        "extraction_date": "2025-08-17T17:01:07.848557"
+      }
+    }
+  },
+  {
+    "query": "\n        MATCH (a {id: $source_id})\n        MATCH (b {id: $target_id})\n        CREATE (a)-[r:BILLED_TO $properties]->(b)\n        RETURN r\n        ",
+    "parameters": {
+      "source_id": "bill_electric_bill_20250817_170107",
+      "target_id": "facility_apex_plant_a",
+      "properties": {}
+    }
+  },
+  {
+    "query": "\n        MATCH (a {id: $source_id})\n        MATCH (b {id: $target_id})\n        CREATE (a)-[r:RESULTED_IN $properties]->(b)\n        RETURN r\n        ",
+    "parameters": {
+      "source_id": "bill_electric_bill_20250817_170107",
+      "target_id": "emission_electric_bill_20250817_170107",
+      "properties": {
+        "calculation_method": "grid_average"
+      }
+    }
+  },
+  {
+    "query": "\n        MATCH (a {id: $source_id})\n        MATCH (b {id: $target_id})\n        CREATE (a)-[r:MONITORS $properties]->(b)\n        RETURN r\n        ",
+    "parameters": {
+      "source_id": "MTR-7743-A",
+      "target_id": "facility_apex_plant_a",
+      "properties": {}
+    }
+  }
+]

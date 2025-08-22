@@ -1,0 +1,253 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - custom",
+    "generated_at": "2025-08-18T19:33:06.694253",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 10,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 15
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 2
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 15
+          },
+          {
+            "type": "Is",
+            "count": 8
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          }
+        ],
+        "total_nodes": 27,
+        "total_relationships": 31
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "MATCH (n) RETURN labels(n) as labels, count(n) as count ORDER BY count DESC LIMIT 10"
+    }
+  ],
+  "query_results": [
+    {
+      "query": "MATCH (n) RETURN labels(n) as labels, count(n) as count ORDER BY count DESC LIMIT 10",
+      "parameters": {},
+      "results": [
+        {
+          "labels": [
+            "__Node__",
+            "__Entity__",
+            "entity"
+          ],
+          "count": 15
+        },
+        {
+          "labels": [
+            "__Node__",
+            "Chunk"
+          ],
+          "count": 2
+        },
+        {
+          "labels": [
+            "DocumentChunk"
+          ],
+          "count": 2
+        },
+        {
+          "labels": [
+            "Document",
+            "Wastemanifest"
+          ],
+          "count": 1
+        },
+        {
+          "labels": [
+            "WasteGenerator"
+          ],
+          "count": 1
+        },
+        {
+          "labels": [
+            "Transporter"
+          ],
+          "count": 1
+        },
+        {
+          "labels": [
+            "WasteShipment"
+          ],
+          "count": 1
+        },
+        {
+          "labels": [
+            "WasteItem"
+          ],
+          "count": 1
+        },
+        {
+          "labels": [
+            "Emission"
+          ],
+          "count": 1
+        },
+        {
+          "labels": [
+            "DisposalFacility"
+          ],
+          "count": 1
+        }
+      ],
+      "record_count": 10,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": [
+      {
+        "Finding": "The query was successful and returned 10 records.",
+        "Details": "The query was executed successfully and returned 10 records. Each record represents a different label or entity type in the EHS data."
+      },
+      {
+        "Finding": "The most common entity type is '__Node__', '__Entity__', 'entity'.",
+        "Details": "The entity type with the labels '__Node__', '__Entity__', 'entity' is the most common, with a count of 15."
+      },
+      {
+        "Finding": "There are several entity types with only one instance.",
+        "Details": "The entity types 'Document', 'Wastemanifest', 'WasteGenerator', 'Transporter', 'WasteShipment', 'WasteItem', 'Emission', and 'DisposalFacility' each only have one instance in the data."
+      }
+    ],
+    "Patterns and Trends": [
+      {
+        "Pattern": "Most entity types have low counts.",
+        "Details": "Aside from the '__Node__', '__Entity__', 'entity' type, all other entity types have counts of 2 or less. This suggests that these types may be less common or less frequently used in the data."
+      }
+    ],
+    "Potential Data Quality Issues": [
+      {
+        "Issue": "Low counts for many entity types.",
+        "Details": "The low counts for many entity types could indicate a data quality issue. It's possible that these types are not being properly recorded or tracked in the data."
+      }
+    ],
+    "Recommendations": [
+      {
+        "Recommendation": "Investigate the low counts for many entity types.",
+        "Details": "It may be worth investigating why many entity types have low counts. If these types are supposed to be more common, there may be an issue with how the data is being recorded or tracked."
+      },
+      {
+        "Recommendation": "Consider additional queries to explore the data further.",
+        "Details": "Given the variety of entity types returned by this query, it may be useful to execute additional queries to explore the relationships between these types and their prevalence in the data."
+      }
+    ]
+  },
+  "errors": []
+}

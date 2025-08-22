@@ -1,0 +1,186 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - custom",
+    "generated_at": "2025-08-18T19:34:45.864238",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 1,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 15
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 2
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 15
+          },
+          {
+            "type": "Is",
+            "count": 8
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          }
+        ],
+        "total_nodes": 27,
+        "total_relationships": 31
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "MATCH (d:Document:Wastemanifest)-[r]->(n) RETURN type(r) as relationship, labels(n) as target_labels, count(*) as count"
+    }
+  ],
+  "query_results": [
+    {
+      "query": "MATCH (d:Document:Wastemanifest)-[r]->(n) RETURN type(r) as relationship, labels(n) as target_labels, count(*) as count",
+      "parameters": {},
+      "results": [
+        {
+          "relationship": "TRACKS",
+          "target_labels": [
+            "WasteManifest"
+          ],
+          "count": 1
+        }
+      ],
+      "record_count": 1,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": [
+      {
+        "Finding 1": "The query executed successfully and retrieved one record."
+      },
+      {
+        "Finding 2": "The retrieved record indicates a 'TRACKS' relationship between 'Document:Wastemanifest' and 'WasteManifest'."
+      }
+    ],
+    "Patterns or Trends": [
+      {
+        "Pattern 1": "There is a one-to-one relationship between 'Document:Wastemanifest' and 'WasteManifest' as indicated by the 'count' value of 1."
+      }
+    ],
+    "Potential Data Quality Issues": [
+      {
+        "Issue 1": "The data set is very limited, with only one record retrieved. This may not provide a comprehensive view of the overall data landscape."
+      }
+    ],
+    "Recommendations": [
+      {
+        "Recommendation 1": "Consider running more queries to retrieve a larger data set for a more comprehensive analysis."
+      },
+      {
+        "Recommendation 2": "Investigate the 'TRACKS' relationship between 'Document:Wastemanifest' and 'WasteManifest' to understand its implications for EHS data management."
+      }
+    ]
+  },
+  "errors": []
+}

@@ -1,0 +1,205 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:45:07.777066",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 1,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 18
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 2
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 18
+          },
+          {
+            "type": "Is",
+            "count": 9
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          }
+        ],
+        "total_nodes": 30,
+        "total_relationships": 35
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "All_Transporter_Nodes",
+      "query": "\n                MATCH (t:Transporter)\n                RETURN \n                    t.name as name,\n                    t.epa_id as epa_id,\n                    t.address as address,\n                    t.city as city,\n                    t.state as state,\n                    t.license_number as license_number,\n                    properties(t) as all_properties\n                ORDER BY t.name\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (t:Transporter)\n                RETURN \n                    t.name as name,\n                    t.epa_id as epa_id,\n                    t.address as address,\n                    t.city as city,\n                    t.state as state,\n                    t.license_number as license_number,\n                    properties(t) as all_properties\n                ORDER BY t.name\n            ",
+      "parameters": {},
+      "results": [
+        {
+          "name": "Evergreen Environmental",
+          "epa_id": null,
+          "address": "",
+          "city": null,
+          "state": null,
+          "license_number": "",
+          "all_properties": {
+            "id": "transporter_evergreen_environmental",
+            "phone": "",
+            "address": "",
+            "license_number": "",
+            "name": "Evergreen Environmental"
+          }
+        }
+      ],
+      "record_count": 1,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": [
+      {
+        "Finding 1": "The query was successful and returned one record related to a transporter named 'Evergreen Environmental'."
+      },
+      {
+        "Finding 2": "The record contains information about the transporter's name, EPA ID, address, city, state, and license number."
+      },
+      {
+        "Finding 3": "The 'all_properties' field contains additional information about the transporter, including its ID, phone number, address, license number, and name."
+      }
+    ],
+    "Patterns or Trends": [
+      {
+        "Pattern 1": "There is no discernible pattern or trend from this single record."
+      }
+    ],
+    "Potential Data Quality Issues": [
+      {
+        "Issue 1": "The EPA ID, address, city, and state fields are null, indicating missing data."
+      },
+      {
+        "Issue 2": "The license number and phone number fields are empty, which may indicate missing or unrecorded data."
+      }
+    ],
+    "Recommendations": [
+      {
+        "Recommendation 1": "Investigate why certain fields such as EPA ID, address, city, state, license number, and phone number are missing or empty. This could be due to data entry errors or lack of data collection."
+      },
+      {
+        "Recommendation 2": "Improve data collection processes to ensure all relevant fields are filled out for each transporter."
+      },
+      {
+        "Recommendation 3": "Consider implementing data validation checks to prevent null or empty values in important fields."
+      }
+    ]
+  },
+  "errors": []
+}

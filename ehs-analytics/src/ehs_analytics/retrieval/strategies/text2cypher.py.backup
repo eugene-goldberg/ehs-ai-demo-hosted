@@ -1,0 +1,695 @@
+"""
+Text2Cypher retriever implementation for EHS Analytics.
+
+This module implements a retriever that converts natural language queries
+to Cypher queries for Neo4j graph database using LangChain's Neo4j integration.
+"""
+
+import time
+import logging
+from typing import Any, Dict, List, Optional, Union
+import re
+
+from langchain.chains import GraphCypherQAChain
+from langchain.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain_community.graphs import Neo4jGraph
+from neo4j import GraphDatabase, Driver
+from neo4j.exceptions import Neo4jError
+
+from ..base import (
+    BaseRetriever,
+    RetrievalStrategy,
+    QueryType,
+    RetrievalResult,
+    RetrievalMetadata,
+    EHSSchemaAware
+)
+
+# Import our logging and monitoring utilities
+from ...utils.logging import get_ehs_logger, performance_logger, log_context
+from ...utils.monitoring import get_ehs_monitor
+from ...utils.tracing import trace_function, SpanKind, get_ehs_tracer
+
+logger = get_ehs_logger(__name__)
+
+
+class Text2CypherRetriever(BaseRetriever, EHSSchemaAware):
+    """
+    Text2Cypher retriever that converts natural language to Cypher queries.
+    
+    This retriever uses LangChain's GraphCypherQAChain to translate natural
+    language queries into Cypher queries for Neo4j, with EHS-specific schema
+    knowledge and query patterns.
+    """
+    
+    def __init__(self, config: Dict[str, Any]):
+        """
+        Initialize the Text2Cypher retriever.
+        
+        Args:
+            config: Configuration dictionary containing:
+                - neo4j_uri: Neo4j connection URI
+                - neo4j_user: Neo4j username
+                - neo4j_password: Neo4j password
+                - openai_api_key: OpenAI API key for LLM
+                - model_name: OpenAI model name (default: gpt-3.5-turbo)
+                - temperature: LLM temperature (default: 0.0)
+                - max_tokens: Maximum tokens for LLM response
+                - cypher_validation: Enable Cypher query validation
+        """
+        super().__init__(config)
+        self.neo4j_uri = config.get("neo4j_uri")
+        self.neo4j_user = config.get("neo4j_user")
+        self.neo4j_password = config.get("neo4j_password")
+        self.openai_api_key = config.get("openai_api_key")
+        self.model_name = config.get("model_name", "gpt-3.5-turbo")
+        self.temperature = config.get("temperature", 0.0)
+        self.max_tokens = config.get("max_tokens", 2000)
+        self.cypher_validation = config.get("cypher_validation", True)
+        
+        # Components to be initialized
+        self.driver: Optional[Driver] = None
+        self.graph: Optional[Neo4jGraph] = None
+        self.llm: Optional[ChatOpenAI] = None
+        self.cypher_chain: Optional[GraphCypherQAChain] = None
+        
+        logger.info(
+            "Text2CypherRetriever initialized",
+            neo4j_uri=self.neo4j_uri,
+            model_name=self.model_name,
+            temperature=self.temperature,
+            max_tokens=self.max_tokens
+        )
+    
+    @trace_function("text2cypher_initialize", SpanKind.INTERNAL, {"component": "retriever"})
+    async def initialize(self) -> None:
+        """Initialize Neo4j connection and LangChain components."""
+        with log_context(component="text2cypher_retriever", operation="initialize"):
+            logger.info("Initializing Text2Cypher retriever")
+            
+            try:
+                # Initialize Neo4j driver
+                logger.debug("Connecting to Neo4j database")
+                self.driver = GraphDatabase.driver(
+                    self.neo4j_uri,
+                    auth=(self.neo4j_user, self.neo4j_password)
+                )
+                
+                # Test connection
+                with self.driver.session() as session:
+                    result = session.run("RETURN 1 AS test")
+                    test_value = result.single()["test"]
+                    if test_value != 1:
+                        raise RuntimeError("Neo4j connection test failed")
+                
+                logger.debug("Neo4j connection established successfully")
+                
+                # Initialize LangChain Neo4j graph
+                logger.debug("Initializing LangChain Neo4j graph")
+                self.graph = Neo4jGraph(
+                    url=self.neo4j_uri,
+                    username=self.neo4j_user,
+                    password=self.neo4j_password
+                )
+                
+                # Initialize OpenAI LLM
+                logger.debug("Initializing OpenAI LLM")
+                self.llm = ChatOpenAI(
+                    api_key=self.openai_api_key,
+                    model_name=self.model_name,
+                    temperature=self.temperature,
+                    max_tokens=self.max_tokens
+                )
+                
+                # Refresh graph schema
+                logger.debug("Refreshing graph schema")
+                self.graph.refresh_schema()
+                
+                # Handle schema whether it's a string or dict
+                if isinstance(self.graph.schema, str):
+                    schema_info = {
+                        "schema_type": "string",
+                        "schema_length": len(self.graph.schema)
+                    }
+                else:
+                    schema_info = {
+                        "node_props": len(self.graph.schema.get("node_props", {})) if hasattr(self.graph.schema, 'get') else 0,
+                        "rel_props": len(self.graph.schema.get("rel_props", {})) if hasattr(self.graph.schema, 'get') else 0,
+                        "relationships": len(self.graph.schema.get("relationships", [])) if hasattr(self.graph.schema, 'get') else 0
+                    }
+                logger.debug("Graph schema refreshed", schema_info=schema_info)
+                
+                # Initialize Cypher chain with EHS-specific prompt
+                logger.debug("Initializing Cypher chain")
+                self.cypher_chain = GraphCypherQAChain.from_llm(
+                    llm=self.llm,
+                    graph=self.graph,
+                    verbose=True,
+                    cypher_prompt=PromptTemplate.from_template(self._build_ehs_cypher_prompt()),
+                    qa_prompt=PromptTemplate.from_template("Answer the user's question based on the database results:\n\nQuestion: {question}\nDatabase Results: {context}\n\nAnswer:"),
+                    return_intermediate_steps=True,
+                    return_direct=True,
+                    allow_dangerous_requests=True
+                )
+                
+                self._initialized = True
+                
+                logger.info(
+                    "Text2Cypher retriever initialized successfully",
+                    schema_nodes=schema_info.get("node_props", "N/A"),
+                    schema_relationships=schema_info.get("relationships", "N/A")
+                )
+                
+            except Exception as e:
+                logger.error(
+                    "Failed to initialize Text2Cypher retriever",
+                    error=str(e),
+                    error_type=type(e).__name__,
+                    neo4j_uri=self.neo4j_uri,
+                    exc_info=True
+                )
+                raise
+    
+    async def cleanup(self) -> None:
+        """Clean up resources including Neo4j connections."""
+        try:
+            if hasattr(self, 'neo4j_driver') and self.neo4j_driver:
+                self.neo4j_driver.close()
+                logger.info("Neo4j driver closed successfully")
+        except Exception as e:
+            logger.error(f"Error closing Neo4j driver: {e}")
+    
+    @performance_logger(include_args=True, include_result=False)
+    @trace_function("text2cypher_retrieve", SpanKind.INTERNAL, {"component": "retriever"})
+    async def retrieve(
+        self,
+        query: str,
+        query_type: QueryType = QueryType.GENERAL,
+        limit: int = 10,
+        **kwargs
+    ) -> RetrievalResult:
+        """
+        Convert natural language query to Cypher and execute against Neo4j.
+        
+        Args:
+            query: Natural language query from the user
+            query_type: Type of EHS query being processed
+            limit: Maximum number of results to return
+            **kwargs: Additional parameters like filters, sorting, etc.
+            
+        Returns:
+            RetrievalResult containing query results and metadata
+        """
+        if not self._initialized:
+            logger.error("Text2Cypher retriever not initialized")
+            raise RuntimeError("Retriever not initialized. Call initialize() first.")
+        
+        with log_context(
+            component="text2cypher_retriever",
+            operation="retrieve",
+            query_type=query_type.value,
+            query_length=len(query),
+            limit=limit
+        ):
+            logger.retrieval_operation(
+                "text2cypher",
+                0,  # Will be updated after retrieval
+                0.0,  # Will be updated after retrieval
+                query_type=query_type.value,
+                query=query[:100]  # First 100 chars for debugging
+            )
+            
+            monitor = get_ehs_monitor()
+            start_time = time.time()
+            
+            try:
+                # Validate query
+                if not self._validate_query_input(query):
+                    raise ValueError("Invalid or empty query provided")
+                
+                # Enhance query with EHS context and type-specific information
+                enhanced_query = self._enhance_query_with_context(query, query_type)
+                logger.debug("Query enhanced for retrieval", enhanced_query_length=len(enhanced_query))
+                
+                # Add limit to query if not present
+                if limit and "limit" not in enhanced_query.lower():
+                    enhanced_query = f"{enhanced_query} (limit results to {limit})"
+                
+                # Execute the query through LangChain
+                logger.info("Executing Text2Cypher query", enhanced_query=enhanced_query[:200])
+                
+                result = await self._execute_cypher_chain(enhanced_query)
+                
+                execution_time = (time.time() - start_time) * 1000
+                
+                # Extract Cypher query and results
+                cypher_query = ""
+                raw_results = result.get("result", [])
+                
+                if "intermediate_steps" in result and result["intermediate_steps"]:
+                    cypher_query = result["intermediate_steps"][0].get("query", "")
+                
+                logger.debug(
+                    "Cypher query executed",
+                    cypher_query=cypher_query,
+                    raw_results_count=len(raw_results) if isinstance(raw_results, list) else 1
+                )
+                
+                # Process and structure results
+                structured_results = self._structure_results(raw_results, query_type)
+                
+                # Create metadata
+                confidence_score = self._calculate_confidence_score(cypher_query, structured_results)
+                relationships_count = self._count_relationships(structured_results)
+                
+                metadata = RetrievalMetadata(
+                    strategy=RetrievalStrategy.TEXT2CYPHER,
+                    query_type=query_type,
+                    confidence_score=confidence_score,
+                    execution_time_ms=execution_time,
+                    cypher_query=cypher_query,
+                    nodes_retrieved=len(structured_results),
+                    relationships_retrieved=relationships_count
+                )
+                
+                # Create successful result
+                result_obj = RetrievalResult(
+                    data=structured_results,
+                    metadata=metadata,
+                    success=True,
+                    message=f"Successfully retrieved {len(structured_results)} results"
+                )
+                
+                # Log successful completion
+                logger.retrieval_operation(
+                    "text2cypher",
+                    len(structured_results),
+                    execution_time,
+                    query_type=query_type.value,
+                    confidence_score=confidence_score,
+                    cypher_query_length=len(cypher_query)
+                )
+                
+                # Record metrics
+                monitor.record_retrieval(
+                    strategy="text2cypher",
+                    duration_ms=execution_time,
+                    results_count=len(structured_results),
+                    success=True
+                )
+                
+                logger.info(
+                    "Text2Cypher retrieval completed successfully",
+                    results_count=len(structured_results),
+                    execution_time_ms=execution_time,
+                    confidence_score=confidence_score
+                )
+                
+                return result_obj
+                
+            except Exception as e:
+                execution_time = (time.time() - start_time) * 1000
+                
+                logger.error(
+                    "Text2Cypher retrieval failed",
+                    query=query,
+                    query_type=query_type.value,
+                    error=str(e),
+                    error_type=type(e).__name__,
+                    execution_time_ms=execution_time,
+                    exc_info=True
+                )
+                
+                # Create error metadata
+                metadata = RetrievalMetadata(
+                    strategy=RetrievalStrategy.TEXT2CYPHER,
+                    query_type=query_type,
+                    confidence_score=0.0,
+                    execution_time_ms=execution_time,
+                    error_message=str(e)
+                )
+                
+                # Record error metrics
+                monitor.record_retrieval(
+                    strategy="text2cypher",
+                    duration_ms=execution_time,
+                    results_count=0,
+                    success=False
+                )
+                
+                return RetrievalResult(
+                    data=[],
+                    metadata=metadata,
+                    success=False,
+                    message=f"Query execution failed: {str(e)}"
+                )
+    
+    @trace_function("query_validation", SpanKind.INTERNAL)
+    async def validate_query(self, query: str) -> bool:
+        """
+        Validate if the query can be processed by Text2Cypher retriever.
+        
+        Args:
+            query: Natural language query to validate
+            
+        Returns:
+            True if the query can be processed, False otherwise
+        """
+        with log_context(component="text2cypher_retriever", operation="validate_query"):
+            logger.debug("Validating query for Text2Cypher processing", query_length=len(query))
+            
+            if not self._validate_query_input(query):
+                logger.debug("Query failed basic input validation")
+                return False
+            
+            # Check for EHS-related keywords
+            ehs_keywords = [
+                "facility", "equipment", "permit", "utility", "consumption",
+                "emission", "waste", "incident", "compliance", "efficiency",
+                "energy", "water", "gas", "electricity", "maintenance",
+                "environmental", "safety", "health"
+            ]
+            
+            query_lower = query.lower()
+            has_ehs_keywords = any(keyword in query_lower for keyword in ehs_keywords)
+            
+            # Check for graph-queryable patterns
+            graph_patterns = [
+                "show", "find", "get", "list", "what", "which", "how many",
+                "total", "sum", "average", "maximum", "minimum", "count",
+                "between", "during", "over time", "related to", "connected to"
+            ]
+            
+            has_graph_patterns = any(pattern in query_lower for pattern in graph_patterns)
+            
+            is_valid = has_ehs_keywords and has_graph_patterns
+            
+            logger.debug(
+                "Query validation completed",
+                is_valid=is_valid,
+                has_ehs_keywords=has_ehs_keywords,
+                has_graph_patterns=has_graph_patterns
+            )
+            
+            return is_valid
+    
+    def _validate_query_input(self, query: str) -> bool:
+        """Validate basic query input requirements."""
+        return bool(query and query.strip() and len(query.strip()) >= 3)
+    
+    def get_strategy(self) -> RetrievalStrategy:
+        """Get the retrieval strategy identifier."""
+        return RetrievalStrategy.TEXT2CYPHER
+    
+    async def cleanup(self) -> None:
+        """Clean up Neo4j connections and resources."""
+        logger.info("Cleaning up Text2Cypher retriever resources")
+        
+        if self.driver:
+            logger.debug("Closing Neo4j driver connection")
+            self.driver.close()
+        
+        await super().cleanup()
+        
+        logger.info("Text2Cypher retriever cleanup completed")
+    
+    def _build_ehs_cypher_prompt(self) -> str:
+        """
+        Build EHS-specific Cypher generation prompt.
+        
+        Returns:
+            Formatted prompt template for Cypher generation
+        """
+        schema_context = self.get_schema_context(QueryType.GENERAL)
+        
+        prompt = f"""
+You are an expert at converting natural language questions about Environmental, Health, and Safety (EHS) data into Cypher queries for Neo4j.
+
+{schema_context}
+
+Guidelines for EHS Cypher Query Generation:
+1. Always use proper Neo4j Cypher syntax
+2. Include appropriate WHERE clauses for filtering
+3. Use CASE-INSENSITIVE matching where appropriate (toLower())
+4. For time-based queries, use proper date comparisons
+5. For aggregations, use appropriate functions (SUM, COUNT, AVG, etc.)
+6. For consumption queries, focus on UtilityBill/WaterBill nodes and their relationships
+7. For compliance queries, focus on Permit nodes and their status/dates
+8. For efficiency queries, join Equipment with UtilityBill data
+9. Always include LIMIT clauses to prevent large result sets
+10. Use descriptive variable names in queries
+
+Common EHS Query Patterns:
+- Consumption over time: Match UtilityBill/WaterBill nodes with date ranges
+- Equipment efficiency: Join Equipment with consumption data
+- Permit compliance: Check Permit status and expiry dates
+- Emission tracking: Match Emission nodes with sources and dates
+- Facility overview: Start with Facility nodes and traverse relationships
+
+Example Queries:
+
+Q: "Show water consumption for all facilities last month"
+Cypher: MATCH (f:Facility)-[:HAS_UTILITY_BILL]->(w:WaterBill)
+        WHERE w.billing_period >= '2024-07'
+        RETURN f.name, SUM(w.consumption_amount) as total_consumption
+        LIMIT 10
+
+Q: "Which permits are expiring in the next 30 days?"
+Cypher: MATCH (p:Permit)
+        WHERE p.expiry_date <= date() + duration('P30D')
+        RETURN p.permit_number, p.type, p.expiry_date
+        ORDER BY p.expiry_date
+        LIMIT 10
+
+Q: "Show all equipment at the main manufacturing plant"
+Cypher: MATCH (f:Facility {{name: 'Main Manufacturing Plant'}})-[:HAS_EQUIPMENT]->(e:Equipment)
+        RETURN e.name, e.type, e.manufacturer, e.model
+        LIMIT 10
+
+Q: "What are the recent emissions from Boiler-01?"
+Cypher: MATCH (e:Emission {{source: 'Boiler-01'}})
+        RETURN e.pollutant, e.amount, e.unit, e.date
+        ORDER BY e.date DESC
+        LIMIT 10
+
+Q: "Show water bills with consumption over 1200 gallons"
+Cypher: MATCH (f:Facility)-[:HAS_UTILITY_BILL]->(w:WaterBill)
+        WHERE w.consumption_amount > 1200
+        RETURN f.name, w.billing_period, w.consumption_amount, w.cost
+        ORDER BY w.consumption_amount DESC
+        LIMIT 10
+
+Q: "List all active permits by facility"
+Cypher: MATCH (f:Facility)-[:HAS_PERMIT]->(p:Permit)
+        WHERE p.status = 'active'
+        RETURN f.name, p.permit_number, p.type, p.expiry_date
+        ORDER BY f.name, p.expiry_date
+        LIMIT 20
+
+Q: "Show total emissions by pollutant type"
+Cypher: MATCH (e:Emission)
+        RETURN e.pollutant, SUM(e.amount) as total_amount, e.unit
+        ORDER BY total_amount DESC
+        LIMIT 10
+
+Generate a Cypher query to answer the question: {{question}}
+
+Cypher Query:
+"""
+        return prompt
+    
+    @trace_function("query_enhancement", SpanKind.INTERNAL)
+    def _enhance_query_with_context(self, query: str, query_type: QueryType) -> str:
+        """
+        Enhance the query with EHS context and type-specific information.
+        
+        Args:
+            query: Original natural language query
+            query_type: Type of EHS query
+            
+        Returns:
+            Enhanced query with additional context
+        """
+        context_mappings = {
+            QueryType.CONSUMPTION: "Focus on utility consumption data including water, electricity, and gas usage. Include time periods and facility information.",
+            QueryType.EFFICIENCY: "Analyze equipment performance and efficiency ratings. Include energy consumption per unit of output where available.",
+            QueryType.COMPLIANCE: "Check permit status, regulatory compliance, and upcoming deadlines. Include permit types and authorities.",
+            QueryType.EMISSIONS: "Track emission measurements, sources, and environmental impact. Include emission types and measurement dates.",
+            QueryType.RISK: "Assess safety and environmental risks based on incident history and current conditions.",
+            QueryType.RECOMMENDATION: "Provide actionable insights for improving efficiency, compliance, or reducing costs."
+        }
+        
+        type_context = context_mappings.get(query_type, "")
+        
+        if type_context:
+            enhanced_query = f"{query}. {type_context}"
+        else:
+            enhanced_query = query
+        
+        logger.debug(
+            "Query enhanced with context",
+            original_length=len(query),
+            enhanced_length=len(enhanced_query),
+            query_type=query_type.value
+        )
+        
+        return enhanced_query
+    
+    @trace_function("cypher_execution", SpanKind.CLIENT, {"service": "neo4j"})
+    async def _execute_cypher_chain(self, query: str) -> Dict[str, Any]:
+        """
+        Execute the Cypher chain with proper error handling.
+        
+        Args:
+            query: Enhanced natural language query
+            
+        Returns:
+            Dictionary containing query results and intermediate steps
+        """
+        try:
+            logger.debug("Executing Cypher chain", query_length=len(query))
+            
+            # Execute the chain - GraphCypherQAChain expects 'query' as the input key
+            result = self.cypher_chain.invoke({"query": query})
+            
+            logger.debug("Cypher chain execution completed", result_keys=list(result.keys()))
+            return result
+        
+        except Neo4jError as e:
+            logger.error("Neo4j error during query execution", error=str(e), error_code=e.code if hasattr(e, 'code') else None)
+            raise
+        
+        except Exception as e:
+            logger.error("Unexpected error during Cypher chain execution", error=str(e), error_type=type(e).__name__)
+            raise
+    
+    @trace_function("result_structuring", SpanKind.INTERNAL)
+    def _structure_results(self, raw_results: Any, query_type: QueryType) -> List[Dict[str, Any]]:
+        """
+        Structure raw Neo4j results into standardized format.
+        
+        Args:
+            raw_results: Raw results from Neo4j query
+            query_type: Type of EHS query
+            
+        Returns:
+            List of structured result dictionaries
+        """
+        if not raw_results:
+            logger.debug("No raw results to structure")
+            return []
+        
+        structured = []
+        
+        # Handle different result formats
+        if isinstance(raw_results, list):
+            logger.debug(f"Structuring {len(raw_results)} list results")
+            for item in raw_results:
+                structured.append(self._structure_single_result(item, query_type))
+        elif isinstance(raw_results, dict):
+            logger.debug("Structuring single dictionary result")
+            structured.append(self._structure_single_result(raw_results, query_type))
+        else:
+            # Handle scalar results (counts, sums, etc.)
+            logger.debug(f"Structuring scalar result: {type(raw_results)}")
+            structured.append({
+                "result": raw_results,
+                "type": "scalar",
+                "query_type": query_type.value
+            })
+        
+        logger.debug(f"Structured {len(structured)} results")
+        return structured
+    
+    def _structure_single_result(self, item: Any, query_type: QueryType) -> Dict[str, Any]:
+        """
+        Structure a single result item.
+        
+        Args:
+            item: Single result item from Neo4j
+            query_type: Type of EHS query
+            
+        Returns:
+            Structured result dictionary
+        """
+        if hasattr(item, '_properties'):
+            # Neo4j Node
+            result = dict(item._properties)
+            result['_node_type'] = list(item.labels)[0] if item.labels else 'Unknown'
+        elif hasattr(item, '_start_node'):
+            # Neo4j Relationship
+            result = {
+                'relationship_type': item.type,
+                'properties': dict(item._properties),
+                'start_node': dict(item._start_node._properties),
+                'end_node': dict(item._end_node._properties)
+            }
+        elif isinstance(item, dict):
+            result = item
+        else:
+            result = {"value": item}
+        
+        result['query_type'] = query_type.value
+        return result
+    
+    def _calculate_confidence_score(self, cypher_query: str, results: List[Dict[str, Any]]) -> float:
+        """
+        Calculate confidence score based on query quality and results.
+        
+        Args:
+            cypher_query: Generated Cypher query
+            results: Retrieved results
+            
+        Returns:
+            Confidence score between 0.0 and 1.0
+        """
+        if not cypher_query or not results:
+            return 0.0
+        
+        score = 0.5  # Base score
+        
+        # Query quality indicators
+        if "WHERE" in cypher_query.upper():
+            score += 0.1  # Has filtering
+        
+        if any(agg in cypher_query.upper() for agg in ["SUM", "COUNT", "AVG", "MAX", "MIN"]):
+            score += 0.1  # Has aggregation
+        
+        if "LIMIT" in cypher_query.upper():
+            score += 0.1  # Has result limiting
+        
+        # Result quality indicators
+        if len(results) > 0:
+            score += 0.2  # Has results
+        
+        if len(results) <= 100:  # Reasonable result size
+            score += 0.1
+        
+        final_score = min(score, 1.0)
+        
+        logger.debug(
+            "Confidence score calculated",
+            score=final_score,
+            cypher_query_length=len(cypher_query),
+            results_count=len(results)
+        )
+        
+        return final_score
+    
+    def _count_relationships(self, results: List[Dict[str, Any]]) -> int:
+        """
+        Count relationships in the results.
+        
+        Args:
+            results: List of structured results
+            
+        Returns:
+            Number of relationships found
+        """
+        relationship_count = 0
+        for result in results:
+            if 'relationship_type' in result:
+                relationship_count += 1
+        
+        return relationship_count

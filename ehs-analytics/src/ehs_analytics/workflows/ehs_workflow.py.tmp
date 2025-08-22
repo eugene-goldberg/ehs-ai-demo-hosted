@@ -1,0 +1,1534 @@
+"""
+EHS Analytics LangGraph Workflow
+
+This module provides the main LangGraph workflow for processing EHS queries
+through classification, RAG retrieval, analysis, and recommendation generation.
+"""
+
+import asyncio
+from typing import Dict, Any, Optional, List
+from datetime import datetime
+import structlog
+
+from ..agents.query_router import QueryRouterAgent, QueryClassification, IntentType, RetrieverType
+from ..agents.rag_agent import RAGAgent, RAGResult, RAGConfiguration
+from ..retrieval.strategies.text2cypher import Text2CypherRetriever
+from ..retrieval.strategies.risk_assessment_retriever import RiskAssessmentRetriever
+from ..retrieval.base import QueryType, RetrievalStrategy
+from ..api.dependencies import DatabaseManager
+
+# Import our logging and monitoring utilities
+from ..utils.logging import get_ehs_logger, performance_logger, log_context, create_request_context
+from ..utils.monitoring import get_ehs_monitor
+from ..utils.tracing import trace_function, SpanKind, get_ehs_tracer, get_ehs_profiler
+
+logger = get_ehs_logger(__name__)
+
+
+class EHSWorkflowState:
+    """
+    State container for the EHS workflow processing.
+    
+    This represents the state that flows through the LangGraph workflow nodes.
+    """
+    
+    def __init__(self, query_id: str, original_query: str, user_id: Optional[str] = None):
+        self.query_id = query_id
+        self.original_query = original_query
+        self.user_id = user_id
+        self.classification: Optional[QueryClassification] = None
+        self.rag_result: Optional[RAGResult] = None
+        self.retrieval_results: Optional[Dict[str, Any]] = None  # Legacy support
+        self.analysis_results: Optional[List[Dict[str, Any]]] = None
+        self.recommendations: Optional[Dict[str, Any]] = None
+        self.error: Optional[str] = None
+        self.metadata: Dict[str, Any] = {}
+        self.workflow_trace: List[str] = []
+        self.created_at = datetime.utcnow()
+        self.updated_at = datetime.utcnow()
+        
+        # Enhanced state fields for risk assessment
+        self.risk_assessment: Optional[Dict[str, Any]] = None
+        self.risk_factors: Optional[List[Dict[str, Any]]] = None
+        self.risk_recommendations: Optional[List[str]] = None
+        
+        # Performance metrics
+        self.step_durations: Dict[str, float] = {}
+        self.total_duration_ms: Optional[float] = None
+    
+    def update_state(self, **kwargs):
+        """Update state and timestamp."""
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+        self.updated_at = datetime.utcnow()
+    
+    def add_trace(self, message: str, step: Optional[str] = None):
+        """Add a trace message to the workflow."""
+        timestamp = datetime.utcnow().isoformat()
+        trace_entry = f"{timestamp}: {message}"
+        if step:
+            trace_entry = f"[{step}] {trace_entry}"
+        
+        self.workflow_trace.append(trace_entry)
+        self.updated_at = datetime.utcnow()
+        
+        logger.debug("Workflow trace added", step=step, message=message, query_id=self.query_id)
+    
+    def record_step_duration(self, step: str, duration_ms: float):
+        """Record the duration of a workflow step."""
+        self.step_durations[step] = duration_ms
+        self.updated_at = datetime.utcnow()
+        
+        logger.debug(
+            "Step duration recorded", 
+            step=step, 
+            duration_ms=duration_ms, 
+            query_id=self.query_id
+        )
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert state to dictionary for serialization."""
+        result = {
+            "query_id": self.query_id,
+            "original_query": self.original_query,
+            "user_id": self.user_id,
+            "classification": self.classification.__dict__ if self.classification else None,
+            "retrieval_results": self.retrieval_results,
+            "analysis_results": self.analysis_results,
+            "recommendations": self.recommendations,
+            "error": self.error,
+            "metadata": self.metadata,
+            "workflow_trace": self.workflow_trace,
+            "step_durations": self.step_durations,
+            "total_duration_ms": self.total_duration_ms,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat(),
+            # Enhanced risk assessment fields
+            "risk_assessment": self.risk_assessment,
+            "risk_factors": self.risk_factors,
+            "risk_recommendations": self.risk_recommendations
+        }
+        
+        # Add RAG result if available
+        if self.rag_result:
+            result["rag_result"] = {
+                "response_content": self.rag_result.response.content,
+                "confidence_score": self.rag_result.confidence_score,
+                "source_count": self.rag_result.source_count,
+                "retrievers_used": self.rag_result.retrievers_used,
+                "processing_time_ms": self.rag_result.processing_time_ms,
+                "success": self.rag_result.success
+            }
+        
+        return result
+
+
+class EHSWorkflow:
+    """
+    EHS Workflow implementation with integrated RAG and Risk Assessment components.
+    
+    This class orchestrates the complete workflow from query classification
+    through RAG retrieval to analysis and recommendations using real components.
+    """
+    
+    def __init__(
+        self, 
+        db_manager: DatabaseManager, 
+        query_router: QueryRouterAgent,
+        rag_agent: Optional[RAGAgent] = None
+    ):
+        self.db_manager = db_manager
+        self.query_router = query_router
+        self.rag_agent = rag_agent
+        self.text2cypher_retriever: Optional[Text2CypherRetriever] = None
+        self.risk_assessment_retriever: Optional[RiskAssessmentRetriever] = None
+        self.is_initialized = False
+        self.profiler = get_ehs_profiler()
+        self.monitor = get_ehs_monitor()
+        
+        logger.info(
+            "EHSWorkflow instance created",
+            has_rag_agent=rag_agent is not None
+        )
+    
+    @trace_function("workflow_initialize", SpanKind.INTERNAL, {"component": "workflow"})
+    async def initialize(self):
+        """Initialize the workflow components."""
+        with log_context(component="ehs_workflow", operation="initialize"):
+            try:
+                logger.info("Initializing EHS workflow")
+                
+                # Initialize Text2Cypher retriever (legacy support)
+                await self._initialize_text2cypher_retriever()
+                
+                # Initialize Risk Assessment retriever
+                await self._initialize_risk_assessment_retriever()
+                
+                # Initialize RAG agent if available
+                if self.rag_agent:
+                    # RAG agent should already be initialized
+                    logger.info("RAG agent available for processing")
+                else:
+                    logger.warning("RAG agent not available, using legacy retrieval")
+                
+                self.is_initialized = True
+                
+                logger.info("EHS workflow initialized successfully")
+                
+            except Exception as e:
+                logger.error(
+                    "Failed to initialize EHS workflow", 
+                    error=str(e),
+                    error_type=type(e).__name__,
+                    exc_info=True
+                )
+                raise
+    
+    async def _initialize_text2cypher_retriever(self):
+        """Initialize the Text2Cypher retriever with database connection."""
+        try:
+            from ..config import get_settings
+            settings = get_settings()
+            
+            # Create retriever configuration
+            text2cypher_config = {
+                "neo4j_uri": settings.neo4j_uri,
+                "neo4j_user": settings.neo4j_username,
+                "neo4j_password": settings.neo4j_password,
+                "openai_api_key": settings.openai_api_key,
+                "model_name": getattr(settings, "llm_model_name", "gpt-3.5-turbo"),
+                "temperature": getattr(settings, "llm_temperature", 0.0),
+                "max_tokens": getattr(settings, "llm_max_tokens", 2000),
+                "cypher_validation": getattr(settings, "cypher_validation", True)
+            }
+            
+            logger.debug("Creating Text2Cypher retriever with config", config_keys=list(text2cypher_config.keys()))
+            
+            # Create and initialize the retriever
+            self.text2cypher_retriever = Text2CypherRetriever(text2cypher_config)
+            await self.text2cypher_retriever.initialize()
+            
+            logger.info("Text2Cypher retriever initialized successfully")
+            
+        except Exception as e:
+            logger.error(
+                "Failed to initialize Text2Cypher retriever",
+                error=str(e),
+                error_type=type(e).__name__,
+                exc_info=True
+            )
+            # Don't raise - allow workflow to continue without retriever
+            logger.warning("Workflow will continue with limited retrieval capabilities")
+
+    async def _initialize_risk_assessment_retriever(self):
+        """Initialize the Risk Assessment retriever with database connection."""
+        try:
+            from ..config import get_settings
+            settings = get_settings()
+            
+            # Get Neo4j driver from database manager
+            neo4j_driver = self.db_manager.get_neo4j_driver()
+            
+            # Create risk assessment retriever configuration
+            risk_config = {
+                "risk_domains": ["water", "electricity", "waste"],
+                "time_range_days": 30,
+                "include_forecasting": True,
+                "include_anomaly_detection": True,
+                "forecast_horizon_days": 7,
+                "confidence_threshold": 0.7,
+                "max_facilities": 10,
+                "aggregation_level": "facility"
+            }
+            
+            logger.debug("Creating Risk Assessment retriever with config", config_keys=list(risk_config.keys()))
+            
+            # Create and initialize the retriever
+            self.risk_assessment_retriever = RiskAssessmentRetriever(neo4j_driver, risk_config)
+            await self.risk_assessment_retriever.initialize()
+            
+            logger.info("Risk Assessment retriever initialized successfully")
+            
+        except Exception as e:
+            logger.error(
+                "Failed to initialize Risk Assessment retriever",
+                error=str(e),
+                error_type=type(e).__name__,
+                exc_info=True
+            )
+            # Don't raise - allow workflow to continue without retriever
+            logger.warning("Workflow will continue without risk assessment capabilities")
+    
+    @performance_logger(include_args=True, include_result=False)
+    @trace_function("workflow_process_query", SpanKind.SERVER, {"component": "workflow"})
+    async def process_query(
+        self, 
+        query_id: str, 
+        query: str, 
+        user_id: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None
+    ) -> EHSWorkflowState:
+        """
+        Process a query through the complete EHS workflow with RAG.
+        
+        This implementation uses RAG components for enhanced retrieval and response generation.
+        """
+        # Create request context for logging
+        request_context = create_request_context(
+            user_id=user_id,
+            request_id=query_id,
+            component="ehs_workflow",
+            operation="process_query"
+        )
+        
+        with log_context(**request_context.__dict__):
+            logger.info(
+                "Starting EHS workflow processing",
+                query_id=query_id,
+                query=query[:100],  # First 100 chars
+                user_id=user_id,
+                options=options,
+                has_rag_agent=self.rag_agent is not None
+            )
+            
+            start_time = datetime.utcnow()
+            state = EHSWorkflowState(query_id, query, user_id)
+            
+            try:
+                # Step 1: Query Classification
+                await self._step_classify_query(state)
+                
+                # Step 2: RAG Processing (if available) or Legacy Retrieval
+                if self.rag_agent and options.get("use_rag", True):
+                    await self._step_rag_processing(state, options)
+                else:
+                    await self._step_legacy_retrieval(state)
+                
+                # Step 3: Analysis (enhanced with RAG results if available)
+                await self._step_analyze_data(state)
+                
+                # Step 4: Recommendations (optional)
+                if options and options.get("include_recommendations", True):
+                    await self._step_generate_recommendations(state)
+                
+                # Calculate total duration
+                total_duration = (datetime.utcnow() - start_time).total_seconds() * 1000
+                state.total_duration_ms = total_duration
+                
+                # Final logging
+                state.add_trace("Workflow processing completed successfully")
+                
+                logger.info(
+                    "EHS workflow processing completed successfully",
+                    query_id=query_id,
+                    total_duration_ms=total_duration,
+                    steps_completed=len(state.step_durations),
+                    used_rag=state.rag_result is not None,
+                    confidence_score=state.rag_result.confidence_score if state.rag_result else None
+                )
+                
+                # Record workflow metrics
+                self.monitor.record_query(
+                    query_type=state.classification.intent_type.value if state.classification else "unknown",
+                    duration_ms=total_duration,
+                    success=True
+                )
+                
+                return state
+                
+            except Exception as e:
+                total_duration = (datetime.utcnow() - start_time).total_seconds() * 1000
+                state.total_duration_ms = total_duration
+                
+                logger.error(
+                    "EHS workflow processing failed", 
+                    query_id=query_id,
+                    user_id=user_id,
+                    error=str(e),
+                    error_type=type(e).__name__,
+                    total_duration_ms=total_duration,
+                    exc_info=True
+                )
+                
+                state.update_state(error=str(e))
+                state.add_trace(f"Workflow failed: {str(e)}")
+                
+                # Record error metrics
+                self.monitor.record_query(
+                    query_type=state.classification.intent_type.value if state.classification else "unknown",
+                    duration_ms=total_duration,
+                    success=False
+                )
+                
+                raise
+    
+    @trace_function("step_classify_query", SpanKind.INTERNAL, {"workflow_step": "classification"})
+    async def _step_classify_query(self, state: EHSWorkflowState):
+        """Query classification step using the real QueryRouterAgent."""
+        with log_context(workflow_step="classification", query_id=state.query_id):
+            step_start = datetime.utcnow()
+            state.add_trace("Starting query classification", "CLASSIFY")
+            
+            try:
+                logger.debug("Executing query classification step")
+                
+                with self.profiler.profile_operation(
+                    "query_classification",
+                    tags={"query_id": state.query_id, "step": "classification"}
+                ):
+                    # Use the real query router agent
+                    classification = self.query_router.classify_query(
+                        state.original_query, 
+                        user_id=state.user_id
+                    )
+                
+                state.update_state(classification=classification)
+                
+                # Record step duration
+                step_duration = (datetime.utcnow() - step_start).total_seconds() * 1000
+                state.record_step_duration("classification", step_duration)
+                
+                state.add_trace(
+                    f"Query classified as: {classification.intent_type.value} "
+                    f"(confidence: {classification.confidence_score:.2f})",
+                    "CLASSIFY"
+                )
+                
+                logger.info(
+                    "Query classification completed",
+                    query_id=state.query_id,
+                    intent_type=classification.intent_type.value,
+                    confidence_score=classification.confidence_score,
+                    suggested_retriever=classification.suggested_retriever.value,
+                    step_duration_ms=step_duration
+                )
+                
+            except Exception as e:
+                step_duration = (datetime.utcnow() - step_start).total_seconds() * 1000
+                state.record_step_duration("classification", step_duration)
+                
+                logger.error(
+                    "Query classification step failed",
+                    query_id=state.query_id,
+                    error=str(e),
+                    step_duration_ms=step_duration
+                )
+                raise
+    
+    @trace_function("step_rag_processing", SpanKind.INTERNAL, {"workflow_step": "rag_processing"})
+    async def _step_rag_processing(self, state: EHSWorkflowState, options: Optional[Dict[str, Any]] = None):
+        """RAG processing step using the RAG agent."""
+        with log_context(workflow_step="rag_processing", query_id=state.query_id):
+            step_start = datetime.utcnow()
+            state.add_trace("Starting RAG processing", "RAG")
+            
+            try:
+                logger.debug("Executing RAG processing step")
+                
+                with self.profiler.profile_operation(
+                    "rag_processing",
+                    tags={
+                        "query_id": state.query_id, 
+                        "step": "rag_processing",
+                        "intent_type": state.classification.intent_type.value if state.classification else "unknown"
+                    }
+                ):
+                    # Process query through RAG agent
+                    rag_result = await self.rag_agent.process_query(
+                        query_id=state.query_id,
+                        query=state.original_query,
+                        classification=state.classification,
+                        user_id=state.user_id,
+                        options=options
+                    )
+                
+                state.update_state(rag_result=rag_result)
+                
+                # Also update legacy retrieval_results for backward compatibility
+                if rag_result.success:
+                    state.update_state(retrieval_results={
+                        "documents": [source.__dict__ for source in rag_result.response.sources],
+                        "total_count": rag_result.source_count,
+                        "retrieval_strategy": "rag_" + "_".join(rag_result.retrievers_used),
+                        "confidence_score": rag_result.confidence_score,
+                        "execution_time_ms": rag_result.processing_time_ms,
+                        "success": True,
+                        "message": "RAG processing completed successfully",
+                        "response_content": rag_result.response.content
+                    })
+                
+                # Record step duration
+                step_duration = (datetime.utcnow() - step_start).total_seconds() * 1000
+                state.record_step_duration("rag_processing", step_duration)
+                
+                state.add_trace("RAG processing completed", "RAG")
+                
+                logger.info(
+                    "RAG processing completed",
+                    query_id=state.query_id,
+                    success=rag_result.success,
+                    confidence_score=rag_result.confidence_score,
+                    source_count=rag_result.source_count,
+                    retrievers_used=rag_result.retrievers_used,
+                    response_length=len(rag_result.response.content),
+                    step_duration_ms=step_duration
+                )
+                
+            except Exception as e:
+                step_duration = (datetime.utcnow() - step_start).total_seconds() * 1000
+                state.record_step_duration("rag_processing", step_duration)
+                
+                logger.error(
+                    "RAG processing step failed",
+                    query_id=state.query_id,
+                    error=str(e),
+                    step_duration_ms=step_duration
+                )
+                
+                # Fall back to legacy retrieval on RAG failure
+                logger.warning("Falling back to legacy retrieval due to RAG failure")
+                await self._step_legacy_retrieval(state)
+    
+    @trace_function("step_legacy_retrieval", SpanKind.INTERNAL, {"workflow_step": "legacy_retrieval"})
+    async def _step_legacy_retrieval(self, state: EHSWorkflowState):
+        """Legacy data retrieval step for backward compatibility."""
+        with log_context(workflow_step="legacy_retrieval", query_id=state.query_id):
+            step_start = datetime.utcnow()
+            state.add_trace("Starting legacy data retrieval", "RETRIEVE")
+            
+            try:
+                logger.debug("Executing legacy data retrieval step")
+                
+                with self.profiler.profile_operation(
+                    "legacy_retrieval",
+                    tags={
+                        "query_id": state.query_id, 
+                        "step": "legacy_retrieval",
+                        "retriever_type": state.classification.suggested_retriever.value if state.classification else "unknown"
+                    }
+                ):
+                    retrieval_results = await self._execute_legacy_retrieval(state)
+                
+                state.update_state(retrieval_results=retrieval_results)
+                
+                # Record step duration
+                step_duration = (datetime.utcnow() - step_start).total_seconds() * 1000
+                state.record_step_duration("legacy_retrieval", step_duration)
+                
+                # Record retrieval metrics
+                self.monitor.record_retrieval(
+                    strategy=retrieval_results.get("retrieval_strategy", "unknown"),
+                    duration_ms=step_duration,
+                    results_count=retrieval_results.get("total_count", 0),
+                    success=retrieval_results.get("success", False)
+                )
+                
+                state.add_trace("Legacy data retrieval completed", "RETRIEVE")
+                
+                logger.info(
+                    "Legacy data retrieval completed",
+                    query_id=state.query_id,
+                    results_count=retrieval_results.get("total_count", 0),
+                    strategy=retrieval_results.get("retrieval_strategy", "unknown"),
+                    success=retrieval_results.get("success", False),
+                    step_duration_ms=step_duration
+                )
+                
+            except Exception as e:
+                step_duration = (datetime.utcnow() - step_start).total_seconds() * 1000
+                state.record_step_duration("legacy_retrieval", step_duration)
+                
+                # Record error metrics
+                self.monitor.record_retrieval(
+                    strategy="unknown",
+                    duration_ms=step_duration,
+                    results_count=0,
+                    success=False
+                )
+                
+                logger.error(
+                    "Legacy data retrieval step failed",
+                    query_id=state.query_id,
+                    error=str(e),
+                    step_duration_ms=step_duration
+                )
+                raise
+    
+    async def _execute_legacy_retrieval(self, state: EHSWorkflowState) -> Dict[str, Any]:
+        """Execute the legacy retrieval strategy based on classification."""
+        if not state.classification:
+            raise ValueError("Query must be classified before retrieval")
+        
+        suggested_retriever = state.classification.suggested_retriever
+        query_to_use = state.classification.query_rewrite or state.original_query
+        
+        logger.debug(
+            "Executing legacy retrieval",
+            suggested_retriever=suggested_retriever.value,
+            query_length=len(query_to_use),
+            has_rewrite=bool(state.classification.query_rewrite)
+        )
+        
+        # Check if this is a risk assessment query and use RiskAssessmentRetriever
+        if (state.classification.intent_type == IntentType.RISK_ASSESSMENT or
+            self._is_risk_related_query(query_to_use)):
+            
+            if self.risk_assessment_retriever and self.risk_assessment_retriever._initialized:
+                logger.debug("Using Risk Assessment retriever for risk query")
+                
+                try:
+                    # Validate query compatibility
+                    is_valid = await self.risk_assessment_retriever.validate_query(query_to_use)
+                    
+                    if is_valid:
+                        # Extract additional parameters for risk analysis
+                        risk_params = self._extract_risk_parameters(state)
+                        
+                        retrieval_result = await self.risk_assessment_retriever.retrieve(
+                            query=query_to_use,
+                            query_type="risk",
+                            limit=20,
+                            **risk_params
+                        )
+                        
+                        if retrieval_result.success:
+                            # Store enhanced risk assessment data in state
+                            risk_data = retrieval_result.data[0] if retrieval_result.data else {}
+                            state.update_state(
+                                risk_assessment=risk_data,
+                                risk_factors=risk_data.get("factors", []),
+                                risk_recommendations=risk_data.get("recommendations", [])
+                            )
+                            
+                            return {
+                                "documents": retrieval_result.data,
+                                "total_count": len(retrieval_result.data),
+                                "retrieval_strategy": "risk_assessment",
+                                "confidence_score": retrieval_result.metadata.confidence_score if hasattr(retrieval_result.metadata, 'confidence_score') else 0.8,
+                                "execution_time_ms": retrieval_result.metadata.execution_time * 1000,
+                                "success": True,
+                                "message": "Risk assessment completed successfully",
+                                "risk_assessment": risk_data
+                            }
+                        else:
+                            logger.warning(
+                                "Risk Assessment retrieval failed, falling back to Text2Cypher",
+                                message=retrieval_result.metadata.error_message if hasattr(retrieval_result.metadata, 'error_message') else "Unknown error"
+                            )
+                    
+                except Exception as e:
+                    logger.error(
+                        "Risk Assessment retrieval error, falling back to Text2Cypher",
+                        error=str(e),
+                        error_type=type(e).__name__
+                    )
+        
+        # Convert IntentType to QueryType for retriever
+        intent_to_query_type_map = {
+            IntentType.CONSUMPTION_ANALYSIS: QueryType.CONSUMPTION,
+            IntentType.EQUIPMENT_EFFICIENCY: QueryType.EFFICIENCY,
+            IntentType.COMPLIANCE_CHECK: QueryType.COMPLIANCE,
+            IntentType.EMISSION_TRACKING: QueryType.EMISSIONS,
+            IntentType.RISK_ASSESSMENT: QueryType.RISK,
+            IntentType.PERMIT_STATUS: QueryType.COMPLIANCE,
+            IntentType.GENERAL_INQUIRY: QueryType.GENERAL
+        }
+        
+        query_type = intent_to_query_type_map.get(
+            state.classification.intent_type, 
+            QueryType.GENERAL
+        )
+        
+        # Try to use Text2Cypher retriever if available
+        if (self.text2cypher_retriever and 
+            self.text2cypher_retriever._initialized and
+            suggested_retriever in [RetrieverType.GENERAL_RETRIEVER, 
+                                   RetrieverType.CONSUMPTION_RETRIEVER,
+                                   RetrieverType.EQUIPMENT_RETRIEVER,
+                                   RetrieverType.COMPLIANCE_RETRIEVER,
+                                   RetrieverType.EMISSION_RETRIEVER,
+                                   RetrieverType.RISK_RETRIEVER]):
+            
+            logger.debug("Using Text2Cypher retriever")
+            
+            # Validate query compatibility
+            is_valid = await self.text2cypher_retriever.validate_query(query_to_use)
+            
+            if is_valid:
+                try:
+                    retrieval_result = await self.text2cypher_retriever.retrieve(
+                        query=query_to_use,
+                        query_type=query_type,
+                        limit=20  # Default limit
+                    )
+                    
+                    if retrieval_result.success:
+                        return {
+                            "documents": retrieval_result.data,
+                            "total_count": len(retrieval_result.data),
+                            "retrieval_strategy": retrieval_result.metadata.strategy.value,
+                            "confidence_score": retrieval_result.metadata.confidence_score,
+                            "execution_time_ms": retrieval_result.metadata.execution_time_ms,
+                            "cypher_query": getattr(retrieval_result.metadata, 'cypher_query', ''),
+                            "success": True,
+                            "message": retrieval_result.message
+                        }
+                    else:
+                        logger.warning(
+                            "Text2Cypher retrieval failed, falling back",
+                            message=retrieval_result.message
+                        )
+                        
+                except Exception as e:
+                    logger.error(
+                        "Text2Cypher retrieval error, falling back",
+                        error=str(e),
+                        error_type=type(e).__name__
+                    )
+        
+        # Fallback to mock retrieval
+        logger.debug("Using fallback mock retrieval")
+        await asyncio.sleep(0.1)  # Simulate processing time
+        
+        return {
+            "documents": [],
+            "total_count": 0,
+            "retrieval_strategy": suggested_retriever.value,
+            "execution_time_ms": 100,
+            "query_embedding": None,
+            "confidence_score": state.classification.confidence_score,
+            "success": True,
+            "message": "Mock retrieval completed (specialized retrievers not available)"
+        }
+
+    def _is_risk_related_query(self, query: str) -> bool:
+        """Check if query contains risk-related keywords."""
+        risk_keywords = [
+            'risk', 'assessment', 'analysis', 'compliance', 'threshold',
+            'anomaly', 'forecast', 'trend', 'safety', 'environmental',
+            'hazard', 'vulnerability', 'mitigation'
+        ]
+        
+        query_lower = query.lower()
+        return any(keyword in query_lower for keyword in risk_keywords)
+
+    def _extract_risk_parameters(self, state: EHSWorkflowState) -> Dict[str, Any]:
+        """Extract risk analysis parameters from state and classification."""
+        params = {}
+        
+        if state.classification:
+            # Extract facility information
+            if state.classification.entities_identified.facilities:
+                params["facility"] = state.classification.entities_identified.facilities[0]
+            
+            # Extract time range from entities
+            if state.classification.entities_identified.date_ranges:
+                # Try to infer days from date range (simplified)
+                date_range = state.classification.entities_identified.date_ranges[0].lower()
+                if "month" in date_range:
+                    params["days"] = 30
+                elif "quarter" in date_range:
+                    params["days"] = 90
+                elif "year" in date_range:
+                    params["days"] = 365
+                elif "week" in date_range:
+                    params["days"] = 7
+        
+        # Infer analysis options from query
+        query_lower = state.original_query.lower()
+        if any(word in query_lower for word in ["forecast", "predict", "future", "projection"]):
+            params["include_forecasting"] = True
+        
+        if any(word in query_lower for word in ["anomaly", "unusual", "outlier", "abnormal"]):
+            params["include_anomaly_detection"] = True
+        
+        # Infer risk domains
+        risk_domains = []
+        if any(word in query_lower for word in ["water", "hydro", "aqua"]):
+            risk_domains.append("water")
+        if any(word in query_lower for word in ["electricity", "electric", "power", "energy"]):
+            risk_domains.append("electricity")
+        if any(word in query_lower for word in ["waste", "disposal", "garbage", "trash"]):
+            risk_domains.append("waste")
+        
+        if risk_domains:
+            params["risk_domains"] = risk_domains
+        
+        return params
+    
+    @trace_function("step_analyze_data", SpanKind.INTERNAL, {"workflow_step": "analysis"})
+    async def _step_analyze_data(self, state: EHSWorkflowState):
+        """Data analysis step enhanced with RAG and Risk Assessment results."""
+        with log_context(workflow_step="analysis", query_id=state.query_id):
+            step_start = datetime.utcnow()
+            state.add_trace("Starting analysis", "ANALYZE")
+            
+            try:
+                logger.debug("Executing data analysis step")
+                
+                with self.profiler.profile_operation(
+                    "data_analysis",
+                    tags={
+                        "query_id": state.query_id, 
+                        "step": "analysis",
+                        "intent_type": state.classification.intent_type.value if state.classification else "unknown",
+                        "has_rag_result": state.rag_result is not None,
+                        "has_risk_assessment": state.risk_assessment is not None
+                    }
+                ):
+                    # Simulate async operation
+                    await asyncio.sleep(0.1)
+                    
+                    analysis_results = await self._perform_analysis(state)
+                
+                state.update_state(analysis_results=analysis_results)
+                
+                # Record step duration
+                step_duration = (datetime.utcnow() - step_start).total_seconds() * 1000
+                state.record_step_duration("analysis", step_duration)
+                
+                # Record analysis metrics
+                if analysis_results:
+                    for result in analysis_results:
+                        self.monitor.record_analysis(
+                            analysis_type=result.get("analysis_type", "unknown"),
+                            confidence=result.get("confidence", 0.0),
+                            success=True
+                        )
+                
+                state.add_trace("Analysis completed", "ANALYZE")
+                
+                logger.info(
+                    "Data analysis completed",
+                    query_id=state.query_id,
+                    analysis_count=len(analysis_results) if analysis_results else 0,
+                    step_duration_ms=step_duration
+                )
+                
+            except Exception as e:
+                step_duration = (datetime.utcnow() - step_start).total_seconds() * 1000
+                state.record_step_duration("analysis", step_duration)
+                
+                logger.error(
+                    "Data analysis step failed",
+                    query_id=state.query_id,
+                    error=str(e),
+                    step_duration_ms=step_duration
+                )
+                raise
+    
+    @trace_function("step_generate_recommendations", SpanKind.INTERNAL, {"workflow_step": "recommendations"})
+    async def _step_generate_recommendations(self, state: EHSWorkflowState):
+        """Recommendations generation step."""
+        with log_context(workflow_step="recommendations", query_id=state.query_id):
+            step_start = datetime.utcnow()
+            state.add_trace("Generating recommendations", "RECOMMEND")
+            
+            try:
+                logger.debug("Executing recommendations generation step")
+                
+                with self.profiler.profile_operation(
+                    "recommendation_generation",
+                    tags={"query_id": state.query_id, "step": "recommendations"}
+                ):
+                    # Simulate async operation
+                    await asyncio.sleep(0.1)
+                    
+                    recommendations = await self._generate_recommendations(state)
+                
+                state.update_state(recommendations=recommendations)
+                
+                # Record step duration
+                step_duration = (datetime.utcnow() - step_start).total_seconds() * 1000
+                state.record_step_duration("recommendations", step_duration)
+                
+                # Log recommendation metrics
+                if recommendations and "recommendations" in recommendations:
+                    logger.recommendation_generated(
+                        recommendation_count=len(recommendations["recommendations"]),
+                        total_savings=recommendations.get("total_estimated_savings", 0.0),
+                        query_id=state.query_id
+                    )
+                
+                state.add_trace("Recommendations generated", "RECOMMEND")
+                
+                logger.info(
+                    "Recommendations generation completed",
+                    query_id=state.query_id,
+                    recommendation_count=len(recommendations.get("recommendations", [])) if recommendations else 0,
+                    step_duration_ms=step_duration
+                )
+                
+            except Exception as e:
+                step_duration = (datetime.utcnow() - step_start).total_seconds() * 1000
+                state.record_step_duration("recommendations", step_duration)
+                
+                logger.error(
+                    "Recommendations generation step failed",
+                    query_id=state.query_id,
+                    error=str(e),
+                    step_duration_ms=step_duration
+                )
+                raise
+    
+    async def _perform_analysis(self, state: EHSWorkflowState) -> List[Dict[str, Any]]:
+        """
+        Perform analysis based on classification and results (RAG, Risk Assessment, or legacy).
+        
+        Enhanced analysis that considers RAG and Risk Assessment results when available.
+        """
+        if not state.classification:
+            return []
+        
+        intent = state.classification.intent_type
+        
+        # Priority 1: Use Risk Assessment results if available
+        if state.risk_assessment and state.classification.intent_type == IntentType.RISK_ASSESSMENT:
+            return await self._analyze_with_risk_assessment_results(state.risk_assessment, state.classification)
+        
+        # Priority 2: Use RAG result if available
+        elif state.rag_result and state.rag_result.success:
+            return await self._analyze_with_rag_results(state.rag_result, state.classification)
+        
+        # Priority 3: Legacy analysis
+        else:
+            retrieval_results = state.retrieval_results or {}
+            documents = retrieval_results.get("documents", [])
+            return await self._analyze_with_legacy_results(documents, state.classification)
+
+    async def _analyze_with_risk_assessment_results(self, risk_assessment: Dict[str, Any], classification: QueryClassification) -> List[Dict[str, Any]]:
+        """Perform analysis using Risk Assessment results."""
+        base_analysis = {
+            "analysis_type": "comprehensive_risk_assessment",
+            "overall_risk_score": risk_assessment.get("overall_score", 0.5),
+            "risk_severity": risk_assessment.get("severity", "medium"),
+            "risk_factors_count": len(risk_assessment.get("factors", [])),
+            "confidence_score": risk_assessment.get("confidence_score", 0.8),
+            "assessment_type": risk_assessment.get("assessment_type", "comprehensive"),
+            "critical_factors": len([f for f in risk_assessment.get("factors", []) if f.get("severity") == "critical"]),
+            "high_factors": len([f for f in risk_assessment.get("factors", []) if f.get("severity") == "high"]),
+            "recommendations_count": len(risk_assessment.get("recommendations", [])),
+            "confidence": risk_assessment.get("confidence_score", 0.8)
+        }
+        
+        # Add specific risk domain insights if available
+        metadata = risk_assessment.get("metadata", {})
+        if "data_points" in metadata:
+            base_analysis["data_coverage"] = metadata["data_points"]
+        
+        if "analysis_scope" in metadata:
+            scope = metadata["analysis_scope"]
+            base_analysis["analyzed_domains"] = scope.get("risk_domains", [])
+            base_analysis["time_range_days"] = scope.get("time_range_days", 30)
+            base_analysis["included_forecasting"] = scope.get("include_forecasting", False)
+            base_analysis["included_anomaly_detection"] = scope.get("include_anomaly_detection", False)
+        
+        return [base_analysis]
+    
+    async def _analyze_with_rag_results(self, rag_result: RAGResult, classification: QueryClassification) -> List[Dict[str, Any]]:
+        """Perform analysis using RAG results."""
+        intent = classification.intent_type
+        
+        # Base analysis from RAG response
+        base_analysis = {
+            "analysis_type": f"rag_{intent.value}",
+            "rag_confidence": rag_result.confidence_score,
+            "source_count": rag_result.source_count,
+            "retrievers_used": rag_result.retrievers_used,
+            "response_quality": len(rag_result.response.content) / 1000.0,  # Simple quality metric
+            "validation_passed": rag_result.response.validation_passed,
+            "confidence": rag_result.confidence_score
+        }
+        
+        # Intent-specific enhancements
+        if intent == IntentType.CONSUMPTION_ANALYSIS:
+            base_analysis.update({
+                "consumption_insights": "Available in RAG response",
+                "trend_analysis": "Processed through RAG pipeline",
+                "efficiency_metrics": "Extracted from multiple sources"
+            })
+        elif intent == IntentType.COMPLIANCE_CHECK:
+            base_analysis.update({
+                "compliance_status": "Analyzed through RAG",
+                "regulatory_coverage": len(rag_result.response.sources),
+                "violations_detected": "Checked against knowledge base"
+            })
+        elif intent == IntentType.RISK_ASSESSMENT:
+            base_analysis.update({
+                "risk_level": "Assessed through comprehensive analysis",
+                "risk_factors": "Identified from multiple data sources",
+                "mitigation_coverage": "Available in RAG response"
+            })
+        
+        return [base_analysis]
+    
+    async def _analyze_with_legacy_results(self, documents: List[Dict], classification: QueryClassification) -> List[Dict[str, Any]]:
+        """Perform analysis using legacy retrieval results."""
+        intent = classification.intent_type
+        
+        # Create intent-specific analysis
+        if intent == IntentType.CONSUMPTION_ANALYSIS:
+            return await self._analyze_consumption(documents, classification)
+        elif intent == IntentType.COMPLIANCE_CHECK:
+            return await self._analyze_compliance(documents, classification)
+        elif intent == IntentType.RISK_ASSESSMENT:
+            return await self._analyze_risk(documents, classification)
+        elif intent == IntentType.EMISSION_TRACKING:
+            return await self._analyze_emissions(documents, classification)
+        elif intent == IntentType.EQUIPMENT_EFFICIENCY:
+            return await self._analyze_equipment(documents, classification)
+        elif intent == IntentType.PERMIT_STATUS:
+            return await self._analyze_permits(documents, classification)
+        else:
+            return [{
+                "analysis_type": "general_analysis",
+                "summary": f"Analysis completed for {intent.value} inquiry",
+                "data_points": len(documents),
+                "confidence": 0.7,
+                "entities_found": len(classification.entities_identified.facilities) + 
+                               len(classification.entities_identified.equipment)
+            }]
+    
+    # Legacy analysis methods (unchanged from original implementation)
+    async def _analyze_consumption(self, documents: List[Dict], classification: QueryClassification) -> List[Dict[str, Any]]:
+        """Analyze consumption-related data."""
+        return [{
+            "analysis_type": "consumption_analysis",
+            "total_data_points": len(documents),
+            "facilities_mentioned": len(classification.entities_identified.facilities),
+            "time_periods": len(classification.entities_identified.date_ranges),
+            "consumption_trend": "stable",  # Would be calculated from actual data
+            "efficiency_score": 0.75,
+            "confidence": 0.8 if documents else 0.4
+        }]
+    
+    async def _analyze_compliance(self, documents: List[Dict], classification: QueryClassification) -> List[Dict[str, Any]]:
+        """Analyze compliance-related data."""
+        return [{
+            "analysis_type": "compliance_analysis",
+            "regulations_checked": len(classification.entities_identified.regulations),
+            "compliant": True,  # Would be determined from actual data
+            "compliance_score": 0.9,
+            "violations": [],
+            "requirements_met": ["Sample requirement"],
+            "confidence": 0.85 if documents else 0.5
+        }]
+    
+    async def _analyze_risk(self, documents: List[Dict], classification: QueryClassification) -> List[Dict[str, Any]]:
+        """Analyze risk-related data."""
+        return [{
+            "analysis_type": "risk_assessment",
+            "risk_level": "medium",
+            "risk_score": 0.6,
+            "risk_factors": ["equipment_age", "maintenance_schedule"],
+            "mitigation_suggestions": ["Increase maintenance frequency"],
+            "confidence": 0.7 if documents else 0.4
+        }]
+    
+    async def _analyze_emissions(self, documents: List[Dict], classification: QueryClassification) -> List[Dict[str, Any]]:
+        """Analyze emissions-related data."""
+        return [{
+            "analysis_type": "emission_analysis",
+            "pollutants_tracked": len(classification.entities_identified.pollutants),
+            "total_emissions": 1000.0,  # Would be calculated from actual data
+            "emission_trend": "decreasing",
+            "targets_met": True,
+            "confidence": 0.75 if documents else 0.4
+        }]
+    
+    async def _analyze_equipment(self, documents: List[Dict], classification: QueryClassification) -> List[Dict[str, Any]]:
+        """Analyze equipment efficiency data."""
+        return [{
+            "analysis_type": "equipment_efficiency",
+            "equipment_count": len(classification.entities_identified.equipment),
+            "average_efficiency": 0.82,
+            "maintenance_due": [],
+            "performance_trend": "improving",
+            "confidence": 0.8 if documents else 0.4
+        }]
+    
+    async def _analyze_permits(self, documents: List[Dict], classification: QueryClassification) -> List[Dict[str, Any]]:
+        """Analyze permit status data."""
+        return [{
+            "analysis_type": "permit_status",
+            "permits_checked": 5,  # Would be from actual data
+            "expiring_soon": [],
+            "renewal_required": [],
+            "compliance_status": "compliant",
+            "confidence": 0.9 if documents else 0.5
+        }]
+    
+    async def _generate_recommendations(self, state: EHSWorkflowState) -> Dict[str, Any]:
+        """
+        Generate recommendations based on analysis results.
+        
+        Enhanced recommendation generation that considers RAG and Risk Assessment results.
+        """
+        if not state.analysis_results:
+            return self._generate_default_recommendations()
+        
+        recommendations = []
+        total_cost = 0.0
+        total_savings = 0.0
+        
+        # Check if we have risk assessment analysis
+        has_risk_analysis = any(
+            analysis.get("analysis_type", "").startswith("comprehensive_risk") 
+            for analysis in state.analysis_results
+        )
+        
+        # Check if we have RAG-enhanced analysis
+        has_rag_analysis = any(
+            analysis.get("analysis_type", "").startswith("rag_") 
+            for analysis in state.analysis_results
+        )
+        
+        for analysis in state.analysis_results:
+            analysis_type = analysis.get("analysis_type", "general")
+            
+            if has_risk_analysis and analysis_type.startswith("comprehensive_risk"):
+                # Generate recommendations based on Risk Assessment analysis
+                rec = self._generate_risk_assessment_recommendations(analysis, state.risk_assessment)
+            elif has_rag_analysis and analysis_type.startswith("rag_"):
+                # Generate recommendations based on RAG analysis
+                rec = self._generate_rag_based_recommendations(analysis, state.rag_result)
+            else:
+                # Generate recommendations based on legacy analysis
+                if "consumption" in analysis_type:
+                    rec = self._generate_consumption_recommendations(analysis)
+                elif "compliance" in analysis_type:
+                    rec = self._generate_compliance_recommendations(analysis)
+                elif "risk" in analysis_type:
+                    rec = self._generate_risk_recommendations(analysis)
+                elif "emission" in analysis_type:
+                    rec = self._generate_emission_recommendations(analysis)
+                elif "equipment" in analysis_type:
+                    rec = self._generate_equipment_recommendations(analysis)
+                elif "permit" in analysis_type:
+                    rec = self._generate_permit_recommendations(analysis)
+                else:
+                    rec = self._generate_general_recommendations(analysis)
+            
+            if rec:
+                recommendations.append(rec)
+                total_cost += rec.get("estimated_cost", 0.0)
+                total_savings += rec.get("estimated_savings", 0.0)
+        
+        return {
+            "recommendations": recommendations,
+            "total_estimated_cost": total_cost,
+            "total_estimated_savings": total_savings,
+            "recommendations_count": len(recommendations),
+            "net_benefit": total_savings - total_cost,
+            "generated_at": datetime.utcnow(),
+            "analysis_method": "risk_assessment" if has_risk_analysis else ("rag_enhanced" if has_rag_analysis else "legacy")
+        }
+
+    def _generate_risk_assessment_recommendations(self, analysis: Dict[str, Any], risk_assessment: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate recommendations based on comprehensive Risk Assessment analysis."""
+        risk_score = analysis.get("overall_risk_score", 0.5)
+        severity = analysis.get("risk_severity", "medium")
+        
+        # Determine priority based on risk score and severity
+        if severity == "critical" or risk_score > 0.8:
+            priority = "critical"
+            cost_multiplier = 2.0
+        elif severity == "high" or risk_score > 0.6:
+            priority = "high" 
+            cost_multiplier = 1.5
+        else:
+            priority = "medium"
+            cost_multiplier = 1.0
+        
+        base_cost = 10000.0 * cost_multiplier
+        base_savings = base_cost * 2.5
+        
+        return {
+            "id": "rec_risk_assessment_001",
+            "title": f"Comprehensive Risk Mitigation Plan - {severity.title()} Risk",
+            "description": f"Implement risk mitigation measures based on comprehensive assessment (Risk Score: {risk_score:.2f})",
+            "priority": priority,
+            "category": "risk_management",
+            "estimated_cost": base_cost,
+            "estimated_savings": base_savings,
+            "payback_period_months": int(12 * (base_cost / base_savings)) if base_savings > 0 else 12,
+            "implementation_effort": "high" if priority == "critical" else "medium",
+            "confidence": analysis.get("confidence_score", 0.8),
+            "data_quality": "high" if analysis.get("risk_factors_count", 0) > 5 else "medium",
+            "tags": ["risk_assessment", "comprehensive", "ai_generated"],
+            "risk_factors_addressed": analysis.get("risk_factors_count", 0),
+            "critical_factors": analysis.get("critical_factors", 0),
+            "high_factors": analysis.get("high_factors", 0),
+            "domains_analyzed": analysis.get("analyzed_domains", []),
+            "risk_recommendations": risk_assessment.get("recommendations", [])[:3]  # Top 3 risk recommendations
+        }
+    
+    def _generate_rag_based_recommendations(self, analysis: Dict[str, Any], rag_result: RAGResult) -> Dict[str, Any]:
+        """Generate recommendations based on RAG analysis."""
+        return {
+            "id": "rec_rag_001",
+            "title": "RAG-Enhanced Recommendation",
+            "description": f"Recommendation based on comprehensive analysis using {len(rag_result.retrievers_used)} retrieval strategies",
+            "priority": "high" if rag_result.confidence_score > 0.8 else "medium",
+            "category": "rag_enhanced",
+            "estimated_cost": 8000.0,
+            "estimated_savings": 20000.0,
+            "payback_period_months": 5,
+            "implementation_effort": "medium",
+            "confidence": analysis.get("confidence", 0.8),
+            "data_quality": "high" if rag_result.source_count > 3 else "medium",
+            "tags": ["rag_enhanced", "multi_source", "ai_generated"],
+            "sources_used": rag_result.source_count,
+            "validation_passed": rag_result.response.validation_passed
+        }
+    
+    # Legacy recommendation methods (unchanged)
+    def _generate_consumption_recommendations(self, analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate consumption-specific recommendations."""
+        return {
+            "id": "rec_consumption_001",
+            "title": "Optimize Energy Consumption",
+            "description": "Implement energy efficiency measures based on consumption analysis",
+            "priority": "high",
+            "category": "efficiency",
+            "estimated_cost": 10000.0,
+            "estimated_savings": 25000.0,
+            "payback_period_months": 5,
+            "implementation_effort": "medium",
+            "confidence": analysis.get("confidence", 0.7),
+            "tags": ["energy", "cost_reduction", "consumption"]
+        }
+    
+    def _generate_compliance_recommendations(self, analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate compliance-specific recommendations."""
+        return {
+            "id": "rec_compliance_001",
+            "title": "Maintain Compliance Standards",
+            "description": "Continue current compliance practices and monitor for changes",
+            "priority": "medium",
+            "category": "compliance",
+            "estimated_cost": 2000.0,
+            "estimated_savings": 5000.0,
+            "payback_period_months": 5,
+            "implementation_effort": "low",
+            "confidence": analysis.get("confidence", 0.8),
+            "tags": ["compliance", "regulatory", "risk_mitigation"]
+        }
+    
+    def _generate_risk_recommendations(self, analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate risk-specific recommendations."""
+        return {
+            "id": "rec_risk_001",
+            "title": "Enhance Risk Mitigation",
+            "description": "Implement additional safety measures to reduce identified risks",
+            "priority": "high",
+            "category": "safety",
+            "estimated_cost": 15000.0,
+            "estimated_savings": 30000.0,
+            "payback_period_months": 6,
+            "implementation_effort": "high",
+            "confidence": analysis.get("confidence", 0.7),
+            "tags": ["safety", "risk_reduction", "mitigation"]
+        }
+    
+    def _generate_emission_recommendations(self, analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate emission-specific recommendations."""
+        return {
+            "id": "rec_emission_001",
+            "title": "Reduce Carbon Footprint",
+            "description": "Implement emission reduction strategies based on tracking data",
+            "priority": "medium",
+            "category": "environmental",
+            "estimated_cost": 8000.0,
+            "estimated_savings": 18000.0,
+            "payback_period_months": 5,
+            "implementation_effort": "medium",
+            "confidence": analysis.get("confidence", 0.75),
+            "tags": ["emissions", "carbon", "environmental"]
+        }
+    
+    def _generate_equipment_recommendations(self, analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate equipment-specific recommendations."""
+        return {
+            "id": "rec_equipment_001",
+            "title": "Optimize Equipment Performance",
+            "description": "Improve equipment efficiency and reduce maintenance costs",
+            "priority": "medium",
+            "category": "efficiency",
+            "estimated_cost": 12000.0,
+            "estimated_savings": 28000.0,
+            "payback_period_months": 5,
+            "implementation_effort": "medium",
+            "confidence": analysis.get("confidence", 0.8),
+            "tags": ["equipment", "maintenance", "efficiency"]
+        }
+    
+    def _generate_permit_recommendations(self, analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate permit-specific recommendations."""
+        return {
+            "id": "rec_permit_001",
+            "title": "Maintain Permit Compliance",
+            "description": "Ensure all permits remain current and compliant",
+            "priority": "high",
+            "category": "compliance",
+            "estimated_cost": 3000.0,
+            "estimated_savings": 8000.0,
+            "payback_period_months": 5,
+            "implementation_effort": "low",
+            "confidence": analysis.get("confidence", 0.9),
+            "tags": ["permits", "compliance", "regulatory"]
+        }
+    
+    def _generate_general_recommendations(self, analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate general recommendations."""
+        return {
+            "id": "rec_general_001",
+            "title": "General EHS Improvement",
+            "description": "Implement general EHS improvements based on analysis",
+            "priority": "medium",
+            "category": "general",
+            "estimated_cost": 5000.0,
+            "estimated_savings": 12000.0,
+            "payback_period_months": 5,
+            "implementation_effort": "medium",
+            "confidence": analysis.get("confidence", 0.7),
+            "tags": ["general", "improvement"]
+        }
+    
+    def _generate_default_recommendations(self) -> Dict[str, Any]:
+        """Generate default recommendations when no analysis is available."""
+        return {
+            "recommendations": [{
+                "id": "rec_default_001",
+                "title": "General EHS Assessment",
+                "description": "Consider a comprehensive EHS assessment to identify improvement opportunities",
+                "priority": "medium",
+                "category": "assessment",
+                "estimated_cost": 5000.0,
+                "estimated_savings": 15000.0,
+                "payback_period_months": 4,
+                "implementation_effort": "medium",
+                "confidence": 0.6,
+                "tags": ["assessment", "general"]
+            }],
+            "total_estimated_cost": 5000.0,
+            "total_estimated_savings": 15000.0,
+            "recommendations_count": 1,
+            "generated_at": datetime.utcnow(),
+            "analysis_method": "default"
+        }
+    
+    @trace_function("workflow_health_check", SpanKind.INTERNAL)
+    async def health_check(self) -> bool:
+        """Check if the workflow is healthy and operational."""
+        with log_context(component="ehs_workflow", operation="health_check"):
+            try:
+                logger.debug("Performing workflow health check")
+                
+                if not self.is_initialized:
+                    logger.warning("Workflow not initialized")
+                    return False
+                
+                # Test query router
+                test_result = self.query_router.classify_query("test health check query")
+                router_healthy = test_result is not None and test_result.confidence_score >= 0.0
+                
+                # Test RAG agent if available
+                rag_healthy = True
+                if self.rag_agent:
+                    try:
+                        rag_health = await self.rag_agent.health_check()
+                        rag_healthy = rag_health.get("status") == "healthy"
+                    except Exception as e:
+                        logger.warning("RAG agent health check failed", error=str(e))
+                        rag_healthy = False
+                
+                # Test retrievers if available
+                text2cypher_healthy = True
+                if self.text2cypher_retriever and self.text2cypher_retriever._initialized:
+                    try:
+                        retriever_valid = await self.text2cypher_retriever.validate_query("test query")
+                        text2cypher_healthy = retriever_valid is not None
+                    except Exception as e:
+                        logger.warning("Text2Cypher retriever health check failed", error=str(e))
+                        text2cypher_healthy = False
+
+                risk_retriever_healthy = True
+                if self.risk_assessment_retriever and self.risk_assessment_retriever._initialized:
+                    try:
+                        risk_valid = await self.risk_assessment_retriever.validate_query("test risk query")
+                        risk_retriever_healthy = risk_valid is not None
+                    except Exception as e:
+                        logger.warning("Risk Assessment retriever health check failed", error=str(e))
+                        risk_retriever_healthy = False
+                
+                # Overall health requires router and at least one working retriever
+                is_healthy = router_healthy and (rag_healthy or text2cypher_healthy or risk_retriever_healthy)
+                
+                if is_healthy:
+                    logger.debug("Workflow health check passed")
+                else:
+                    logger.warning(
+                        "Workflow health check failed",
+                        router_healthy=router_healthy,
+                        rag_healthy=rag_healthy,
+                        text2cypher_healthy=text2cypher_healthy,
+                        risk_retriever_healthy=risk_retriever_healthy
+                    )
+                
+                return is_healthy
+                
+            except Exception as e:
+                logger.error(
+                    "Workflow health check failed", 
+                    error=str(e),
+                    error_type=type(e).__name__
+                )
+                return False
+    
+    def get_workflow_stats(self) -> Dict[str, Any]:
+        """Get workflow performance statistics."""
+        # This would typically return real metrics from processed queries
+        return {
+            "total_queries_processed": 0,
+            "average_processing_time_ms": 0.0,
+            "success_rate": 0.0,
+            "step_performance": {
+                "classification": {"avg_ms": 0.0, "success_rate": 0.0},
+                "rag_processing": {"avg_ms": 0.0, "success_rate": 0.0},
+                "legacy_retrieval": {"avg_ms": 0.0, "success_rate": 0.0},
+                "analysis": {"avg_ms": 0.0, "success_rate": 0.0},
+                "recommendations": {"avg_ms": 0.0, "success_rate": 0.0}
+            },
+            "intent_distribution": {},
+            "rag_usage": {
+                "rag_agent_available": self.rag_agent is not None,
+                "rag_success_rate": 0.0,
+                "average_confidence": 0.0
+            },
+            "retriever_usage": {
+                "text2cypher_available": bool(self.text2cypher_retriever and self.text2cypher_retriever._initialized),
+                "risk_assessment_available": bool(self.risk_assessment_retriever and self.risk_assessment_retriever._initialized),
+                "fallback_usage_count": 0
+            }
+        }
+
+
+async def create_ehs_workflow(
+    db_manager: DatabaseManager, 
+    query_router: QueryRouterAgent,
+    rag_agent: Optional[RAGAgent] = None
+) -> EHSWorkflow:
+    """
+    Factory function to create and initialize the EHS workflow.
+    
+    Args:
+        db_manager: Database manager instance
+        query_router: Query router agent instance
+        rag_agent: Optional RAG agent instance
+    
+    Returns:
+        Initialized EHSWorkflow instance
+    """
+    with log_context(component="workflow_factory", operation="create_workflow"):
+        try:
+            logger.info(
+                "Creating EHS workflow instance",
+                has_rag_agent=rag_agent is not None
+            )
+            
+            workflow = EHSWorkflow(db_manager, query_router, rag_agent)
+            await workflow.initialize()
+            
+            logger.info("EHS workflow created and initialized successfully")
+            return workflow
+            
+        except Exception as e:
+            logger.error(
+                "Failed to create EHS workflow", 
+                error=str(e),
+                error_type=type(e).__name__,
+                exc_info=True
+            )
+            raise
+
+
+# Placeholder for actual LangGraph implementation
+"""
+Future LangGraph Implementation Structure:
+
+from langgraph import StateGraph, END
+from typing import TypedDict
+
+class WorkflowState(TypedDict):
+    query_id: str
+    original_query: str
+    user_id: Optional[str]
+    classification: Optional[QueryClassification]
+    rag_result: Optional[RAGResult]
+    retrieval_results: Optional[Dict[str, Any]]
+    analysis_results: Optional[List[Dict[str, Any]]]
+    recommendations: Optional[Dict[str, Any]]
+    error: Optional[str]
+    metadata: Dict[str, Any]
+    workflow_trace: List[str]
+    step_durations: Dict[str, float]
+
+def create_langgraph_workflow():
+    workflow = StateGraph(WorkflowState)
+    
+    # Add nodes
+    workflow.add_node("classify_query", classify_query_node)
+    workflow.add_node("rag_processing", rag_processing_node)
+    workflow.add_node("legacy_retrieval", legacy_retrieval_node) 
+    workflow.add_node("analyze_data", analyze_data_node)
+    workflow.add_node("generate_recommendations", generate_recommendations_node)
+    
+    # Add conditional edges for RAG vs legacy
+    workflow.add_conditional_edges(
+        "classify_query",
+        route_retrieval,
+        {
+            "rag": "rag_processing",
+            "legacy": "legacy_retrieval"
+        }
+    )
+    
+    workflow.add_edge("rag_processing", "analyze_data")
+    workflow.add_edge("legacy_retrieval", "analyze_data")
+    workflow.add_edge("analyze_data", "generate_recommendations")
+    workflow.add_edge("generate_recommendations", END)
+    
+    # Set entry point
+    workflow.set_entry_point("classify_query")
+    
+    return workflow.compile()
+
+def route_retrieval(state: WorkflowState) -> str:
+    # Logic to decide between RAG and legacy retrieval
+    if has_rag_agent and should_use_rag(state):
+        return "rag"
+    else:
+        return "legacy"
+
+async def classify_query_node(state: WorkflowState) -> WorkflowState:
+    # Implementation for query classification
+    pass
+
+async def rag_processing_node(state: WorkflowState) -> WorkflowState:
+    # Implementation for RAG processing
+    pass
+
+async def legacy_retrieval_node(state: WorkflowState) -> WorkflowState:
+    # Implementation for legacy retrieval
+    pass
+
+async def analyze_data_node(state: WorkflowState) -> WorkflowState:
+    # Implementation for data analysis
+    pass
+
+async def generate_recommendations_node(state: WorkflowState) -> WorkflowState:
+    # Implementation for recommendation generation
+    pass
+"""

@@ -1,0 +1,164 @@
+================================================================================
+EHS Data Extraction Report - QueryType.FACILITY_EMISSIONS
+================================================================================
+
+Generated: 2025-08-17T23:24:20.296373
+Query Type: QueryType.FACILITY_EMISSIONS
+
+SUMMARY
+----------------------------------------
+Total Queries: 2
+Successful: 2
+Failed: 0
+Total Records: 0
+
+GRAPH OBJECTS
+----------------------------------------
+[
+  {
+    "nodes": [
+      {
+        "labels": [
+          "__Node__",
+          "__Entity__",
+          "entity"
+        ],
+        "count": 22
+      },
+      {
+        "labels": [
+          "DocumentChunk"
+        ],
+        "count": 4
+      },
+      {
+        "labels": [
+          "__Node__",
+          "Chunk"
+        ],
+        "count": 8
+      },
+      {
+        "labels": [
+          "Document",
+          "Utilitybill"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "UtilityBill"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Emission"
+        ],
+        "count": 1
+      }
+    ],
+    "relationships": [
+      {
+        "type": "MENTIONS",
+        "count": 22
+      },
+      {
+        "type": "Is",
+        "count": 8
+      },
+      {
+        "type": "Include",
+        "count": 1
+      },
+      {
+        "type": "SOURCE",
+        "count": 4
+      },
+      {
+        "type": "Has previous reading of",
+        "count": 2
+      },
+      {
+        "type": "Has current reading of",
+        "count": 1
+      },
+      {
+        "type": "Parsed by",
+        "count": 1
+      },
+      {
+        "type": "Has document_id",
+        "count": 1
+      },
+      {
+        "type": "Has current reading",
+        "count": 1
+      },
+      {
+        "type": "EXTRACTED_TO",
+        "count": 1
+      },
+      {
+        "type": "RESULTED_IN",
+        "count": 1
+      },
+      {
+        "type": "For",
+        "count": 1
+      }
+    ],
+    "total_nodes": 37,
+    "total_relationships": 44
+  }
+]
+
+QUERY RESULTS
+================================================================================
+
+Query 1
+----------------------------------------
+Query: 
+                MATCH (f:Facility)
+                OPTIONAL MATCH (f)<-[:BILLED_TO]-(b:UtilityBill)
+                OPTIONAL MATCH (b)-[:RESULTED_IN]->(e:Emission)
+                RETURN f, b, e
+                ORDER BY b.billing_period_end DESC
+                
+Status: success
+Records: 0
+
+Query 2
+----------------------------------------
+Query: 
+                MATCH (f:Facility)
+                MATCH (f)<-[:BILLED_TO]-(b:UtilityBill)-[:RESULTED_IN]->(e:Emission)
+                RETURN f.name as facility, 
+                       SUM(e.amount) as total_emissions,
+                       e.unit as unit,
+                       COUNT(b) as bill_count
+                
+Status: success
+Records: 0
+
+ANALYSIS
+================================================================================
+{
+  "Key Findings": {
+    "1": "Both queries executed successfully, indicating that the database and query syntax are functioning correctly.",
+    "2": "No records were retrieved from either query, suggesting that there may be no data related to facility emissions in the database."
+  },
+  "Patterns or Trends": {
+    "1": "There is a consistent lack of data across both queries, indicating a potential issue with the data source or the specific parameters of the queries."
+  },
+  "Potential Data Quality Issues": {
+    "1": "The database may not contain any data related to facility emissions, utility bills, or the relationship between them.",
+    "2": "The queries may be too specific or incorrectly structured, resulting in no matches found in the database.",
+    "3": "There may be an issue with the data entry or data import process, resulting in missing or incorrectly formatted data."
+  },
+  "Recommendations": {
+    "1": "Check the database to ensure that it contains data related to facility emissions and utility bills.",
+    "2": "Review the queries to ensure that they are correctly structured and that the parameters are appropriate for the data.",
+    "3": "Investigate the data entry or data import process to identify any issues that may be causing missing or incorrectly formatted data."
+  }
+}

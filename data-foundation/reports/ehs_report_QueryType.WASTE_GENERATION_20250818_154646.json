@@ -1,0 +1,310 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.WASTE_GENERATION",
+    "generated_at": "2025-08-18T15:46:46.161927",
+    "query_type": "waste_generation",
+    "parameters": {
+      "start_date": "2025-06-01",
+      "end_date": "2025-06-30"
+    },
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 8,
+    "successful_queries": 8,
+    "failed_queries": 0,
+    "total_records": 1,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 18
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 2
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 18
+          },
+          {
+            "type": "Is",
+            "count": 9
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          }
+        ],
+        "total_nodes": 30,
+        "total_relationships": 35
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "\n                MATCH (d:Document:WasteManifest)-[:EXTRACTED_TO]->(wm:WasteManifest)\n                MATCH (wm)-[:GENERATED_BY]->(g:Generator)\n                MATCH (wm)-[:TRANSPORTED_BY]->(t:Transporter)  \n                MATCH (wm)-[:DISPOSED_AT]->(df:DisposalFacility)\n                OPTIONAL MATCH (wm)-[:CONTAINS]->(wi:WasteItem)\n                OPTIONAL MATCH (wm)-[:RESULTED_IN]->(e:Emission)\n                RETURN d, wm, g, t, df, collect(wi) as waste_items, collect(e) as emissions\n                ORDER BY wm.manifest_date DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      }
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:GENERATED_BY]->(g:Generator)\n                MATCH (wm)-[:CONTAINS]->(wi:WasteItem)\n                OPTIONAL MATCH (wm)-[:RESULTED_IN]->(e:Emission)\n                WHERE wm.manifest_date >= $start_date \n                  AND wm.manifest_date <= $end_date\n                RETURN g.name as generator,\n                       g.epa_id as generator_epa_id,\n                       SUM(wi.quantity) as total_waste_quantity,\n                       wi.unit as quantity_unit,\n                       COUNT(DISTINCT wm) as manifest_count,\n                       COUNT(wi) as waste_item_count,\n                       SUM(CASE WHEN wi.hazardous = true THEN wi.quantity ELSE 0 END) as hazardous_waste,\n                       SUM(CASE WHEN wi.hazardous = false THEN wi.quantity ELSE 0 END) as non_hazardous_waste,\n                       SUM(e.amount) as total_emissions\n                ORDER BY total_waste_quantity DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      }
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:DISPOSED_AT]->(df:DisposalFacility)\n                MATCH (wm)-[:CONTAINS]->(wi:WasteItem)\n                OPTIONAL MATCH (wm)-[:RESULTED_IN]->(e:Emission)\n                WHERE wm.manifest_date >= $start_date \n                  AND wm.manifest_date <= $end_date\n                RETURN df.name as disposal_facility,\n                       df.epa_id as facility_epa_id,\n                       df.state as facility_state,\n                       COUNT(DISTINCT wm) as manifests_received,\n                       SUM(wi.quantity) as total_waste_received,\n                       wi.unit as quantity_unit,\n                       collect(DISTINCT wi.disposal_method) as disposal_methods,\n                       SUM(e.amount) as total_emissions_from_disposal\n                ORDER BY total_waste_received DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      }
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:TRANSPORTED_BY]->(t:Transporter)\n                MATCH (wm)-[:CONTAINS]->(wi:WasteItem)\n                WHERE wm.manifest_date >= $start_date \n                  AND wm.manifest_date <= $end_date\n                RETURN t.name as transporter,\n                       t.epa_id as transporter_epa_id,\n                       COUNT(DISTINCT wm) as manifests_transported,\n                       SUM(wi.quantity) as total_waste_transported,\n                       wi.unit as quantity_unit,\n                       COUNT(DISTINCT wm.generator_id) as unique_generators_served,\n                       COUNT(DISTINCT wm.disposal_facility_id) as unique_facilities_served\n                ORDER BY total_waste_transported DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      }
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:CONTAINS]->(wi:WasteItem)\n                WHERE wm.manifest_date >= $start_date \n                  AND wm.manifest_date <= $end_date\n                RETURN wi.waste_code as waste_code,\n                       wi.description as waste_description,\n                       wi.hazardous as is_hazardous,\n                       COUNT(wi) as item_count,\n                       SUM(wi.quantity) as total_quantity,\n                       wi.unit as quantity_unit,\n                       collect(DISTINCT wi.disposal_method) as disposal_methods\n                ORDER BY total_quantity DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      }
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)\n                WHERE wm.manifest_date >= $start_date \n                  AND wm.manifest_date <= $end_date\n                WITH date(wm.manifest_date) as manifest_date, \n                     wm, \n                     [(wm)-[:CONTAINS]->(wi:WasteItem) | wi] as waste_items\n                RETURN manifest_date,\n                       COUNT(wm) as manifests_generated,\n                       SUM(reduce(total = 0, wi in waste_items | total + wi.quantity)) as daily_waste_total,\n                       SUM(reduce(hazardous = 0, wi in waste_items | \n                           CASE WHEN wi.hazardous = true THEN hazardous + wi.quantity ELSE hazardous END)) as daily_hazardous_waste,\n                       SUM(reduce(non_hazardous = 0, wi in waste_items | \n                           CASE WHEN wi.hazardous = false THEN non_hazardous + wi.quantity ELSE non_hazardous END)) as daily_non_hazardous_waste\n                ORDER BY manifest_date DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      }
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:RESULTED_IN]->(e:Emission)\n                MATCH (wm)-[:CONTAINS]->(wi:WasteItem)\n                WHERE wm.manifest_date >= $start_date \n                  AND wm.manifest_date <= $end_date\n                RETURN e.emission_type as emission_type,\n                       e.unit as emission_unit,\n                       COUNT(e) as emission_records,\n                       SUM(e.amount) as total_emissions,\n                       AVG(e.amount) as avg_emissions_per_record,\n                       SUM(wi.quantity) as associated_waste_quantity,\n                       AVG(e.amount / wi.quantity) as avg_emission_factor\n                ORDER BY total_emissions DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      }
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)\n                WHERE wm.status IS NOT NULL\n                OPTIONAL MATCH (wm)-[:CONTAINS]->(wi:WasteItem)\n                RETURN wm.status as manifest_status,\n                       COUNT(wm) as manifest_count,\n                       SUM(wi.quantity) as total_waste_quantity,\n                       MIN(wm.manifest_date) as earliest_date,\n                       MAX(wm.manifest_date) as latest_date,\n                       COUNT(DISTINCT wm.generator_id) as unique_generators,\n                       COUNT(DISTINCT wm.transporter_id) as unique_transporters,\n                       COUNT(DISTINCT wm.disposal_facility_id) as unique_disposal_facilities\n                ORDER BY manifest_count DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      }
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (d:Document:WasteManifest)-[:EXTRACTED_TO]->(wm:WasteManifest)\n                MATCH (wm)-[:GENERATED_BY]->(g:Generator)\n                MATCH (wm)-[:TRANSPORTED_BY]->(t:Transporter)  \n                MATCH (wm)-[:DISPOSED_AT]->(df:DisposalFacility)\n                OPTIONAL MATCH (wm)-[:CONTAINS]->(wi:WasteItem)\n                OPTIONAL MATCH (wm)-[:RESULTED_IN]->(e:Emission)\n                RETURN d, wm, g, t, df, collect(wi) as waste_items, collect(e) as emissions\n                ORDER BY wm.manifest_date DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      },
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:GENERATED_BY]->(g:Generator)\n                MATCH (wm)-[:CONTAINS]->(wi:WasteItem)\n                OPTIONAL MATCH (wm)-[:RESULTED_IN]->(e:Emission)\n                WHERE wm.manifest_date >= $start_date \n                  AND wm.manifest_date <= $end_date\n                RETURN g.name as generator,\n                       g.epa_id as generator_epa_id,\n                       SUM(wi.quantity) as total_waste_quantity,\n                       wi.unit as quantity_unit,\n                       COUNT(DISTINCT wm) as manifest_count,\n                       COUNT(wi) as waste_item_count,\n                       SUM(CASE WHEN wi.hazardous = true THEN wi.quantity ELSE 0 END) as hazardous_waste,\n                       SUM(CASE WHEN wi.hazardous = false THEN wi.quantity ELSE 0 END) as non_hazardous_waste,\n                       SUM(e.amount) as total_emissions\n                ORDER BY total_waste_quantity DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      },
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:DISPOSED_AT]->(df:DisposalFacility)\n                MATCH (wm)-[:CONTAINS]->(wi:WasteItem)\n                OPTIONAL MATCH (wm)-[:RESULTED_IN]->(e:Emission)\n                WHERE wm.manifest_date >= $start_date \n                  AND wm.manifest_date <= $end_date\n                RETURN df.name as disposal_facility,\n                       df.epa_id as facility_epa_id,\n                       df.state as facility_state,\n                       COUNT(DISTINCT wm) as manifests_received,\n                       SUM(wi.quantity) as total_waste_received,\n                       wi.unit as quantity_unit,\n                       collect(DISTINCT wi.disposal_method) as disposal_methods,\n                       SUM(e.amount) as total_emissions_from_disposal\n                ORDER BY total_waste_received DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      },
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:TRANSPORTED_BY]->(t:Transporter)\n                MATCH (wm)-[:CONTAINS]->(wi:WasteItem)\n                WHERE wm.manifest_date >= $start_date \n                  AND wm.manifest_date <= $end_date\n                RETURN t.name as transporter,\n                       t.epa_id as transporter_epa_id,\n                       COUNT(DISTINCT wm) as manifests_transported,\n                       SUM(wi.quantity) as total_waste_transported,\n                       wi.unit as quantity_unit,\n                       COUNT(DISTINCT wm.generator_id) as unique_generators_served,\n                       COUNT(DISTINCT wm.disposal_facility_id) as unique_facilities_served\n                ORDER BY total_waste_transported DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      },
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:CONTAINS]->(wi:WasteItem)\n                WHERE wm.manifest_date >= $start_date \n                  AND wm.manifest_date <= $end_date\n                RETURN wi.waste_code as waste_code,\n                       wi.description as waste_description,\n                       wi.hazardous as is_hazardous,\n                       COUNT(wi) as item_count,\n                       SUM(wi.quantity) as total_quantity,\n                       wi.unit as quantity_unit,\n                       collect(DISTINCT wi.disposal_method) as disposal_methods\n                ORDER BY total_quantity DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      },
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)\n                WHERE wm.manifest_date >= $start_date \n                  AND wm.manifest_date <= $end_date\n                WITH date(wm.manifest_date) as manifest_date, \n                     wm, \n                     [(wm)-[:CONTAINS]->(wi:WasteItem) | wi] as waste_items\n                RETURN manifest_date,\n                       COUNT(wm) as manifests_generated,\n                       SUM(reduce(total = 0, wi in waste_items | total + wi.quantity)) as daily_waste_total,\n                       SUM(reduce(hazardous = 0, wi in waste_items | \n                           CASE WHEN wi.hazardous = true THEN hazardous + wi.quantity ELSE hazardous END)) as daily_hazardous_waste,\n                       SUM(reduce(non_hazardous = 0, wi in waste_items | \n                           CASE WHEN wi.hazardous = false THEN non_hazardous + wi.quantity ELSE non_hazardous END)) as daily_non_hazardous_waste\n                ORDER BY manifest_date DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      },
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:RESULTED_IN]->(e:Emission)\n                MATCH (wm)-[:CONTAINS]->(wi:WasteItem)\n                WHERE wm.manifest_date >= $start_date \n                  AND wm.manifest_date <= $end_date\n                RETURN e.emission_type as emission_type,\n                       e.unit as emission_unit,\n                       COUNT(e) as emission_records,\n                       SUM(e.amount) as total_emissions,\n                       AVG(e.amount) as avg_emissions_per_record,\n                       SUM(wi.quantity) as associated_waste_quantity,\n                       AVG(e.amount / wi.quantity) as avg_emission_factor\n                ORDER BY total_emissions DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      },
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)\n                WHERE wm.status IS NOT NULL\n                OPTIONAL MATCH (wm)-[:CONTAINS]->(wi:WasteItem)\n                RETURN wm.status as manifest_status,\n                       COUNT(wm) as manifest_count,\n                       SUM(wi.quantity) as total_waste_quantity,\n                       MIN(wm.manifest_date) as earliest_date,\n                       MAX(wm.manifest_date) as latest_date,\n                       COUNT(DISTINCT wm.generator_id) as unique_generators,\n                       COUNT(DISTINCT wm.transporter_id) as unique_transporters,\n                       COUNT(DISTINCT wm.disposal_facility_id) as unique_disposal_facilities\n                ORDER BY manifest_count DESC\n                ",
+      "parameters": {
+        "start_date": "2025-06-01",
+        "end_date": "2025-06-30"
+      },
+      "results": [
+        {
+          "manifest_status": "Not specified",
+          "manifest_count": 1,
+          "total_waste_quantity": 0,
+          "earliest_date": null,
+          "latest_date": null,
+          "unique_generators": 0,
+          "unique_transporters": 0,
+          "unique_disposal_facilities": 0
+        }
+      ],
+      "record_count": 1,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "All the queries executed successfully.",
+      "2": "No data was retrieved from any of the queries.",
+      "3": "The queries were designed to extract data related to waste generation, transportation, and disposal, as well as emissions resulting from these processes."
+    },
+    "Patterns or Trends": {
+      "1": "No patterns or trends can be identified as no data was retrieved from the queries."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The lack of data retrieved from the queries could indicate a data quality issue. This could be due to missing or incomplete data in the database.",
+      "2": "The parameters used in the queries may not match the data available in the database. For example, the date range specified may not correspond to any records in the database.",
+      "3": "There could be an issue with the query design. If the queries are not correctly structured, they may not return the expected results."
+    },
+    "Recommendations": {
+      "1": "Check the database to ensure that it contains the necessary data for the queries.",
+      "2": "Review the parameters used in the queries to ensure they match the available data.",
+      "3": "Review the structure of the queries to ensure they are correctly designed to retrieve the desired data."
+    }
+  },
+  "errors": []
+}

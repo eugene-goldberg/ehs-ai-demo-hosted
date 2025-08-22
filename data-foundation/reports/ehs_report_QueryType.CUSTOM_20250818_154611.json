@@ -1,0 +1,171 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:46:11.904462",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 18
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 2
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 18
+          },
+          {
+            "type": "Is",
+            "count": 9
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          }
+        ],
+        "total_nodes": 30,
+        "total_relationships": 35
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "Manifest_DisposalFacility_Relationships",
+      "query": "\n                MATCH (m:WasteManifest)-[:DISPOSED_AT]->(df:DisposalFacility)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    m.date_shipped as date_shipped,\n                    m.quantity as quantity,\n                    m.unit as unit,\n                    df.name as disposal_facility_name,\n                    df.epa_id as disposal_facility_epa_id,\n                    df.disposal_method as disposal_method\n                ORDER BY m.date_shipped DESC\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (m:WasteManifest)-[:DISPOSED_AT]->(df:DisposalFacility)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    m.date_shipped as date_shipped,\n                    m.quantity as quantity,\n                    m.unit as unit,\n                    df.name as disposal_facility_name,\n                    df.epa_id as disposal_facility_epa_id,\n                    df.disposal_method as disposal_method\n                ORDER BY m.date_shipped DESC\n            ",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query executed successfully without any errors.",
+      "2": "The query was designed to retrieve data related to waste manifests and their disposal at various facilities.",
+      "3": "Despite the successful execution, the query did not return any records."
+    },
+    "Patterns or Trends": {
+      "1": "No patterns or trends can be identified from the data as no records were retrieved from the query."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The lack of returned records could indicate a data quality issue. It's possible that the database does not contain any matching records for the query.",
+      "2": "Alternatively, the query may be incorrectly structured or the parameters may not be correctly set, resulting in no matching records."
+    },
+    "Recommendations": {
+      "1": "Check the database to ensure that it contains data that matches the query parameters.",
+      "2": "Review the query structure and parameters to ensure they are correctly set.",
+      "3": "If the database and query are both correct, consider the possibility that the lack of returned records is accurate and reflects the current state of the data."
+    }
+  },
+  "errors": []
+}

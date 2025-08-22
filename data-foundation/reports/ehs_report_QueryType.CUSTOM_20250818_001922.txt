@@ -1,0 +1,203 @@
+================================================================================
+EHS Data Extraction Report - QueryType.CUSTOM
+================================================================================
+
+Generated: 2025-08-18T00:19:22.790978
+Query Type: QueryType.CUSTOM
+
+SUMMARY
+----------------------------------------
+Total Queries: 2
+Successful: 2
+Failed: 0
+Total Records: 1
+
+GRAPH OBJECTS
+----------------------------------------
+[
+  {
+    "nodes": [
+      {
+        "labels": [
+          "__Node__",
+          "__Entity__",
+          "entity"
+        ],
+        "count": 12
+      },
+      {
+        "labels": [
+          "__Node__",
+          "Chunk"
+        ],
+        "count": 2
+      },
+      {
+        "labels": [
+          "Document",
+          "Utilitybill"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "UtilityBill"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Facility"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Customer"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "UtilityProvider"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Meter"
+        ],
+        "count": 2
+      },
+      {
+        "labels": [
+          "Emission"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "DocumentChunk"
+        ],
+        "count": 1
+      }
+    ],
+    "relationships": [
+      {
+        "type": "MENTIONS",
+        "count": 12
+      },
+      {
+        "type": "Is",
+        "count": 6
+      },
+      {
+        "type": "SOURCE",
+        "count": 1
+      },
+      {
+        "type": "EXTRACTED_TO",
+        "count": 1
+      },
+      {
+        "type": "BILLED_TO",
+        "count": 1
+      },
+      {
+        "type": "BILLED_FOR",
+        "count": 1
+      },
+      {
+        "type": "PROVIDED_BY",
+        "count": 1
+      },
+      {
+        "type": "MONITORS",
+        "count": 2
+      },
+      {
+        "type": "RECORDED_IN",
+        "count": 2
+      },
+      {
+        "type": "RESULTED_IN",
+        "count": 1
+      }
+    ],
+    "total_nodes": 23,
+    "total_relationships": 28
+  }
+]
+
+QUERY RESULTS
+================================================================================
+
+Query 1
+----------------------------------------
+Query: 
+                MATCH (d:Document:UtilityBill)-[:EXTRACTED_TO]->(b:UtilityBill)-[:BILLED_TO]->(f:Facility)
+                OPTIONAL MATCH (b)-[:RESULTED_IN]->(e:Emission)
+                OPTIONAL MATCH (m:Meter)-[:MONITORS]->(f)
+                RETURN d, b, f, e, m
+                
+Status: success
+Records: 0
+
+Query 2
+----------------------------------------
+Query: 
+                MATCH (b:UtilityBill)
+                RETURN b.billing_period_end as period,
+                       b.total_kwh as consumption,
+                       b.total_cost as cost
+                ORDER BY b.billing_period_end DESC
+                LIMIT 10
+                
+Status: success
+Records: 1
+Results (first 5):
+  1: {
+  "period": "2025-06-30",
+  "consumption": 130000,
+  "cost": 15432.89
+}
+
+ANALYSIS
+================================================================================
+{
+  "Key Findings": [
+    {
+      "Finding 1": "Two queries were executed successfully, but only one query returned a record."
+    },
+    {
+      "Finding 2": "The first query, which was designed to retrieve documents related to utility bills, emissions, and meter monitoring at a facility, returned no records."
+    },
+    {
+      "Finding 3": "The second query, which was designed to retrieve the most recent 10 utility bills, returned only one record. This record shows a utility bill with a billing period end date of 2025-06-30, a total consumption of 130,000 kWh, and a total cost of $15,432.89."
+    }
+  ],
+  "Patterns or Trends": [
+    {
+      "Trend 1": "There is insufficient data to identify any significant patterns or trends."
+    }
+  ],
+  "Potential Data Quality Issues": [
+    {
+      "Issue 1": "The first query returned no records, which could indicate a lack of data or a problem with the query itself."
+    },
+    {
+      "Issue 2": "The second query was designed to return 10 records, but only returned one. This could indicate a lack of data or a problem with the query."
+    }
+  ],
+  "Recommendations": [
+    {
+      "Recommendation 1": "Review the first query to ensure it is correctly structured and that the data it is designed to retrieve exists in the database."
+    },
+    {
+      "Recommendation 2": "Investigate why the second query returned only one record. If the query is correct, consider whether there is a lack of data and if so, take steps to acquire more data."
+    },
+    {
+      "Recommendation 3": "Consider implementing data quality checks to ensure the completeness and accuracy of the data in the database."
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:23:10.009739",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [],
+        "relationships": [],
+        "total_nodes": 0,
+        "total_relationships": 0
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "Manifest_DisposalFacility_Relationships",
+      "query": "\n                MATCH (m:WasteManifest)-[:DISPOSED_AT]->(df:DisposalFacility)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    m.date_shipped as date_shipped,\n                    m.quantity as quantity,\n                    m.unit as unit,\n                    df.name as disposal_facility_name,\n                    df.epa_id as disposal_facility_epa_id,\n                    df.disposal_method as disposal_method\n                ORDER BY m.date_shipped DESC\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (m:WasteManifest)-[:DISPOSED_AT]->(df:DisposalFacility)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    m.date_shipped as date_shipped,\n                    m.quantity as quantity,\n                    m.unit as unit,\n                    df.name as disposal_facility_name,\n                    df.epa_id as disposal_facility_epa_id,\n                    df.disposal_method as disposal_method\n                ORDER BY m.date_shipped DESC\n            ",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query was executed successfully without any errors.",
+      "2": "The query was designed to extract data related to waste manifests and their disposal at various facilities.",
+      "3": "Despite the successful execution, the query did not return any records."
+    },
+    "Patterns or Trends": {
+      "1": "No patterns or trends can be identified as the query did not return any records."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The lack of returned records could indicate a data quality issue. It's possible that the database does not contain any matching records for the query.",
+      "2": "Alternatively, the query parameters might be too specific or incorrectly defined, resulting in no matches."
+    },
+    "Recommendations": {
+      "1": "Review the query parameters to ensure they are correctly defined and relevant to the existing data.",
+      "2": "Check the database for data integrity and completeness. If the database is supposed to have relevant records but doesn't, this could indicate a data entry or collection issue.",
+      "3": "If the query is correct and the database is complete, the lack of results could indicate a gap in the data. This might warrant further investigation into why there are no matching records."
+    }
+  },
+  "errors": []
+}

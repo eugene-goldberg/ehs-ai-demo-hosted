@@ -1,0 +1,187 @@
+================================================================================
+EHS Data Extraction Report - QueryType.CUSTOM
+================================================================================
+
+Generated: 2025-08-18T15:47:41.843979
+Query Type: QueryType.CUSTOM
+
+SUMMARY
+----------------------------------------
+Total Queries: 1
+Successful: 1
+Failed: 0
+Total Records: 0
+
+GRAPH OBJECTS
+----------------------------------------
+[
+  {
+    "nodes": [
+      {
+        "labels": [
+          "__Node__",
+          "__Entity__",
+          "entity"
+        ],
+        "count": 18
+      },
+      {
+        "labels": [
+          "Document",
+          "Wastemanifest"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "WasteManifest"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "WasteShipment"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "WasteGenerator"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Transporter"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "DisposalFacility"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "__Node__",
+          "Chunk"
+        ],
+        "count": 2
+      },
+      {
+        "labels": [
+          "WasteItem"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Emission"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "DocumentChunk"
+        ],
+        "count": 2
+      }
+    ],
+    "relationships": [
+      {
+        "type": "MENTIONS",
+        "count": 18
+      },
+      {
+        "type": "Is",
+        "count": 9
+      },
+      {
+        "type": "TRACKS",
+        "count": 1
+      },
+      {
+        "type": "DOCUMENTS",
+        "count": 1
+      },
+      {
+        "type": "SOURCE",
+        "count": 1
+      },
+      {
+        "type": "GENERATED_BY",
+        "count": 1
+      },
+      {
+        "type": "TRANSPORTED_BY",
+        "count": 1
+      },
+      {
+        "type": "DISPOSED_AT",
+        "count": 1
+      },
+      {
+        "type": "CONTAINS_WASTE",
+        "count": 1
+      },
+      {
+        "type": "RESULTED_IN",
+        "count": 1
+      }
+    ],
+    "total_nodes": 30,
+    "total_relationships": 35
+  }
+]
+
+QUERY RESULTS
+================================================================================
+
+Query 1
+----------------------------------------
+Query: 
+                    // Top 5 Generators by total waste
+                    MATCH (m:WasteManifest)-[:GENERATED_BY]->(g:Generator)
+                    WITH g, SUM(m.quantity) as total_quantity
+                    ORDER BY total_quantity DESC
+                    LIMIT 5
+                    RETURN 'Generator' as entity_type, g.name as name, g.epa_id as epa_id, 
+                           total_quantity, 'tons' as unit, g.address as address
+                    
+                    UNION
+                    
+                    // Top 5 Disposal Facilities by total waste received
+                    MATCH (m:WasteManifest)-[:DISPOSED_AT]->(df:DisposalFacility)
+                    WITH df, SUM(m.quantity) as total_quantity
+                    ORDER BY total_quantity DESC
+                    LIMIT 5
+                    RETURN 'Disposal Facility' as entity_type, df.name as name, df.epa_id as epa_id,
+                           total_quantity, 'tons' as unit, df.address as address
+                    
+                    ORDER BY entity_type, total_quantity DESC
+                
+Status: success
+Records: 0
+
+ANALYSIS
+================================================================================
+{
+  "Key Findings": {
+    "1": "The query was executed successfully.",
+    "2": "No records were retrieved from the query.",
+    "3": "The query was designed to retrieve the top 5 generators and disposal facilities by total waste."
+  },
+  "Patterns or Trends": {
+    "1": "No patterns or trends can be identified as no data was retrieved."
+  },
+  "Potential Data Quality Issues": {
+    "1": "The query returned no results, which could indicate a data quality issue. It's possible that there is no matching data in the database, or the query may not be correctly formulated.",
+    "2": "The absence of data could also suggest that the data hasn't been updated recently, or that there are issues with the data collection process."
+  },
+  "Recommendations": {
+    "1": "Check the query to ensure it is correctly formulated and is targeting the right data fields.",
+    "2": "Investigate the database to ensure that it contains the necessary data and that the data is up-to-date.",
+    "3": "Review the data collection and input processes to identify any potential issues that could be leading to missing or incorrect data."
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:47:17.706861",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 18
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 2
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 18
+          },
+          {
+            "type": "Is",
+            "count": 9
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          }
+        ],
+        "total_nodes": 30,
+        "total_relationships": 35
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "\n                    MATCH (m:WasteManifest)-[:RESULTED_IN]->(e:Emission)\n                    MATCH (m)-[:GENERATED_BY]->(g:Generator)\n                    MATCH (m)-[:DISPOSED_AT]->(df:DisposalFacility)\n                    RETURN \n                        e.emission_type as emission_type,\n                        COUNT(DISTINCT m) as manifest_count,\n                        SUM(e.amount) as total_emissions,\n                        AVG(e.amount) as avg_emissions_per_manifest,\n                        e.unit as emission_unit,\n                        SUM(m.quantity) as waste_quantity,\n                        m.unit as waste_unit,\n                        AVG(e.emission_factor) as avg_emission_factor,\n                        COUNT(DISTINCT g) as unique_generators,\n                        COUNT(DISTINCT df) as unique_disposal_facilities,\n                        collect(DISTINCT CASE WHEN m.hazardous = true THEN 'Hazardous' ELSE 'Non-Hazardous' END) as waste_types\n                    ORDER BY total_emissions DESC\n                ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                    MATCH (m:WasteManifest)-[:RESULTED_IN]->(e:Emission)\n                    MATCH (m)-[:GENERATED_BY]->(g:Generator)\n                    MATCH (m)-[:DISPOSED_AT]->(df:DisposalFacility)\n                    RETURN \n                        e.emission_type as emission_type,\n                        COUNT(DISTINCT m) as manifest_count,\n                        SUM(e.amount) as total_emissions,\n                        AVG(e.amount) as avg_emissions_per_manifest,\n                        e.unit as emission_unit,\n                        SUM(m.quantity) as waste_quantity,\n                        m.unit as waste_unit,\n                        AVG(e.emission_factor) as avg_emission_factor,\n                        COUNT(DISTINCT g) as unique_generators,\n                        COUNT(DISTINCT df) as unique_disposal_facilities,\n                        collect(DISTINCT CASE WHEN m.hazardous = true THEN 'Hazardous' ELSE 'Non-Hazardous' END) as waste_types\n                    ORDER BY total_emissions DESC\n                ",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query executed successfully without any errors.",
+      "2": "No records were retrieved from the query.",
+      "3": "The query was designed to extract detailed information about waste manifests, emissions, generators, and disposal facilities."
+    },
+    "Patterns or Trends": {
+      "1": "No patterns or trends can be identified as no data was retrieved from the query."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The lack of results could indicate a data quality issue. It's possible that the database is empty or the data does not match the query parameters.",
+      "2": "The query might be too specific or complex, which could be why no records were retrieved."
+    },
+    "Recommendations": {
+      "1": "Check the database to ensure it contains data that matches the query parameters.",
+      "2": "Simplify or modify the query to ensure it's not too specific or complex.",
+      "3": "If the database is not empty, investigate potential data quality issues that could be preventing the retrieval of records."
+    }
+  },
+  "errors": []
+}

@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:22:01.394444",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [],
+        "relationships": [],
+        "total_nodes": 0,
+        "total_relationships": 0
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "All_DisposalFacility_Nodes",
+      "query": "\n                MATCH (df:DisposalFacility)\n                RETURN \n                    df.name as name,\n                    df.epa_id as epa_id,\n                    df.address as address,\n                    df.city as city,\n                    df.state as state,\n                    df.zip_code as zip_code,\n                    df.disposal_method as disposal_method,\n                    df.permit_number as permit_number,\n                    properties(df) as all_properties\n                ORDER BY df.name\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (df:DisposalFacility)\n                RETURN \n                    df.name as name,\n                    df.epa_id as epa_id,\n                    df.address as address,\n                    df.city as city,\n                    df.state as state,\n                    df.zip_code as zip_code,\n                    df.disposal_method as disposal_method,\n                    df.permit_number as permit_number,\n                    properties(df) as all_properties\n                ORDER BY df.name\n            ",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query executed was a custom type and it was successful.",
+      "2": "The query was designed to extract data about disposal facilities, including their name, EPA ID, address, city, state, zip code, disposal method, permit number, and all properties.",
+      "3": "Despite the successful execution of the query, no records were retrieved."
+    },
+    "Patterns or Trends": {
+      "1": "There are no patterns or trends to report as no data was retrieved from the query."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The main data quality issue is the lack of data. Despite the successful execution of the query, no records were retrieved.",
+      "2": "This could indicate that there are no disposal facilities in the database, or that the data about these facilities is stored under different parameters than those used in the query."
+    },
+    "Recommendations": {
+      "1": "Check the database to ensure that data about disposal facilities is being correctly stored and categorized.",
+      "2": "If the data is present, adjust the parameters of the query to match the way the data is stored in the database.",
+      "3": "If the data is not present, consider ways to collect and incorporate this data into the database for future queries."
+    }
+  },
+  "errors": []
+}

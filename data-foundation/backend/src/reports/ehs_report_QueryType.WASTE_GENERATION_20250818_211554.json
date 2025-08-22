@@ -1,0 +1,252 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.WASTE_GENERATION",
+    "generated_at": "2025-08-18T21:15:54.754389",
+    "query_type": "waste_generation",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 8,
+    "successful_queries": 2,
+    "failed_queries": 6,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "Document",
+              "Waterbill"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WaterBill"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "Facility"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "Customer"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "UtilityProvider"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "Meter"
+            ],
+            "count": 4
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 6
+          },
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 19
+          },
+          {
+            "labels": [
+              "Document",
+              "Utilitybill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "UtilityBill"
+            ],
+            "count": 1
+          }
+        ],
+        "relationships": [
+          {
+            "type": "EXTRACTED_TO",
+            "count": 3
+          },
+          {
+            "type": "BILLED_TO",
+            "count": 6
+          },
+          {
+            "type": "BILLED_FOR",
+            "count": 6
+          },
+          {
+            "type": "PROVIDED_BY",
+            "count": 4
+          },
+          {
+            "type": "MONITORS",
+            "count": 11
+          },
+          {
+            "type": "RECORDED_IN",
+            "count": 5
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 3
+          },
+          {
+            "type": "MENTIONS",
+            "count": 19
+          },
+          {
+            "type": "Is",
+            "count": 10
+          },
+          {
+            "type": "SOURCE",
+            "count": 3
+          }
+        ],
+        "total_nodes": 50,
+        "total_relationships": 70
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "\n                MATCH (d:Document:Wastemanifest)-[:TRACKS]->(wm:WasteManifest)\n                MATCH (wm)-[:DOCUMENTS]->(ws:WasteShipment)\n                MATCH (ws)-[:GENERATED_BY]->(g:WasteGenerator)\n                MATCH (ws)-[:TRANSPORTED_BY]->(t:Transporter)  \n                MATCH (ws)-[:DISPOSED_AT]->(df:DisposalFacility)\n                OPTIONAL MATCH (ws)-[:CONTAINS_WASTE]->(wi:WasteItem)\n                OPTIONAL MATCH (ws)-[:RESULTED_IN]->(e:Emission)\n                RETURN d, wm, ws, g, t, df, collect(wi) as waste_items, collect(e) as emissions\n                ORDER BY ws.shipment_date DESC\n                ",
+      "parameters": {}
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:DOCUMENTS]->(ws:WasteShipment)\n                MATCH (ws)-[:GENERATED_BY]->(g:WasteGenerator)\n                MATCH (ws)-[:CONTAINS_WASTE]->(wi:WasteItem)\n                OPTIONAL MATCH (ws)-[:RESULTED_IN]->(e:Emission)\n                WHERE ws.shipment_date >= $start_date \n                  AND ws.shipment_date <= $end_date\n                RETURN g.name as generator,\n                       g.epa_id as generator_epa_id,\n                       SUM(wi.quantity) as total_waste_quantity,\n                       wi.unit as quantity_unit,\n                       COUNT(DISTINCT wm) as manifest_count,\n                       COUNT(wi) as waste_item_count,\n                       SUM(e.amount) as total_emissions\n                ORDER BY total_waste_quantity DESC\n                ",
+      "parameters": {}
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:DOCUMENTS]->(ws:WasteShipment)\n                MATCH (ws)-[:DISPOSED_AT]->(df:DisposalFacility)\n                MATCH (ws)-[:CONTAINS_WASTE]->(wi:WasteItem)\n                OPTIONAL MATCH (ws)-[:RESULTED_IN]->(e:Emission)\n                WHERE ws.shipment_date >= $start_date \n                  AND ws.shipment_date <= $end_date\n                RETURN df.name as disposal_facility,\n                       df.epa_id as facility_epa_id,\n                       df.state as facility_state,\n                       COUNT(DISTINCT wm) as manifests_received,\n                       SUM(wi.quantity) as total_waste_received,\n                       wi.unit as quantity_unit,\n                       collect(DISTINCT wi.disposal_method) as disposal_methods,\n                       SUM(e.amount) as total_emissions_from_disposal\n                ORDER BY total_waste_received DESC\n                ",
+      "parameters": {}
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:DOCUMENTS]->(ws:WasteShipment)\n                MATCH (ws)-[:TRANSPORTED_BY]->(t:Transporter)\n                MATCH (ws)-[:CONTAINS_WASTE]->(wi:WasteItem)\n                WHERE ws.shipment_date >= $start_date \n                  AND ws.shipment_date <= $end_date\n                RETURN t.name as transporter,\n                       t.epa_id as transporter_epa_id,\n                       COUNT(DISTINCT wm) as manifests_transported,\n                       SUM(wi.quantity) as total_waste_transported,\n                       wi.unit as quantity_unit,\n                       COUNT(DISTINCT ws) as unique_shipments_transported,\n                       collect(DISTINCT ws.transport_method) as transport_methods\n                ORDER BY total_waste_transported DESC\n                ",
+      "parameters": {}
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:DOCUMENTS]->(ws:WasteShipment)\n                MATCH (ws)-[:CONTAINS_WASTE]->(wi:WasteItem)\n                WHERE ws.shipment_date >= $start_date \n                  AND ws.shipment_date <= $end_date\n                RETURN wi.waste_code as waste_code,\n                       wi.description as waste_description,\n                       COUNT(wi) as item_count,\n                       SUM(wi.quantity) as total_quantity,\n                       wi.unit as quantity_unit,\n                       collect(DISTINCT wi.disposal_method) as disposal_methods\n                ORDER BY total_quantity DESC\n                ",
+      "parameters": {}
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:DOCUMENTS]->(ws:WasteShipment)\n                WHERE ws.shipment_date >= $start_date \n                  AND ws.shipment_date <= $end_date\n                WITH date(ws.shipment_date) as shipment_date, \n                     wm, \n                     ws,\n                     [(ws)-[:CONTAINS_WASTE]->(wi:WasteItem) | wi] as waste_items\n                RETURN shipment_date,\n                       COUNT(DISTINCT wm) as manifests_generated,\n                       SUM(reduce(total = 0, wi in waste_items | total + wi.quantity)) as daily_waste_total,\n                       AVG(ws.total_weight) as avg_shipment_weight\n                ORDER BY shipment_date DESC\n                ",
+      "parameters": {}
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:DOCUMENTS]->(ws:WasteShipment)\n                MATCH (ws)-[:RESULTED_IN]->(e:Emission)\n                MATCH (ws)-[:CONTAINS_WASTE]->(wi:WasteItem)\n                WHERE ws.shipment_date >= $start_date \n                  AND ws.shipment_date <= $end_date\n                RETURN e.emission_type as emission_type,\n                       e.unit as emission_unit,\n                       COUNT(e) as emission_records,\n                       SUM(e.amount) as total_emissions,\n                       AVG(e.amount) as avg_emissions_per_record,\n                       SUM(wi.quantity) as associated_waste_quantity,\n                       AVG(e.amount / wi.quantity) as avg_emission_factor\n                ORDER BY total_emissions DESC\n                ",
+      "parameters": {}
+    },
+    {
+      "query": "\n                MATCH (d:Document:Wastemanifest)-[:TRACKS]->(wm:WasteManifest)\n                MATCH (wm)-[:DOCUMENTS]->(ws:WasteShipment)\n                WHERE d.status IS NOT NULL\n                OPTIONAL MATCH (ws)-[:CONTAINS_WASTE]->(wi:WasteItem)\n                RETURN d.status as manifest_status,\n                       COUNT(DISTINCT wm) as manifest_count,\n                       SUM(wi.quantity) as total_waste_quantity,\n                       MIN(ws.shipment_date) as earliest_shipment_date,\n                       MAX(ws.shipment_date) as latest_shipment_date,\n                       MIN(wm.issue_date) as earliest_issue_date,\n                       MAX(wm.issue_date) as latest_issue_date,\n                       COUNT(DISTINCT ws) as unique_shipments\n                ORDER BY manifest_count DESC\n                ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (d:Document:Wastemanifest)-[:TRACKS]->(wm:WasteManifest)\n                MATCH (wm)-[:DOCUMENTS]->(ws:WasteShipment)\n                MATCH (ws)-[:GENERATED_BY]->(g:WasteGenerator)\n                MATCH (ws)-[:TRANSPORTED_BY]->(t:Transporter)  \n                MATCH (ws)-[:DISPOSED_AT]->(df:DisposalFacility)\n                OPTIONAL MATCH (ws)-[:CONTAINS_WASTE]->(wi:WasteItem)\n                OPTIONAL MATCH (ws)-[:RESULTED_IN]->(e:Emission)\n                RETURN d, wm, ws, g, t, df, collect(wi) as waste_items, collect(e) as emissions\n                ORDER BY ws.shipment_date DESC\n                ",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:DOCUMENTS]->(ws:WasteShipment)\n                MATCH (ws)-[:GENERATED_BY]->(g:WasteGenerator)\n                MATCH (ws)-[:CONTAINS_WASTE]->(wi:WasteItem)\n                OPTIONAL MATCH (ws)-[:RESULTED_IN]->(e:Emission)\n                WHERE ws.shipment_date >= $start_date \n                  AND ws.shipment_date <= $end_date\n                RETURN g.name as generator,\n                       g.epa_id as generator_epa_id,\n                       SUM(wi.quantity) as total_waste_quantity,\n                       wi.unit as quantity_unit,\n                       COUNT(DISTINCT wm) as manifest_count,\n                       COUNT(wi) as waste_item_count,\n                       SUM(e.amount) as total_emissions\n                ORDER BY total_waste_quantity DESC\n                ",
+      "parameters": {},
+      "error": "{code: Neo.ClientError.Statement.ParameterMissing} {message: Expected parameter(s): start_date, end_date}",
+      "status": "failed"
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:DOCUMENTS]->(ws:WasteShipment)\n                MATCH (ws)-[:DISPOSED_AT]->(df:DisposalFacility)\n                MATCH (ws)-[:CONTAINS_WASTE]->(wi:WasteItem)\n                OPTIONAL MATCH (ws)-[:RESULTED_IN]->(e:Emission)\n                WHERE ws.shipment_date >= $start_date \n                  AND ws.shipment_date <= $end_date\n                RETURN df.name as disposal_facility,\n                       df.epa_id as facility_epa_id,\n                       df.state as facility_state,\n                       COUNT(DISTINCT wm) as manifests_received,\n                       SUM(wi.quantity) as total_waste_received,\n                       wi.unit as quantity_unit,\n                       collect(DISTINCT wi.disposal_method) as disposal_methods,\n                       SUM(e.amount) as total_emissions_from_disposal\n                ORDER BY total_waste_received DESC\n                ",
+      "parameters": {},
+      "error": "{code: Neo.ClientError.Statement.ParameterMissing} {message: Expected parameter(s): start_date, end_date}",
+      "status": "failed"
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:DOCUMENTS]->(ws:WasteShipment)\n                MATCH (ws)-[:TRANSPORTED_BY]->(t:Transporter)\n                MATCH (ws)-[:CONTAINS_WASTE]->(wi:WasteItem)\n                WHERE ws.shipment_date >= $start_date \n                  AND ws.shipment_date <= $end_date\n                RETURN t.name as transporter,\n                       t.epa_id as transporter_epa_id,\n                       COUNT(DISTINCT wm) as manifests_transported,\n                       SUM(wi.quantity) as total_waste_transported,\n                       wi.unit as quantity_unit,\n                       COUNT(DISTINCT ws) as unique_shipments_transported,\n                       collect(DISTINCT ws.transport_method) as transport_methods\n                ORDER BY total_waste_transported DESC\n                ",
+      "parameters": {},
+      "error": "{code: Neo.ClientError.Statement.ParameterMissing} {message: Expected parameter(s): start_date, end_date}",
+      "status": "failed"
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:DOCUMENTS]->(ws:WasteShipment)\n                MATCH (ws)-[:CONTAINS_WASTE]->(wi:WasteItem)\n                WHERE ws.shipment_date >= $start_date \n                  AND ws.shipment_date <= $end_date\n                RETURN wi.waste_code as waste_code,\n                       wi.description as waste_description,\n                       COUNT(wi) as item_count,\n                       SUM(wi.quantity) as total_quantity,\n                       wi.unit as quantity_unit,\n                       collect(DISTINCT wi.disposal_method) as disposal_methods\n                ORDER BY total_quantity DESC\n                ",
+      "parameters": {},
+      "error": "{code: Neo.ClientError.Statement.ParameterMissing} {message: Expected parameter(s): start_date, end_date}",
+      "status": "failed"
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:DOCUMENTS]->(ws:WasteShipment)\n                WHERE ws.shipment_date >= $start_date \n                  AND ws.shipment_date <= $end_date\n                WITH date(ws.shipment_date) as shipment_date, \n                     wm, \n                     ws,\n                     [(ws)-[:CONTAINS_WASTE]->(wi:WasteItem) | wi] as waste_items\n                RETURN shipment_date,\n                       COUNT(DISTINCT wm) as manifests_generated,\n                       SUM(reduce(total = 0, wi in waste_items | total + wi.quantity)) as daily_waste_total,\n                       AVG(ws.total_weight) as avg_shipment_weight\n                ORDER BY shipment_date DESC\n                ",
+      "parameters": {},
+      "error": "{code: Neo.ClientError.Statement.ParameterMissing} {message: Expected parameter(s): start_date, end_date}",
+      "status": "failed"
+    },
+    {
+      "query": "\n                MATCH (wm:WasteManifest)-[:DOCUMENTS]->(ws:WasteShipment)\n                MATCH (ws)-[:RESULTED_IN]->(e:Emission)\n                MATCH (ws)-[:CONTAINS_WASTE]->(wi:WasteItem)\n                WHERE ws.shipment_date >= $start_date \n                  AND ws.shipment_date <= $end_date\n                RETURN e.emission_type as emission_type,\n                       e.unit as emission_unit,\n                       COUNT(e) as emission_records,\n                       SUM(e.amount) as total_emissions,\n                       AVG(e.amount) as avg_emissions_per_record,\n                       SUM(wi.quantity) as associated_waste_quantity,\n                       AVG(e.amount / wi.quantity) as avg_emission_factor\n                ORDER BY total_emissions DESC\n                ",
+      "parameters": {},
+      "error": "{code: Neo.ClientError.Statement.ParameterMissing} {message: Expected parameter(s): start_date, end_date}",
+      "status": "failed"
+    },
+    {
+      "query": "\n                MATCH (d:Document:Wastemanifest)-[:TRACKS]->(wm:WasteManifest)\n                MATCH (wm)-[:DOCUMENTS]->(ws:WasteShipment)\n                WHERE d.status IS NOT NULL\n                OPTIONAL MATCH (ws)-[:CONTAINS_WASTE]->(wi:WasteItem)\n                RETURN d.status as manifest_status,\n                       COUNT(DISTINCT wm) as manifest_count,\n                       SUM(wi.quantity) as total_waste_quantity,\n                       MIN(ws.shipment_date) as earliest_shipment_date,\n                       MAX(ws.shipment_date) as latest_shipment_date,\n                       MIN(wm.issue_date) as earliest_issue_date,\n                       MAX(wm.issue_date) as latest_issue_date,\n                       COUNT(DISTINCT ws) as unique_shipments\n                ORDER BY manifest_count DESC\n                ",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "Out of 8 total queries executed, only 2 were successful.",
+      "2": "No records were retrieved from the executed queries.",
+      "3": "The successful query did not return any results.",
+      "4": "The failed queries were due to missing parameters 'start_date' and 'end_date'."
+    },
+    "Patterns or Trends": {
+      "1": "The queries are designed to extract information about waste generation, transportation, and disposal.",
+      "2": "The queries are structured to retrieve data from a graph database, possibly Neo4j, as indicated by the Cypher query language used.",
+      "3": "The queries are dependent on certain parameters (start_date, end_date) which were not provided, leading to their failure."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The lack of results from the successful query could indicate that there is no data in the database that matches the query criteria.",
+      "2": "The failed queries indicate that the necessary parameters were not provided, which could be due to a lack of data validation or error handling in the query execution process."
+    },
+    "Recommendations": {
+      "1": "Ensure that all necessary parameters are provided before executing queries.",
+      "2": "Implement data validation and error handling mechanisms to prevent query failures due to missing parameters.",
+      "3": "Investigate the database to ensure that it contains the necessary data for the queries to return results.",
+      "4": "If the database is empty or the data is not structured as expected, it may be necessary to review the data ingestion process."
+    }
+  },
+  "errors": []
+}

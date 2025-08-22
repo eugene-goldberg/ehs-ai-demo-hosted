@@ -1,0 +1,199 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - custom",
+    "generated_at": "2025-08-18T20:02:53.096584",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 1,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "Document",
+              "Waterbill"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WaterBill"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "Facility"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "Customer"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "UtilityProvider"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "Meter"
+            ],
+            "count": 4
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 6
+          },
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 19
+          },
+          {
+            "labels": [
+              "Document",
+              "Utilitybill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "UtilityBill"
+            ],
+            "count": 1
+          }
+        ],
+        "relationships": [
+          {
+            "type": "EXTRACTED_TO",
+            "count": 3
+          },
+          {
+            "type": "BILLED_TO",
+            "count": 6
+          },
+          {
+            "type": "BILLED_FOR",
+            "count": 6
+          },
+          {
+            "type": "PROVIDED_BY",
+            "count": 4
+          },
+          {
+            "type": "MONITORS",
+            "count": 11
+          },
+          {
+            "type": "RECORDED_IN",
+            "count": 5
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 3
+          },
+          {
+            "type": "MENTIONS",
+            "count": 19
+          },
+          {
+            "type": "Is",
+            "count": 10
+          },
+          {
+            "type": "SOURCE",
+            "count": 3
+          }
+        ],
+        "total_nodes": 50,
+        "total_relationships": 70
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "MATCH (w:WaterBill) RETURN w LIMIT 1"
+    }
+  ],
+  "query_results": [
+    {
+      "query": "MATCH (w:WaterBill) RETURN w LIMIT 1",
+      "parameters": {},
+      "results": [
+        {
+          "w": {
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_144959",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          }
+        }
+      ],
+      "record_count": 1,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query was successful and returned one record related to a water bill.",
+      "2": "The total cost of the water bill is $4891.5.",
+      "3": "The water bill includes charges for stormwater fee, sewer service, water consumption, infrastructure surcharge, and conservation tax.",
+      "4": "The billing period for this water bill is from June 1, 2025, to June 30, 2025.",
+      "5": "The total gallons of water consumed during this billing period is 250,000."
+    },
+    "Patterns or Trends": {
+      "1": "As this is a single record, it's not possible to identify any patterns or trends from this data."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The data seems to be complete for this record with no missing values.",
+      "2": "However, as this is a single record, it's not possible to assess the overall quality of the data or identify any potential issues such as inconsistencies or outliers."
+    },
+    "Recommendations": {
+      "1": "To identify patterns or trends, consider retrieving and analyzing a larger dataset.",
+      "2": "To ensure data quality, implement data validation checks at the point of data entry or during the data extraction process.",
+      "3": "To better understand water consumption costs, consider analyzing the breakdown of the total cost and the factors contributing to each charge."
+    }
+  },
+  "errors": []
+}

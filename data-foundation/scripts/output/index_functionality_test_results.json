@@ -1,0 +1,58 @@
+{
+  "timestamp": "2025-08-20T20:22:41.134117",
+  "tests": {
+    "Neo4j Connection": {
+      "status": "PASSED",
+      "duration": 0.011914968490600586,
+      "details": {
+        "success": false,
+        "error": "{code: Neo.ClientError.Security.Unauthorized} {message: The client is unauthorized due to authentication failure.}"
+      }
+    },
+    "Vector Indexes Exist": {
+      "status": "PASSED",
+      "duration": 0.0036118030548095703,
+      "details": {
+        "success": false,
+        "error": "{code: Neo.ClientError.Security.AuthenticationRateLimit} {message: The client has provided incorrect authentication details too many times in a row.}"
+      }
+    },
+    "Fulltext Indexes Exist": {
+      "status": "PASSED",
+      "duration": 0.0020890235900878906,
+      "details": {
+        "success": false,
+        "error": "{code: Neo.ClientError.Security.AuthenticationRateLimit} {message: The client has provided incorrect authentication details too many times in a row.}"
+      }
+    },
+    "Data Integrity": {
+      "status": "PASSED",
+      "duration": 0.002079010009765625,
+      "details": {
+        "success": false,
+        "error": "{code: Neo.ClientError.Security.AuthenticationRateLimit} {message: The client has provided incorrect authentication details too many times in a row.}"
+      }
+    },
+    "Vector Similarity Search": {
+      "status": "PASSED",
+      "duration": 0.002008199691772461,
+      "details": {
+        "success": false,
+        "error": "{code: Neo.ClientError.Security.AuthenticationRateLimit} {message: The client has provided incorrect authentication details too many times in a row.}"
+      }
+    },
+    "Fulltext Search": {
+      "status": "PASSED",
+      "duration": 0.0018169879913330078,
+      "details": {
+        "success": false,
+        "error": "{code: Neo.ClientError.Security.AuthenticationRateLimit} {message: The client has provided incorrect authentication details too many times in a row.}"
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 6,
+    "passed_tests": 6,
+    "failed_tests": 0
+  }
+}

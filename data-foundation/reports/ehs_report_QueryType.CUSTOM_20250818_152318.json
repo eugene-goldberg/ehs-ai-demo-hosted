@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:23:18.815236",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [],
+        "relationships": [],
+        "total_nodes": 0,
+        "total_relationships": 0
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "Manifest_Emission_Relationships",
+      "query": "\n                MATCH (m:WasteManifest)-[:RESULTED_IN]->(e:Emission)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    m.date_shipped as date_shipped,\n                    m.quantity as waste_quantity,\n                    m.unit as waste_unit,\n                    e.emission_type as emission_type,\n                    e.amount as emission_amount,\n                    e.unit as emission_unit,\n                    e.emission_factor as emission_factor\n                ORDER BY m.date_shipped DESC\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (m:WasteManifest)-[:RESULTED_IN]->(e:Emission)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    m.date_shipped as date_shipped,\n                    m.quantity as waste_quantity,\n                    m.unit as waste_unit,\n                    e.emission_type as emission_type,\n                    e.amount as emission_amount,\n                    e.unit as emission_unit,\n                    e.emission_factor as emission_factor\n                ORDER BY m.date_shipped DESC\n            ",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query was executed successfully without any errors.",
+      "2": "The query was designed to extract data related to waste manifests and their resulting emissions.",
+      "3": "Despite the successful execution, the query did not return any records."
+    },
+    "Patterns or Trends": {
+      "1": "No patterns or trends can be identified from the data as no records were retrieved from the query."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The lack of returned records could indicate a data quality issue. It's possible that the database does not contain any matching records for the query.",
+      "2": "Alternatively, the query may be too specific or incorrectly structured, resulting in no matches found."
+    },
+    "Recommendations": {
+      "1": "Review the query to ensure it is correctly structured and targets the right data fields.",
+      "2": "Check the database to ensure it contains data that matches the query parameters.",
+      "3": "If the query and database are both correct, consider broadening the query parameters to retrieve a larger data set."
+    }
+  },
+  "errors": []
+}

@@ -1,0 +1,215 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:45:39.763814",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 2,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 18
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 2
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 18
+          },
+          {
+            "type": "Is",
+            "count": 9
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          }
+        ],
+        "total_nodes": 30,
+        "total_relationships": 35
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "All_WasteManifest_Relationships",
+      "query": "\n                MATCH (m:WasteManifest)-[r]-(n)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    type(r) as relationship_type,\n                    labels(n) as connected_node_labels,\n                    CASE \n                        WHEN 'Generator' IN labels(n) THEN n.name\n                        WHEN 'Transporter' IN labels(n) THEN n.name\n                        WHEN 'DisposalFacility' IN labels(n) THEN n.name\n                        WHEN 'Emission' IN labels(n) THEN n.emission_type\n                        ELSE toString(id(n))\n                    END as connected_node_name,\n                    properties(r) as relationship_properties,\n                    id(startNode(r)) as start_node_id,\n                    id(endNode(r)) as end_node_id\n                ORDER BY m.manifest_id, relationship_type\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (m:WasteManifest)-[r]-(n)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    type(r) as relationship_type,\n                    labels(n) as connected_node_labels,\n                    CASE \n                        WHEN 'Generator' IN labels(n) THEN n.name\n                        WHEN 'Transporter' IN labels(n) THEN n.name\n                        WHEN 'DisposalFacility' IN labels(n) THEN n.name\n                        WHEN 'Emission' IN labels(n) THEN n.emission_type\n                        ELSE toString(id(n))\n                    END as connected_node_name,\n                    properties(r) as relationship_properties,\n                    id(startNode(r)) as start_node_id,\n                    id(endNode(r)) as end_node_id\n                ORDER BY m.manifest_id, relationship_type\n            ",
+      "parameters": {},
+      "results": [
+        {
+          "manifest_id": null,
+          "relationship_type": "DOCUMENTS",
+          "connected_node_labels": [
+            "WasteShipment"
+          ],
+          "connected_node_name": "9",
+          "relationship_properties": {},
+          "start_node_id": 8,
+          "end_node_id": 9
+        },
+        {
+          "manifest_id": null,
+          "relationship_type": "TRACKS",
+          "connected_node_labels": [
+            "Document",
+            "Wastemanifest"
+          ],
+          "connected_node_name": "7",
+          "relationship_properties": {
+            "tracking_date": "2025-08-18T15:40:43.274618"
+          },
+          "start_node_id": 7,
+          "end_node_id": 8
+        }
+      ],
+      "record_count": 2,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": [
+      {
+        "Finding 1": "The query executed successfully and retrieved two records from the database."
+      },
+      {
+        "Finding 2": "The first record is related to a 'WasteShipment' node with a 'DOCUMENTS' relationship. The start node id is 8 and the end node id is 9."
+      },
+      {
+        "Finding 3": "The second record is related to a 'Document' and 'Wastemanifest' node with a 'TRACKS' relationship. The start node id is 7 and the end node id is 8. The tracking date is '2025-08-18T15:40:43.274618'."
+      }
+    ],
+    "Patterns or Trends": [
+      {
+        "Pattern 1": "The 'WasteManifest' node is connected to different types of nodes ('WasteShipment', 'Document', 'Wastemanifest') through different types of relationships ('DOCUMENTS', 'TRACKS')."
+      },
+      {
+        "Pattern 2": "The 'TRACKS' relationship includes a 'tracking_date' property, which could be used to track the timeline of waste management."
+      }
+    ],
+    "Potential Data Quality Issues": [
+      {
+        "Issue 1": "The 'manifest_id' is null in both records. This could be a data quality issue if the 'manifest_id' is expected to be a unique identifier for 'WasteManifest' nodes."
+      }
+    ],
+    "Recommendations": [
+      {
+        "Recommendation 1": "Investigate why the 'manifest_id' is null in both records. If it's expected to be a unique identifier, ensure that it's properly assigned during data entry or data import."
+      },
+      {
+        "Recommendation 2": "Consider adding more properties to the 'DOCUMENTS' relationship to provide more context about the relationship between 'WasteManifest' and 'WasteShipment'."
+      },
+      {
+        "Recommendation 3": "Use the 'tracking_date' property in the 'TRACKS' relationship to analyze the timeline of waste management."
+      }
+    ]
+  },
+  "errors": []
+}

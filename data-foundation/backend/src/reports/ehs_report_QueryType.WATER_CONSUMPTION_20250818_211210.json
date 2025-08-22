@@ -1,0 +1,2279 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.WATER_CONSUMPTION",
+    "generated_at": "2025-08-18T21:12:10.211208",
+    "query_type": "water_consumption",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 4,
+    "successful_queries": 3,
+    "failed_queries": 1,
+    "total_records": 23,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "Document",
+              "Waterbill"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WaterBill"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "Facility"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "Customer"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "UtilityProvider"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "Meter"
+            ],
+            "count": 4
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 6
+          },
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 19
+          },
+          {
+            "labels": [
+              "Document",
+              "Utilitybill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "UtilityBill"
+            ],
+            "count": 1
+          }
+        ],
+        "relationships": [
+          {
+            "type": "EXTRACTED_TO",
+            "count": 3
+          },
+          {
+            "type": "BILLED_TO",
+            "count": 6
+          },
+          {
+            "type": "BILLED_FOR",
+            "count": 6
+          },
+          {
+            "type": "PROVIDED_BY",
+            "count": 4
+          },
+          {
+            "type": "MONITORS",
+            "count": 11
+          },
+          {
+            "type": "RECORDED_IN",
+            "count": 5
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 3
+          },
+          {
+            "type": "MENTIONS",
+            "count": 19
+          },
+          {
+            "type": "Is",
+            "count": 10
+          },
+          {
+            "type": "SOURCE",
+            "count": 3
+          }
+        ],
+        "total_nodes": 50,
+        "total_relationships": 70
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "\n                MATCH (d:Document:Waterbill)-[:EXTRACTED_TO]->(w:WaterBill)\n                RETURN d, w\n                ORDER BY w.billing_period_end DESC\n                ",
+      "parameters": {}
+    },
+    {
+      "query": "\n                MATCH (w:WaterBill)\n                RETURN w\n                ORDER BY w.billing_period_end DESC\n                ",
+      "parameters": {}
+    },
+    {
+      "query": "\n                MATCH (w:WaterBill)\n                OPTIONAL MATCH (w)-[:BILLED_TO]->(f:Facility)\n                OPTIONAL MATCH (w)-[:BILLED_FOR]->(c:Customer)\n                OPTIONAL MATCH (w)-[:PROVIDED_BY]->(p:UtilityProvider)\n                OPTIONAL MATCH (w)-[:RESULTED_IN]->(e:Emission)\n                OPTIONAL MATCH (m:Meter)-[:RECORDED_IN]->(w)\n                RETURN w, f, c, p, e, collect(m) as meters\n                ORDER BY w.billing_period_end DESC\n                ",
+      "parameters": {}
+    },
+    {
+      "query": "\n                MATCH (w:WaterBill)\n                WHERE w.billing_period_start >= $start_date \n                  AND w.billing_period_end <= $end_date\n                RETURN SUM(w.total_gallons) as total_water_usage,\n                       AVG(w.total_cost) as avg_cost,\n                       COUNT(w) as bill_count\n                ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (d:Document:Waterbill)-[:EXTRACTED_TO]->(w:WaterBill)\n                RETURN d, w\n                ORDER BY w.billing_period_end DESC\n                ",
+      "parameters": {},
+      "results": [
+        {
+          "d": {
+            "id": 0,
+            "labels": [
+              "Waterbill",
+              "Document"
+            ],
+            "properties": {
+              "file_path": "data/water_bill.pdf",
+              "uploaded_at": "2025-08-18T19:50:27.315042",
+              "id": "water_bill_20250818_144959",
+              "source": "test",
+              "type": "water_bill",
+              "document_type": "water_bill"
+            }
+          },
+          "w": {
+            "id": 1,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_144959",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          }
+        },
+        {
+          "d": {
+            "id": 40,
+            "labels": [
+              "Waterbill",
+              "Document"
+            ],
+            "properties": {
+              "file_path": "data/water_bill.pdf",
+              "uploaded_at": "2025-08-18T19:57:09.590360",
+              "id": "water_bill_20250818_145639",
+              "source": "batch_ingestion",
+              "type": "water_bill",
+              "document_type": "water_bill"
+            }
+          },
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          }
+        }
+      ],
+      "record_count": 2,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (w:WaterBill)\n                RETURN w\n                ORDER BY w.billing_period_end DESC\n                ",
+      "parameters": {},
+      "results": [
+        {
+          "w": {
+            "id": 1,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_144959",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          }
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          }
+        }
+      ],
+      "record_count": 2,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (w:WaterBill)\n                OPTIONAL MATCH (w)-[:BILLED_TO]->(f:Facility)\n                OPTIONAL MATCH (w)-[:BILLED_FOR]->(c:Customer)\n                OPTIONAL MATCH (w)-[:PROVIDED_BY]->(p:UtilityProvider)\n                OPTIONAL MATCH (w)-[:RESULTED_IN]->(e:Emission)\n                OPTIONAL MATCH (m:Meter)-[:RECORDED_IN]->(w)\n                RETURN w, f, c, p, e, collect(m) as meters\n                ORDER BY w.billing_period_end DESC\n                ",
+      "parameters": {},
+      "results": [
+        {
+          "w": {
+            "id": 1,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_144959",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 2,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 3,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 4,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 6,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_144959"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 2,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 25,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "attention": "Accounts Payable",
+              "billing_address": "456 Industrial Ave. Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 44,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 42,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 25,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "attention": "Accounts Payable",
+              "billing_address": "456 Industrial Ave. Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 44,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 24,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 25,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "attention": "Accounts Payable",
+              "billing_address": "456 Industrial Ave. Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 44,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 2,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 3,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 44,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 42,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 3,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 44,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 24,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 3,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 44,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 2,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 43,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 44,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 42,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 43,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 44,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 24,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 43,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 44,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 2,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 25,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "attention": "Accounts Payable",
+              "billing_address": "456 Industrial Ave. Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 4,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 42,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 25,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "attention": "Accounts Payable",
+              "billing_address": "456 Industrial Ave. Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 4,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 24,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 25,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "attention": "Accounts Payable",
+              "billing_address": "456 Industrial Ave. Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 4,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 2,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 3,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 4,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 42,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 3,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 4,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 24,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 3,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 4,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 2,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 43,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 4,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 42,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 43,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 4,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 41,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_145639",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 24,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 43,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 4,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 46,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_145639"
+            }
+          },
+          "meters": [
+            {
+              "id": 5,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            },
+            {
+              "id": 45,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        }
+      ],
+      "record_count": 19,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (w:WaterBill)\n                WHERE w.billing_period_start >= $start_date \n                  AND w.billing_period_end <= $end_date\n                RETURN SUM(w.total_gallons) as total_water_usage,\n                       AVG(w.total_cost) as avg_cost,\n                       COUNT(w) as bill_count\n                ",
+      "parameters": {},
+      "error": "{code: Neo.ClientError.Statement.ParameterMissing} {message: Expected parameter(s): start_date, end_date}",
+      "status": "failed"
+    }
+  ],
+  "analysis": {
+    "Key Findings": [
+      {
+        "Finding": "The total number of queries executed was 4, out of which 3 were successful.",
+        "Implication": "This indicates a high success rate of 75% for the queries executed."
+      },
+      {
+        "Finding": "The total number of records retrieved from the successful queries was 23.",
+        "Implication": "This suggests that the queries were able to extract a substantial amount of data."
+      },
+      {
+        "Finding": "The water bills retrieved show a consistent total cost of 4891.5, with the same breakdown of costs across stormwater fee, sewer service charge, water consumption cost, infrastructure surcharge, and conservation tax.",
+        "Implication": "This could suggest a standard billing structure for the water consumption."
+      },
+      {
+        "Finding": "The total gallons of water consumed as per the bills is 250000.",
+        "Implication": "This could be used to analyze water consumption patterns."
+      }
+    ],
+    "Patterns or Trends": [
+      {
+        "Pattern": "The water bills retrieved have the same billing period, from 2025-06-01 to 2025-06-30.",
+        "Implication": "This could suggest a monthly billing cycle for water consumption."
+      }
+    ],
+    "Potential Data Quality Issues": [
+      {
+        "Issue": "The source of the water bills is not consistent, with one bill coming from 'test' and the other from 'batch_ingestion'.",
+        "Implication": "This could potentially lead to inconsistencies in the data."
+      }
+    ],
+    "Recommendations": [
+      {
+        "Recommendation": "Ensure consistency in the source of the water bills to maintain data quality."
+      },
+      {
+        "Recommendation": "Further analyze the water consumption patterns using the total gallons of water consumed."
+      },
+      {
+        "Recommendation": "Investigate the failed query to improve the success rate of queries executed."
+      }
+    ]
+  },
+  "errors": []
+}

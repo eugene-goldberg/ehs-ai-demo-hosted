@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:22:11.827888",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [],
+        "relationships": [],
+        "total_nodes": 0,
+        "total_relationships": 0
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "All_Transporter_Nodes",
+      "query": "\n                MATCH (t:Transporter)\n                RETURN \n                    t.name as name,\n                    t.epa_id as epa_id,\n                    t.address as address,\n                    t.city as city,\n                    t.state as state,\n                    t.license_number as license_number,\n                    properties(t) as all_properties\n                ORDER BY t.name\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (t:Transporter)\n                RETURN \n                    t.name as name,\n                    t.epa_id as epa_id,\n                    t.address as address,\n                    t.city as city,\n                    t.state as state,\n                    t.license_number as license_number,\n                    properties(t) as all_properties\n                ORDER BY t.name\n            ",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query was executed successfully without any errors.",
+      "2": "The query was designed to extract data about transporters, including their name, EPA ID, address, city, state, license number, and all properties.",
+      "3": "Despite the successful execution, the query did not return any records."
+    },
+    "Patterns or Trends": {
+      "1": "There are no patterns or trends to report as the query did not return any data."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The lack of returned data could indicate that there are no transporters in the database that match the query parameters.",
+      "2": "Alternatively, it could suggest that there are issues with the data quality or structure in the database, such as missing or incorrectly formatted data."
+    },
+    "Recommendations": {
+      "1": "Verify the existence of transporter data in the database.",
+      "2": "Check the structure and quality of the data in the database to ensure it matches the query parameters.",
+      "3": "If the data is confirmed to be correct and the query is still returning no results, consider revising the query parameters."
+    }
+  },
+  "errors": []
+}

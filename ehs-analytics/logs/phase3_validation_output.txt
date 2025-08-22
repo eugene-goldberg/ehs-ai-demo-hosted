@@ -1,0 +1,178 @@
+2025-08-21 16:18:24,004 - __main__ - WARNING - Optional dependency prophet not available
+2025-08-21 16:18:24,004 - __main__ - WARNING - Optional dependency scikit-learn not available
+2025-08-21 16:18:24,006 - __main__ - INFO - ✅ Risk assessment base components imported
+2025-08-21 16:18:24,007 - __main__ - INFO - ✅ Water risk analyzer imported
+2025-08-21 16:18:24,009 - __main__ - INFO - ✅ Electricity risk analyzer imported
+2025-08-21 16:18:24,010 - __main__ - INFO - ✅ Waste risk analyzer imported
+2025-08-21 16:18:24,528 - __main__ - INFO - ✅ Time series analyzer imported
+2025-08-21 16:18:24,693 - root - WARNING - Prophet not available. Install with: pip install prophet
+2025-08-21 16:18:24,800 - __main__ - INFO - ✅ Forecasting engine imported
+2025-08-21 16:18:24,993 - __main__ - INFO - ✅ Anomaly detection system imported
+2025-08-21 16:18:25,024 - __main__ - INFO - ✅ Monitoring system imported
+{"timestamp": "2025-08-21T21:18:28.814713+00:00", "level": "INFO", "logger": "__main__", "message": "✅ Risk query processor imported", "module": "validate_phase3_implementation", "function": "<module>", "line": 158, "thread": 8668979392, "process": 49864, "taskName": null}
+{"timestamp": "2025-08-21T21:18:28.815024+00:00", "level": "INFO", "logger": "__main__", "message": "Phase 3 component imports: 9/9 successful", "module": "validate_phase3_implementation", "function": "<module>", "line": 165, "thread": 8668979392, "process": 49864, "taskName": null}
+🚀 Starting Phase 3 Implementation Validation
+============================================================
+{"timestamp": "2025-08-21T21:18:28.815265+00:00", "level": "INFO", "logger": "__main__", "message": "🚀 Starting Phase 3 Implementation Validation", "module": "validate_phase3_implementation", "function": "run_validation", "line": 614, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.815314+00:00", "level": "INFO", "logger": "__main__", "message": "🔍 Testing imports and dependencies...", "module": "validate_phase3_implementation", "function": "_test_import_availability", "line": 655, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.815356+00:00", "level": "INFO", "logger": "__main__", "message": "✅ Import test passed - 9/9 components available", "module": "validate_phase3_implementation", "function": "_test_import_availability", "line": 686, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.815393+00:00", "level": "INFO", "logger": "__main__", "message": "🔍 Testing risk assessment framework...", "module": "validate_phase3_implementation", "function": "_test_risk_assessment_framework", "line": 693, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.815443+00:00", "level": "ERROR", "logger": "__main__", "message": "❌ Risk assessment framework test failed: ", "module": "validate_phase3_implementation", "function": "_test_risk_assessment_framework", "line": 764, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.815688+00:00", "level": "INFO", "logger": "__main__", "message": "🔍 Testing water consumption risk analyzer...", "module": "validate_phase3_implementation", "function": "_test_water_risk_analyzer", "line": 771, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.816223+00:00", "level": "INFO", "logger": "ehs_analytics.risk_assessment.water_risk", "message": "Starting water consumption risk analysis for facility_001", "module": "water_risk", "function": "analyze", "line": 137, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.816746+00:00", "level": "INFO", "logger": "ehs_analytics.risk_assessment.water_risk", "message": "Completed water risk analysis: medium risk level", "module": "water_risk", "function": "analyze", "line": 188, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.816805+00:00", "level": "INFO", "logger": "__main__", "message": "✅ Water risk analysis completed - medium risk level", "module": "validate_phase3_implementation", "function": "_test_water_risk_analyzer", "line": 826, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.816864+00:00", "level": "INFO", "logger": "__main__", "message": "🔍 Testing electricity consumption risk analyzer...", "module": "validate_phase3_implementation", "function": "_test_electricity_risk_analyzer", "line": 836, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.946622+00:00", "level": "INFO", "logger": "ehs_analytics.risk_assessment.electricity_risk", "message": "Starting electricity consumption risk analysis for facility_001", "module": "electricity_risk", "function": "analyze", "line": 166, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.974004+00:00", "level": "INFO", "logger": "ehs_analytics.risk_assessment.electricity_risk", "message": "Completed electricity risk analysis: medium risk level", "module": "electricity_risk", "function": "analyze", "line": 229, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.974084+00:00", "level": "INFO", "logger": "__main__", "message": "✅ Electricity risk analysis completed - medium risk level", "module": "validate_phase3_implementation", "function": "_test_electricity_risk_analyzer", "line": 878, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.974785+00:00", "level": "INFO", "logger": "__main__", "message": "🔍 Testing waste generation risk analyzer...", "module": "validate_phase3_implementation", "function": "_test_waste_risk_analyzer", "line": 888, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.975828+00:00", "level": "INFO", "logger": "ehs_analytics.risk_assessment.waste_risk", "message": "Starting waste generation risk analysis for facility_001", "module": "waste_risk", "function": "analyze", "line": 163, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.975884+00:00", "level": "ERROR", "logger": "ehs_analytics.risk_assessment.waste_risk", "message": "Error in waste generation risk analysis: regulation_data must be a list or dict", "module": "waste_risk", "function": "analyze", "line": 220, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.975958+00:00", "level": "ERROR", "logger": "__main__", "message": "❌ Waste risk analyzer test failed: regulation_data must be a list or dict", "module": "validate_phase3_implementation", "function": "_test_waste_risk_analyzer", "line": 933, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:28.976099+00:00", "level": "INFO", "logger": "__main__", "message": "🔍 Testing time series analysis...", "module": "validate_phase3_implementation", "function": "_test_time_series_analysis", "line": 940, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.018668+00:00", "level": "INFO", "logger": "ehs_analytics.risk_assessment.time_series", "message": "Trend analysis completed: increasing", "module": "time_series", "function": "analyze_trend", "line": 386, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.018755+00:00", "level": "ERROR", "logger": "__main__", "message": "❌ Time series analysis test failed: ", "module": "validate_phase3_implementation", "function": "_test_time_series_analysis", "line": 973, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.018849+00:00", "level": "INFO", "logger": "__main__", "message": "🔍 Testing forecasting engine...", "module": "validate_phase3_implementation", "function": "_test_forecasting_engine", "line": 980, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.019331+00:00", "level": "WARNING", "logger": "ehs_analytics.risk_assessment.forecasting", "message": "ARIMA model failed: object of type 'TimeSeriesData' has no len(). Using exponential smoothing.", "module": "forecasting", "function": "_arima_forecast", "line": 685, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.019408+00:00", "level": "WARNING", "logger": "ehs_analytics.risk_assessment.forecasting", "message": "ETS model failed: object of type 'TimeSeriesData' has no len(). Using simple exponential smoothing.", "module": "forecasting", "function": "_exponential_smoothing_forecast", "line": 616, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.019465+00:00", "level": "ERROR", "logger": "__main__", "message": "❌ Forecasting engine test failed: object of type 'TimeSeriesData' has no len()", "module": "validate_phase3_implementation", "function": "_test_forecasting_engine", "line": 1009, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.019530+00:00", "level": "INFO", "logger": "__main__", "message": "🔍 Testing anomaly detection system...", "module": "validate_phase3_implementation", "function": "_test_anomaly_detection", "line": 1016, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020021+00:00", "level": "ERROR", "logger": "__main__", "message": "❌ Anomaly detection test failed: object dict can't be used in 'await' expression", "module": "validate_phase3_implementation", "function": "_test_anomaly_detection", "line": 1043, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020096+00:00", "level": "INFO", "logger": "__main__", "message": "🔍 Testing risk-aware query processing...", "module": "validate_phase3_implementation", "function": "_test_risk_query_processing", "line": 1050, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020436+00:00", "level": "INFO", "logger": "ehs_analytics.utils.monitoring", "message": "{\"max_points\": 10000, \"event\": \"MetricsCollector initialized\", \"timestamp\": \"2025-08-21T21:18:29.020416Z\", \"level\": \"info\"}", "module": "logging", "function": "info", "line": 150, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020491+00:00", "level": "INFO", "logger": "ehs_analytics.utils.monitoring", "message": "{\"interval\": 60.0, \"event\": \"ResourceMonitor initialized\", \"timestamp\": \"2025-08-21T21:18:29.020479Z\", \"level\": \"info\"}", "module": "logging", "function": "info", "line": 150, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020534+00:00", "level": "INFO", "logger": "ehs_analytics.utils.monitoring", "message": "{\"event\": \"HealthChecker initialized\", \"timestamp\": \"2025-08-21T21:18:29.020526Z\", \"level\": \"info\"}", "module": "logging", "function": "info", "line": 150, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020575+00:00", "level": "INFO", "logger": "ehs_analytics.utils.monitoring", "message": "{\"event\": \"AlertManager initialized\", \"timestamp\": \"2025-08-21T21:18:29.020568Z\", \"level\": \"info\"}", "module": "logging", "function": "info", "line": 150, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020633+00:00", "level": "INFO", "logger": "ehs_analytics.utils.monitoring", "message": "{\"check_name\": \"database\", \"interval\": 30.0, \"event\": \"Health check registered\", \"timestamp\": \"2025-08-21T21:18:29.020626Z\", \"level\": \"info\"}", "module": "logging", "function": "info", "line": 150, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020673+00:00", "level": "INFO", "logger": "ehs_analytics.utils.monitoring", "message": "{\"check_name\": \"llm_service\", \"interval\": 60.0, \"event\": \"Health check registered\", \"timestamp\": \"2025-08-21T21:18:29.020666Z\", \"level\": \"info\"}", "module": "logging", "function": "info", "line": 150, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020709+00:00", "level": "INFO", "logger": "ehs_analytics.utils.monitoring", "message": "{\"check_name\": \"memory\", \"interval\": 30.0, \"event\": \"Health check registered\", \"timestamp\": \"2025-08-21T21:18:29.020703Z\", \"level\": \"info\"}", "module": "logging", "function": "info", "line": 150, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020750+00:00", "level": "INFO", "logger": "ehs_analytics.utils.monitoring", "message": "{\"rule_name\": \"high_error_rate\", \"metric_name\": \"ehs_query_errors_total\", \"threshold\": 10, \"comparison\": \"greater\", \"event\": \"Threshold alert rule added\", \"timestamp\": \"2025-08-21T21:18:29.020742Z\", \"level\": \"info\"}", "module": "logging", "function": "info", "line": 150, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020794+00:00", "level": "INFO", "logger": "ehs_analytics.utils.monitoring", "message": "{\"rule_name\": \"high_memory_usage\", \"metric_name\": \"system_memory_percent\", \"threshold\": 85.0, \"comparison\": \"greater\", \"event\": \"Threshold alert rule added\", \"timestamp\": \"2025-08-21T21:18:29.020786Z\", \"level\": \"info\"}", "module": "logging", "function": "info", "line": 150, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020835+00:00", "level": "INFO", "logger": "ehs_analytics.utils.monitoring", "message": "{\"rule_name\": \"critical_memory_usage\", \"metric_name\": \"system_memory_percent\", \"threshold\": 95.0, \"comparison\": \"greater\", \"event\": \"Threshold alert rule added\", \"timestamp\": \"2025-08-21T21:18:29.020827Z\", \"level\": \"info\"}", "module": "logging", "function": "info", "line": 150, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020875+00:00", "level": "INFO", "logger": "ehs_analytics.utils.monitoring", "message": "{\"rule_name\": \"high_cpu_usage\", \"metric_name\": \"system_cpu_percent\", \"threshold\": 80.0, \"comparison\": \"greater\", \"event\": \"Threshold alert rule added\", \"timestamp\": \"2025-08-21T21:18:29.020868Z\", \"level\": \"info\"}", "module": "logging", "function": "info", "line": 150, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020912+00:00", "level": "INFO", "logger": "ehs_analytics.utils.monitoring", "message": "{\"event\": \"EHSMonitor initialized\", \"timestamp\": \"2025-08-21T21:18:29.020906Z\", \"level\": \"info\"}", "module": "logging", "function": "info", "line": 150, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.020964+00:00", "level": "INFO", "logger": "ehs_analytics.risk_assessment.risk_query_processor", "message": "{\"available_analyzers\": [\"electricity\", \"water\", \"waste\"], \"cache_ttl_minutes\": 15, \"max_concurrent_assessments\": 5, \"has_neo4j\": true, \"has_llm\": true, \"risk_threshold\": 0.7, \"enable_risk_filtering\": true, \"event\": \"Risk-Aware Query Processor initialized\", \"timestamp\": \"2025-08-21T21:18:29.020952Z\", \"level\": \"info\"}", "module": "logging", "function": "info", "line": 150, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.021007+00:00", "level": "ERROR", "logger": "__main__", "message": "❌ Risk query processing test failed: 'RiskAwareQueryProcessor' object has no attribute 'enhance_query_with_risk_context'", "module": "validate_phase3_implementation", "function": "_test_risk_query_processing", "line": 1089, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.021066+00:00", "level": "INFO", "logger": "__main__", "message": "🔍 Testing monitoring and alerting system...", "module": "validate_phase3_implementation", "function": "_test_monitoring_and_alerting", "line": 1096, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.021197+00:00", "level": "INFO", "logger": "ehs_analytics.risk_assessment.monitoring", "message": "Risk monitoring system initialized", "module": "monitoring", "function": "__init__", "line": 379, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.021249+00:00", "level": "ERROR", "logger": "__main__", "message": "❌ Monitoring and alerting test failed: 'RiskAssessment' object has no attribute 'get'", "module": "validate_phase3_implementation", "function": "_test_monitoring_and_alerting", "line": 1133, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.021309+00:00", "level": "INFO", "logger": "__main__", "message": "🔍 Testing end-to-end integration...", "module": "validate_phase3_implementation", "function": "_test_end_to_end_integration", "line": 1140, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.021790+00:00", "level": "INFO", "logger": "ehs_analytics.risk_assessment.water_risk", "message": "Starting water consumption risk analysis for facility_integration_test", "module": "water_risk", "function": "analyze", "line": 137, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.022259+00:00", "level": "INFO", "logger": "ehs_analytics.risk_assessment.water_risk", "message": "Completed water risk analysis: medium risk level", "module": "water_risk", "function": "analyze", "line": 188, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.033763+00:00", "level": "INFO", "logger": "ehs_analytics.risk_assessment.electricity_risk", "message": "Starting electricity consumption risk analysis for facility_integration_test", "module": "electricity_risk", "function": "analyze", "line": 166, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.060554+00:00", "level": "INFO", "logger": "ehs_analytics.risk_assessment.electricity_risk", "message": "Completed electricity risk analysis: medium risk level", "module": "electricity_risk", "function": "analyze", "line": 229, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.061616+00:00", "level": "INFO", "logger": "ehs_analytics.risk_assessment.waste_risk", "message": "Starting waste generation risk analysis for facility_integration_test", "module": "waste_risk", "function": "analyze", "line": 163, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.061663+00:00", "level": "ERROR", "logger": "ehs_analytics.risk_assessment.waste_risk", "message": "Error in waste generation risk analysis: regulation_data must be a list or dict", "module": "waste_risk", "function": "analyze", "line": 220, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.061729+00:00", "level": "ERROR", "logger": "__main__", "message": "❌ End-to-end integration test failed: regulation_data must be a list or dict", "module": "validate_phase3_implementation", "function": "_test_end_to_end_integration", "line": 1215, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+{"timestamp": "2025-08-21T21:18:29.062495+00:00", "level": "INFO", "logger": "__main__", "message": "✅ Phase 3 validation completed", "module": "validate_phase3_implementation", "function": "run_validation", "line": 649, "thread": 8668979392, "process": 49864, "taskName": "Task-1"}
+
+================================================================================
+PHASE 3 IMPLEMENTATION VALIDATION REPORT
+================================================================================
+
+Validation Date: 2025-08-21 16:18:28
+Total Duration: 0.25 seconds
+Overall Success: ❌ FAILED
+Success Rate: 60.0%
+
+DEPENDENCY STATUS:
+----------------------------------------
+numpy                ✅ Available
+pandas               ✅ Available
+scipy                ✅ Available
+statsmodels          ✅ Available
+prophet              ❌ Missing
+scikit-learn         ❌ Missing
+
+COMPONENT IMPORT STATUS:
+----------------------------------------
+base                      ✅ Imported
+water_risk                ✅ Imported
+electricity_risk          ✅ Imported
+waste_risk                ✅ Imported
+time_series               ✅ Imported
+forecasting               ✅ Imported
+anomaly_detection         ✅ Imported
+monitoring                ✅ Imported
+risk_query_processor      ✅ Imported
+
+COMPONENT TEST RESULTS:
+----------------------------------------
+imports_and_dependencies  ✅ PASS (1/1 tests, 100%)
+  ✅ import_availability  (0.0ms)
+risk_framework            ⚠️  PARTIAL (1/2 tests, 50%)
+  ✅ risk_severity_enum   (0.0ms)
+  ❌ framework_test       (0.0ms)
+water_risk                ✅ PASS (2/2 tests, 100%)
+  ✅ analyzer_initialization (0.0ms)
+  ✅ risk_analysis        (0.6ms)
+electricity_risk          ✅ PASS (2/2 tests, 100%)
+  ✅ analyzer_initialization (0.0ms)
+  ✅ risk_analysis        (27.5ms)
+waste_risk                ⚠️  PARTIAL (1/2 tests, 50%)
+  ✅ analyzer_initialization (0.0ms)
+  ❌ waste_analysis       (0.0ms)
+time_series               ⚠️  PARTIAL (1/2 tests, 50%)
+  ✅ analyzer_initialization (0.0ms)
+  ❌ time_series_analysis (0.0ms)
+forecasting               ⚠️  PARTIAL (1/2 tests, 50%)
+  ✅ engine_initialization (0.1ms)
+  ❌ forecasting_test     (0.0ms)
+anomaly_detection         ⚠️  PARTIAL (1/2 tests, 50%)
+  ✅ system_initialization (0.0ms)
+  ❌ anomaly_detection_test (0.0ms)
+risk_query_processing     ⚠️  PARTIAL (1/2 tests, 50%)
+  ✅ processor_initialization (0.9ms)
+  ❌ risk_query_test      (0.0ms)
+monitoring_alerting       ⚠️  PARTIAL (1/2 tests, 50%)
+  ✅ monitor_initialization (0.1ms)
+  ❌ monitoring_test      (0.0ms)
+end_to_end_integration    ❌ FAIL (0/1 tests, 0%)
+  ❌ integration_test     (0.0ms)
+
+PERFORMANCE METRICS:
+----------------------------------------
+water_risk:
+  data_generation_time: 0.5ms
+  analysis_execution_time: 0.6ms
+electricity_risk:
+  data_generation_time: 129.7ms
+  analysis_execution_time: 27.5ms
+waste_risk:
+  data_generation_time: 1.0ms
+time_series:
+  data_generation_time: 0.4ms
+
+ERRORS:
+----------------------------------------
+❌ risk_framework: 
+❌ waste_risk: regulation_data must be a list or dict
+❌ time_series: 
+❌ forecasting: object of type 'TimeSeriesData' has no len()
+❌ anomaly_detection: object dict can't be used in 'await' expression
+❌ risk_query_processing: 'RiskAwareQueryProcessor' object has no attribute 'enhance_query_with_risk_context'
+❌ monitoring_alerting: 'RiskAssessment' object has no attribute 'get'
+❌ end_to_end_integration: regulation_data must be a list or dict
+
+WARNINGS:
+----------------------------------------
+⚠️  dependencies: Optional dependency prophet not available
+⚠️  dependencies: Optional dependency scikit-learn not available
+
+RECOMMENDATIONS:
+----------------------------------------
+⚠️  Consider installing optional dependencies: prophet, scikit-learn
+❌ Review and fix all reported errors
+✅ Core Phase 3 components are functional
+✅ Basic functionality is available for risk assessment
+⚠️  Some advanced features may require additional dependencies
+
+================================================================================
+Report generated: 2025-08-21 16:18:29
+================================================================================
+
+📁 Detailed results saved to: phase3_validation_results_20250821_161829.json
+📁 Summary report saved to: phase3_validation_report_20250821_161829.txt
+
+🏁 Validation COMPLETED WITH WARNINGS

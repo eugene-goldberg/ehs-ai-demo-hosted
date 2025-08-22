@@ -1,0 +1,32 @@
+{
+  "account_number": "85-23459-88-1",
+  "statement_date": "July 5, 2025",
+  "billing_period_start": "June 1, 2025",
+  "billing_period_end": "June 30, 2025",
+  "total_kwh": 130000.0,
+  "peak_kwh": 70000.0,
+  "off_peak_kwh": 60000.0,
+  "total_amount_due": 15432.89,
+  "due_date": "August 1, 2025",
+  "service_address": "Apex Manufacturing - Plant A, 789 Production Way,",
+  "meter_readings": [
+    {
+      "meter_id": "MTR-7743-A",
+      "service_type": "Commercial - Peak\n543210 kWh\n613210 kWh\nMTR-7743-B\nCommercial - O\ufb00-Peak",
+      "previous_reading": 891234.0,
+      "current_reading": 951234.0
+    }
+  ],
+  "charges": [
+    {
+      "description": "d Usage (70,000 kWh)",
+      "rate": 0.1255,
+      "amount": 8785.0
+    },
+    {
+      "description": "d Usage (60,000 kWh)",
+      "rate": 0.089,
+      "amount": 5340.0
+    }
+  ]
+}

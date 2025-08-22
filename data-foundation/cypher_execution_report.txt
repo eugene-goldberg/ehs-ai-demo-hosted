@@ -1,0 +1,520 @@
+EHS AI PLATFORM - CYPHER QUERY EXECUTION REPORT
+================================================================================
+
+Generated: 2025-08-17T18:29:47.587260
+Neo4j URI: bolt://localhost:7687
+Source Document: electric_bill.pdf
+
+EXECUTION SUMMARY
+----------------------------------------
+Total Queries: 9
+Successful: 5
+Failed: 4
+
+QUERY EXECUTIONS
+================================================================================
+
+Query #1
+----------------------------------------
+Status: SUCCESS
+Query: CREATE (n:Document:UtilityBill {id: $id, type: $type, account_number: $account_number, statement_date: $statement_date, uploaded_at: $uploaded_at}) RETURN n
+Parameters: {
+  "id": "electric_bill_20250817_170107",
+  "type": "utility_bill",
+  "account_number": "85-23459-88-1",
+  "statement_date": "July 5, 2025",
+  "uploaded_at": "2025-08-17T17:01:07.848549"
+}
+Records Affected: 1
+Result: [
+  {
+    "n": {
+      "id": "electric_bill_20250817_170107",
+      "labels": [
+        "UtilityBill",
+        "Document"
+      ],
+      "properties": {
+        "statement_date": "July 5, 2025",
+        "account_number": "85-23459-88-1",
+        "uploaded_at": "2025-08-17T17:01:07.848549",
+        "id": "electric_bill_20250817_170107",
+        "type": "utility_bill"
+      },
+      "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:37"
+    }
+  }
+]
+
+Query #2
+----------------------------------------
+Status: SUCCESS
+Query: CREATE (n:UtilityBill {id: $id, billing_period_start: $billing_period_start, billing_period_end: $billing_period_end, total_kwh: $total_kwh, peak_kwh: $peak_kwh, off_peak_kwh: $off_peak_kwh, total_cost: $total_cost, due_date: $due_date}) RETURN n
+Parameters: {
+  "id": "bill_electric_bill_20250817_170107",
+  "billing_period_start": "June 1, 2025",
+  "billing_period_end": "June 30, 2025",
+  "total_kwh": 130000.0,
+  "peak_kwh": 70000.0,
+  "off_peak_kwh": 60000.0,
+  "total_cost": 15432.89,
+  "due_date": "August 1, 2025"
+}
+Records Affected: 1
+Result: [
+  {
+    "n": {
+      "id": "bill_electric_bill_20250817_170107",
+      "labels": [
+        "UtilityBill"
+      ],
+      "properties": {
+        "off_peak_kwh": 60000.0,
+        "peak_kwh": 70000.0,
+        "total_cost": 15432.89,
+        "due_date": "August 1, 2025",
+        "billing_period_end": "June 30, 2025",
+        "billing_period_start": "June 1, 2025",
+        "id": "bill_electric_bill_20250817_170107",
+        "total_kwh": 130000.0
+      },
+      "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:38"
+    }
+  }
+]
+
+Query #3
+----------------------------------------
+Status: SUCCESS
+Query: CREATE (n:Facility {id: $id, name: $name, address: $address}) RETURN n
+Parameters: {
+  "id": "facility_apex_plant_a",
+  "name": "Apex Manufacturing - Plant A",
+  "address": "Apex Manufacturing - Plant A, 789 Production Way,"
+}
+Records Affected: 1
+Result: [
+  {
+    "n": {
+      "id": "facility_apex_plant_a",
+      "labels": [
+        "Facility"
+      ],
+      "properties": {
+        "address": "Apex Manufacturing - Plant A, 789 Production Way,",
+        "name": "Apex Manufacturing - Plant A",
+        "id": "facility_apex_plant_a"
+      },
+      "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:39"
+    }
+  }
+]
+
+Query #4
+----------------------------------------
+Status: SUCCESS
+Query: CREATE (n:Emission {id: $id, amount: $amount, unit: $unit, calculation_method: $calculation_method, emission_factor: $emission_factor}) RETURN n
+Parameters: {
+  "id": "emission_electric_bill_20250817_170107",
+  "amount": 52000.0,
+  "unit": "kg_CO2",
+  "calculation_method": "grid_average_factor",
+  "emission_factor": 0.4
+}
+Records Affected: 1
+Result: [
+  {
+    "n": {
+      "id": "emission_electric_bill_20250817_170107",
+      "labels": [
+        "Emission"
+      ],
+      "properties": {
+        "emission_factor": 0.4,
+        "amount": 52000.0,
+        "unit": "kg_CO2",
+        "calculation_method": "grid_average_factor",
+        "id": "emission_electric_bill_20250817_170107"
+      },
+      "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:40"
+    }
+  }
+]
+
+Query #5
+----------------------------------------
+Status: SUCCESS
+Query: CREATE (n:Meter {id: $id, type: $type, previous_reading: $previous_reading, current_reading: $current_reading, usage: $usage}) RETURN n
+Parameters: {
+  "id": "MTR-7743-A",
+  "type": "electricity",
+  "previous_reading": 891234.0,
+  "current_reading": 951234.0,
+  "usage": 60000.0
+}
+Records Affected: 1
+Result: [
+  {
+    "n": {
+      "id": "MTR-7743-A",
+      "labels": [
+        "Meter"
+      ],
+      "properties": {
+        "previous_reading": 891234.0,
+        "usage": 60000.0,
+        "current_reading": 951234.0,
+        "id": "MTR-7743-A",
+        "type": "electricity"
+      },
+      "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:41"
+    }
+  }
+]
+
+Query #6
+----------------------------------------
+Status: FAILED
+Query: 
+        MATCH (a {id: $source_id})
+        MATCH (b {id: $target_id})
+        CREATE (a)-[r:EXTRACTED_TO $properties]->(b)
+        RETURN r
+        
+Parameters: {
+  "source_id": "electric_bill_20250817_170107",
+  "target_id": "bill_electric_bill_20250817_170107",
+  "properties": {
+    "extraction_date": "2025-08-17T17:01:07.848557"
+  }
+}
+Error: 'EXTRACTED_TO' object has no attribute 'labels'
+
+Query #7
+----------------------------------------
+Status: FAILED
+Query: 
+        MATCH (a {id: $source_id})
+        MATCH (b {id: $target_id})
+        CREATE (a)-[r:BILLED_TO $properties]->(b)
+        RETURN r
+        
+Parameters: {
+  "source_id": "bill_electric_bill_20250817_170107",
+  "target_id": "facility_apex_plant_a",
+  "properties": {}
+}
+Error: 'BILLED_TO' object has no attribute 'labels'
+
+Query #8
+----------------------------------------
+Status: FAILED
+Query: 
+        MATCH (a {id: $source_id})
+        MATCH (b {id: $target_id})
+        CREATE (a)-[r:RESULTED_IN $properties]->(b)
+        RETURN r
+        
+Parameters: {
+  "source_id": "bill_electric_bill_20250817_170107",
+  "target_id": "emission_electric_bill_20250817_170107",
+  "properties": {
+    "calculation_method": "grid_average"
+  }
+}
+Error: 'RESULTED_IN' object has no attribute 'labels'
+
+Query #9
+----------------------------------------
+Status: FAILED
+Query: 
+        MATCH (a {id: $source_id})
+        MATCH (b {id: $target_id})
+        CREATE (a)-[r:MONITORS $properties]->(b)
+        RETURN r
+        
+Parameters: {
+  "source_id": "MTR-7743-A",
+  "target_id": "facility_apex_plant_a",
+  "properties": {}
+}
+Error: 'MONITORS' object has no attribute 'labels'
+
+
+GRAPH VERIFICATION
+================================================================================
+
+Total Nodes:
+Query: MATCH (n) RETURN count(n) as count, labels(n) as labels
+Record Count: 8
+Results:
+  {
+  "count": 22,
+  "labels": [
+    "__Node__",
+    "__Entity__",
+    "entity"
+  ]
+}
+  {
+  "count": 4,
+  "labels": [
+    "DocumentChunk"
+  ]
+}
+  {
+  "count": 8,
+  "labels": [
+    "__Node__",
+    "Chunk"
+  ]
+}
+  {
+  "count": 1,
+  "labels": [
+    "UtilityBill",
+    "Document"
+  ]
+}
+  {
+  "count": 1,
+  "labels": [
+    "UtilityBill"
+  ]
+}
+  ... and 3 more records
+
+Document Nodes:
+Query: MATCH (d:Document) RETURN d
+Record Count: 1
+Results:
+  {
+  "d": {
+    "id": "electric_bill_20250817_170107",
+    "labels": [
+      "UtilityBill",
+      "Document"
+    ],
+    "properties": {
+      "statement_date": "July 5, 2025",
+      "account_number": "85-23459-88-1",
+      "uploaded_at": "2025-08-17T17:01:07.848549",
+      "id": "electric_bill_20250817_170107",
+      "type": "utility_bill"
+    },
+    "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:37"
+  }
+}
+
+UtilityBill Nodes:
+Query: MATCH (u:UtilityBill) RETURN u
+Record Count: 2
+Results:
+  {
+  "u": {
+    "id": "electric_bill_20250817_170107",
+    "labels": [
+      "UtilityBill",
+      "Document"
+    ],
+    "properties": {
+      "statement_date": "July 5, 2025",
+      "account_number": "85-23459-88-1",
+      "uploaded_at": "2025-08-17T17:01:07.848549",
+      "id": "electric_bill_20250817_170107",
+      "type": "utility_bill"
+    },
+    "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:37"
+  }
+}
+  {
+  "u": {
+    "id": "bill_electric_bill_20250817_170107",
+    "labels": [
+      "UtilityBill"
+    ],
+    "properties": {
+      "off_peak_kwh": 60000.0,
+      "peak_kwh": 70000.0,
+      "total_cost": 15432.89,
+      "due_date": "August 1, 2025",
+      "billing_period_end": "June 30, 2025",
+      "id": "bill_electric_bill_20250817_170107",
+      "billing_period_start": "June 1, 2025",
+      "total_kwh": 130000.0
+    },
+    "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:38"
+  }
+}
+
+Facility Nodes:
+Query: MATCH (f:Facility) RETURN f
+Record Count: 1
+Results:
+  {
+  "f": {
+    "id": "facility_apex_plant_a",
+    "labels": [
+      "Facility"
+    ],
+    "properties": {
+      "address": "Apex Manufacturing - Plant A, 789 Production Way,",
+      "name": "Apex Manufacturing - Plant A",
+      "id": "facility_apex_plant_a"
+    },
+    "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:39"
+  }
+}
+
+Emission Nodes:
+Query: MATCH (e:Emission) RETURN e
+Record Count: 1
+Results:
+  {
+  "e": {
+    "id": "emission_electric_bill_20250817_170107",
+    "labels": [
+      "Emission"
+    ],
+    "properties": {
+      "emission_factor": 0.4,
+      "amount": 52000.0,
+      "unit": "kg_CO2",
+      "calculation_method": "grid_average_factor",
+      "id": "emission_electric_bill_20250817_170107"
+    },
+    "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:40"
+  }
+}
+
+Meter Nodes:
+Query: MATCH (m:Meter) RETURN m
+Record Count: 1
+Results:
+  {
+  "m": {
+    "id": "MTR-7743-A",
+    "labels": [
+      "Meter"
+    ],
+    "properties": {
+      "previous_reading": 891234.0,
+      "usage": 60000.0,
+      "current_reading": 951234.0,
+      "id": "MTR-7743-A",
+      "type": "electricity"
+    },
+    "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:41"
+  }
+}
+
+All Relationships:
+Query: MATCH ()-[r]->() RETURN type(r) as type, count(r) as count
+Record Count: 14
+Results:
+  {
+  "type": "MENTIONS",
+  "count": 22
+}
+  {
+  "type": "Is",
+  "count": 8
+}
+  {
+  "type": "Include",
+  "count": 1
+}
+  {
+  "type": "SOURCE",
+  "count": 4
+}
+  {
+  "type": "Has previous reading of",
+  "count": 2
+}
+  ... and 9 more records
+
+Full Graph Pattern:
+Query: 
+                MATCH (d:Document)-[:EXTRACTED_TO]->(b:UtilityBill)-[:BILLED_TO]->(f:Facility)
+                OPTIONAL MATCH (b)-[:RESULTED_IN]->(e:Emission)
+                OPTIONAL MATCH (m:Meter)-[:MONITORS]->(f)
+                RETURN d, b, f, e, m
+            
+Record Count: 1
+Results:
+  {
+  "d": {
+    "id": "electric_bill_20250817_170107",
+    "labels": [
+      "UtilityBill",
+      "Document"
+    ],
+    "properties": {
+      "statement_date": "July 5, 2025",
+      "account_number": "85-23459-88-1",
+      "uploaded_at": "2025-08-17T17:01:07.848549",
+      "id": "electric_bill_20250817_170107",
+      "type": "utility_bill"
+    },
+    "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:37"
+  },
+  "b": {
+    "id": "bill_electric_bill_20250817_170107",
+    "labels": [
+      "UtilityBill"
+    ],
+    "properties": {
+      "off_peak_kwh": 60000.0,
+      "peak_kwh": 70000.0,
+      "total_cost": 15432.89,
+      "due_date": "August 1, 2025",
+      "billing_period_end": "June 30, 2025",
+      "id": "bill_electric_bill_20250817_170107",
+      "billing_period_start": "June 1, 2025",
+      "total_kwh": 130000.0
+    },
+    "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:38"
+  },
+  "f": {
+    "id": "facility_apex_plant_a",
+    "labels": [
+      "Facility"
+    ],
+    "properties": {
+      "address": "Apex Manufacturing - Plant A, 789 Production Way,",
+      "name": "Apex Manufacturing - Plant A",
+      "id": "facility_apex_plant_a"
+    },
+    "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:39"
+  },
+  "e": {
+    "id": "emission_electric_bill_20250817_170107",
+    "labels": [
+      "Emission"
+    ],
+    "properties": {
+      "emission_factor": 0.4,
+      "amount": 52000.0,
+      "unit": "kg_CO2",
+      "calculation_method": "grid_average_factor",
+      "id": "emission_electric_bill_20250817_170107"
+    },
+    "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:40"
+  },
+  "m": {
+    "id": "MTR-7743-A",
+    "labels": [
+      "Meter"
+    ],
+    "properties": {
+      "previous_reading": 891234.0,
+      "usage": 60000.0,
+      "current_reading": 951234.0,
+      "id": "MTR-7743-A",
+      "type": "electricity"
+    },
+    "element_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:41"
+  }
+}
+

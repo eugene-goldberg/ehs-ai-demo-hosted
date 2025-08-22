@@ -1,0 +1,1 @@
+# Document indexing for EHS AI Platform

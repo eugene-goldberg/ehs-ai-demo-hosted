@@ -1,0 +1,132 @@
+.ingestion-progress {
+  /* Remove background and shadow for inline display */
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+}
+
+.progress-stages {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+  flex-wrap: nowrap;
+  gap: 15px;
+  overflow-x: auto;
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  color: #666;
+  transition: all 0.3s ease;
+  min-width: 60px;
+}
+
+.stage-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.stage.active .stage-icon {
+  background: #3498db;
+  color: white;
+  animation: pulse 1.5s infinite;
+}
+
+.stage.completed .stage-icon {
+  background: #27ae60;
+  color: white;
+}
+
+.stage.active {
+  color: #3498db;
+  font-weight: 600;
+}
+
+.stage.completed {
+  color: #27ae60;
+}
+
+.stage-name {
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.progress-bar {
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #27ae60 0%, #3498db 100%);
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5));
+  animation: shimmer 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(52, 152, 219, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100px);
+  }
+  100% {
+    transform: translateX(100px);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .progress-stages {
+    justify-content: center;
+  }
+  
+  .stage {
+    font-size: 12px;
+  }
+  
+  .stage-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+}

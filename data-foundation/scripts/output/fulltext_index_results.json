@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-08-20T20:21:44.406879",
+  "creation_results": {
+    "ehs_document_text_search": false,
+    "ehs_entity_search": false,
+    "ehs_permit_search": false,
+    "ehs_utility_search": false,
+    "ehs_waste_search": false
+  },
+  "verification_results": {},
+  "sample_data_created": false
+}

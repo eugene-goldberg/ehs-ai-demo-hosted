@@ -1,0 +1,207 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ehs-analytics"
+version = "0.1.0"
+description = "EHS Analytics - AI-powered environmental, health, and safety analytics platform"
+authors = [
+    {name = "EHS AI Team", email = "ehs-ai@company.com"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+keywords = ["ehs", "analytics", "ai", "graphrag", "neo4j"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Environmental Science",
+]
+
+dependencies = [
+    # Core GraphRAG Dependencies
+    "neo4j-graphrag-python==0.8.0",
+    "neo4j==5.13.0",
+    "langchain==0.1.0",
+    "langchain-openai==0.0.5",
+    "llama-index==0.9.30",
+    "llama-parse==0.3.9",
+    "langgraph==0.0.20",
+    
+    # Vector Store Options
+    "pinecone-client==3.0.0",
+    "weaviate-client==4.4.0",
+    "qdrant-client==1.7.0",
+    
+    # Data Processing & Validation
+    "pydantic==2.5.0",
+    "pandas>=1.5.0",
+    "numpy>=1.21.0",
+    
+    # API Framework
+    "fastapi==0.104.1",
+    "uvicorn[standard]>=0.20.0",
+    
+    # Configuration & Environment
+    "python-dotenv>=1.0.0",
+    "pydantic-settings>=2.0.0",
+    
+    # Async & Concurrency
+    "asyncio>=3.4.3",
+    "aiofiles>=23.0.0",
+    
+    # Logging & Monitoring
+    "structlog>=23.0.0",
+    "prometheus-client>=0.17.0",
+    
+    # Testing & Development
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-mock>=3.10.0",
+    "httpx>=0.24.0",
+    
+    # Utilities
+    "typer[all]>=0.9.0",
+    "rich>=13.0.0",
+    "python-multipart>=0.0.6",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.0.0",
+    "pytest-cov>=4.0.0",
+    "bandit[toml]>=1.7.0",
+    "safety>=2.3.0",
+]
+
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocstrings[python]>=0.22.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/company/ehs-analytics"
+Documentation = "https://ehs-analytics.readthedocs.io"
+Repository = "https://github.com/company/ehs-analytics.git"
+"Bug Tracker" = "https://github.com/company/ehs-analytics/issues"
+
+[project.scripts]
+ehs-analytics = "ehs_analytics.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["ehs_analytics"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--verbose",
+    "-ra",
+    "--cov=src/ehs_analytics",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "e2e: End-to-end tests",
+    "slow: Slow tests",
+]
+asyncio_mode = "auto"
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+show_error_codes = true
+namespace_packages = true
+exclude = [
+    "build/",
+    "dist/",
+    ".venv/",
+    "tests/fixtures/",
+]
+
+[[tool.mypy.overrides]]
+module = [
+    "neo4j_graphrag.*",
+    "llama_index.*",
+    "llama_parse.*",
+    "langgraph.*",
+    "pinecone.*",
+    "weaviate.*",
+    "qdrant_client.*",
+]
+ignore_missing_imports = true
+
+[tool.bandit]
+exclude_dirs = ["tests", "build", "dist"]
+skips = ["B101", "B601"]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]

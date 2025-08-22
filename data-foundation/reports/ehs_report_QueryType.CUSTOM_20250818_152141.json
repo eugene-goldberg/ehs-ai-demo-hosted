@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:21:41.038135",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [],
+        "relationships": [],
+        "total_nodes": 0,
+        "total_relationships": 0
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "All_WasteManifest_Nodes",
+      "query": "\n                MATCH (m:WasteManifest)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    m.date_shipped as date_shipped,\n                    m.quantity as quantity,\n                    m.unit as unit,\n                    m.hazardous as hazardous,\n                    m.waste_code as waste_code,\n                    m.description as description,\n                    m.proper_shipping_name as proper_shipping_name,\n                    m.un_number as un_number,\n                    m.packing_group as packing_group,\n                    m.hazard_class as hazard_class,\n                    properties(m) as all_properties\n                ORDER BY m.date_shipped DESC, m.manifest_id\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (m:WasteManifest)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    m.date_shipped as date_shipped,\n                    m.quantity as quantity,\n                    m.unit as unit,\n                    m.hazardous as hazardous,\n                    m.waste_code as waste_code,\n                    m.description as description,\n                    m.proper_shipping_name as proper_shipping_name,\n                    m.un_number as un_number,\n                    m.packing_group as packing_group,\n                    m.hazard_class as hazard_class,\n                    properties(m) as all_properties\n                ORDER BY m.date_shipped DESC, m.manifest_id\n            ",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query executed successfully without any errors.",
+      "2": "The query was designed to extract data related to waste manifests, including details such as manifest ID, date shipped, quantity, unit, whether it's hazardous or not, waste code, description, proper shipping name, UN number, packing group, hazard class, and all properties.",
+      "3": "Despite the successful execution, the query did not return any records."
+    },
+    "Patterns or Trends": {
+      "1": "No patterns or trends can be identified as the query did not return any records."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The lack of returned records could indicate a data quality issue. It's possible that the database does not contain any WasteManifest records, or the existing records do not meet the criteria specified in the query.",
+      "2": "Another potential issue could be that the query is not correctly formulated to retrieve the desired data."
+    },
+    "Recommendations": {
+      "1": "Verify the existence and correctness of WasteManifest records in the database.",
+      "2": "Review the query to ensure it is correctly formulated to retrieve the desired data.",
+      "3": "If the database is confirmed to be empty, steps should be taken to populate it with the necessary data."
+    }
+  },
+  "errors": []
+}

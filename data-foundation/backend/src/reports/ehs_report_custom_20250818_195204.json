@@ -1,0 +1,163 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - custom",
+    "generated_at": "2025-08-18T19:52:04.853939",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "Document",
+              "Waterbill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WaterBill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Facility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Customer"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "UtilityProvider"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Meter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 12
+          }
+        ],
+        "relationships": [
+          {
+            "type": "EXTRACTED_TO",
+            "count": 1
+          },
+          {
+            "type": "BILLED_TO",
+            "count": 1
+          },
+          {
+            "type": "BILLED_FOR",
+            "count": 1
+          },
+          {
+            "type": "PROVIDED_BY",
+            "count": 1
+          },
+          {
+            "type": "MONITORS",
+            "count": 1
+          },
+          {
+            "type": "RECORDED_IN",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          },
+          {
+            "type": "MENTIONS",
+            "count": 12
+          },
+          {
+            "type": "Is",
+            "count": 6
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          }
+        ],
+        "total_nodes": 22,
+        "total_relationships": 26
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "MATCH (n:UtilityBill) RETURN n LIMIT 1"
+    }
+  ],
+  "query_results": [
+    {
+      "query": "MATCH (n:UtilityBill) RETURN n LIMIT 1",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query executed successfully but did not return any records.",
+      "2": "The query was designed to retrieve data from the 'UtilityBill' node, but no such data was found."
+    },
+    "Patterns or Trends": {
+      "1": "There is no data available to identify any patterns or trends as the query returned zero records."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The 'UtilityBill' node may not contain any data, indicating a potential data quality issue.",
+      "2": "There could be a mismatch between the query parameters and the actual data structure or content in the database.",
+      "3": "The data in the 'UtilityBill' node may not be properly indexed or structured, causing the query to return zero results."
+    },
+    "Recommendations": {
+      "1": "Check the 'UtilityBill' node for data. If it is empty, investigate why no data is being stored.",
+      "2": "Review the query parameters to ensure they match the actual data structure and content in the database.",
+      "3": "Ensure the data in the 'UtilityBill' node is properly indexed and structured to facilitate accurate query results."
+    }
+  },
+  "errors": []
+}

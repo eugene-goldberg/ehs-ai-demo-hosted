@@ -1,0 +1,140 @@
+# EHS Analytics Default Configuration
+
+# Neo4j Database Configuration
+neo4j:
+  uri: "bolt://localhost:7687"
+  username: "neo4j"
+  password: "${NEO4J_PASSWORD}"
+  database: "ehs"
+  max_connection_lifetime: 3600
+  max_connection_pool_size: 50
+
+# LLM Configuration
+llm:
+  openai:
+    api_key: "${OPENAI_API_KEY}"
+    model: "gpt-4"
+    temperature: 0.1
+    max_tokens: 2048
+  
+  anthropic:
+    api_key: "${ANTHROPIC_API_KEY}"
+    model: "claude-3-sonnet-20240229"
+    temperature: 0.1
+    max_tokens: 2048
+
+# Document Processing
+document_processing:
+  llama_parse:
+    api_key: "${LLAMA_PARSE_API_KEY}"
+    max_timeout: 30
+    language: "en"
+  
+  chunk_size: 1000
+  chunk_overlap: 200
+  max_file_size_mb: 50
+
+# Vector Stores
+vector_stores:
+  neo4j:
+    index_name: "ehs_embeddings"
+    dimension: 1536
+    similarity_function: "cosine"
+  
+  pinecone:
+    api_key: "${PINECONE_API_KEY}"
+    environment: "us-west1-gcp"
+    index_name: "ehs-analytics"
+  
+  weaviate:
+    url: "${WEAVIATE_URL}"
+    api_key: "${WEAVIATE_API_KEY}"
+    class_name: "EHSDocument"
+  
+  qdrant:
+    url: "${QDRANT_URL}"
+    api_key: "${QDRANT_API_KEY}"
+    collection_name: "ehs_documents"
+
+# Retrieval Configuration
+retrieval:
+  strategies:
+    vector:
+      enabled: true
+      top_k: 10
+      score_threshold: 0.7
+    
+    hybrid:
+      enabled: true
+      vector_weight: 0.7
+      fulltext_weight: 0.3
+      top_k: 10
+    
+    text2cypher:
+      enabled: true
+      max_examples: 20
+      validation: true
+    
+    vector_cypher:
+      enabled: true
+      top_k: 5
+      max_depth: 3
+    
+    hybrid_cypher:
+      enabled: true
+      vector_weight: 0.6
+      fulltext_weight: 0.4
+      top_k: 8
+
+# Risk Assessment
+risk_assessment:
+  algorithms:
+    - "environmental_impact"
+    - "compliance_risk"
+    - "operational_risk"
+    - "financial_impact"
+  
+  thresholds:
+    low: 0.3
+    medium: 0.6
+    high: 0.8
+    critical: 0.9
+
+# API Configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+  cors_origins: ["*"]
+  max_request_size: 100_000_000  # 100MB
+
+# Logging
+logging:
+  level: "INFO"
+  format: "json"
+  handlers:
+    - type: "console"
+    - type: "file"
+      filename: "logs/ehs_analytics.log"
+      max_bytes: 10_000_000
+      backup_count: 5
+
+# Monitoring
+monitoring:
+  prometheus:
+    enabled: true
+    port: 9090
+  
+  health_check:
+    enabled: true
+    interval_seconds: 30
+
+# Cache Configuration
+cache:
+  redis:
+    url: "${REDIS_URL:-redis://localhost:6379}"
+    ttl_seconds: 3600
+  
+  in_memory:
+    max_size: 1000
+    ttl_seconds: 1800

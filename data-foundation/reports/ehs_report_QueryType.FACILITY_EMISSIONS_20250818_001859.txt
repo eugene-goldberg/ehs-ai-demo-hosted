@@ -1,0 +1,269 @@
+================================================================================
+EHS Data Extraction Report - QueryType.FACILITY_EMISSIONS
+================================================================================
+
+Generated: 2025-08-18T00:18:59.475391
+Query Type: QueryType.FACILITY_EMISSIONS
+
+SUMMARY
+----------------------------------------
+Total Queries: 2
+Successful: 2
+Failed: 0
+Total Records: 2
+
+GRAPH OBJECTS
+----------------------------------------
+[
+  {
+    "nodes": [
+      {
+        "labels": [
+          "__Node__",
+          "__Entity__",
+          "entity"
+        ],
+        "count": 12
+      },
+      {
+        "labels": [
+          "__Node__",
+          "Chunk"
+        ],
+        "count": 2
+      },
+      {
+        "labels": [
+          "Document",
+          "Utilitybill"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "UtilityBill"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Facility"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Customer"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "UtilityProvider"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Meter"
+        ],
+        "count": 2
+      },
+      {
+        "labels": [
+          "Emission"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "DocumentChunk"
+        ],
+        "count": 1
+      }
+    ],
+    "relationships": [
+      {
+        "type": "MENTIONS",
+        "count": 12
+      },
+      {
+        "type": "Is",
+        "count": 6
+      },
+      {
+        "type": "SOURCE",
+        "count": 1
+      },
+      {
+        "type": "EXTRACTED_TO",
+        "count": 1
+      },
+      {
+        "type": "BILLED_TO",
+        "count": 1
+      },
+      {
+        "type": "BILLED_FOR",
+        "count": 1
+      },
+      {
+        "type": "PROVIDED_BY",
+        "count": 1
+      },
+      {
+        "type": "MONITORS",
+        "count": 2
+      },
+      {
+        "type": "RECORDED_IN",
+        "count": 2
+      },
+      {
+        "type": "RESULTED_IN",
+        "count": 1
+      }
+    ],
+    "total_nodes": 23,
+    "total_relationships": 28
+  }
+]
+
+QUERY RESULTS
+================================================================================
+
+Query 1
+----------------------------------------
+Query: 
+                MATCH (f:Facility)
+                OPTIONAL MATCH (f)<-[:BILLED_TO]-(b:UtilityBill)
+                OPTIONAL MATCH (b)-[:RESULTED_IN]->(e:Emission)
+                RETURN f, b, e
+                ORDER BY b.billing_period_end DESC
+                
+Status: success
+Records: 1
+Results (first 5):
+  1: {
+  "f": {
+    "labels": [
+      "Facility"
+    ],
+    "properties": {
+      "address": "789 Production Way, Mechanicsburg, CA 93011",
+      "name": "Apex Manufacturing - Plant A",
+      "id": "facility_apex_manufacturing___plant_a"
+    }
+  },
+  "b": {
+    "labels": [
+      "UtilityBill"
+    ],
+    "properties": {
+      "off_peak_kwh": 60000,
+      "peak_kwh": 70000,
+      "grid_infrastructure_fee": 182.39,
+      "total_cost": 15432.89,
+      "billing_period_end": "2025-06-30",
+      "base_service_charge": 250.0,
+      "state_environmental_surcharge": 875.5,
+      "billing_period_start": "2025-06-01",
+      "id": "bill_electric_bill_20250817_191629",
+      "total_kwh": 130000,
+      "peak_demand_kw": 70000
+    }
+  },
+  "e": {
+    "labels": [
+      "Emission"
+    ],
+    "properties": {
+      "emission_factor": 0.4,
+      "amount": 52000.0,
+      "unit": "kg_CO2",
+      "calculation_method": "grid_average_factor",
+      "id": "emission_electric_bill_20250817_191629"
+    }
+  }
+}
+
+Query 2
+----------------------------------------
+Query: 
+                MATCH (f:Facility)
+                MATCH (f)<-[:BILLED_TO]-(b:UtilityBill)-[:RESULTED_IN]->(e:Emission)
+                RETURN f.name as facility, 
+                       SUM(e.amount) as total_emissions,
+                       e.unit as unit,
+                       COUNT(b) as bill_count
+                
+Status: success
+Records: 1
+Results (first 5):
+  1: {
+  "facility": "Apex Manufacturing - Plant A",
+  "total_emissions": 52000.0,
+  "unit": "kg_CO2",
+  "bill_count": 1
+}
+
+ANALYSIS
+================================================================================
+{
+  "Key Findings": [
+    {
+      "Facility Information": {
+        "Name": "Apex Manufacturing - Plant A",
+        "Address": "789 Production Way, Mechanicsburg, CA 93011",
+        "ID": "facility_apex_manufacturing___plant_a"
+      }
+    },
+    {
+      "Utility Bill Information": {
+        "Off Peak kWh": 60000,
+        "Peak kWh": 70000,
+        "Grid Infrastructure Fee": 182.39,
+        "Total Cost": 15432.89,
+        "Billing Period": "2025-06-01 to 2025-06-30",
+        "Base Service Charge": 250.0,
+        "State Environmental Surcharge": 875.5,
+        "Total kWh": 130000,
+        "Peak Demand kW": 70000
+      }
+    },
+    {
+      "Emission Information": {
+        "Emission Factor": 0.4,
+        "Amount": 52000.0,
+        "Unit": "kg_CO2",
+        "Calculation Method": "grid_average_factor"
+      }
+    },
+    {
+      "Total Emissions": {
+        "Facility": "Apex Manufacturing - Plant A",
+        "Total Emissions": 52000.0,
+        "Unit": "kg_CO2",
+        "Bill Count": 1
+      }
+    }
+  ],
+  "Patterns or Trends": [
+    {
+      "Observation": "The facility has a high energy consumption with a total of 130000 kWh for the billing period of June 2025. This resulted in a significant amount of emissions (52000 kg CO2)."
+    }
+  ],
+  "Potential Data Quality Issues": [
+    {
+      "Issue": "The data set is limited to one facility and one billing period. This limits the ability to identify trends or make comparisons."
+    }
+  ],
+  "Recommendations": [
+    {
+      "Recommendation": "To reduce emissions, the facility could consider implementing energy efficiency measures or switching to renewable energy sources."
+    },
+    {
+      "Recommendation": "To improve data quality and analysis, consider expanding the data set to include multiple facilities and billing periods."
+    }
+  ]
+}

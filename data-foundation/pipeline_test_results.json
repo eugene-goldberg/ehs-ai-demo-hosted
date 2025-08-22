@@ -1,0 +1,136 @@
+{
+  "document_id": "electric_bill_20250817_170107",
+  "extracted_data": {
+    "account_number": "85-23459-88-1",
+    "statement_date": "July 5, 2025",
+    "billing_period_start": "June 1, 2025",
+    "billing_period_end": "June 30, 2025",
+    "total_kwh": 130000.0,
+    "peak_kwh": 70000.0,
+    "off_peak_kwh": 60000.0,
+    "total_amount_due": 15432.89,
+    "due_date": "August 1, 2025",
+    "service_address": "Apex Manufacturing - Plant A, 789 Production Way,",
+    "meter_readings": [
+      {
+        "meter_id": "MTR-7743-A",
+        "service_type": "Commercial - Peak\n543210 kWh\n613210 kWh\nMTR-7743-B\nCommercial - O\ufb00-Peak",
+        "previous_reading": 891234.0,
+        "current_reading": 951234.0
+      }
+    ],
+    "charges": [
+      {
+        "description": "d Usage (70,000 kWh)",
+        "rate": 0.1255,
+        "amount": 8785.0
+      },
+      {
+        "description": "d Usage (60,000 kWh)",
+        "rate": 0.089,
+        "amount": 5340.0
+      }
+    ]
+  },
+  "graph_schema": {
+    "nodes": [
+      {
+        "labels": [
+          "Document",
+          "UtilityBill"
+        ],
+        "properties": {
+          "id": "electric_bill_20250817_170107",
+          "type": "utility_bill",
+          "account_number": "85-23459-88-1",
+          "statement_date": "July 5, 2025",
+          "uploaded_at": "2025-08-17T17:01:07.848549"
+        }
+      },
+      {
+        "labels": [
+          "UtilityBill"
+        ],
+        "properties": {
+          "id": "bill_electric_bill_20250817_170107",
+          "billing_period_start": "June 1, 2025",
+          "billing_period_end": "June 30, 2025",
+          "total_kwh": 130000.0,
+          "peak_kwh": 70000.0,
+          "off_peak_kwh": 60000.0,
+          "total_cost": 15432.89,
+          "due_date": "August 1, 2025"
+        }
+      },
+      {
+        "labels": [
+          "Facility"
+        ],
+        "properties": {
+          "id": "facility_apex_plant_a",
+          "name": "Apex Manufacturing - Plant A",
+          "address": "Apex Manufacturing - Plant A, 789 Production Way,"
+        }
+      },
+      {
+        "labels": [
+          "Emission"
+        ],
+        "properties": {
+          "id": "emission_electric_bill_20250817_170107",
+          "amount": 52000.0,
+          "unit": "kg_CO2",
+          "calculation_method": "grid_average_factor",
+          "emission_factor": 0.4
+        }
+      },
+      {
+        "labels": [
+          "Meter"
+        ],
+        "properties": {
+          "id": "MTR-7743-A",
+          "type": "electricity",
+          "previous_reading": 891234.0,
+          "current_reading": 951234.0,
+          "usage": 60000.0
+        }
+      }
+    ],
+    "relationships": [
+      {
+        "source": "electric_bill_20250817_170107",
+        "target": "bill_electric_bill_20250817_170107",
+        "type": "EXTRACTED_TO",
+        "properties": {
+          "extraction_date": "2025-08-17T17:01:07.848557"
+        }
+      },
+      {
+        "source": "bill_electric_bill_20250817_170107",
+        "target": "facility_apex_plant_a",
+        "type": "BILLED_TO",
+        "properties": {}
+      },
+      {
+        "source": "bill_electric_bill_20250817_170107",
+        "target": "emission_electric_bill_20250817_170107",
+        "type": "RESULTED_IN",
+        "properties": {
+          "calculation_method": "grid_average"
+        }
+      },
+      {
+        "source": "MTR-7743-A",
+        "target": "facility_apex_plant_a",
+        "type": "MONITORS",
+        "properties": {}
+      }
+    ]
+  },
+  "metrics": {
+    "co2_emissions_kg": 52000.0,
+    "daily_average_kwh": 4333.333333333333,
+    "cost_per_kwh": 0.11871453846153845
+  }
+}

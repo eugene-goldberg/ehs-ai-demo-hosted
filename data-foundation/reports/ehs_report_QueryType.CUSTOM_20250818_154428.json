@@ -1,0 +1,213 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:44:28.254173",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 1,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 18
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 2
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 18
+          },
+          {
+            "type": "Is",
+            "count": 9
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          }
+        ],
+        "total_nodes": 30,
+        "total_relationships": 35
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "All_WasteManifest_Nodes",
+      "query": "\n                MATCH (m:WasteManifest)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    m.date_shipped as date_shipped,\n                    m.quantity as quantity,\n                    m.unit as unit,\n                    m.hazardous as hazardous,\n                    m.waste_code as waste_code,\n                    m.description as description,\n                    m.proper_shipping_name as proper_shipping_name,\n                    m.un_number as un_number,\n                    m.packing_group as packing_group,\n                    m.hazard_class as hazard_class,\n                    properties(m) as all_properties\n                ORDER BY m.date_shipped DESC, m.manifest_id\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (m:WasteManifest)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    m.date_shipped as date_shipped,\n                    m.quantity as quantity,\n                    m.unit as unit,\n                    m.hazardous as hazardous,\n                    m.waste_code as waste_code,\n                    m.description as description,\n                    m.proper_shipping_name as proper_shipping_name,\n                    m.un_number as un_number,\n                    m.packing_group as packing_group,\n                    m.hazard_class as hazard_class,\n                    properties(m) as all_properties\n                ORDER BY m.date_shipped DESC, m.manifest_id\n            ",
+      "parameters": {},
+      "results": [
+        {
+          "manifest_id": null,
+          "date_shipped": null,
+          "quantity": null,
+          "unit": "Open Top Roll-off",
+          "hazardous": null,
+          "waste_code": null,
+          "description": null,
+          "proper_shipping_name": null,
+          "un_number": null,
+          "packing_group": null,
+          "hazard_class": null,
+          "all_properties": {
+            "id": "manifest_waste_manifest_20250818_104007",
+            "unit": "Open Top Roll-off",
+            "status": "Not specified",
+            "total_weight": 1,
+            "issue_date": "2025-07-15",
+            "manifest_tracking_number": "EES-2025-0715-A45",
+            "total_quantity": 1
+          }
+        }
+      ],
+      "record_count": 1,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": [
+      {
+        "Finding": "The query was successful and returned one record.",
+        "Details": "The query was of custom type and it executed successfully. The total number of records retrieved was one."
+      },
+      {
+        "Finding": "The retrieved record is related to a waste manifest.",
+        "Details": "The record contains information about a waste manifest, including its ID, date shipped, quantity, unit, whether it's hazardous or not, waste code, description, proper shipping name, UN number, packing group, hazard class, and other properties."
+      },
+      {
+        "Finding": "The record contains specific details in the 'all_properties' field.",
+        "Details": "The 'all_properties' field contains specific details such as the ID, unit, status, total weight, issue date, manifest tracking number, and total quantity."
+      }
+    ],
+    "Patterns or Trends": [
+      {
+        "Pattern": "No specific patterns or trends can be identified from a single record.",
+        "Details": "Since only one record was retrieved, it's not possible to identify any patterns or trends."
+      }
+    ],
+    "Data Quality Issues": [
+      {
+        "Issue": "Several fields in the record are null.",
+        "Details": "Fields such as manifest_id, date_shipped, quantity, hazardous, waste_code, description, proper_shipping_name, un_number, packing_group, and hazard_class are null. This could indicate missing data."
+      }
+    ],
+    "Recommendations": [
+      {
+        "Recommendation": "Investigate the source of the null values.",
+        "Details": "The null values in the record could indicate a problem with data collection or entry. It's recommended to investigate the source of these null values to ensure data completeness and accuracy."
+      },
+      {
+        "Recommendation": "Consider running more queries to identify patterns or trends.",
+        "Details": "Since only one record was retrieved, it's not possible to identify any patterns or trends. Running more queries could provide more data for analysis."
+      }
+    ]
+  },
+  "errors": []
+}

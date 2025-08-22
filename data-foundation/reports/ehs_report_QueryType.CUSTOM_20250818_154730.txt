@@ -1,0 +1,195 @@
+================================================================================
+EHS Data Extraction Report - QueryType.CUSTOM
+================================================================================
+
+Generated: 2025-08-18T15:47:30.883823
+Query Type: QueryType.CUSTOM
+
+SUMMARY
+----------------------------------------
+Total Queries: 1
+Successful: 0
+Failed: 1
+Total Records: 0
+
+GRAPH OBJECTS
+----------------------------------------
+[
+  {
+    "nodes": [
+      {
+        "labels": [
+          "__Node__",
+          "__Entity__",
+          "entity"
+        ],
+        "count": 18
+      },
+      {
+        "labels": [
+          "Document",
+          "Wastemanifest"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "WasteManifest"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "WasteShipment"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "WasteGenerator"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Transporter"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "DisposalFacility"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "__Node__",
+          "Chunk"
+        ],
+        "count": 2
+      },
+      {
+        "labels": [
+          "WasteItem"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Emission"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "DocumentChunk"
+        ],
+        "count": 2
+      }
+    ],
+    "relationships": [
+      {
+        "type": "MENTIONS",
+        "count": 18
+      },
+      {
+        "type": "Is",
+        "count": 9
+      },
+      {
+        "type": "TRACKS",
+        "count": 1
+      },
+      {
+        "type": "DOCUMENTS",
+        "count": 1
+      },
+      {
+        "type": "SOURCE",
+        "count": 1
+      },
+      {
+        "type": "GENERATED_BY",
+        "count": 1
+      },
+      {
+        "type": "TRANSPORTED_BY",
+        "count": 1
+      },
+      {
+        "type": "DISPOSED_AT",
+        "count": 1
+      },
+      {
+        "type": "CONTAINS_WASTE",
+        "count": 1
+      },
+      {
+        "type": "RESULTED_IN",
+        "count": 1
+      }
+    ],
+    "total_nodes": 30,
+    "total_relationships": 35
+  }
+]
+
+QUERY RESULTS
+================================================================================
+
+Query 1
+----------------------------------------
+Query: 
+                    MATCH (m:WasteManifest)
+                    OPTIONAL MATCH (m)-[:GENERATED_BY]->(g:Generator)
+                    OPTIONAL MATCH (m)-[:DISPOSED_AT]->(df:DisposalFacility)
+                    OPTIONAL MATCH (m)-[:RESULTED_IN]->(e:Emission)
+                    WITH 
+                        COUNT(DISTINCT m) as total_manifests,
+                        SUM(m.quantity) as total_waste_quantity,
+                        SUM(CASE WHEN m.hazardous = true THEN m.quantity ELSE 0 END) as total_hazardous,
+                        SUM(CASE WHEN m.hazardous = false THEN m.quantity ELSE 0 END) as total_nonhazardous,
+                        COUNT(DISTINCT g) as unique_generators,
+                        COUNT(DISTINCT df) as unique_disposal_facilities,
+                        SUM(e.amount) as total_emissions,
+                        MIN(m.date_shipped) as earliest_date,
+                        MAX(m.date_shipped) as latest_date
+                    RETURN 
+                        total_manifests,
+                        total_waste_quantity,
+                        total_hazardous,
+                        total_nonhazardous,
+                        unique_generators,
+                        unique_disposal_facilities,
+                        total_emissions,
+                        earliest_date,
+                        latest_date,
+                        ROUND((total_hazardous * 100.0 / total_waste_quantity), 2) as hazardous_percentage,
+                        ROUND((total_nonhazardous * 100.0 / total_waste_quantity), 2) as nonhazardous_percentage,
+                        ROUND((total_emissions / total_waste_quantity), 4) as emissions_per_unit_waste
+                
+Status: failed
+Error: {code: Neo.ClientError.Statement.ArithmeticError} {message: / by zero}
+
+ANALYSIS
+================================================================================
+{
+  "Key Findings": {
+    "1": "The query executed was a custom type and it failed to execute successfully.",
+    "2": "No records were retrieved from the query.",
+    "3": "The error message indicates that there was an attempt to divide by zero in the query."
+  },
+  "Patterns or Trends": {
+    "1": "There are no patterns or trends that can be observed from the data as no records were retrieved due to the failed query."
+  },
+  "Potential Data Quality Issues": {
+    "1": "The query attempted to divide by zero, which indicates that the 'total_waste_quantity' field may have been zero or null.",
+    "2": "The failure of the query suggests that there may be missing or incorrect data in the database."
+  },
+  "Recommendations": {
+    "1": "Review the query to ensure it is correctly written and that it handles cases where 'total_waste_quantity' could be zero or null.",
+    "2": "Check the database for any missing or incorrect data that could have caused the query to fail.",
+    "3": "Implement error handling in the query to prevent failures due to division by zero."
+  }
+}

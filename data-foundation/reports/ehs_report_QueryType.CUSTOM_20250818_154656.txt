@@ -1,0 +1,188 @@
+================================================================================
+EHS Data Extraction Report - QueryType.CUSTOM
+================================================================================
+
+Generated: 2025-08-18T15:46:56.767211
+Query Type: QueryType.CUSTOM
+
+SUMMARY
+----------------------------------------
+Total Queries: 1
+Successful: 1
+Failed: 0
+Total Records: 0
+
+GRAPH OBJECTS
+----------------------------------------
+[
+  {
+    "nodes": [
+      {
+        "labels": [
+          "__Node__",
+          "__Entity__",
+          "entity"
+        ],
+        "count": 18
+      },
+      {
+        "labels": [
+          "Document",
+          "Wastemanifest"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "WasteManifest"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "WasteShipment"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "WasteGenerator"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Transporter"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "DisposalFacility"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "__Node__",
+          "Chunk"
+        ],
+        "count": 2
+      },
+      {
+        "labels": [
+          "WasteItem"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Emission"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "DocumentChunk"
+        ],
+        "count": 2
+      }
+    ],
+    "relationships": [
+      {
+        "type": "MENTIONS",
+        "count": 18
+      },
+      {
+        "type": "Is",
+        "count": 9
+      },
+      {
+        "type": "TRACKS",
+        "count": 1
+      },
+      {
+        "type": "DOCUMENTS",
+        "count": 1
+      },
+      {
+        "type": "SOURCE",
+        "count": 1
+      },
+      {
+        "type": "GENERATED_BY",
+        "count": 1
+      },
+      {
+        "type": "TRANSPORTED_BY",
+        "count": 1
+      },
+      {
+        "type": "DISPOSED_AT",
+        "count": 1
+      },
+      {
+        "type": "CONTAINS_WASTE",
+        "count": 1
+      },
+      {
+        "type": "RESULTED_IN",
+        "count": 1
+      }
+    ],
+    "total_nodes": 30,
+    "total_relationships": 35
+  }
+]
+
+QUERY RESULTS
+================================================================================
+
+Query 1
+----------------------------------------
+Query: 
+                    MATCH (m:WasteManifest)
+                    MATCH (m)-[:GENERATED_BY]->(g:Generator)
+                    OPTIONAL MATCH (m)-[:TRANSPORTED_BY]->(t:Transporter)
+                    OPTIONAL MATCH (m)-[:DISPOSED_AT]->(df:DisposalFacility)
+                    OPTIONAL MATCH (m)-[:RESULTED_IN]->(e:Emission)
+                    RETURN 
+                        g.name as generator_name,
+                        g.epa_id as generator_epa_id,
+                        g.address as generator_address,
+                        COUNT(DISTINCT m) as manifest_count,
+                        SUM(m.quantity) as total_quantity,
+                        m.unit as unit,
+                        COUNT(DISTINCT CASE WHEN m.hazardous = true THEN m END) as hazardous_manifests,
+                        COUNT(DISTINCT CASE WHEN m.hazardous = false THEN m END) as nonhazardous_manifests,
+                        SUM(CASE WHEN m.hazardous = true THEN m.quantity ELSE 0 END) as hazardous_quantity,
+                        SUM(CASE WHEN m.hazardous = false THEN m.quantity ELSE 0 END) as nonhazardous_quantity,
+                        SUM(e.amount) as total_emissions,
+                        collect(DISTINCT t.name) as transporters,
+                        collect(DISTINCT df.name) as disposal_facilities
+                    ORDER BY total_quantity DESC
+                
+Status: success
+Records: 0
+
+ANALYSIS
+================================================================================
+{
+  "Key Findings": {
+    "1": "The query executed successfully without any errors.",
+    "2": "Despite the successful execution, the query did not return any records.",
+    "3": "The query was designed to extract detailed information about waste manifests, including generator details, quantity, hazardous status, emissions, transporters, and disposal facilities."
+  },
+  "Patterns or Trends": {
+    "1": "No patterns or trends can be identified from the data as no records were retrieved from the query."
+  },
+  "Potential Data Quality Issues": {
+    "1": "The lack of returned records could indicate a data quality issue. It's possible that the database is empty or the data does not match the criteria specified in the query.",
+    "2": "Another potential issue could be that the relationships between the nodes in the query do not exist in the database, resulting in no matches and hence no returned records."
+  },
+  "Recommendations": {
+    "1": "Check the database to ensure that it contains data and that the data is correctly structured and categorized.",
+    "2": "Review the query to ensure that it accurately reflects the relationships and nodes in the database.",
+    "3": "If the database and query are both correct, consider broadening the query parameters to return a wider range of records."
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:44:39.135656",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 18
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 2
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 18
+          },
+          {
+            "type": "Is",
+            "count": 9
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          }
+        ],
+        "total_nodes": 30,
+        "total_relationships": 35
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "All_Generator_Nodes",
+      "query": "\n                MATCH (g:Generator)\n                RETURN \n                    g.name as name,\n                    g.epa_id as epa_id,\n                    g.address as address,\n                    g.city as city,\n                    g.state as state,\n                    g.zip_code as zip_code,\n                    g.phone as phone,\n                    g.contact_person as contact_person,\n                    properties(g) as all_properties\n                ORDER BY g.name\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (g:Generator)\n                RETURN \n                    g.name as name,\n                    g.epa_id as epa_id,\n                    g.address as address,\n                    g.city as city,\n                    g.state as state,\n                    g.zip_code as zip_code,\n                    g.phone as phone,\n                    g.contact_person as contact_person,\n                    properties(g) as all_properties\n                ORDER BY g.name\n            ",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query was executed successfully.",
+      "2": "The query was designed to extract data about generators, including their name, EPA ID, address, city, state, zip code, phone, contact person, and all properties.",
+      "3": "No records were retrieved from the query."
+    },
+    "Patterns or Trends": {
+      "1": "There is no data available to identify any patterns or trends as the query returned zero records."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The lack of returned records could indicate a data quality issue. It's possible that the database is empty, or the data does not match the query parameters.",
+      "2": "The query might be targeting a non-existent or incorrect node label or property in the database."
+    },
+    "Recommendations": {
+      "1": "Check the database to ensure that it contains data and that the data is correctly structured and labeled.",
+      "2": "Review the query to ensure that it is correctly formatted and targeting the right nodes and properties.",
+      "3": "If the database and query are both correct, consider the possibility that there are no generators that match the query parameters. In this case, the query parameters may need to be adjusted."
+    }
+  },
+  "errors": []
+}

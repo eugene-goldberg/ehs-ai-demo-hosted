@@ -1,0 +1,763 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.WATER_CONSUMPTION",
+    "generated_at": "2025-08-18T23:02:49.339280",
+    "query_type": "water_consumption",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 4,
+    "successful_queries": 3,
+    "failed_queries": 1,
+    "total_records": 6,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "Document",
+              "Utilitybill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "UtilityBill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Facility"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "Customer"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "UtilityProvider"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "Meter"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 5
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 6
+          },
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 39
+          },
+          {
+            "labels": [
+              "Document",
+              "Waterbill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WaterBill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          }
+        ],
+        "relationships": [
+          {
+            "type": "EXTRACTED_TO",
+            "count": 2
+          },
+          {
+            "type": "BILLED_TO",
+            "count": 3
+          },
+          {
+            "type": "BILLED_FOR",
+            "count": 3
+          },
+          {
+            "type": "PROVIDED_BY",
+            "count": 2
+          },
+          {
+            "type": "MONITORS",
+            "count": 4
+          },
+          {
+            "type": "RECORDED_IN",
+            "count": 3
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 3
+          },
+          {
+            "type": "MENTIONS",
+            "count": 39
+          },
+          {
+            "type": "Is",
+            "count": 8
+          },
+          {
+            "type": "Rate",
+            "count": 2
+          },
+          {
+            "type": "Previous reading",
+            "count": 1
+          },
+          {
+            "type": "Current reading",
+            "count": 2
+          },
+          {
+            "type": "SOURCE",
+            "count": 3
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "Tracking number",
+            "count": 1
+          },
+          {
+            "type": "Type",
+            "count": 1
+          },
+          {
+            "type": "Issue date",
+            "count": 1
+          },
+          {
+            "type": "Epa id",
+            "count": 2
+          },
+          {
+            "type": "Contact person",
+            "count": 1
+          },
+          {
+            "type": "Vehicle id",
+            "count": 1
+          },
+          {
+            "type": "Classification",
+            "count": 1
+          },
+          {
+            "type": "Description",
+            "count": 1
+          },
+          {
+            "type": "Unit",
+            "count": 1
+          }
+        ],
+        "total_nodes": 73,
+        "total_relationships": 91
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "\n                MATCH (d:Document)-[:EXTRACTED_TO]->(w:WaterBill)\n                WHERE 'Waterbill' IN labels(d) OR 'WaterBill' IN labels(d)\n                RETURN d, w\n                ORDER BY w.billing_period_end DESC\n                ",
+      "parameters": {}
+    },
+    {
+      "query": "\n                MATCH (w:WaterBill)\n                RETURN w\n                ORDER BY w.billing_period_end DESC\n                ",
+      "parameters": {}
+    },
+    {
+      "query": "\n                MATCH (w:WaterBill)\n                OPTIONAL MATCH (w)-[:BILLED_TO]->(f:Facility)\n                OPTIONAL MATCH (w)-[:BILLED_FOR]->(c:Customer)\n                OPTIONAL MATCH (w)-[:PROVIDED_BY]->(p:UtilityProvider)\n                OPTIONAL MATCH (w)-[:RESULTED_IN]->(e:Emission)\n                OPTIONAL MATCH (m:Meter)-[:RECORDED_IN]->(w)\n                RETURN w, f, c, p, e, collect(m) as meters\n                ORDER BY w.billing_period_end DESC\n                ",
+      "parameters": {}
+    },
+    {
+      "query": "\n                MATCH (w:WaterBill)\n                WHERE w.billing_period_start >= $start_date \n                  AND w.billing_period_end <= $end_date\n                RETURN SUM(w.total_gallons) as total_water_usage,\n                       AVG(w.total_cost) as avg_cost,\n                       COUNT(w) as bill_count\n                ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (d:Document)-[:EXTRACTED_TO]->(w:WaterBill)\n                WHERE 'Waterbill' IN labels(d) OR 'WaterBill' IN labels(d)\n                RETURN d, w\n                ORDER BY w.billing_period_end DESC\n                ",
+      "parameters": {},
+      "results": [
+        {
+          "d": {
+            "id": 22,
+            "labels": [
+              "Waterbill",
+              "Document"
+            ],
+            "properties": {
+              "file_path": "data/water_bill.pdf",
+              "uploaded_at": "2025-08-18T23:01:26.054572",
+              "processed_at": "2025-08-18T18:01:02.067098",
+              "id": "water_bill_20250818_180102_066",
+              "source": "comprehensive_batch_ingestion",
+              "type": "water_bill",
+              "document_type": "water_bill"
+            }
+          },
+          "w": {
+            "id": 23,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_180102_066",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          }
+        }
+      ],
+      "record_count": 1,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (w:WaterBill)\n                RETURN w\n                ORDER BY w.billing_period_end DESC\n                ",
+      "parameters": {},
+      "results": [
+        {
+          "w": {
+            "id": 23,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_180102_066",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          }
+        }
+      ],
+      "record_count": 1,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (w:WaterBill)\n                OPTIONAL MATCH (w)-[:BILLED_TO]->(f:Facility)\n                OPTIONAL MATCH (w)-[:BILLED_FOR]->(c:Customer)\n                OPTIONAL MATCH (w)-[:PROVIDED_BY]->(p:UtilityProvider)\n                OPTIONAL MATCH (w)-[:RESULTED_IN]->(e:Emission)\n                OPTIONAL MATCH (m:Meter)-[:RECORDED_IN]->(w)\n                RETURN w, f, c, p, e, collect(m) as meters\n                ORDER BY w.billing_period_end DESC\n                ",
+      "parameters": {},
+      "results": [
+        {
+          "w": {
+            "id": 23,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_180102_066",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 24,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 25,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 26,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 28,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_180102_066"
+            }
+          },
+          "meters": [
+            {
+              "id": 27,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 23,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_180102_066",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 2,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 25,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 26,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 28,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_180102_066"
+            }
+          },
+          "meters": [
+            {
+              "id": 27,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 23,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_180102_066",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 24,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 3,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "attention": "Accounts Payable",
+              "billing_address": "456 Industrial Ave. Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 26,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 28,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_180102_066"
+            }
+          },
+          "meters": [
+            {
+              "id": 27,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        },
+        {
+          "w": {
+            "id": 23,
+            "labels": [
+              "WaterBill"
+            ],
+            "properties": {
+              "stormwater_fee": 125.0,
+              "total_cost": 4891.5,
+              "sewer_service_charge": 950.0,
+              "due_date": "2025-08-05",
+              "billing_period_end": "2025-06-30",
+              "water_consumption_cost": 3750.0,
+              "total_gallons": 250000,
+              "billing_period_start": "2025-06-01",
+              "id": "water_bill_water_bill_20250818_180102_066",
+              "infrastructure_surcharge": 5.0,
+              "conservation_tax": 61.5
+            }
+          },
+          "f": {
+            "id": 2,
+            "labels": [
+              "Facility"
+            ],
+            "properties": {
+              "address": "789 Production Way, Mechanicsburg, CA 93011",
+              "name": "Apex Manufacturing - Plant A",
+              "id": "facility_apex_manufacturing___plant_a"
+            }
+          },
+          "c": {
+            "id": 3,
+            "labels": [
+              "Customer"
+            ],
+            "properties": {
+              "name": "Apex Manufacturing Inc.",
+              "attention": "Accounts Payable",
+              "billing_address": "456 Industrial Ave. Mechanicsburg, CA 93011",
+              "id": "customer_apex_manufacturing_inc"
+            }
+          },
+          "p": {
+            "id": 26,
+            "labels": [
+              "UtilityProvider"
+            ],
+            "properties": {
+              "website": "www.aquaflow.gov",
+              "address": "789 Reservoir Road, Clearwater, CA 90330",
+              "phone": "(800) 555-0211",
+              "name": "Aquaflow Municipal Water",
+              "id": "provider_aquaflow_municipal_water"
+            }
+          },
+          "e": {
+            "id": 28,
+            "labels": [
+              "Emission"
+            ],
+            "properties": {
+              "emission_factor": 0.0002,
+              "amount": 50.0,
+              "unit": "kg_CO2",
+              "calculation_method": "water_treatment_distribution_factor",
+              "source_type": "water",
+              "id": "emission_water_bill_20250818_180102_066"
+            }
+          },
+          "meters": [
+            {
+              "id": 27,
+              "labels": [
+                "Meter"
+              ],
+              "properties": {
+                "unit": "gallons",
+                "service_type": "Commercial",
+                "previous_reading": 8765400,
+                "usage": 250000,
+                "current_reading": 9015400,
+                "id": "WTR-MAIN-01",
+                "type": "water"
+              }
+            }
+          ]
+        }
+      ],
+      "record_count": 4,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (w:WaterBill)\n                WHERE w.billing_period_start >= $start_date \n                  AND w.billing_period_end <= $end_date\n                RETURN SUM(w.total_gallons) as total_water_usage,\n                       AVG(w.total_cost) as avg_cost,\n                       COUNT(w) as bill_count\n                ",
+      "parameters": {},
+      "error": "{code: Neo.ClientError.Statement.ParameterMissing} {message: Expected parameter(s): start_date, end_date}",
+      "status": "failed"
+    }
+  ],
+  "analysis": {
+    "Key Findings": [
+      {
+        "Finding": "The total number of queries executed was 4, out of which 3 were successful.",
+        "Implication": "This indicates a high success rate of 75% for the queries executed."
+      },
+      {
+        "Finding": "The total number of records retrieved from the successful queries was 6.",
+        "Implication": "This suggests that the queries were able to extract a significant amount of data."
+      },
+      {
+        "Finding": "The water bill data shows various charges including stormwater fee, sewer service charge, water consumption cost, infrastructure surcharge, and conservation tax.",
+        "Implication": "This provides a detailed breakdown of the costs associated with water consumption."
+      },
+      {
+        "Finding": "The total water consumption cost was 3750.0 for 250000 gallons of water.",
+        "Implication": "This provides an insight into the cost efficiency of water usage."
+      }
+    ],
+    "Patterns or Trends": [
+      {
+        "Pattern": "The queries seem to be focused on retrieving water bill data, specifically related to costs and consumption.",
+        "Implication": "This suggests a focus on understanding and potentially optimizing water usage and costs."
+      }
+    ],
+    "Data Quality Issues": [
+      {
+        "Issue": "One of the queries failed to execute successfully.",
+        "Implication": "This could indicate a problem with the query syntax or the data structure."
+      },
+      {
+        "Issue": "The data extraction results do not provide information about the facility, customer, utility provider, emission, or meter associated with the water bill.",
+        "Implication": "This limits the context and usability of the extracted data."
+      }
+    ],
+    "Recommendations": [
+      {
+        "Recommendation": "Investigate the cause of the failed query and make necessary corrections to ensure a 100% success rate."
+      },
+      {
+        "Recommendation": "Expand the queries to include additional information such as the facility, customer, utility provider, emission, and meter associated with the water bill to provide more context and enhance data usability."
+      },
+      {
+        "Recommendation": "Analyze the cost efficiency of water usage and explore opportunities for optimization."
+      }
+    ]
+  },
+  "errors": []
+}

@@ -1,0 +1,198 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - custom",
+    "generated_at": "2025-08-18T19:34:20.445854",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 1,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 15
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 2
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 15
+          },
+          {
+            "type": "Is",
+            "count": 8
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          }
+        ],
+        "total_nodes": 27,
+        "total_relationships": 31
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "MATCH (d:Document:Wastemanifest) RETURN d LIMIT 1"
+    }
+  ],
+  "query_results": [
+    {
+      "query": "MATCH (d:Document:Wastemanifest) RETURN d LIMIT 1",
+      "parameters": {},
+      "results": [
+        {
+          "d": {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "properties": {
+              "file_path": "data/waste_manifest.pdf",
+              "enhanced_logging": true,
+              "test_run": true,
+              "uploaded_at": "2025-08-18T17:09:34.710680",
+              "id": "waste_manifest_20250818_120855",
+              "source": "test_enhanced",
+              "type": "waste_manifest",
+              "document_type": "waste_manifest"
+            }
+          }
+        }
+      ],
+      "record_count": 1,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": [
+      {
+        "Finding 1": "The query was successful and returned one record.",
+        "Finding 2": "The record retrieved is a document labeled as 'Wastemanifest'.",
+        "Finding 3": "The document was uploaded on 2025-08-18 at 17:09:34.710680.",
+        "Finding 4": "The document's source is 'test_enhanced'.",
+        "Finding 5": "The document has enhanced logging enabled."
+      }
+    ],
+    "Patterns or Trends": [
+      {
+        "Trend 1": "There is no trend or pattern observable from a single data point. More data is required for this analysis."
+      }
+    ],
+    "Potential Data Quality Issues": [
+      {
+        "Issue 1": "The 'test_run' property is set to true, indicating that this document might be a test file and not actual data.",
+        "Issue 2": "The source of the document is 'test_enhanced', which might also suggest that this is not actual data but a test file."
+      }
+    ],
+    "Recommendations": [
+      {
+        "Recommendation 1": "Verify the 'test_run' and 'source' properties of the document to ensure the data is not test data.",
+        "Recommendation 2": "If the document is a test file, it should be separated from the actual data to maintain data integrity.",
+        "Recommendation 3": "If more data is available, execute more queries to identify patterns or trends."
+      }
+    ]
+  },
+  "errors": []
+}

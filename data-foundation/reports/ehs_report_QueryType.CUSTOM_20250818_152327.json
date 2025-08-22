@@ -1,0 +1,57 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:23:26.999942",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 0,
+    "failed_queries": 1,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [],
+        "relationships": [],
+        "total_nodes": 0,
+        "total_relationships": 0
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "Database_Statistics",
+      "query": "\n                CALL db.stats.retrieve('GRAPH COUNTS') YIELD data\n                RETURN data\n                \n                UNION\n                \n                MATCH (n)\n                RETURN 'Total Nodes' as metric, count(n) as value\n                \n                UNION\n                \n                MATCH ()-[r]->()\n                RETURN 'Total Relationships' as metric, count(r) as value\n                \n                UNION\n                \n                MATCH (m:WasteManifest)\n                RETURN 'WasteManifest Nodes' as metric, count(m) as value\n                \n                UNION\n                \n                MATCH (g:Generator)\n                RETURN 'Generator Nodes' as metric, count(g) as value\n                \n                UNION\n                \n                MATCH (t:Transporter)\n                RETURN 'Transporter Nodes' as metric, count(t) as value\n                \n                UNION\n                \n                MATCH (df:DisposalFacility)\n                RETURN 'DisposalFacility Nodes' as metric, count(df) as value\n                \n                UNION\n                \n                MATCH (e:Emission)\n                RETURN 'Emission Nodes' as metric, count(e) as value\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                CALL db.stats.retrieve('GRAPH COUNTS') YIELD data\n                RETURN data\n                \n                UNION\n                \n                MATCH (n)\n                RETURN 'Total Nodes' as metric, count(n) as value\n                \n                UNION\n                \n                MATCH ()-[r]->()\n                RETURN 'Total Relationships' as metric, count(r) as value\n                \n                UNION\n                \n                MATCH (m:WasteManifest)\n                RETURN 'WasteManifest Nodes' as metric, count(m) as value\n                \n                UNION\n                \n                MATCH (g:Generator)\n                RETURN 'Generator Nodes' as metric, count(g) as value\n                \n                UNION\n                \n                MATCH (t:Transporter)\n                RETURN 'Transporter Nodes' as metric, count(t) as value\n                \n                UNION\n                \n                MATCH (df:DisposalFacility)\n                RETURN 'DisposalFacility Nodes' as metric, count(df) as value\n                \n                UNION\n                \n                MATCH (e:Emission)\n                RETURN 'Emission Nodes' as metric, count(e) as value\n            ",
+      "parameters": {},
+      "error": "{code: Neo.ClientError.Statement.SyntaxError} {message: All sub queries in an UNION must have the same return column names (line 5, column 17 (offset: 128))\n\"                UNION\"\n                 ^}",
+      "status": "failed"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query execution was not successful.",
+      "2": "No records were retrieved from the database.",
+      "3": "The error message indicates a syntax error in the query."
+    },
+    "Patterns or Trends": {
+      "1": "The error message suggests that all sub queries in an UNION must have the same return column names. This is a common requirement in SQL-like languages and seems to be the cause of the failure."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The data quality cannot be assessed as no data was retrieved due to the query failure."
+    },
+    "Recommendations": {
+      "1": "Review the query syntax to ensure that all sub queries in the UNION have the same return column names.",
+      "2": "Test the query in a controlled environment before executing it on the live database to prevent such errors.",
+      "3": "Consider using a query builder tool or software that can help in building syntactically correct queries."
+    }
+  },
+  "errors": []
+}

@@ -1,0 +1,206 @@
+================================================================================
+EHS Data Extraction Report - QueryType.CUSTOM
+================================================================================
+
+Generated: 2025-08-18T02:34:51.995791
+Query Type: QueryType.CUSTOM
+
+SUMMARY
+----------------------------------------
+Total Queries: 1
+Successful: 1
+Failed: 0
+Total Records: 1
+
+GRAPH OBJECTS
+----------------------------------------
+[
+  {
+    "nodes": [
+      {
+        "labels": [
+          "__Node__",
+          "__Entity__",
+          "entity"
+        ],
+        "count": 16
+      },
+      {
+        "labels": [
+          "__Node__",
+          "Chunk"
+        ],
+        "count": 2
+      },
+      {
+        "labels": [
+          "Document",
+          "Waterbill"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "WaterBill"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Facility"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Customer"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "UtilityProvider"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Meter"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Emission"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "DocumentChunk"
+        ],
+        "count": 1
+      }
+    ],
+    "relationships": [
+      {
+        "type": "MENTIONS",
+        "count": 16
+      },
+      {
+        "type": "Is",
+        "count": 8
+      },
+      {
+        "type": "SOURCE",
+        "count": 1
+      },
+      {
+        "type": "EXTRACTED_TO",
+        "count": 1
+      },
+      {
+        "type": "BILLED_TO",
+        "count": 1
+      },
+      {
+        "type": "BILLED_FOR",
+        "count": 1
+      },
+      {
+        "type": "PROVIDED_BY",
+        "count": 1
+      },
+      {
+        "type": "MONITORS",
+        "count": 1
+      },
+      {
+        "type": "RECORDED_IN",
+        "count": 1
+      },
+      {
+        "type": "RESULTED_IN",
+        "count": 1
+      }
+    ],
+    "total_nodes": 26,
+    "total_relationships": 32
+  }
+]
+
+QUERY RESULTS
+================================================================================
+
+Query 1
+----------------------------------------
+Query: 
+                    MATCH (f:Facility)
+                    OPTIONAL MATCH (f)<-[:BILLED_TO]-(w:WaterBill)-[:RESULTED_IN]->(we:Emission)
+                    OPTIONAL MATCH (f)<-[:BILLED_TO]-(u:UtilityBill)-[:RESULTED_IN]->(ue:Emission)
+                    WITH f,
+                         SUM(we.amount) as water_emissions,
+                         SUM(ue.amount) as electric_emissions
+                    RETURN 
+                        f.name as facility_name,
+                        f.address as facility_address,
+                        water_emissions,
+                        electric_emissions,
+                        water_emissions + electric_emissions as total_emissions,
+                        'kg_CO2' as unit
+                
+Status: success
+Records: 1
+Results (first 5):
+  1: {
+  "facility_name": "Apex Manufacturing - Plant A",
+  "facility_address": "789 Production Way, Mechanicsburg, CA 93011",
+  "water_emissions": 50.0,
+  "electric_emissions": 0,
+  "total_emissions": 50.0,
+  "unit": "kg_CO2"
+}
+
+ANALYSIS
+================================================================================
+{
+  "Key Findings": [
+    {
+      "Finding": "The query was successful and returned one record.",
+      "Details": {
+        "Facility Name": "Apex Manufacturing - Plant A",
+        "Facility Address": "789 Production Way, Mechanicsburg, CA 93011",
+        "Water Emissions": 50.0,
+        "Electric Emissions": 0,
+        "Total Emissions": 50.0,
+        "Unit": "kg_CO2"
+      }
+    }
+  ],
+  "Patterns or Trends": [
+    {
+      "Observation": "The facility has only water emissions and no electric emissions.",
+      "Implication": "This could suggest that the facility's operations are more water-intensive than electricity-intensive, or that the facility has implemented measures to reduce its electricity-related emissions."
+    }
+  ],
+  "Potential Data Quality Issues": [
+    {
+      "Issue": "Limited data set",
+      "Explanation": "The query returned only one record, which limits the ability to identify broader patterns or trends across multiple facilities."
+    },
+    {
+      "Issue": "Missing electric emissions data",
+      "Explanation": "The electric emissions for the facility are reported as zero. This could be accurate, but it could also indicate missing or unreported data."
+    }
+  ],
+  "Recommendations": [
+    {
+      "Recommendation": "Verify the accuracy of the electric emissions data",
+      "Rationale": "If the reported zero electric emissions is due to missing or unreported data, this could lead to an underestimation of the facility's total emissions."
+    },
+    {
+      "Recommendation": "Expand the data set",
+      "Rationale": "Including more facilities in the query would provide a more comprehensive view of emissions patterns and trends."
+    }
+  ]
+}

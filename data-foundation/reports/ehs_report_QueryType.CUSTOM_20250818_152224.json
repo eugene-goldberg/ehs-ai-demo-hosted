@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:22:24.398752",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [],
+        "relationships": [],
+        "total_nodes": 0,
+        "total_relationships": 0
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "All_Emission_Nodes",
+      "query": "\n                MATCH (e:Emission)\n                RETURN \n                    e.emission_type as emission_type,\n                    e.amount as amount,\n                    e.unit as unit,\n                    e.emission_factor as emission_factor,\n                    e.calculation_method as calculation_method,\n                    e.date_calculated as date_calculated,\n                    properties(e) as all_properties\n                ORDER BY e.amount DESC\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (e:Emission)\n                RETURN \n                    e.emission_type as emission_type,\n                    e.amount as amount,\n                    e.unit as unit,\n                    e.emission_factor as emission_factor,\n                    e.calculation_method as calculation_method,\n                    e.date_calculated as date_calculated,\n                    properties(e) as all_properties\n                ORDER BY e.amount DESC\n            ",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query executed successfully without any errors.",
+      "2": "The query was designed to retrieve data related to emissions, including emission type, amount, unit, emission factor, calculation method, and date calculated.",
+      "3": "Despite the successful execution, the query did not retrieve any records."
+    },
+    "Patterns or Trends": {
+      "1": "No patterns or trends can be identified from the data as no records were retrieved from the query."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The lack of retrieved records could indicate a data quality issue. It's possible that the database does not contain any data related to emissions, or the data might not be properly labeled or categorized.",
+      "2": "Another potential issue could be that the query parameters are too specific or restrictive, resulting in no matching records."
+    },
+    "Recommendations": {
+      "1": "Check the database to ensure that it contains data related to emissions and that the data is properly labeled and categorized.",
+      "2": "Review the query parameters to ensure they are not too specific or restrictive. If necessary, adjust the parameters to retrieve a broader range of records.",
+      "3": "If the database does not contain any data related to emissions, consider collecting this data if it is relevant to your EHS objectives."
+    }
+  },
+  "errors": []
+}

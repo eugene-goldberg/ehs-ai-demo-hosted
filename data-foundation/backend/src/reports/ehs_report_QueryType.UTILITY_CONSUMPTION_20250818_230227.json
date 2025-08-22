@@ -1,0 +1,371 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.UTILITY_CONSUMPTION",
+    "generated_at": "2025-08-18T23:02:27.371229",
+    "query_type": "utility_consumption",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 2,
+    "successful_queries": 1,
+    "failed_queries": 1,
+    "total_records": 1,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "Document",
+              "Utilitybill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "UtilityBill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Facility"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "Customer"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "UtilityProvider"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "Meter"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 5
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 6
+          },
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 39
+          },
+          {
+            "labels": [
+              "Document",
+              "Waterbill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WaterBill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          }
+        ],
+        "relationships": [
+          {
+            "type": "EXTRACTED_TO",
+            "count": 2
+          },
+          {
+            "type": "BILLED_TO",
+            "count": 3
+          },
+          {
+            "type": "BILLED_FOR",
+            "count": 3
+          },
+          {
+            "type": "PROVIDED_BY",
+            "count": 2
+          },
+          {
+            "type": "MONITORS",
+            "count": 4
+          },
+          {
+            "type": "RECORDED_IN",
+            "count": 3
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 3
+          },
+          {
+            "type": "MENTIONS",
+            "count": 39
+          },
+          {
+            "type": "Is",
+            "count": 8
+          },
+          {
+            "type": "Rate",
+            "count": 2
+          },
+          {
+            "type": "Previous reading",
+            "count": 1
+          },
+          {
+            "type": "Current reading",
+            "count": 2
+          },
+          {
+            "type": "SOURCE",
+            "count": 3
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "Tracking number",
+            "count": 1
+          },
+          {
+            "type": "Type",
+            "count": 1
+          },
+          {
+            "type": "Issue date",
+            "count": 1
+          },
+          {
+            "type": "Epa id",
+            "count": 2
+          },
+          {
+            "type": "Contact person",
+            "count": 1
+          },
+          {
+            "type": "Vehicle id",
+            "count": 1
+          },
+          {
+            "type": "Classification",
+            "count": 1
+          },
+          {
+            "type": "Description",
+            "count": 1
+          },
+          {
+            "type": "Unit",
+            "count": 1
+          }
+        ],
+        "total_nodes": 73,
+        "total_relationships": 91
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "\n                MATCH (d:Document)-[:EXTRACTED_TO]->(b:UtilityBill)\n                WHERE 'Utilitybill' IN labels(d) OR 'UtilityBill' IN labels(d)\n                RETURN d, b\n                ORDER BY b.billing_period_end DESC\n                ",
+      "parameters": {}
+    },
+    {
+      "query": "\n                MATCH (b:UtilityBill)\n                WHERE b.billing_period_start >= $start_date \n                  AND b.billing_period_end <= $end_date\n                RETURN SUM(b.total_kwh) as total_consumption,\n                       AVG(b.total_cost) as avg_cost,\n                       COUNT(b) as bill_count\n                ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (d:Document)-[:EXTRACTED_TO]->(b:UtilityBill)\n                WHERE 'Utilitybill' IN labels(d) OR 'UtilityBill' IN labels(d)\n                RETURN d, b\n                ORDER BY b.billing_period_end DESC\n                ",
+      "parameters": {},
+      "results": [
+        {
+          "d": {
+            "id": 0,
+            "labels": [
+              "Utilitybill",
+              "Document"
+            ],
+            "properties": {
+              "statement_date": "July 5, 2025",
+              "file_path": "data/electric_bill.pdf",
+              "account_number": "85-23459-88-1",
+              "uploaded_at": "2025-08-18T23:00:51.754607",
+              "processed_at": "2025-08-18T18:00:29.793599",
+              "source": "comprehensive_batch_ingestion",
+              "id": "electric_bill_20250818_180029_793",
+              "type": "utility_bill",
+              "document_type": "electric_bill"
+            }
+          },
+          "b": {
+            "id": 1,
+            "labels": [
+              "UtilityBill"
+            ],
+            "properties": {
+              "off_peak_kwh": 60000,
+              "peak_kwh": 70000,
+              "grid_infrastructure_fee": 182.39,
+              "total_cost": 15432.89,
+              "billing_period_end": "2025-06-30",
+              "base_service_charge": 250.0,
+              "state_environmental_surcharge": 875.5,
+              "billing_period_start": "2025-06-01",
+              "id": "bill_electric_bill_20250818_180029_793",
+              "total_kwh": 130000,
+              "peak_demand_kw": 70000
+            }
+          }
+        }
+      ],
+      "record_count": 1,
+      "status": "success"
+    },
+    {
+      "query": "\n                MATCH (b:UtilityBill)\n                WHERE b.billing_period_start >= $start_date \n                  AND b.billing_period_end <= $end_date\n                RETURN SUM(b.total_kwh) as total_consumption,\n                       AVG(b.total_cost) as avg_cost,\n                       COUNT(b) as bill_count\n                ",
+      "parameters": {},
+      "error": "{code: Neo.ClientError.Statement.ParameterMissing} {message: Expected parameter(s): start_date, end_date}",
+      "status": "failed"
+    }
+  ],
+  "analysis": {
+    "Key Findings": [
+      {
+        "Finding": "The first query was successful and returned a single record of a utility bill.",
+        "Details": {
+          "Statement Date": "July 5, 2025",
+          "Account Number": "85-23459-88-1",
+          "Uploaded At": "2025-08-18T23:00:51.754607",
+          "Processed At": "2025-08-18T18:00:29.793599",
+          "Source": "comprehensive_batch_ingestion",
+          "Type": "utility_bill",
+          "Document Type": "electric_bill",
+          "Off Peak kWh": 60000,
+          "Peak kWh": 70000,
+          "Grid Infrastructure Fee": 182.39,
+          "Total Cost": 15432.89,
+          "Billing Period End": "2025-06-30",
+          "Base Service Charge": 250.0,
+          "State Environmental Surcharge": 875.5,
+          "Billing Period Start": "2025-06-01",
+          "Total kWh": 130000,
+          "Peak Demand kW": 70000
+        }
+      },
+      {
+        "Finding": "The second query failed due to missing parameters.",
+        "Details": {
+          "Error": "{code: Neo.ClientError.Statement.ParameterMissing} {message: Expected parameter(s): start_date, end_date}"
+        }
+      }
+    ],
+    "Patterns or Trends": [
+      {
+        "Pattern": "There is no pattern or trend observable from the single record retrieved."
+      }
+    ],
+    "Data Quality Issues": [
+      {
+        "Issue": "The second query failed due to missing parameters 'start_date' and 'end_date'.",
+        "Impact": "This failure prevented the retrieval of aggregate data on total consumption, average cost, and bill count."
+      }
+    ],
+    "Recommendations": [
+      {
+        "Recommendation": "Ensure all necessary parameters are provided when executing queries to avoid failures and ensure data retrieval."
+      }
+    ]
+  },
+  "errors": []
+}

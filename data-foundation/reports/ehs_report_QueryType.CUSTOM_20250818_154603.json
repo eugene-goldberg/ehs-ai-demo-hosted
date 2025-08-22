@@ -1,0 +1,171 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:46:03.288806",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 18
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 2
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 18
+          },
+          {
+            "type": "Is",
+            "count": 9
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          }
+        ],
+        "total_nodes": 30,
+        "total_relationships": 35
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "Manifest_Transporter_Relationships",
+      "query": "\n                MATCH (m:WasteManifest)-[:TRANSPORTED_BY]->(t:Transporter)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    m.date_shipped as date_shipped,\n                    t.name as transporter_name,\n                    t.epa_id as transporter_epa_id,\n                    t.license_number as license_number\n                ORDER BY m.date_shipped DESC\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (m:WasteManifest)-[:TRANSPORTED_BY]->(t:Transporter)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    m.date_shipped as date_shipped,\n                    t.name as transporter_name,\n                    t.epa_id as transporter_epa_id,\n                    t.license_number as license_number\n                ORDER BY m.date_shipped DESC\n            ",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query was executed successfully without any errors.",
+      "2": "The query was designed to retrieve data related to waste manifests and their associated transporters, including details such as the manifest ID, date shipped, transporter name, EPA ID, and license number.",
+      "3": "Despite the successful execution, the query did not return any records."
+    },
+    "Patterns or Trends": {
+      "1": "No patterns or trends can be identified from the data as no records were retrieved from the query."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The lack of returned records could indicate a data quality issue. It's possible that the database does not contain any matching records for the query, or the data might not be properly linked between the 'WasteManifest' and 'Transporter' nodes.",
+      "2": "Another possibility is that the query parameters are too specific or restrictive, resulting in no matching records."
+    },
+    "Recommendations": {
+      "1": "Review the database to ensure that it contains valid and linked data between the 'WasteManifest' and 'Transporter' nodes.",
+      "2": "Reevaluate the query parameters to ensure they are not too restrictive or specific, preventing the retrieval of relevant records.",
+      "3": "If the database and query parameters are confirmed to be correct, consider the possibility that there may be no records that match the query due to the nature of the data itself. In this case, adjust the query or the data collection process as necessary."
+    }
+  },
+  "errors": []
+}

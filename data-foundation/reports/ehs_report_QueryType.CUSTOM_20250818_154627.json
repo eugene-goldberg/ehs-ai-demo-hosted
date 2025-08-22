@@ -1,0 +1,169 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:46:27.959124",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 0,
+    "failed_queries": 1,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 18
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 2
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 18
+          },
+          {
+            "type": "Is",
+            "count": 9
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          }
+        ],
+        "total_nodes": 30,
+        "total_relationships": 35
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "Database_Statistics",
+      "query": "\n                CALL db.stats.retrieve('GRAPH COUNTS') YIELD data\n                RETURN data\n                \n                UNION\n                \n                MATCH (n)\n                RETURN 'Total Nodes' as metric, count(n) as value\n                \n                UNION\n                \n                MATCH ()-[r]->()\n                RETURN 'Total Relationships' as metric, count(r) as value\n                \n                UNION\n                \n                MATCH (m:WasteManifest)\n                RETURN 'WasteManifest Nodes' as metric, count(m) as value\n                \n                UNION\n                \n                MATCH (g:Generator)\n                RETURN 'Generator Nodes' as metric, count(g) as value\n                \n                UNION\n                \n                MATCH (t:Transporter)\n                RETURN 'Transporter Nodes' as metric, count(t) as value\n                \n                UNION\n                \n                MATCH (df:DisposalFacility)\n                RETURN 'DisposalFacility Nodes' as metric, count(df) as value\n                \n                UNION\n                \n                MATCH (e:Emission)\n                RETURN 'Emission Nodes' as metric, count(e) as value\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                CALL db.stats.retrieve('GRAPH COUNTS') YIELD data\n                RETURN data\n                \n                UNION\n                \n                MATCH (n)\n                RETURN 'Total Nodes' as metric, count(n) as value\n                \n                UNION\n                \n                MATCH ()-[r]->()\n                RETURN 'Total Relationships' as metric, count(r) as value\n                \n                UNION\n                \n                MATCH (m:WasteManifest)\n                RETURN 'WasteManifest Nodes' as metric, count(m) as value\n                \n                UNION\n                \n                MATCH (g:Generator)\n                RETURN 'Generator Nodes' as metric, count(g) as value\n                \n                UNION\n                \n                MATCH (t:Transporter)\n                RETURN 'Transporter Nodes' as metric, count(t) as value\n                \n                UNION\n                \n                MATCH (df:DisposalFacility)\n                RETURN 'DisposalFacility Nodes' as metric, count(df) as value\n                \n                UNION\n                \n                MATCH (e:Emission)\n                RETURN 'Emission Nodes' as metric, count(e) as value\n            ",
+      "parameters": {},
+      "error": "{code: Neo.ClientError.Statement.SyntaxError} {message: All sub queries in an UNION must have the same return column names (line 5, column 17 (offset: 128))\n\"                UNION\"\n                 ^}",
+      "status": "failed"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query execution was unsuccessful.",
+      "2": "No records were retrieved from the database.",
+      "3": "The error message indicates a syntax error in the query."
+    },
+    "Patterns or Trends": {
+      "1": "There is a consistent issue with the query syntax, specifically with the UNION operation."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The syntax error in the query prevents any data from being retrieved, making it impossible to assess the quality of the data."
+    },
+    "Recommendations": {
+      "1": "Review the syntax of the query, specifically the UNION operation. Ensure that all subqueries in the UNION have the same return column names.",
+      "2": "Test the query in a controlled environment before executing it on the live database to prevent such errors.",
+      "3": "Consider using a query builder tool or software to help construct queries and prevent syntax errors."
+    }
+  },
+  "errors": []
+}

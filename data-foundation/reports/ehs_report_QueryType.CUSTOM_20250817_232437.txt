@@ -1,0 +1,174 @@
+================================================================================
+EHS Data Extraction Report - QueryType.CUSTOM
+================================================================================
+
+Generated: 2025-08-17T23:24:37.783142
+Query Type: QueryType.CUSTOM
+
+SUMMARY
+----------------------------------------
+Total Queries: 2
+Successful: 2
+Failed: 0
+Total Records: 1
+
+GRAPH OBJECTS
+----------------------------------------
+[
+  {
+    "nodes": [
+      {
+        "labels": [
+          "__Node__",
+          "__Entity__",
+          "entity"
+        ],
+        "count": 22
+      },
+      {
+        "labels": [
+          "DocumentChunk"
+        ],
+        "count": 4
+      },
+      {
+        "labels": [
+          "__Node__",
+          "Chunk"
+        ],
+        "count": 8
+      },
+      {
+        "labels": [
+          "Document",
+          "Utilitybill"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "UtilityBill"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Emission"
+        ],
+        "count": 1
+      }
+    ],
+    "relationships": [
+      {
+        "type": "MENTIONS",
+        "count": 22
+      },
+      {
+        "type": "Is",
+        "count": 8
+      },
+      {
+        "type": "Include",
+        "count": 1
+      },
+      {
+        "type": "SOURCE",
+        "count": 4
+      },
+      {
+        "type": "Has previous reading of",
+        "count": 2
+      },
+      {
+        "type": "Has current reading of",
+        "count": 1
+      },
+      {
+        "type": "Parsed by",
+        "count": 1
+      },
+      {
+        "type": "Has document_id",
+        "count": 1
+      },
+      {
+        "type": "Has current reading",
+        "count": 1
+      },
+      {
+        "type": "EXTRACTED_TO",
+        "count": 1
+      },
+      {
+        "type": "RESULTED_IN",
+        "count": 1
+      },
+      {
+        "type": "For",
+        "count": 1
+      }
+    ],
+    "total_nodes": 37,
+    "total_relationships": 44
+  }
+]
+
+QUERY RESULTS
+================================================================================
+
+Query 1
+----------------------------------------
+Query: 
+                MATCH (d:Document:UtilityBill)-[:EXTRACTED_TO]->(b:UtilityBill)-[:BILLED_TO]->(f:Facility)
+                OPTIONAL MATCH (b)-[:RESULTED_IN]->(e:Emission)
+                OPTIONAL MATCH (m:Meter)-[:MONITORS]->(f)
+                RETURN d, b, f, e, m
+                
+Status: success
+Records: 0
+
+Query 2
+----------------------------------------
+Query: 
+                MATCH (b:UtilityBill)
+                RETURN b.billing_period_end as period,
+                       b.total_kwh as consumption,
+                       b.total_cost as cost
+                ORDER BY b.billing_period_end DESC
+                LIMIT 10
+                
+Status: success
+Records: 1
+Results (first 5):
+  1: {
+  "period": "2025-06-30",
+  "consumption": 130000,
+  "cost": 15432.89
+}
+
+ANALYSIS
+================================================================================
+{
+  "Key Findings": [
+    {
+      "Finding 1": "Two queries were executed successfully, but only one query returned a record.",
+      "Finding 2": "The record retrieved from the second query provides information about a utility bill, including the billing period end date, total consumption in kilowatt-hours (kWh), and total cost."
+    }
+  ],
+  "Patterns or Trends": [
+    {
+      "Pattern 1": "There is no pattern or trend observable from the single record retrieved."
+    }
+  ],
+  "Potential Data Quality Issues": [
+    {
+      "Issue 1": "The first query, which attempts to match and return a complex relationship involving documents, utility bills, facilities, emissions, and meters, returned no results. This could indicate a data quality issue, such as missing or improperly linked data."
+    }
+  ],
+  "Recommendations": [
+    {
+      "Recommendation 1": "Investigate the data model and relationships to ensure they are correctly defined and populated. This could help in retrieving results from complex queries like the first one.",
+      "Recommendation 2": "If more data is available, consider running more queries to gather a larger dataset. This would allow for more meaningful analysis and the identification of patterns or trends."
+    }
+  ]
+}

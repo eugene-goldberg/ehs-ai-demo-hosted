@@ -1,0 +1,10 @@
+{
+  "timestamp": "2025-08-20T20:23:10.018653",
+  "creation_results": {
+    "ehs_documents_vector": false,
+    "ehs_entities_vector": false,
+    "ehs_summaries_vector": false
+  },
+  "verification_results": {},
+  "sample_data_created": false
+}

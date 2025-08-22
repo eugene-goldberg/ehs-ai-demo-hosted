@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:44:55.018374",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 1,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 18
+          },
+          {
+            "labels": [
+              "Document",
+              "Wastemanifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteManifest"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteShipment"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WasteGenerator"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Transporter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DisposalFacility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WasteItem"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 2
+          }
+        ],
+        "relationships": [
+          {
+            "type": "MENTIONS",
+            "count": 18
+          },
+          {
+            "type": "Is",
+            "count": 9
+          },
+          {
+            "type": "TRACKS",
+            "count": 1
+          },
+          {
+            "type": "DOCUMENTS",
+            "count": 1
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          },
+          {
+            "type": "GENERATED_BY",
+            "count": 1
+          },
+          {
+            "type": "TRANSPORTED_BY",
+            "count": 1
+          },
+          {
+            "type": "DISPOSED_AT",
+            "count": 1
+          },
+          {
+            "type": "CONTAINS_WASTE",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          }
+        ],
+        "total_nodes": 30,
+        "total_relationships": 35
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "All_DisposalFacility_Nodes",
+      "query": "\n                MATCH (df:DisposalFacility)\n                RETURN \n                    df.name as name,\n                    df.epa_id as epa_id,\n                    df.address as address,\n                    df.city as city,\n                    df.state as state,\n                    df.zip_code as zip_code,\n                    df.disposal_method as disposal_method,\n                    df.permit_number as permit_number,\n                    properties(df) as all_properties\n                ORDER BY df.name\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (df:DisposalFacility)\n                RETURN \n                    df.name as name,\n                    df.epa_id as epa_id,\n                    df.address as address,\n                    df.city as city,\n                    df.state as state,\n                    df.zip_code as zip_code,\n                    df.disposal_method as disposal_method,\n                    df.permit_number as permit_number,\n                    properties(df) as all_properties\n                ORDER BY df.name\n            ",
+      "parameters": {},
+      "results": [
+        {
+          "name": "Green Valley Landfill",
+          "epa_id": "CAL000654321",
+          "address": "100 Landfill Lane, Greenville, CA 91102",
+          "city": null,
+          "state": null,
+          "zip_code": null,
+          "disposal_method": null,
+          "permit_number": "",
+          "all_properties": {
+            "id": "disposal_facility_green_valley_landfill",
+            "permit_number": "",
+            "address": "100 Landfill Lane, Greenville, CA 91102",
+            "disposal_methods": "[]",
+            "epa_id": "CAL000654321",
+            "name": "Green Valley Landfill"
+          }
+        }
+      ],
+      "record_count": 1,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": [
+      {
+        "Finding 1": "The query was successful and returned one record related to a disposal facility named 'Green Valley Landfill'."
+      },
+      {
+        "Finding 2": "The EPA ID for the Green Valley Landfill is 'CAL000654321'."
+      },
+      {
+        "Finding 3": "The address of the Green Valley Landfill is '100 Landfill Lane, Greenville, CA 91102'."
+      },
+      {
+        "Finding 4": "The permit number for the Green Valley Landfill is not provided."
+      },
+      {
+        "Finding 5": "The disposal methods for the Green Valley Landfill are not provided."
+      }
+    ],
+    "Patterns or Trends": [
+      {
+        "Pattern 1": "There is no pattern or trend observed from this single record."
+      }
+    ],
+    "Data Quality Issues": [
+      {
+        "Issue 1": "The city, state, and zip code fields are null for the Green Valley Landfill record."
+      },
+      {
+        "Issue 2": "The disposal method for the Green Valley Landfill is not provided."
+      },
+      {
+        "Issue 3": "The permit number for the Green Valley Landfill is not provided."
+      }
+    ],
+    "Recommendations": [
+      {
+        "Recommendation 1": "It is recommended to update the city, state, and zip code fields for the Green Valley Landfill record."
+      },
+      {
+        "Recommendation 2": "It is recommended to update the disposal method for the Green Valley Landfill."
+      },
+      {
+        "Recommendation 3": "It is recommended to update the permit number for the Green Valley Landfill."
+      }
+    ]
+  },
+  "errors": []
+}

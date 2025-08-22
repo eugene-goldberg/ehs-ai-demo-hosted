@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - QueryType.CUSTOM",
+    "generated_at": "2025-08-18T15:22:37.659135",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 0,
+    "graph_objects": [
+      {
+        "nodes": [],
+        "relationships": [],
+        "total_nodes": 0,
+        "total_relationships": 0
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "name": "All_WasteManifest_Relationships",
+      "query": "\n                MATCH (m:WasteManifest)-[r]-(n)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    type(r) as relationship_type,\n                    labels(n) as connected_node_labels,\n                    CASE \n                        WHEN 'Generator' IN labels(n) THEN n.name\n                        WHEN 'Transporter' IN labels(n) THEN n.name\n                        WHEN 'DisposalFacility' IN labels(n) THEN n.name\n                        WHEN 'Emission' IN labels(n) THEN n.emission_type\n                        ELSE toString(id(n))\n                    END as connected_node_name,\n                    properties(r) as relationship_properties,\n                    id(startNode(r)) as start_node_id,\n                    id(endNode(r)) as end_node_id\n                ORDER BY m.manifest_id, relationship_type\n            ",
+      "parameters": {}
+    }
+  ],
+  "query_results": [
+    {
+      "query": "\n                MATCH (m:WasteManifest)-[r]-(n)\n                RETURN \n                    m.manifest_id as manifest_id,\n                    type(r) as relationship_type,\n                    labels(n) as connected_node_labels,\n                    CASE \n                        WHEN 'Generator' IN labels(n) THEN n.name\n                        WHEN 'Transporter' IN labels(n) THEN n.name\n                        WHEN 'DisposalFacility' IN labels(n) THEN n.name\n                        WHEN 'Emission' IN labels(n) THEN n.emission_type\n                        ELSE toString(id(n))\n                    END as connected_node_name,\n                    properties(r) as relationship_properties,\n                    id(startNode(r)) as start_node_id,\n                    id(endNode(r)) as end_node_id\n                ORDER BY m.manifest_id, relationship_type\n            ",
+      "parameters": {},
+      "results": [],
+      "record_count": 0,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query was executed successfully without any errors.",
+      "2": "Despite the successful execution, the query did not return any records.",
+      "3": "The query was designed to extract information about the relationships between WasteManifest nodes and other connected nodes in the database."
+    },
+    "Patterns or Trends": {
+      "1": "No patterns or trends can be identified from the data as no records were retrieved from the query."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The lack of returned records could indicate that there are no WasteManifest nodes in the database, or that these nodes are not connected to any other nodes.",
+      "2": "It could also be possible that the query parameters are not correctly set, leading to no matches found."
+    },
+    "Recommendations": {
+      "1": "Check the database to ensure that WasteManifest nodes exist and are connected to other nodes.",
+      "2": "Review the query parameters to ensure they are correctly set to match the desired nodes and relationships.",
+      "3": "If the database and query parameters are correct, consider revising the query to ensure it is correctly structured to return the desired results."
+    }
+  },
+  "errors": []
+}

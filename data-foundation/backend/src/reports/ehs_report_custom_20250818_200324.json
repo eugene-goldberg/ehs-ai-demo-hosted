@@ -1,0 +1,208 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - custom",
+    "generated_at": "2025-08-18T20:03:23.999255",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 4,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "Document",
+              "Waterbill"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "WaterBill"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "Facility"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "Customer"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "UtilityProvider"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "Meter"
+            ],
+            "count": 4
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 3
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 6
+          },
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 19
+          },
+          {
+            "labels": [
+              "Document",
+              "Utilitybill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "UtilityBill"
+            ],
+            "count": 1
+          }
+        ],
+        "relationships": [
+          {
+            "type": "EXTRACTED_TO",
+            "count": 3
+          },
+          {
+            "type": "BILLED_TO",
+            "count": 6
+          },
+          {
+            "type": "BILLED_FOR",
+            "count": 6
+          },
+          {
+            "type": "PROVIDED_BY",
+            "count": 4
+          },
+          {
+            "type": "MONITORS",
+            "count": 11
+          },
+          {
+            "type": "RECORDED_IN",
+            "count": 5
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 3
+          },
+          {
+            "type": "MENTIONS",
+            "count": 19
+          },
+          {
+            "type": "Is",
+            "count": 10
+          },
+          {
+            "type": "SOURCE",
+            "count": 3
+          }
+        ],
+        "total_nodes": 50,
+        "total_relationships": 70
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "MATCH (w:WaterBill)-[r]->(n) RETURN type(r) as rel_type, labels(n) as target_labels, count(*) as count"
+    }
+  ],
+  "query_results": [
+    {
+      "query": "MATCH (w:WaterBill)-[r]->(n) RETURN type(r) as rel_type, labels(n) as target_labels, count(*) as count",
+      "parameters": {},
+      "results": [
+        {
+          "rel_type": "RESULTED_IN",
+          "target_labels": [
+            "Emission"
+          ],
+          "count": 2
+        },
+        {
+          "rel_type": "PROVIDED_BY",
+          "target_labels": [
+            "UtilityProvider"
+          ],
+          "count": 3
+        },
+        {
+          "rel_type": "BILLED_FOR",
+          "target_labels": [
+            "Customer"
+          ],
+          "count": 4
+        },
+        {
+          "rel_type": "BILLED_TO",
+          "target_labels": [
+            "Facility"
+          ],
+          "count": 4
+        }
+      ],
+      "record_count": 4,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": {
+      "1": "The query was successful and returned 4 records.",
+      "2": "The 'WaterBill' node has relationships with four different types of nodes: 'Emission', 'UtilityProvider', 'Customer', and 'Facility'.",
+      "3": "The relationship types are 'RESULTED_IN', 'PROVIDED_BY', 'BILLED_FOR', and 'BILLED_TO'.",
+      "4": "The 'WaterBill' node has the most relationships with 'Customer' and 'Facility' nodes, both having a count of 4.",
+      "5": "The 'WaterBill' node has the least relationships with 'Emission' nodes, having a count of 2."
+    },
+    "Patterns or Trends": {
+      "1": "The 'WaterBill' node seems to have a direct relationship with 'Customer' and 'Facility' nodes, as indicated by the 'BILLED_FOR' and 'BILLED_TO' relationship types.",
+      "2": "The 'WaterBill' node also seems to have a relationship with 'UtilityProvider' nodes, as indicated by the 'PROVIDED_BY' relationship type.",
+      "3": "The 'WaterBill' node seems to have an effect on 'Emission' nodes, as indicated by the 'RESULTED_IN' relationship type."
+    },
+    "Potential Data Quality Issues": {
+      "1": "The data seems to be clean and well-structured. However, without knowing the full context or having access to the full dataset, it's hard to identify potential data quality issues."
+    },
+    "Recommendations": {
+      "1": "Further analysis could be done to understand the nature of the relationships between the 'WaterBill' node and the other nodes.",
+      "2": "It would be beneficial to investigate why the 'WaterBill' node has more relationships with 'Customer' and 'Facility' nodes than with 'Emission' and 'UtilityProvider' nodes.",
+      "3": "It might be useful to explore the 'Emission' nodes in more detail, as they have the least number of relationships with the 'WaterBill' node."
+    }
+  },
+  "errors": []
+}

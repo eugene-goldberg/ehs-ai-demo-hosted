@@ -1,0 +1,248 @@
+================================================================================
+EHS Data Extraction Report - QueryType.CUSTOM
+================================================================================
+
+Generated: 2025-08-18T02:34:41.915955
+Query Type: QueryType.CUSTOM
+
+SUMMARY
+----------------------------------------
+Total Queries: 1
+Successful: 1
+Failed: 0
+Total Records: 1
+
+GRAPH OBJECTS
+----------------------------------------
+[
+  {
+    "nodes": [
+      {
+        "labels": [
+          "__Node__",
+          "__Entity__",
+          "entity"
+        ],
+        "count": 16
+      },
+      {
+        "labels": [
+          "__Node__",
+          "Chunk"
+        ],
+        "count": 2
+      },
+      {
+        "labels": [
+          "Document",
+          "Waterbill"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "WaterBill"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Facility"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Customer"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "UtilityProvider"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Meter"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "Emission"
+        ],
+        "count": 1
+      },
+      {
+        "labels": [
+          "DocumentChunk"
+        ],
+        "count": 1
+      }
+    ],
+    "relationships": [
+      {
+        "type": "MENTIONS",
+        "count": 16
+      },
+      {
+        "type": "Is",
+        "count": 8
+      },
+      {
+        "type": "SOURCE",
+        "count": 1
+      },
+      {
+        "type": "EXTRACTED_TO",
+        "count": 1
+      },
+      {
+        "type": "BILLED_TO",
+        "count": 1
+      },
+      {
+        "type": "BILLED_FOR",
+        "count": 1
+      },
+      {
+        "type": "PROVIDED_BY",
+        "count": 1
+      },
+      {
+        "type": "MONITORS",
+        "count": 1
+      },
+      {
+        "type": "RECORDED_IN",
+        "count": 1
+      },
+      {
+        "type": "RESULTED_IN",
+        "count": 1
+      }
+    ],
+    "total_nodes": 26,
+    "total_relationships": 32
+  }
+]
+
+QUERY RESULTS
+================================================================================
+
+Query 1
+----------------------------------------
+Query: 
+                    MATCH (w:WaterBill)
+                    MATCH (w)-[:BILLED_TO]->(f:Facility)
+                    MATCH (w)-[:BILLED_FOR]->(c:Customer)
+                    MATCH (w)-[:PROVIDED_BY]->(p:UtilityProvider)
+                    OPTIONAL MATCH (w)-[:RESULTED_IN]->(e:Emission)
+                    OPTIONAL MATCH (m:Meter)-[:RECORDED_IN]->(w)
+                    RETURN 
+                        w.billing_period_start as period_start,
+                        w.billing_period_end as period_end,
+                        w.total_gallons as gallons_used,
+                        w.total_cost as total_cost,
+                        w.water_consumption_cost as water_cost,
+                        w.sewer_service_charge as sewer_charge,
+                        w.stormwater_fee as stormwater_fee,
+                        w.conservation_tax as conservation_tax,
+                        w.infrastructure_surcharge as infrastructure_surcharge,
+                        f.name as facility_name,
+                        f.address as facility_address,
+                        c.name as customer_name,
+                        c.billing_address as billing_address,
+                        p.name as provider_name,
+                        p.phone as provider_phone,
+                        e.amount as co2_emissions,
+                        e.emission_factor as emission_factor,
+                        collect({
+                            meter_id: m.id,
+                            usage: m.usage,
+                            unit: m.unit,
+                            service_type: m.service_type
+                        }) as meter_readings
+                    ORDER BY w.billing_period_end DESC
+                
+Status: success
+Records: 1
+Results (first 5):
+  1: {
+  "period_start": "2025-06-01",
+  "period_end": "2025-06-30",
+  "gallons_used": 250000,
+  "total_cost": 4891.5,
+  "water_cost": 3750.0,
+  "sewer_charge": 950.0,
+  "stormwater_fee": 125.0,
+  "conservation_tax": 61.5,
+  "infrastructure_surcharge": 5.0,
+  "facility_name": "Apex Manufacturing - Plant A",
+  "facility_address": "789 Production Way, Mechanicsburg, CA 93011",
+  "customer_name": "Apex Manufacturing Inc.",
+  "billing_address": "456 Industrial Ave., Mechanicsburg, CA 93011",
+  "provider_name": "Aquaflow Municipal Water",
+  "provider_phone": "(800) 555-0211",
+  "co2_emissions": 50.0,
+  "emission_factor": 0.0002,
+  "meter_readings": [
+    {
+      "unit": "gallons",
+      "service_type": "Commercial",
+      "usage": 250000,
+      "meter_id": "WTR-MAIN-01"
+    }
+  ]
+}
+
+ANALYSIS
+================================================================================
+{
+  "Key Findings": [
+    {
+      "Finding": "The query was successful and returned one record.",
+      "Details": "The record pertains to a water bill for Apex Manufacturing - Plant A, billed to Apex Manufacturing Inc. by Aquaflow Municipal Water."
+    },
+    {
+      "Finding": "The water bill details for the period from June 1, 2025, to June 30, 2025, were retrieved.",
+      "Details": "The total cost of the bill was $4891.5, with the water consumption cost being the highest charge at $3750.0. Other charges include a sewer service charge, stormwater fee, conservation tax, and an infrastructure surcharge."
+    },
+    {
+      "Finding": "The water usage for the period was 250,000 gallons.",
+      "Details": "This usage resulted in CO2 emissions of 50.0 units, with an emission factor of 0.0002."
+    },
+    {
+      "Finding": "Meter readings were also retrieved.",
+      "Details": "The meter, identified as WTR-MAIN-01, recorded a usage of 250,000 gallons for commercial service."
+    }
+  ],
+  "Patterns or Trends": [
+    {
+      "Pattern": "No specific patterns or trends can be identified from a single record.",
+      "Details": "More data over multiple periods would be required to identify usage patterns, cost trends, or emission trends."
+    }
+  ],
+  "Data Quality Issues": [
+    {
+      "Issue": "Limited data.",
+      "Details": "Only one record was retrieved, which limits the ability to perform comprehensive analysis or identify trends."
+    },
+    {
+      "Issue": "Potential missing data.",
+      "Details": "The query includes optional matches for emissions and meter readings. If these matches are not found, the corresponding data fields may be null."
+    }
+  ],
+  "Recommendations": [
+    {
+      "Recommendation": "Retrieve more data for comprehensive analysis.",
+      "Details": "Executing queries for multiple billing periods and facilities would provide more data for analysis and allow for the identification of trends."
+    },
+    {
+      "Recommendation": "Ensure complete data capture.",
+      "Details": "Ensure that all relevant data, including emissions and meter readings, are consistently recorded and captured in the database."
+    }
+  ]
+}

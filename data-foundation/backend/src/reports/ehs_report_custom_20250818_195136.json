@@ -1,0 +1,246 @@
+{
+  "metadata": {
+    "title": "EHS Data Extraction Report - custom",
+    "generated_at": "2025-08-18T19:51:36.756196",
+    "query_type": "custom",
+    "parameters": {},
+    "output_format": "json"
+  },
+  "summary": {
+    "total_queries": 1,
+    "successful_queries": 1,
+    "failed_queries": 0,
+    "total_records": 10,
+    "graph_objects": [
+      {
+        "nodes": [
+          {
+            "labels": [
+              "Document",
+              "Waterbill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "WaterBill"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Facility"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Customer"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "UtilityProvider"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Meter"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "Emission"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "DocumentChunk"
+            ],
+            "count": 1
+          },
+          {
+            "labels": [
+              "__Node__",
+              "Chunk"
+            ],
+            "count": 2
+          },
+          {
+            "labels": [
+              "__Node__",
+              "__Entity__",
+              "entity"
+            ],
+            "count": 12
+          }
+        ],
+        "relationships": [
+          {
+            "type": "EXTRACTED_TO",
+            "count": 1
+          },
+          {
+            "type": "BILLED_TO",
+            "count": 1
+          },
+          {
+            "type": "BILLED_FOR",
+            "count": 1
+          },
+          {
+            "type": "PROVIDED_BY",
+            "count": 1
+          },
+          {
+            "type": "MONITORS",
+            "count": 1
+          },
+          {
+            "type": "RECORDED_IN",
+            "count": 1
+          },
+          {
+            "type": "RESULTED_IN",
+            "count": 1
+          },
+          {
+            "type": "MENTIONS",
+            "count": 12
+          },
+          {
+            "type": "Is",
+            "count": 6
+          },
+          {
+            "type": "SOURCE",
+            "count": 1
+          }
+        ],
+        "total_nodes": 22,
+        "total_relationships": 26
+      }
+    ]
+  },
+  "queries_executed": [
+    {
+      "query": "MATCH (n) RETURN labels(n) as labels, count(n) as count ORDER BY count DESC"
+    }
+  ],
+  "query_results": [
+    {
+      "query": "MATCH (n) RETURN labels(n) as labels, count(n) as count ORDER BY count DESC",
+      "parameters": {},
+      "results": [
+        {
+          "labels": [
+            "__Node__",
+            "__Entity__",
+            "entity"
+          ],
+          "count": 12
+        },
+        {
+          "labels": [
+            "__Node__",
+            "Chunk"
+          ],
+          "count": 2
+        },
+        {
+          "labels": [
+            "Document",
+            "Waterbill"
+          ],
+          "count": 1
+        },
+        {
+          "labels": [
+            "WaterBill"
+          ],
+          "count": 1
+        },
+        {
+          "labels": [
+            "Facility"
+          ],
+          "count": 1
+        },
+        {
+          "labels": [
+            "Customer"
+          ],
+          "count": 1
+        },
+        {
+          "labels": [
+            "UtilityProvider"
+          ],
+          "count": 1
+        },
+        {
+          "labels": [
+            "Meter"
+          ],
+          "count": 1
+        },
+        {
+          "labels": [
+            "Emission"
+          ],
+          "count": 1
+        },
+        {
+          "labels": [
+            "DocumentChunk"
+          ],
+          "count": 1
+        }
+      ],
+      "record_count": 10,
+      "status": "success"
+    }
+  ],
+  "analysis": {
+    "Key Findings": [
+      {
+        "Finding": "The query was successful and returned 10 records."
+      },
+      {
+        "Finding": "The most common label combination in the data is '__Node__', '__Entity__', 'entity' with a count of 12."
+      },
+      {
+        "Finding": "The labels 'Document', 'Waterbill', 'WaterBill', 'Facility', 'Customer', 'UtilityProvider', 'Meter', 'Emission', and 'DocumentChunk' each have a count of 1."
+      }
+    ],
+    "Patterns or Trends": [
+      {
+        "Pattern": "The '__Node__' label appears in two different combinations, suggesting it may be a common label in the data."
+      },
+      {
+        "Trend": "Most labels are unique and only appear once in the data."
+      }
+    ],
+    "Potential Data Quality Issues": [
+      {
+        "Issue": "The labels 'Waterbill' and 'WaterBill' may represent the same entity but are treated as separate due to case sensitivity. This could lead to inconsistencies in data analysis."
+      },
+      {
+        "Issue": "The '__Node__', '__Entity__', 'entity' combination has a count of 12, which is more than the total records retrieved (10). This could indicate a potential data duplication or counting error."
+      }
+    ],
+    "Recommendations": [
+      {
+        "Recommendation": "Investigate the potential data duplication or counting error associated with the '__Node__', '__Entity__', 'entity' label combination."
+      },
+      {
+        "Recommendation": "Standardize the case for labels to avoid potential inconsistencies in data analysis. For example, 'Waterbill' and 'WaterBill' should be treated as the same label."
+      }
+    ]
+  },
+  "errors": []
+}
