@@ -1,0 +1,115 @@
+# Production Docker Compose Override
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+version: '3.8'
+
+services:
+  neo4j:
+    environment:
+      # Production Neo4j settings
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD:-change_me_in_production}
+      - NEO4J_dbms_memory_heap_initial__size=1g
+      - NEO4J_dbms_memory_heap_max__size=4g
+      - NEO4J_dbms_memory_pagecache_size=2g
+      - NEO4J_dbms_logs_debug_level=WARN
+      - NEO4J_dbms_security_auth_enabled=true
+      - NEO4J_dbms_connector_bolt_advertised__address=neo4j:7687
+    restart: always
+    # Uncomment for production backups
+    # volumes:
+    #   - /opt/neo4j/backups:/backups
+
+  data-foundation-backend:
+    environment:
+      - ENV=production
+      - DEBUG=false
+      - LOG_LEVEL=WARNING
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-change_me_in_production}
+    restart: always
+    # Remove development volume mounts
+    volumes:
+      - ./input-documents:/code/input:ro
+      - app_data:/code/data
+      - backend_logs:/code/logs
+    # Production command (no reload)
+    command: ["gunicorn", "score:app", "--workers", "4", "--threads", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000", "--timeout", "300"]
+
+  data-foundation-frontend:
+    build:
+      context: ./data-foundation/frontend
+      dockerfile: Dockerfile
+      args:
+        # Production frontend settings
+        - VITE_BACKEND_API_URL=${FRONTEND_API_URL:-http://localhost:8000}
+        - VITE_SKIP_AUTH=false
+        - VITE_ENV=PROD
+        - DEPLOYMENT_ENV=production
+    restart: always
+
+  ehs-analytics:
+    environment:
+      - ENVIRONMENT=production
+      - DEBUG=false
+      - LOG_LEVEL=WARNING
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-change_me_in_production}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    restart: always
+    # Remove development volume mounts
+    volumes:
+      - ./input-documents:/app/input:ro
+      - app_data:/app/data
+      - analytics_logs:/app/logs
+      - ./ehs-analytics/models:/app/models
+      - ./ehs-analytics/forecast_cache:/app/forecast_cache
+    # Production command (no reload)
+    command: ["python", "-m", "uvicorn", "ehs_analytics.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4", "--log-level", "warning"]
+
+# Production network configuration
+networks:
+  ehs-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: ehs-bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+
+# Production volume configuration
+volumes:
+  neo4j_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/ehs-ai-demo/neo4j/data
+
+  neo4j_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/ehs-ai-demo/neo4j/logs
+
+  app_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/ehs-ai-demo/app-data
+
+  backend_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/ehs-ai-demo/logs/backend
+
+  analytics_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/ehs-ai-demo/logs/analytics
