@@ -22,13 +22,18 @@ load_dotenv(env_path, override=True)
 
 from backend.src.workflows.ingestion_workflow import IngestionWorkflow
 
+# Create logs directory if it doesn't exist
+script_dir = Path(__file__).parent
+logs_dir = script_dir / "logs"
+logs_dir.mkdir(exist_ok=True)
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler(f'scripts/logs/ingestion_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log')
+        logging.FileHandler(logs_dir / f'ingestion_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log')
     ]
 )
 logger = logging.getLogger(__name__)
@@ -380,10 +385,6 @@ def main():
     print("Processing: Electric Bill, Water Bill, and Waste Manifest")
     print("=" * 100)
     
-    # Create logs directory if it doesn't exist
-    logs_dir = Path("scripts/logs")
-    logs_dir.mkdir(exist_ok=True)
-    
     # Check environment variables
     required_env_vars = {
         "LLAMA_PARSE_API_KEY": os.getenv("LLAMA_PARSE_API_KEY"),
@@ -431,10 +432,12 @@ def main():
         return
     
     # Process all documents
+    # Use absolute paths based on script location
+    data_dir = Path(__file__).parent.parent / "data"
     documents_to_process = [
-        ("data/electric_bill.pdf", "electric_bill"),
-        ("data/water_bill.pdf", "water_bill"),
-        ("data/waste_manifest.pdf", "waste_manifest")
+        (str(data_dir / "electric_bill.pdf"), "electric_bill"),
+        (str(data_dir / "water_bill.pdf"), "water_bill"),
+        (str(data_dir / "waste_manifest.pdf"), "waste_manifest")
     ]
     
     results = []
@@ -557,7 +560,8 @@ def main():
     print(f"{'='*80}")
     
     # Log file location
-    print(f"\nDetailed logs saved to: scripts/logs/ingestion_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+    log_filename = f'ingestion_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
+    print(f"\nDetailed logs saved to: {logs_dir / log_filename}")
 
 
 if __name__ == "__main__":
