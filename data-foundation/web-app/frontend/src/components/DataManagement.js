@@ -21,7 +21,7 @@ const DataManagement = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const documentsRes = await axios.get('http://localhost:8006/api/data/processed-documents');
+      const documentsRes = await axios.get('http://localhost:8001/api/data/processed-documents');
       setProcessedDocuments(documentsRes.data);
       setError(null);
     } catch (err) {
@@ -39,7 +39,7 @@ const DataManagement = () => {
 
     try {
       setLoadingDetails(prev => ({ ...prev, [documentId]: true }));
-      const response = await axios.get(`http://localhost:8006/api/data/processed-documents/${documentId}`);
+      const response = await axios.get(`http://localhost:8001/api/data/processed-documents/${documentId}`);
       setDocumentDetails(prev => ({ ...prev, [documentId]: response.data }));
     } catch (err) {
       console.error('Error fetching document details:', err);
@@ -53,7 +53,7 @@ const DataManagement = () => {
   const handleBulkIngestion = async () => {
     setIsIngesting(true);
     try {
-      const response = await axios.post('http://localhost:8005/api/v1/ingest/batch', {
+      const response = await axios.post('http://localhost:8000/api/v1/ingest/batch', {
         clear_database: true
       });
       

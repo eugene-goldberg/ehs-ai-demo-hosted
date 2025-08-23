@@ -70,7 +70,7 @@ const Analytics = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:8006/api/analytics/dashboard');
+      const response = await axios.get('http://localhost:8001/api/analytics/dashboard');
       setDashboardData(response.data);
       setError(null);
     } catch (err) {
@@ -83,7 +83,7 @@ const Analytics = () => {
 
   const fetchAnalyticsQuery = async (metricType) => {
     try {
-      const response = await axios.post('http://localhost:8006/api/analytics/query', {
+      const response = await axios.post('http://localhost:8001/api/analytics/query', {
         metric_type: metricType,
         date_range: {
           start: '2024-01-01',

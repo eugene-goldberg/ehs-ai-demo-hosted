@@ -661,7 +661,7 @@ async def shutdown_event():
 
 if __name__ == "__main__":
     # Get port from environment variable with fallback
-    port = int(os.getenv("PORT", "8001"))
+    port = int(os.getenv("PORT", "8000"))
     
     # Run the application
     uvicorn.run(
