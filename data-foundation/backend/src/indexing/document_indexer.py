@@ -19,10 +19,11 @@ from llama_index.core import (
 from llama_index.core.node_parser import SimpleNodeParser
 from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
-from llama_index.embeddings.openai import OpenAIEmbedding
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from llama_index.llms.openai import OpenAI
-from llama_index.llms.anthropic import Anthropic
+# Commented out llama-index imports not in requirements.txt
+# from llama_index.embeddings.openai import OpenAIEmbedding
+# from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+# from llama_index.llms.openai import OpenAI
+# from llama_index.llms.anthropic import Anthropic
 from llama_index.graph_stores.neo4j import Neo4jPropertyGraphStore
 from llama_index.vector_stores.neo4jvector import Neo4jVectorStore
 from llama_index.core.extractors import (

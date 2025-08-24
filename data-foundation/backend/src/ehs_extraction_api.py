@@ -18,8 +18,12 @@ src_dir = os.path.join(parent_dir, 'src')
 if src_dir not in sys.path:
     sys.path.insert(0, src_dir)
 
+# Phase 1 Enhancement Imports
+from phase1_enhancements.phase1_integration import create_phase1_integration
+
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, validator
 from dotenv import load_dotenv
 import uvicorn
@@ -42,6 +46,9 @@ app = FastAPI(
     docs_url="/api/docs",
     redoc_url="/api/redoc"
 )
+
+# Phase 1 Integration
+phase1_integration = None
 
 # CORS middleware
 app.add_middleware(
@@ -405,12 +412,18 @@ async def batch_ingest_documents(request: BatchIngestionRequest):
         # Run the ingestion script
         logger.info(f"Executing ingestion script: {script_path}")
         
+        # Create environment with correct PYTHONPATH
+        env = {**os.environ}
+        # Clear PYTHONPATH to avoid conflicts between our workflows and llama_index.workflows
+        # The script will handle its own path setup
+        env.pop('PYTHONPATH', None)
+        
         # Execute the script and capture output
         result = subprocess.run(
             [sys.executable, script_path],
             capture_output=True,
             text=True,
-            env={**os.environ}  # Pass current environment variables
+            env=env
         )
         
         end_time = datetime.utcnow()
@@ -619,20 +632,28 @@ def _get_query_type_description(query_type: QueryType) -> str:
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request, exc):
     """Handle HTTP exceptions with consistent response format."""
-    return create_api_response(
+    response_data = create_api_response(
         status="Failed",
         message=exc.detail,
         error=exc.detail
+    )
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=response_data
     )
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request, exc):
     """Handle general exceptions with consistent response format."""
     logger.error(f"Unhandled exception: {str(exc)}")
-    return create_api_response(
+    response_data = create_api_response(
         status="Failed", 
         message="Internal server error",
         error=str(exc)
+    )
+    return JSONResponse(
+        status_code=500,
+        content=response_data
     )
 
 # Startup/shutdown events
@@ -652,6 +673,18 @@ async def startup_event():
     # Create reports directory if it doesn't exist
     os.makedirs("./reports", exist_ok=True)
     
+    # Initialize Phase 1 enhancements
+    global phase1_integration
+    try:
+        phase1_integration = create_phase1_integration()
+        await phase1_integration.initialize_all_enhancements()
+        # Integrate Phase 1 routers with the FastAPI app
+        phase1_integration.integrate_with_app(app)
+        logger.info("Phase 1 enhancements initialized and integrated successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize Phase 1 enhancements: {str(e)}")
+        # Continue running even if Phase 1 fails to initialize
+
     logger.info("EHS Extraction API startup completed")
 
 @app.on_event("shutdown") 

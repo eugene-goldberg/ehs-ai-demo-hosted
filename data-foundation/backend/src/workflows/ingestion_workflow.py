@@ -17,7 +17,8 @@ from langchain_anthropic import ChatAnthropic
 from pydantic import BaseModel, Field
 
 from ..parsers.llama_parser import EHSDocumentParser
-from ..indexing.document_indexer import EHSDocumentIndexer
+# Temporarily commented out - document_indexer has llama-index dependencies not in requirements.txt
+# from ..indexing.document_indexer import EHSDocumentIndexer
 from ..extractors.ehs_extractors import (
     UtilityBillExtractor,
     WaterBillExtractor,
@@ -93,12 +94,14 @@ class IngestionWorkflow:
         
         # Initialize components
         self.parser = EHSDocumentParser(api_key=llama_parse_api_key)
-        self.indexer = EHSDocumentIndexer(
-            neo4j_uri=neo4j_uri,
-            neo4j_username=neo4j_username,
-            neo4j_password=neo4j_password,
-            llm_model=llm_model
-        )
+        # Temporarily disabled - EHSDocumentIndexer has llama-index dependencies not in requirements.txt
+        # self.indexer = EHSDocumentIndexer(
+        #     neo4j_uri=neo4j_uri,
+        #     neo4j_username=neo4j_username,
+        #     neo4j_password=neo4j_password,
+        #     llm_model=llm_model
+        # )
+        self.indexer = None
         
         # Initialize extractors
         self.extractors = {
@@ -1203,10 +1206,11 @@ class IngestionWorkflow:
                     )
                     documents.append(doc)
             
+            # Temporarily disabled - indexer has llama-index dependencies not in requirements.txt
             # Build indexes
-            indexes = self.indexer.create_hybrid_index(documents)
+            # indexes = self.indexer.create_hybrid_index(documents)
             
-            logger.info("Document indexed successfully")
+            logger.info("Document indexing skipped - indexer disabled")
             
         except Exception as e:
             state["errors"].append(f"Indexing error: {str(e)}")

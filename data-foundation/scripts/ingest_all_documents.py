@@ -20,7 +20,19 @@ sys.path.append(str(Path(__file__).parent.parent))
 env_path = Path(__file__).parent.parent / "backend" / ".env"
 load_dotenv(env_path, override=True)
 
-from backend.src.workflows.ingestion_workflow import IngestionWorkflow
+# Try different import paths to handle different execution contexts
+try:
+    # When run from the API with PYTHONPATH set to backend/src
+    from workflows.ingestion_workflow import IngestionWorkflow
+except ImportError:
+    try:
+        # When run directly from scripts directory
+        from backend.src.workflows.ingestion_workflow import IngestionWorkflow
+    except ImportError:
+        # Add backend/src to path and try again
+        backend_src_path = Path(__file__).parent.parent / "backend" / "src"
+        sys.path.insert(0, str(backend_src_path))
+        from workflows.ingestion_workflow import IngestionWorkflow
 
 # Create logs directory if it doesn't exist
 script_dir = Path(__file__).parent
