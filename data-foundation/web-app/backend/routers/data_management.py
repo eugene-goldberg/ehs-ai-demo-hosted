@@ -1,8 +1,11 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File
+from fastapi.responses import FileResponse
 from typing import List
 import uuid
 from datetime import datetime
 import logging
+import os
+from pathlib import Path
 from models import (
     DataUploadRequest, 
     DataUploadResponse, 
@@ -165,7 +168,8 @@ async def get_processed_documents():
                        d.created_at as date_received,
                        labels(d) as labels,
                        d.account_number as account_number,
-                       d.service_address as site
+                       d.service_address as site,
+                       d.file_path as file_path
                 ORDER BY d.created_at DESC
             """)
             
@@ -186,7 +190,8 @@ async def get_processed_documents():
                     'id': record['id'],
                     'document_type': doc_type,
                     'date_received': record['date_received'] or datetime.now().isoformat(),
-                    'site': record['site'] or record['account_number'] or 'Main Facility'
+                    'site': record['site'] or record['account_number'] or 'Main Facility',
+                    'file_path': record['file_path']
                 }
                 
                 processed_docs.append(doc)
@@ -201,19 +206,22 @@ async def get_processed_documents():
                 "id": "electric_bill_001",
                 "document_type": "Electric Bill",
                 "date_received": "2025-08-18T10:30:00",
-                "site": "Main Facility"
+                "site": "Main Facility",
+                "file_path": "/tmp/electric_bill_001.pdf"
             },
             {
                 "id": "water_bill_001", 
                 "document_type": "Water Bill",
                 "date_received": "2025-08-18T10:31:00",
-                "site": "Main Facility"
+                "site": "Main Facility",
+                "file_path": "/tmp/water_bill_001.pdf"
             },
             {
                 "id": "waste_manifest_001",
                 "document_type": "Waste Manifest",
                 "date_received": "2025-08-18T10:32:00",
-                "site": "Warehouse B"
+                "site": "Warehouse B",
+                "file_path": "/tmp/waste_manifest_001.pdf"
             }
         ]
     
@@ -421,3 +429,57 @@ async def get_document_details(document_id: str):
             status_code=404, 
             detail=error_detail
         )
+
+@router.get("/documents/{document_id}/download")
+async def download_document(document_id: str):
+    """Download a document file by document ID."""
+    from neo4j import GraphDatabase
+    import os
+    from pathlib import Path
+    
+    # Neo4j connection details
+    uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
+    username = os.getenv('NEO4J_USERNAME', 'neo4j')
+    password = os.getenv('NEO4J_PASSWORD', 'EhsAI2024!')
+    
+    try:
+        driver = GraphDatabase.driver(uri, auth=(username, password))
+        
+        with driver.session() as session:
+            # Query to get the file path for the document
+            result = session.run(
+                "MATCH (d:Document {id: $document_id}) RETURN d.file_path as file_path",
+                document_id=document_id
+            )
+            
+            record = result.single()
+            if not record or not record['file_path']:
+                raise HTTPException(status_code=404, detail="Document or file path not found")
+            
+            file_path = record['file_path']
+            
+        driver.close()
+        
+        # Security check: ensure file path is safe (prevent directory traversal)
+        file_path = Path(file_path).resolve()
+        
+        # Check if file exists
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail="File not found on disk")
+        
+        # Check if it's actually a file (not a directory)
+        if not file_path.is_file():
+            raise HTTPException(status_code=400, detail="Path is not a file")
+        
+        # Return the file
+        return FileResponse(
+            path=str(file_path),
+            filename=file_path.name,
+            media_type='application/octet-stream'
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error downloading document {document_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error while downloading file")

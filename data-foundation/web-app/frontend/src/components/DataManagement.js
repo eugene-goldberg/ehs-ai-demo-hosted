@@ -9,6 +9,7 @@ const DataManagement = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isIngesting, setIsIngesting] = useState(false);
+  const [downloadingFiles, setDownloadingFiles] = useState(new Set());
   
   // Popup state
   const [hoveredRow, setHoveredRow] = useState(null);
@@ -66,6 +67,75 @@ const DataManagement = () => {
       setDocumentDetails(prev => ({ ...prev, [documentId]: null }));
     } finally {
       setLoadingDetails(prev => ({ ...prev, [documentId]: false }));
+    }
+  };
+
+  const handleDownload = async (doc) => {
+    if (!doc.file_path || downloadingFiles.has(doc.id)) {
+      return;
+    }
+
+    try {
+      setDownloadingFiles(prev => new Set(prev).add(doc.id));
+      
+      const response = await axios.get(`http://localhost:8001/api/data/documents/${doc.id}/download`, {
+        responseType: 'blob',
+        timeout: 30000 // 30 second timeout for large files
+      });
+
+      // Extract filename from response headers or use a default
+      const contentDisposition = response.headers['content-disposition'];
+      let filename = 'document.pdf'; // Default with .pdf extension
+      
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename[*]?=['"]?([^;\r\n"]+)['"]?/);
+        if (filenameMatch) {
+          filename = filenameMatch[1];
+        }
+      } else if (doc.file_path) {
+        // Extract filename from file_path
+        const pathParts = doc.file_path.split('/');
+        filename = pathParts[pathParts.length - 1];
+      } else if (doc.original_filename || doc.filename) {
+        filename = doc.original_filename || doc.filename;
+      }
+
+      // Create blob URL and trigger download
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+    } catch (err) {
+      console.error('Error downloading file:', err);
+      
+      // Show user-friendly error message
+      let errorMessage = 'Failed to download file. ';
+      if (err.response?.status === 404) {
+        errorMessage += 'File not found on server.';
+      } else if (err.code === 'ECONNABORTED') {
+        errorMessage += 'Download timeout - file may be too large.';
+      } else if (err.response?.status >= 500) {
+        errorMessage += 'Server error occurred.';
+      } else {
+        errorMessage += 'Please try again.';
+      }
+      
+      // You could show this in a toast notification or alert
+      alert(errorMessage);
+    } finally {
+      setDownloadingFiles(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(doc.id);
+        return newSet;
+      });
     }
   };
 
@@ -516,12 +586,13 @@ const DataManagement = () => {
               <th>Date Received</th>
               <th>Site</th>
               <th>Document Type</th>
+              <th>Download</th>
             </tr>
           </thead>
           <tbody>
             {processedDocuments.length === 0 ? (
               <tr>
-                <td colSpan="4">No documents processed yet</td>
+                <td colSpan="5">No documents processed yet</td>
               </tr>
             ) : (
               processedDocuments.map((doc, index) => (
@@ -546,6 +617,41 @@ const DataManagement = () => {
                   })}</td>
                   <td>{doc.site || doc.location || 'Main Facility'}</td>
                   <td>{doc.document_type || doc.type || 'Unknown'}</td>
+                  <td>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent row hover popup when clicking download
+                        handleDownload(doc);
+                      }}
+                      disabled={!doc.file_path || downloadingFiles.has(doc.id)}
+                      title={doc.file_path ? "Download original document" : "Original file not available"}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: doc.file_path && !downloadingFiles.has(doc.id) ? 'pointer' : 'not-allowed',
+                        fontSize: '16px',
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        transition: 'background-color 0.2s ease',
+                        opacity: doc.file_path ? 1 : 0.3,
+                        ...(doc.file_path && !downloadingFiles.has(doc.id) && {
+                          ':hover': {
+                            backgroundColor: '#f3f4f6'
+                          }
+                        })
+                      }}
+                      onMouseEnter={(e) => {
+                        if (doc.file_path && !downloadingFiles.has(doc.id)) {
+                          e.target.style.backgroundColor = '#f3f4f6';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = 'transparent';
+                      }}
+                    >
+                      {downloadingFiles.has(doc.id) ? '⏳' : '📄'}
+                    </button>
+                  </td>
                 </tr>
               ))
             )}
