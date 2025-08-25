@@ -178,7 +178,7 @@ async def get_processed_documents():
                 labels = record['labels']
                 doc_type = 'Unknown'
                 
-                if 'Utilitybill' in labels or 'UtilityBill' in labels:
+                if 'Electricitybill' in labels or 'ElectricityBill' in labels:
                     doc_type = 'Electric Bill'
                 elif 'Waterbill' in labels or 'WaterBill' in labels:
                     doc_type = 'Water Bill'
@@ -359,7 +359,7 @@ async def get_document_details(document_id: str):
                 
                 # Extract document type from labels
                 doc_type = 'Unknown'
-                if 'Utilitybill' in labels or 'UtilityBill' in labels:
+                if 'Electricitybill' in labels or 'ElectricityBill' in labels:
                     doc_type = 'Electric Bill'
                 elif 'Waterbill' in labels or 'WaterBill' in labels:
                     doc_type = 'Water Bill'
