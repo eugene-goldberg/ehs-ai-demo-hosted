@@ -1,0 +1,14 @@
+{
+  "test_run": {
+    "start_time": "2025-08-23T13:20:55Z",
+    "api_base_url": "http://localhost:8001",
+    "tests": [],
+    "end_time": "2025-08-23T13:20:55Z",
+    "summary": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    }
+  }
+}

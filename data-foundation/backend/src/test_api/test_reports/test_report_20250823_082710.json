@@ -1,0 +1,100 @@
+{
+  "metadata": {
+    "timestamp": "2025-08-23T08:27:10.848648",
+    "total_duration": 2.304981,
+    "test_orchestrator_version": "1.0.0"
+  },
+  "summary": {
+    "total_tests": 0,
+    "total_suites": 4,
+    "passed_tests": 0,
+    "failed_tests": 0,
+    "skipped_tests": 0,
+    "passed_suites": 1,
+    "failed_suites": 2,
+    "skipped_suites": 1
+  },
+  "coverage": {},
+  "results": [
+    {
+      "name": "comprehensive_curl_tests.sh",
+      "category": "api",
+      "status": "PASSED",
+      "start_time": "2025-08-23T08:27:09.560020",
+      "end_time": "2025-08-23T08:27:10.707965",
+      "duration": 1.147945,
+      "total_tests": 0,
+      "passed_tests": 0,
+      "failed_tests": 0,
+      "skipped_tests": 0,
+      "error_message": "",
+      "output": "===========================================\u001b[0m\n\u001b[0;36m Generating HTML Test Report \u001b[0m\n\u001b[0;36m================================================\u001b[0m\n\n\u001b[0;32m\u2713 PASS\u001b[0m: HTML report saved to: ./test_reports/api_test_report_20250823_082709.html\n\n\u001b[0;36m================================================\u001b[0m\n\u001b[0;36m Test Execution Summary \u001b[0m\n\u001b[0;36m================================================\u001b[0m\n\nTotal Tests: \u001b[0;34m33\u001b[0m\nPassed: \u001b[0;32m4\u001b[0m\nFailed: \u001b[0;31m29\u001b[0m\nSuccess Rate: \u001b[1;33m12.1%\u001b[0m\n\nReports generated:\n  JSON: \u001b[0;36m./test_reports/api_test_report_20250823_082709.json\u001b[0m\n  HTML: \u001b[0;36m./test_reports/api_test_report_20250823_082709.html\u001b[0m\n  Log: \u001b[0;36m./test_reports/test_execution.log\u001b[0m\n\n\u001b[0;36m================================================\u001b[0m\n\u001b[0;36m Cleaning up Test Environment \u001b[0m\n\u001b[0;36m================================================\u001b[0m\n\n\u001b[0;32m\u2713 PASS\u001b[0m: Cleanup completed\nsed: 1: \"s/TEST_DATA_PLACEHOLDER ...\": unescaped newline inside substitute pattern\n",
+      "details": {}
+    },
+    {
+      "name": "ehs_api_tests.sh",
+      "category": "api",
+      "status": "FAILED",
+      "start_time": "2025-08-23T08:27:10.708229",
+      "end_time": "2025-08-23T08:27:10.782869",
+      "duration": 0.07464,
+      "total_tests": 0,
+      "passed_tests": 0,
+      "failed_tests": 0,
+      "skipped_tests": 0,
+      "error_message": "Exit code: 1",
+      "output": "\u001b[0;34m[2025-08-23 08:27:10]\u001b[0m Starting EHS API Test Suite\n\u001b[0;34m[2025-08-23 08:27:10]\u001b[0m =========================================\n\u001b[0;34m[2025-08-23 08:27:10]\u001b[0m Setting up test environment...\n\u001b[0;34m[2025-08-23 08:27:10]\u001b[0m Test environment setup complete\n\u001b[0;34m[2025-08-23 08:27:10]\u001b[0m API Base URL: http://localhost:8000\n\u001b[0;34m[2025-08-23 08:27:10]\u001b[0m Output Directory: ./test_reports\n\u001b[0;34m[2025-08-23 08:27:10]\u001b[0m Test Report: ./test_reports/test_report_20250823_082710.json\n\u001b[0;34m[2025-08-23 08:27:10]\u001b[0m Preparing test data...\n\u001b[0;34m[2025-08-23 08:27:10]\u001b[0m Test data preparation complete\n\u001b[0;34m[2025-08-23 08:27:10]\u001b[0m Testing health check endpoint...\n\u001b[0;31m[FAIL]\u001b[0m health_check (0s, status: 200) - Additional checks failed\n\u001b[0;34m[2025-08-23 08:27:10]\u001b[0m Cleaning up test environment...\n\u001b[0;34m[2025-08-23 08:27:10]\u001b[0m Test cleanup complete\n",
+      "details": {}
+    },
+    {
+      "name": "phase1_integration_tests.sh",
+      "category": "integration",
+      "status": "FAILED",
+      "start_time": "2025-08-23T08:27:10.782998",
+      "end_time": "2025-08-23T08:27:10.829541",
+      "duration": 0.046543,
+      "total_tests": 0,
+      "passed_tests": 0,
+      "failed_tests": 0,
+      "skipped_tests": 0,
+      "error_message": "Exit code: 1",
+      "output": ": Setting up test environment...\u001b[0m\n\u001b[0;34m[2025-08-23 08:27:10] INFO: Test report: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/src/test_api/test_scripts/test_results/phase1_integration_test_report_20250823_082710.txt\u001b[0m\n\u001b[0;34m[2025-08-23 08:27:10] INFO: Performance log: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/src/test_api/test_scripts/test_results/phase1_performance_comparison_20250823_082710.json\u001b[0m\n\u001b[0;34m[2025-08-23 08:27:10] INFO: Checking API health...\u001b[0m\n\u001b[0;31m[2025-08-23 08:27:10] ERROR: Failed to connect to API at http://localhost:8001\u001b[0m\n\u001b[0;34m[2025-08-23 08:27:10] INFO: Make sure the comprehensive test API is running:\u001b[0m\n\u001b[0;34m[2025-08-23 08:27:10] INFO:   cd /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data-foundation/backend/src/test_api\u001b[0m\n\u001b[0;34m[2025-08-23 08:27:10] INFO:   python3 comprehensive_test_api.py\u001b[0m\n\u001b[0;31m[2025-08-23 08:27:10] ERROR: API health check failed. Cannot proceed with tests.\u001b[0m\n",
+      "details": {}
+    },
+    {
+      "name": "python_unit_tests",
+      "category": "unit",
+      "status": "SKIPPED",
+      "start_time": null,
+      "end_time": "2025-08-23T08:27:10.848602",
+      "duration": 0,
+      "total_tests": 0,
+      "passed_tests": 0,
+      "failed_tests": 0,
+      "skipped_tests": 0,
+      "error_message": "pytest not available",
+      "output": "",
+      "details": {}
+    }
+  ],
+  "categories": {
+    "integration": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "api": {
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "skipped": 0
+    },
+    "unit": {
+      "total": 1,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 1
+    }
+  }
+}

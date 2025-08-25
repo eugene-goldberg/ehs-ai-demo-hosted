@@ -13,7 +13,7 @@ This document outlines the technical specification and implementation plan for P
 The three core enhancements for Phase 1 are:
 1.  **Audit Trail Enhancement:** Tracking the source file for each processed document.
 2.  **Utility Bill Pro-Rating:** Allocating costs and usage from billing periods to their corresponding calendar months.
-3.  **Document Rejection Tracking:** Implementing a system to manage and track documents that are identified as invalid or irrelevant.
+3.  **Document Rejection Tracking:** Implementing a pre-ingestion filter system that rejects unrecognized documents (those not positively identified as electricity bills, water bills, or waste manifests) before they enter the Neo4j knowledge graph, while maintaining a separate audit trail of rejected documents.
 
 ---
 
@@ -259,94 +259,130 @@ A new endpoint may be needed to view the allocation breakdown for a single sourc
 
 ### 4.1. Current State
 
-The system has no formal process for handling uploaded documents that are not relevant to EHS (e.g., marketing materials, other invoices). These files may be processed with errors or simply ignored, but there is no visibility into why a document was not included in the dataset.
+The system currently processes all uploaded documents without validating whether they are actually relevant EHS documents (electricity bills, water bills, or waste manifests). This can lead to data quality issues where unrelated documents (e.g., marketing materials, personal invoices, contracts) are processed and potentially ingested into the Neo4j knowledge graph, cluttering the dataset with irrelevant data.
 
 ### 4.2. Requirements
 
--   The system must allow documents to be marked as "rejected".
--   A reason for rejection must be stored for each rejected document.
--   An audit trail of who rejected a document and when must be maintained.
--   Rejection reasons should be standardized for consistent reporting.
--   A user interface must be provided to view the list of rejected documents and their rejection reasons.
--   The primary dataset of processed documents should not be cluttered with rejected items.
+-   The system must implement a pre-ingestion document type recognition system that validates documents before they reach the Neo4j processing pipeline.
+-   Only documents positively identified as electricity bills, water bills, or waste manifests should be allowed to proceed to Neo4j ingestion.
+-   Unrecognized or invalid documents must be rejected and stored in a separate rejected documents table.
+-   The original file must be preserved in its original form for rejected documents to maintain audit capability.
+-   A reason for rejection must be stored (e.g., "UNRECOGNIZED_DOCUMENT_TYPE", "POOR_IMAGE_QUALITY", "UNSUPPORTED_FORMAT").
+-   The web application UI must provide a separate section for users to view and manage rejected documents.
+-   The rejection system must act as a data quality protection mechanism, ensuring the Neo4j knowledge graph only contains validated, relevant EHS data.
 
 ### 4.3. Database Schema Changes
 
-We will add status, reason, and audit properties to the `ProcessedDocument` nodes. This is the simplest approach for Phase 1 and avoids creating separate node types. An index on the `status` property will ensure efficient querying.
+Since rejected documents should never reach the Neo4j knowledge graph, we will create a separate PostgreSQL table to store rejected documents. This maintains complete separation between valid EHS data in Neo4j and rejected documents in the relational database.
 
-**Node:** `ProcessedDocument`
+**New Table:** `rejected_documents` (PostgreSQL)
 
-```cypher
-// Add new properties to existing ProcessedDocument nodes
-MATCH (doc:ProcessedDocument)
-SET doc.status = 'PROCESSING',
-    doc.rejection_reason = null,
-    doc.rejection_notes = null,
-    doc.rejected_at = null,
-    doc.rejected_by_user_id = null;
+```sql
+CREATE TABLE rejected_documents (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    original_filename VARCHAR(500) NOT NULL,
+    source_file_path VARCHAR(1000) NOT NULL,
+    file_size_bytes BIGINT NOT NULL,
+    file_type VARCHAR(100) NOT NULL,
+    rejected_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    rejection_reason VARCHAR(50) NOT NULL CHECK (
+        rejection_reason IN (
+            'UNRECOGNIZED_DOCUMENT_TYPE',
+            'POOR_IMAGE_QUALITY', 
+            'UNSUPPORTED_FORMAT'
+        )
+    ),
+    rejection_details TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
-// Create index for efficient filtering by status
-CREATE INDEX document_status IF NOT EXISTS FOR (d:ProcessedDocument) ON (d.status);
-
-// Create relationship to User node for rejection audit trail
-// (Assuming User nodes exist)
-MATCH (doc:ProcessedDocument), (user:User)
-WHERE doc.rejected_by_user_id = user.id
-CREATE (user)-[:REJECTED]->(doc);
+-- Create indexes for performance
+CREATE INDEX idx_rejected_documents_rejected_at ON rejected_documents(rejected_at);
+CREATE INDEX idx_rejected_documents_rejection_reason ON rejected_documents(rejection_reason);
+CREATE INDEX idx_rejected_documents_filename ON rejected_documents(original_filename);
 ```
 
-**Allowed values:**
-- `status`: 'PROCESSING', 'PROCESSED', 'REJECTED', 'REVIEW_REQUIRED'
-- `rejection_reason`: 'NOT_EHS_DOCUMENT', 'UNREADABLE_SCAN', 'DUPLICATE_DOCUMENT', 'MISSING_DATA', 'OTHER'
+**Important:** No changes are needed to Neo4j schema since rejected documents will never reach the Neo4j database. Only successfully validated documents (electricity bills, water bills, waste manifests) will be processed into `ProcessedDocument` nodes.
 
 ### 4.4. API Endpoint Modifications
 
-The primary endpoint for listing documents will need a filter for status.
+New endpoints will be created to manage rejected documents, while the existing document processing pipeline will be enhanced with pre-ingestion validation.
 
-**Modified Endpoint:** `GET /api/v1/documents?status=<status>`
+**Enhanced Upload Processing:** The existing document upload endpoints will be modified to include document type recognition before processing.
 
--   By default, this endpoint should return only `PROCESSED` documents (`status=PROCESSED`).
--   To view rejected documents, the client will call `GET /api/v1/documents?status=REJECTED`.
+**New Endpoints for Rejected Documents:**
 
-A new endpoint is required to mark a document as rejected.
-
-**New Endpoint:** `POST /api/v1/documents/{document_id}/reject`
-
--   **Authorization:** Requires user with review/admin privileges.
--   **Request Body:**
+**Endpoint:** `GET /api/v1/rejected-documents`
+-   **Description:** List all rejected documents with filtering and pagination.
+-   **Query Parameters:**
+    - `reason`: Filter by rejection reason
+    - `date_from`, `date_to`: Filter by rejection date range
+    - `page`, `page_size`: Pagination
+-   **Response:**
     ```json
     {
-      "reason": "NOT_EHS_DOCUMENT",
-      "notes": "This is an invoice for marketing services."
+      "documents": [
+        {
+          "id": "uuid",
+          "original_filename": "marketing_brochure.pdf",
+          "file_size_bytes": 1024000,
+          "file_type": "application/pdf",
+          "rejected_at": "2024-01-15T10:30:00Z",
+          "rejection_reason": "UNRECOGNIZED_DOCUMENT_TYPE",
+          "rejection_details": "Document content does not match any accepted EHS document types"
+        }
+      ],
+      "total_count": 42,
+      "page": 1,
+      "page_size": 10
     }
     ```
--   **Backend Logic:** Updates the document's `status` property to `REJECTED` and populates the `rejection_reason`, `rejection_notes`, `rejected_at` (with the current timestamp), and `rejected_by_user_id` (with the authenticated user's ID) properties. Also creates a `REJECTED` relationship between the User and ProcessedDocument nodes.
+
+**Endpoint:** `GET /api/v1/rejected-documents/{id}`
+-   **Description:** Get details of a specific rejected document.
+
+**Endpoint:** `GET /api/v1/rejected-documents/{id}/download`
+-   **Description:** Download the original rejected document file.
+
+**Endpoint:** `DELETE /api/v1/rejected-documents/{id}`
+-   **Description:** Delete a rejected document record and its associated file.
 
 ### 4.5. UI/UX Design Considerations
 
--   A new section/tab in the UI labeled "Rejected Documents" will be created.
--   This view will list all documents with a `REJECTED` status, showing the filename, upload date, rejection reason, **who rejected it, and when**.
--   In the document review queue (if one exists), a "Reject" button should be added. Clicking it would open a modal for the user to select a reason and add optional notes.
--   The main dashboard/document list should, by default, only show `PROCESSED` documents to keep the view clean.
+-   A new section/tab in the UI labeled "Rejected Documents" will be created, completely separate from the main document management interface.
+-   This view will list all rejected documents, showing the original filename, upload date, rejection reason, file size, and rejection details.
+-   Users will be able to download the original rejected documents for manual review.
+-   The document upload interface will provide clear feedback when documents are rejected, explaining why they were not accepted and what document types are supported.
+-   A dashboard widget will show rejection statistics (total rejections, breakdown by reason, recent trends) to help monitor data quality.
+-   The main document list will only show successfully processed documents (those in Neo4j), keeping the primary interface clean and focused on valid EHS data.
 
 ### 4.6. Implementation Steps
 
-1.  Update the Neo4j database schema to add the new properties to `ProcessedDocument` nodes and create necessary indexes.
-2.  Update the document processing logic to set the initial `status` property to `PROCESSING` and the final status to `PROCESSED` upon success.
-3.  Implement the `POST /api/v1/documents/{document_id}/reject` endpoint with proper Cypher queries to update node properties and create relationships.
-4.  Modify the `GET /api/v1/documents` endpoint to filter by the `status` property using Cypher queries and default to `PROCESSED`.
-5.  Develop the new "Rejected Documents" view in the frontend.
-6.  Integrate the rejection functionality into the document review workflow UI.
+1.  Create the PostgreSQL `rejected_documents` table with appropriate indexes and constraints.
+2.  Implement document type recognition service that can identify electricity bills, water bills, and waste manifests using text content analysis and keyword matching.
+3.  Modify the document upload/processing pipeline to include pre-ingestion validation:
+    a. Extract basic text content from uploaded documents
+    b. Run document type recognition analysis
+    c. If document is recognized as valid EHS type, proceed with normal Neo4j processing
+    d. If document is not recognized, store in rejected_documents table and preserve original file
+4.  Implement the new rejected documents API endpoints (`GET /api/v1/rejected-documents`, etc.).
+5.  Develop the new "Rejected Documents" section in the frontend UI.
+6.  Update the document upload interface to provide clear rejection feedback to users.
+7.  Add rejection statistics dashboard widget for monitoring data quality trends.
 
 ### 4.7. Testing Strategy
 
--   **Unit Tests:** Test the logic in the rejection API endpoint.
--   **Integration Tests:** Ensure that rejecting a document correctly updates all relevant properties (`status`, `rejection_reason`, `rejected_at`, `rejected_by_user_id`) in the Neo4j database, creates the appropriate `REJECTED` relationship, and that it no longer appears in the default document list.
--   **Manual Tests:** Test the full rejection workflow from the UI. Verify that all rejection reasons can be selected and saved correctly, and the audit data is displayed.
+-   **Unit Tests:** Test document type recognition logic with sample electricity bills, water bills, waste manifests, and unrecognized documents.
+-   **Integration Tests:** Verify end-to-end rejection flow - ensure unrecognized documents are stored in rejected_documents table, original files are preserved, and no data reaches Neo4j. Verify recognized documents continue to process normally into Neo4j.
+-   **Manual Tests:** Test document upload with various file types to verify correct rejection feedback. Test rejected documents UI for listing, filtering, and downloading capabilities.
 
 ### 4.8. Future Considerations
 
-A flow to "un-reject" or revert a rejection is out of scope for Phase 1. Future enhancements should consider this functionality, which would involve changing the document's status back to a processable state (e.g., `REVIEW_REQUIRED`), clearing the rejection-related properties, and removing the `REJECTED` relationship.
+Phase 1 focuses on basic document type recognition using text analysis and keyword matching. Future enhancements could include:
+-   Machine learning models for more sophisticated document classification
+-   OCR quality assessment for better handling of scanned documents
+-   User-trainable classification rules for edge cases
+-   Bulk re-processing of rejected documents when classification rules improve
 
 ### 4.9. Estimated Effort
 
@@ -381,7 +417,7 @@ Phase 1 will be considered successful when:
 
 1. **Audit Trail:** Users can successfully download original source files for any processed document, and the system is resilient to upload failures.
 2. **Pro-Rating:** Monthly reports accurately reflect usage allocated to calendar months. Data remains consistent even when original documents are corrected.
-3. **Rejection Tracking:** Users can mark documents as rejected with appropriate reasons, and these rejections are fully audited and visible in a dedicated UI section.
+3. **Rejection Tracking:** The system automatically rejects unrecognized documents before they reach Neo4j, maintains complete separation between valid EHS data and rejected documents, and provides a dedicated UI for managing rejected documents.
 4. **Performance:** All new features maintain response times under 2 seconds for typical operations.
 5. **Reliability:** The system maintains 99.9% uptime with the new features enabled.
 6. **Docker Deployment:** The entire system can be deployed and run using only `docker-compose up -d` without external dependencies.

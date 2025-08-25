@@ -1,0 +1,673 @@
+"""
+FastAPI Router for Document Rejection Tracking API Endpoints
+
+This module provides REST API endpoints for managing document rejection workflows,
+including rejection, unreejection, bulk operations, appeals, and analytics.
+It integrates with the rejection workflow service for comprehensive document lifecycle management.
+
+Dependencies:
+- FastAPI for REST API framework
+- RejectionWorkflowService for rejection management operations
+- Neo4j graph database for document metadata
+- Proper error handling and authentication
+"""
+
+import os
+import uuid
+import logging
+from datetime import datetime, timedelta
+from typing import Optional, Dict, Any, List, Union
+from decimal import Decimal
+
+from fastapi import APIRouter, HTTPException, Depends, Query, BackgroundTasks
+from fastapi.responses import JSONResponse
+from starlette.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR
+from pydantic import BaseModel, Field, validator
+
+from .rejection_workflow_service import RejectionWorkflowService, RejectionReason, RejectionStatus
+from .rejection_tracking_schema import DocumentStatus
+from src.graph_query import get_graphDB_driver
+from src.shared.common_fn import create_graph_database_connection
+
+# Initialize logging
+logger = logging.getLogger(__name__)
+
+# Create FastAPI router with prefix
+router = APIRouter(
+    prefix="/api/v1/documents",
+    tags=["Document Rejection Tracking"],
+    responses={
+        404: {"description": "Document not found"},
+        400: {"description": "Bad request"},
+        500: {"description": "Internal server error"}
+    }
+)
+
+# Rejection workflow service will be initialized with dependency injection
+rejection_service = None
+
+
+def get_rejection_service():
+    """Get or create the rejection service instance."""
+    global rejection_service
+    if rejection_service is None:
+        # Initialize with proper graph connection
+        driver = get_graph_connection()
+        rejection_service = RejectionWorkflowService(driver)
+    return rejection_service
+
+
+# Pydantic Models
+class RejectionRequest(BaseModel):
+    """Request model for document rejection."""
+    reason: str = Field(..., description="Reason for rejection")
+    notes: Optional[str] = Field(None, description="Additional notes for rejection")
+    notify_owner: bool = Field(True, description="Whether to notify document owner")
+    
+    @validator('reason')
+    def validate_reason(cls, v):
+        try:
+            RejectionReason(v)
+        except ValueError:
+            raise ValueError(f"Invalid rejection reason: {v}")
+        return v
+
+
+class RejectionResponse(BaseModel):
+    """Response model for document rejection."""
+    status: str = Field(..., description="Operation status")
+    rejection_id: str = Field(..., description="Unique rejection identifier")
+    timestamp: datetime = Field(..., description="Rejection timestamp")
+    message: Optional[str] = Field(None, description="Status message")
+
+
+class UnrejectionRequest(BaseModel):
+    """Request model for unreejecting a document."""
+    reason: Optional[str] = Field(None, description="Reason for unreejection")
+    notes: Optional[str] = Field(None, description="Additional notes")
+
+
+class DocumentFilterRequest(BaseModel):
+    """Request model for filtering documents."""
+    status: Optional[List[str]] = Field(None, description="Document statuses to filter")
+    date_range: Optional[Dict[str, str]] = Field(None, description="Date range filter")
+    user_id: Optional[str] = Field(None, description="Filter by user ID")
+    rejection_reason: Optional[List[str]] = Field(None, description="Filter by rejection reasons")
+    limit: int = Field(50, ge=1, le=1000, description="Maximum number of results")
+    offset: int = Field(0, ge=0, description="Offset for pagination")
+
+
+class BulkRejectionRequest(BaseModel):
+    """Request model for bulk document rejection."""
+    document_ids: List[str] = Field(..., description="List of document IDs to reject")
+    reason: str = Field(..., description="Reason for rejection")
+    notes: Optional[str] = Field(None, description="Additional notes")
+    notify_owners: bool = Field(True, description="Whether to notify document owners")
+    
+    @validator('reason')
+    def validate_reason(cls, v):
+        try:
+            RejectionReason(v)
+        except ValueError:
+            raise ValueError(f"Invalid rejection reason: {v}")
+        return v
+
+
+class AppealRequest(BaseModel):
+    """Request model for document rejection appeal."""
+    appeal_reason: str = Field(..., description="Reason for appeal")
+    additional_info: Optional[str] = Field(None, description="Additional information")
+    requested_by: str = Field(..., description="User requesting appeal")
+
+
+class RejectionStatisticsResponse(BaseModel):
+    """Response model for rejection statistics."""
+    total_documents: int
+    total_rejected: int
+    rejection_rate: float
+    rejection_by_reason: Dict[str, int]
+    rejection_trends: Dict[str, int]
+    top_rejection_reasons: List[Dict[str, Any]]
+    recent_rejections: List[Dict[str, Any]]
+
+
+def get_graph_connection():
+    """
+    Dependency to get Neo4j graph database connection.
+    Uses environment variables for connection details.
+    """
+    try:
+        neo4j_uri = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
+        neo4j_username = os.getenv('NEO4J_USERNAME', 'neo4j')
+        neo4j_password = os.getenv('NEO4J_PASSWORD', 'password')
+        
+        driver = create_graph_database_connection(
+            uri=neo4j_uri,
+            userName=neo4j_username,
+            password=neo4j_password,
+            database=os.getenv('NEO4J_DATABASE', 'neo4j')
+        )
+        return driver
+    except Exception as e:
+        logger.error(f"Failed to create graph database connection: {e}")
+        raise HTTPException(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Database connection failed"
+        )
+
+
+def get_current_user():
+    """
+    Mock authentication dependency. In production, this would integrate
+    with your actual authentication system.
+    """
+    # TODO: Implement actual user authentication
+    return {"user_id": "system", "username": "system_user"}
+
+
+# API Endpoints
+
+@router.post("/{document_id}/reject", response_model=RejectionResponse, status_code=HTTP_201_CREATED)
+async def reject_document(
+    document_id: str,
+    request: RejectionRequest,
+    background_tasks: BackgroundTasks,
+    graph_driver=Depends(get_graph_connection),
+    current_user=Depends(get_current_user)
+):
+    """
+    Reject a document with specified reason and optional notes.
+    """
+    try:
+        logger.info(f"Rejecting document {document_id} by user {current_user['user_id']}")
+        
+        # Validate document exists - remove graph_driver parameter
+        if not await get_rejection_service().document_exists(document_id):
+            raise HTTPException(
+                status_code=HTTP_404_NOT_FOUND,
+                detail=f"Document {document_id} not found"
+            )
+        
+        # Check if document is already rejected - remove graph_driver parameter
+        document_status = await get_rejection_service().get_document_status(document_id)
+        if document_status == DocumentStatus.REJECTED.value:
+            raise HTTPException(
+                status_code=HTTP_400_BAD_REQUEST,
+                detail="Document is already rejected"
+            )
+        
+        # Process rejection - remove graph_driver parameter
+        rejection_result = await get_rejection_service().reject_document(
+            document_id=document_id,
+            rejection_reason=RejectionReason(request.reason),
+            notes=request.notes,
+            rejected_by=current_user['user_id']
+        )
+        
+        # Schedule notification if requested
+        if request.notify_owner:
+            background_tasks.add_task(
+                get_rejection_service().send_rejection_notification,
+                document_id=document_id,
+                rejection_id=rejection_result['rejection_id'],
+                reason=request.reason,
+                notes=request.notes
+            )
+        
+        return RejectionResponse(
+            status="rejected",
+            rejection_id=rejection_result['rejection_id'],
+            timestamp=datetime.fromisoformat(rejection_result['timestamp']),
+            message=f"Document {document_id} rejected successfully"
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error rejecting document {document_id}: {e}")
+        raise HTTPException(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to reject document: {str(e)}"
+        )
+
+
+@router.post("/{document_id}/unreject", response_model=Dict[str, Any])
+async def unreject_document(
+    document_id: str,
+    request: UnrejectionRequest,
+    background_tasks: BackgroundTasks,
+    graph_driver=Depends(get_graph_connection),
+    current_user=Depends(get_current_user)
+):
+    """
+    Remove rejection status from a document and restore it to processing.
+    """
+    try:
+        logger.info(f"Unreejecting document {document_id} by user {current_user['user_id']}")
+        
+        # Validate document exists - remove graph_driver parameter
+        if not await get_rejection_service().document_exists(document_id):
+            raise HTTPException(
+                status_code=HTTP_404_NOT_FOUND,
+                detail=f"Document {document_id} not found"
+            )
+        
+        # Check if document is currently rejected - remove graph_driver parameter
+        document_status = await get_rejection_service().get_document_status(document_id)
+        if document_status != DocumentStatus.REJECTED.value:
+            raise HTTPException(
+                status_code=HTTP_400_BAD_REQUEST,
+                detail="Document is not currently rejected"
+            )
+        
+        # Process unreejection - remove graph_driver parameter
+        unreject_result = await get_rejection_service().unreject_document(
+            document_id=document_id,
+            reason=request.reason,
+            notes=request.notes,
+            unreejected_by=current_user['user_id']
+        )
+        
+        # Schedule notification
+        background_tasks.add_task(
+            get_rejection_service().send_unreejection_notification,
+            document_id=document_id,
+            reason=request.reason
+        )
+        
+        return {
+            "status": "success",
+            "document_id": document_id,
+            "message": "Document unreejected successfully",
+            "timestamp": unreject_result['timestamp'],
+            "new_status": unreject_result['new_status']
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error unreejecting document {document_id}: {e}")
+        raise HTTPException(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to unreject document: {str(e)}"
+        )
+
+
+@router.get("/rejected", response_model=Dict[str, Any])
+async def list_rejected_documents(
+    limit: int = Query(50, ge=1, le=1000, description="Maximum number of results"),
+    offset: int = Query(0, ge=0, description="Offset for pagination"),
+    reason: Optional[str] = Query(None, description="Filter by rejection reason"),
+    date_from: Optional[str] = Query(None, description="Start date (YYYY-MM-DD)"),
+    date_to: Optional[str] = Query(None, description="End date (YYYY-MM-DD)"),
+    user_id: Optional[str] = Query(None, description="Filter by rejecting user"),
+    sort_by: str = Query("rejected_at", description="Sort field"),
+    sort_order: str = Query("desc", description="Sort order (asc/desc)"),
+    graph_driver=Depends(get_graph_connection)
+):
+    """
+    Get list of rejected documents with filtering and pagination.
+    """
+    try:
+        logger.info(f"Retrieving rejected documents with filters: reason={reason}, date_range={date_from}-{date_to}")
+        
+        filters = {
+            "reason": reason,
+            "date_from": date_from,
+            "date_to": date_to,
+            "user_id": user_id,
+            "limit": limit,
+            "offset": offset,
+            "sort_by": sort_by,
+            "sort_order": sort_order
+        }
+        
+        # Remove graph_driver parameter from service call
+        rejected_documents = await get_rejection_service().get_rejected_documents(
+            filters=filters
+        )
+        
+        total_count = await get_rejection_service().count_rejected_documents(
+            filters=filters
+        )
+        
+        return {
+            "documents": rejected_documents,
+            "pagination": {
+                "total": total_count,
+                "limit": limit,
+                "offset": offset,
+                "has_more": offset + limit < total_count
+            },
+            "filters_applied": {k: v for k, v in filters.items() if v is not None}
+        }
+        
+    except Exception as e:
+        logger.error(f"Error retrieving rejected documents: {e}")
+        raise HTTPException(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve rejected documents: {str(e)}"
+        )
+
+
+@router.get("/status/{status}", response_model=Dict[str, Any])
+async def get_documents_by_status(
+    status: str,
+    limit: int = Query(50, ge=1, le=1000, description="Maximum number of results"),
+    offset: int = Query(0, ge=0, description="Offset for pagination"),
+    date_from: Optional[str] = Query(None, description="Start date (YYYY-MM-DD)"),
+    date_to: Optional[str] = Query(None, description="End date (YYYY-MM-DD)"),
+    sort_by: str = Query("created_at", description="Sort field"),
+    sort_order: str = Query("desc", description="Sort order (asc/desc)"),
+    graph_driver=Depends(get_graph_connection)
+):
+    """
+    Get documents filtered by processing status.
+    """
+    try:
+        # Validate status
+        try:
+            DocumentStatus(status.upper())
+        except ValueError:
+            raise HTTPException(
+                status_code=HTTP_400_BAD_REQUEST,
+                detail=f"Invalid status: {status}"
+            )
+        
+        logger.info(f"Retrieving documents with status {status}")
+        
+        filters = {
+            "status": status.upper(),
+            "date_from": date_from,
+            "date_to": date_to,
+            "limit": limit,
+            "offset": offset,
+            "sort_by": sort_by,
+            "sort_order": sort_order
+        }
+        
+        # Remove graph_driver parameter from service calls
+        documents = await get_rejection_service().get_documents_by_status(
+            filters=filters
+        )
+        
+        total_count = await get_rejection_service().count_documents_by_status(
+            status=status.upper(),
+            filters=filters
+        )
+        
+        return {
+            "documents": documents,
+            "status": status,
+            "pagination": {
+                "total": total_count,
+                "limit": limit,
+                "offset": offset,
+                "has_more": offset + limit < total_count
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error retrieving documents by status {status}: {e}")
+        raise HTTPException(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve documents by status: {str(e)}"
+        )
+
+
+@router.post("/bulk-reject", response_model=Dict[str, Any])
+async def bulk_reject_documents(
+    request: BulkRejectionRequest,
+    background_tasks: BackgroundTasks,
+    graph_driver=Depends(get_graph_connection),
+    current_user=Depends(get_current_user)
+):
+    """
+    Reject multiple documents in bulk operation.
+    """
+    try:
+        logger.info(f"Bulk rejecting {len(request.document_ids)} documents by user {current_user['user_id']}")
+        
+        if len(request.document_ids) > 100:
+            raise HTTPException(
+                status_code=HTTP_400_BAD_REQUEST,
+                detail="Maximum 100 documents can be rejected in a single bulk operation"
+            )
+        
+        # Process bulk rejection - remove graph_driver parameter
+        bulk_result = await get_rejection_service().bulk_reject_documents(
+            document_ids=request.document_ids,
+            rejection_reason=RejectionReason(request.reason),
+            notes=request.notes,
+            rejected_by=current_user['user_id']
+        )
+        
+        # Schedule notifications if requested
+        if request.notify_owners:
+            background_tasks.add_task(
+                get_rejection_service().send_bulk_rejection_notifications,
+                successful_rejections=bulk_result['successful'],
+                reason=request.reason,
+                notes=request.notes
+            )
+        
+        return {
+            "status": "completed",
+            "total_requested": len(request.document_ids),
+            "successful_rejections": len(bulk_result['successful']),
+            "failed_rejections": len(bulk_result['failed']),
+            "successful_ids": bulk_result['successful'],
+            "failed_details": bulk_result['failed'],
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in bulk rejection: {e}")
+        raise HTTPException(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Bulk rejection failed: {str(e)}"
+        )
+
+
+@router.get("/{document_id}/rejection-history", response_model=Dict[str, Any])
+async def get_rejection_history(
+    document_id: str,
+    graph_driver=Depends(get_graph_connection)
+):
+    """
+    Get complete rejection history for a document including appeals and status changes.
+    """
+    try:
+        logger.info(f"Retrieving rejection history for document {document_id}")
+        
+        # Validate document exists - remove graph_driver parameter
+        if not await get_rejection_service().document_exists(document_id):
+            raise HTTPException(
+                status_code=HTTP_404_NOT_FOUND,
+                detail=f"Document {document_id} not found"
+            )
+        
+        # Remove graph_driver parameter from service call
+        history = await get_rejection_service().get_rejection_history(
+            document_id=document_id
+        )
+        
+        return {
+            "document_id": document_id,
+            "history": history,
+            "total_events": len(history),
+            "current_status": history[0]["status"] if history else "unknown"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error retrieving rejection history for {document_id}: {e}")
+        raise HTTPException(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve rejection history: {str(e)}"
+        )
+
+
+@router.post("/{document_id}/appeal", response_model=Dict[str, Any])
+async def appeal_rejection(
+    document_id: str,
+    request: AppealRequest,
+    background_tasks: BackgroundTasks,
+    graph_driver=Depends(get_graph_connection),
+    current_user=Depends(get_current_user)
+):
+    """
+    Submit an appeal for a rejected document.
+    """
+    try:
+        logger.info(f"Processing appeal for document {document_id} by user {request.requested_by}")
+        
+        # Validate document exists and is rejected - remove graph_driver parameter
+        if not await get_rejection_service().document_exists(document_id):
+            raise HTTPException(
+                status_code=HTTP_404_NOT_FOUND,
+                detail=f"Document {document_id} not found"
+            )
+        
+        document_status = await get_rejection_service().get_document_status(document_id)
+        if document_status != DocumentStatus.REJECTED.value:
+            raise HTTPException(
+                status_code=HTTP_400_BAD_REQUEST,
+                detail="Only rejected documents can be appealed"
+            )
+        
+        # Check if appeal already exists - remove graph_driver parameter
+        existing_appeal = await get_rejection_service().get_active_appeal(document_id)
+        if existing_appeal:
+            raise HTTPException(
+                status_code=HTTP_400_BAD_REQUEST,
+                detail="An appeal is already pending for this document"
+            )
+        
+        # Process appeal - remove graph_driver parameter
+        appeal_result = await get_rejection_service().create_appeal(
+            document_id=document_id,
+            appeal_reason=request.appeal_reason,
+            additional_info=request.additional_info,
+            requested_by=request.requested_by
+        )
+        
+        # Schedule notification to reviewers
+        background_tasks.add_task(
+            get_rejection_service().send_appeal_notification,
+            appeal_id=appeal_result['appeal_id'],
+            document_id=document_id,
+            appeal_reason=request.appeal_reason
+        )
+        
+        return {
+            "status": "appeal_submitted",
+            "appeal_id": appeal_result['appeal_id'],
+            "document_id": document_id,
+            "message": "Appeal submitted successfully and is under review",
+            "timestamp": appeal_result['timestamp'],
+            "estimated_review_time": "2-3 business days"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error processing appeal for {document_id}: {e}")
+        raise HTTPException(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to process appeal: {str(e)}"
+        )
+
+
+@router.get("/rejection-statistics", response_model=RejectionStatisticsResponse)
+async def get_rejection_statistics(
+    date_from: Optional[str] = Query(None, description="Start date (YYYY-MM-DD)"),
+    date_to: Optional[str] = Query(None, description="End date (YYYY-MM-DD)"),
+    include_trends: bool = Query(True, description="Include trend analysis"),
+    graph_driver=Depends(get_graph_connection)
+):
+    """
+    Get comprehensive rejection statistics and analytics.
+    """
+    try:
+        logger.info("Retrieving rejection statistics")
+        
+        filters = {
+            "date_from": date_from,
+            "date_to": date_to
+        }
+        
+        # Get basic statistics - remove graph_driver parameter
+        stats = await get_rejection_service().get_rejection_statistics(
+            filters=filters
+        )
+        
+        # Get trends if requested - remove graph_driver parameter
+        trends = {}
+        if include_trends:
+            trends = await get_rejection_service().get_rejection_trends(
+                filters=filters
+            )
+        
+        return RejectionStatisticsResponse(
+            total_documents=stats['total_documents'],
+            total_rejected=stats['total_rejected'],
+            rejection_rate=stats['rejection_rate'],
+            rejection_by_reason=stats['rejection_by_reason'],
+            rejection_trends=trends,
+            top_rejection_reasons=stats['top_rejection_reasons'],
+            recent_rejections=stats['recent_rejections']
+        )
+        
+    except Exception as e:
+        logger.error(f"Error retrieving rejection statistics: {e}")
+        raise HTTPException(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve rejection statistics: {str(e)}"
+        )
+
+
+# Health check endpoint for the rejection tracking API
+@router.get("/rejection-tracking/health")
+async def rejection_tracking_health():
+    """
+    Health check endpoint for rejection tracking functionality.
+    """
+    try:
+        # Test basic service connectivity
+        health_status = await get_rejection_service().health_check()
+        
+        # Handle different response types from health_check method
+        if isinstance(health_status, dict):
+            is_healthy = health_status.get('status') == 'healthy'
+        else:
+            # If it returns a string, treat as healthy if it's 'healthy'
+            is_healthy = health_status == 'healthy'
+            health_status = {"status": health_status}
+        
+        return {
+            "status": "healthy" if is_healthy else "unhealthy",
+            "timestamp": datetime.now().isoformat(),
+            "service": "rejection_tracking_api",
+            "version": "1.0.0",
+            "details": health_status
+        }
+        
+    except Exception as e:
+        logger.error(f"Health check failed: {e}")
+        return JSONResponse(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            content={
+                "status": "unhealthy",
+                "timestamp": datetime.now().isoformat(),
+                "service": "rejection_tracking_api",
+                "error": str(e)
+            }
+        )
+# Export router as rejection_tracking_router for external imports  
+rejection_tracking_router = router

@@ -1,10 +1,12 @@
 """
 LangGraph-based document processing workflow for EHS AI Platform.
 Orchestrates the entire pipeline from upload to knowledge graph storage.
+Now includes document recognition and rejection handling.
 """
 
 import os
 import logging
+import shutil
 from typing import Dict, List, Any, Optional, TypedDict
 from datetime import datetime
 from enum import Enum
@@ -17,6 +19,7 @@ from langchain_anthropic import ChatAnthropic
 from pydantic import BaseModel, Field
 
 from ..parsers.llama_parser import EHSDocumentParser
+from ..recognition.document_recognition_service import DocumentRecognitionService
 # Temporarily commented out - document_indexer has llama-index dependencies not in requirements.txt
 # from ..indexing.document_indexer import EHSDocumentIndexer
 from ..extractors.ehs_extractors import (
@@ -38,6 +41,11 @@ class DocumentState(TypedDict):
     document_id: str
     upload_metadata: Dict[str, Any]
     
+    # Document recognition
+    recognition_result: Optional[Dict[str, Any]]
+    is_accepted: bool
+    rejection_reason: Optional[str]
+    
     # Processing state
     document_type: Optional[str]
     parsed_content: Optional[List[Dict[str, Any]]]
@@ -53,7 +61,7 @@ class DocumentState(TypedDict):
     neo4j_nodes: Optional[List[Dict[str, Any]]]
     neo4j_relationships: Optional[List[Dict[str, Any]]]
     processing_time: Optional[float]
-    status: str  # pending, processing, completed, failed
+    status: str  # pending, processing, completed, failed, rejected
 
 
 class ProcessingStatus(str, Enum):
@@ -63,11 +71,13 @@ class ProcessingStatus(str, Enum):
     COMPLETED = "completed"
     FAILED = "failed"
     RETRY = "retry"
+    REJECTED = "rejected"
 
 
 class IngestionWorkflow:
     """
     LangGraph workflow for ingesting EHS documents into Neo4j.
+    Now includes document recognition and rejection handling.
     """
     
     def __init__(
@@ -76,8 +86,11 @@ class IngestionWorkflow:
         neo4j_uri: str,
         neo4j_username: str,
         neo4j_password: str,
+        openai_api_key: str,
+        rejected_documents_storage_path: str = "/tmp/rejected_documents",
         llm_model: str = "gpt-4",
-        max_retries: int = 3
+        max_retries: int = 3,
+        acceptance_threshold: float = 0.6
     ):
         """
         Initialize the document processing workflow.
@@ -87,13 +100,29 @@ class IngestionWorkflow:
             neo4j_uri: Neo4j connection URI
             neo4j_username: Neo4j username
             neo4j_password: Neo4j password
+            openai_api_key: OpenAI API key for document recognition
+            rejected_documents_storage_path: Path to store rejected documents
             llm_model: LLM model to use
             max_retries: Maximum retry attempts
+            acceptance_threshold: Minimum confidence for document acceptance
         """
         self.max_retries = max_retries
+        self.acceptance_threshold = acceptance_threshold
+        self.rejected_documents_storage_path = rejected_documents_storage_path
+        self.neo4j_uri = neo4j_uri
+        self.neo4j_username = neo4j_username
+        self.neo4j_password = neo4j_password
+        
+        # Create rejected documents storage directory
+        os.makedirs(rejected_documents_storage_path, exist_ok=True)
         
         # Initialize components
         self.parser = EHSDocumentParser(api_key=llama_parse_api_key)
+        self.recognition_service = DocumentRecognitionService(
+            openai_api_key=openai_api_key,
+            llama_parse_key=llama_parse_api_key
+        )
+        
         # Temporarily disabled - EHSDocumentIndexer has llama-index dependencies not in requirements.txt
         # self.indexer = EHSDocumentIndexer(
         #     neo4j_uri=neo4j_uri,
@@ -109,7 +138,8 @@ class IngestionWorkflow:
             "water_bill": WaterBillExtractor(llm_model=llm_model),
             "permit": PermitExtractor(llm_model=llm_model),
             "invoice": InvoiceExtractor(llm_model=llm_model),
-            "waste_manifest": WasteManifestExtractor(llm_model)
+            "waste_manifest": WasteManifestExtractor(llm_model),
+            "electricity_bill": UtilityBillExtractor(llm_model=llm_model)  # Map recognition service type
         }
         
         # Configure LLM
@@ -123,7 +153,7 @@ class IngestionWorkflow:
         
     def _build_workflow(self) -> StateGraph:
         """
-        Build the LangGraph workflow.
+        Build the LangGraph workflow with document recognition and rejection handling.
         
         Returns:
             Compiled workflow graph
@@ -131,7 +161,9 @@ class IngestionWorkflow:
         # Create workflow
         workflow = StateGraph(DocumentState)
         
-        # Add nodes
+        # Add nodes - recognition comes first
+        workflow.add_node("recognize_document", self.recognize_document)
+        workflow.add_node("handle_rejection", self.handle_rejection)
         workflow.add_node("validate", self.validate_document)
         workflow.add_node("parse", self.parse_document)
         workflow.add_node("extract", self.extract_data)
@@ -142,13 +174,29 @@ class IngestionWorkflow:
         workflow.add_node("complete", self.complete_processing)
         workflow.add_node("handle_error", self.handle_error)
         
-        # Add edges
+        # Set entry point to recognition
+        workflow.set_entry_point("recognize_document")
+        
+        # Add conditional routing after recognition
+        workflow.add_conditional_edges(
+            "recognize_document",
+            self.check_document_acceptance,
+            {
+                "accept": "validate",
+                "reject": "handle_rejection"
+            }
+        )
+        
+        # Rejection path goes directly to END
+        workflow.add_edge("handle_rejection", END)
+        
+        # Normal processing flow (unchanged from original)
         workflow.add_edge("validate", "parse")
         workflow.add_edge("parse", "extract")
         workflow.add_edge("extract", "transform")
         workflow.add_edge("transform", "validate_data")
         
-        # Conditional edges
+        # Conditional edges for validation
         workflow.add_conditional_edges(
             "validate_data",
             self.check_validation,
@@ -173,15 +221,186 @@ class IngestionWorkflow:
         
         workflow.add_edge("complete", END)
         
-        # Set entry point
-        workflow.set_entry_point("validate")
-        
         # Compile
         return workflow.compile()
     
+    def recognize_document(self, state: DocumentState) -> DocumentState:
+        """
+        Recognize and classify the document using the DocumentRecognitionService.
+        
+        Args:
+            state: Current workflow state
+            
+        Returns:
+            Updated state with recognition results
+        """
+        logger.info(f"Recognizing document: {state['file_path']}")
+        state["status"] = ProcessingStatus.PROCESSING
+        
+        try:
+            # Use the recognition service to analyze the document
+            recognition_result = self.recognition_service.analyze_document_type(
+                state["file_path"]
+            )
+            
+            state["recognition_result"] = recognition_result
+            document_type = recognition_result["document_type"]
+            confidence = recognition_result["confidence"]
+            
+            logger.info(f"Document recognized as: {document_type} (confidence: {confidence:.3f})")
+            
+            # Determine if document should be accepted
+            if document_type == "unknown":
+                state["is_accepted"] = False
+                state["rejection_reason"] = f"Document type could not be determined (confidence: {confidence:.3f})"
+            elif confidence < self.acceptance_threshold:
+                state["is_accepted"] = False
+                state["rejection_reason"] = f"Low confidence for {document_type} (confidence: {confidence:.3f}, threshold: {self.acceptance_threshold})"
+            else:
+                state["is_accepted"] = True
+                state["document_type"] = document_type
+                state["rejection_reason"] = None
+            
+        except Exception as e:
+            state["errors"].append(f"Document recognition error: {str(e)}")
+            state["is_accepted"] = False
+            state["rejection_reason"] = f"Recognition failed: {str(e)}"
+            logger.error(f"Document recognition failed: {str(e)}")
+        
+        return state
+    
+    def handle_rejection(self, state: DocumentState) -> DocumentState:
+        """
+        Handle rejected documents by storing them and recording in Neo4j.
+        
+        Args:
+            state: Current workflow state
+            
+        Returns:
+            Updated state
+        """
+        logger.info(f"Handling rejection for document: {state['file_path']}")
+        state["status"] = ProcessingStatus.REJECTED
+        
+        try:
+            # Generate unique filename for rejected document
+            original_filename = os.path.basename(state["file_path"])
+            timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+            stored_filename = f"{timestamp}_{state['document_id']}_{original_filename}"
+            rejected_file_path = os.path.join(self.rejected_documents_storage_path, stored_filename)
+            
+            # Copy the file to rejected documents storage
+            shutil.copy2(state["file_path"], rejected_file_path)
+            logger.info(f"Rejected document stored at: {rejected_file_path}")
+            
+            # Create RejectedDocument node in Neo4j
+            self._store_rejected_document_in_neo4j(
+                document_id=state["document_id"],
+                original_filename=original_filename,
+                stored_file_path=rejected_file_path,
+                rejection_reason=state["rejection_reason"],
+                recognition_result=state.get("recognition_result"),
+                upload_metadata=state["upload_metadata"]
+            )
+            
+            # Update state with rejection details
+            state["processing_time"] = datetime.utcnow().timestamp() - state.get("start_time", 0)
+            
+            logger.info(f"Document rejection handled successfully for: {original_filename}")
+            
+        except Exception as e:
+            state["errors"].append(f"Rejection handling error: {str(e)}")
+            logger.error(f"Rejection handling failed: {str(e)}")
+        
+        return state
+    
+    def _store_rejected_document_in_neo4j(
+        self,
+        document_id: str,
+        original_filename: str,
+        stored_file_path: str,
+        rejection_reason: str,
+        recognition_result: Optional[Dict[str, Any]],
+        upload_metadata: Dict[str, Any]
+    ):
+        """
+        Store rejected document information in Neo4j as a separate node.
+        
+        Args:
+            document_id: Unique document identifier
+            original_filename: Original filename
+            stored_file_path: Path where rejected file is stored
+            rejection_reason: Reason for rejection
+            recognition_result: Results from document recognition
+            upload_metadata: Original upload metadata
+        """
+        try:
+            from neo4j import GraphDatabase
+            
+            driver = GraphDatabase.driver(
+                self.neo4j_uri,
+                auth=(self.neo4j_username, self.neo4j_password)
+            )
+            
+            with driver.session() as session:
+                # Create RejectedDocument node (not connected to main data graph)
+                properties = {
+                    "id": document_id,
+                    "original_filename": original_filename,
+                    "file_path": stored_file_path,
+                    "rejection_reason": rejection_reason,
+                    "rejected_at": datetime.utcnow().isoformat(),
+                    "attempted_type": recognition_result.get("document_type") if recognition_result else "unknown",
+                    "confidence": recognition_result.get("confidence") if recognition_result else 0.0,
+                    "upload_source": upload_metadata.get("source", ""),
+                    "upload_timestamp": upload_metadata.get("timestamp", ""),
+                    "file_size": os.path.getsize(stored_file_path) if os.path.exists(stored_file_path) else 0
+                }
+                
+                # Add recognition features if available
+                if recognition_result and "features" in recognition_result:
+                    features = recognition_result["features"]
+                    properties.update({
+                        "key_terms": json.dumps(features.get("key_terms", [])),
+                        "page_count": features.get("metadata", {}).get("page_count", 0),
+                        "content_length": features.get("metadata", {}).get("content_length", 0),
+                        "tables_found": features.get("metadata", {}).get("table_count", 0) > 0
+                    })
+                
+                # Build parameter string for properties
+                prop_strings = [f"{k}: ${k}" for k in properties.keys()]
+                props_str = "{" + ", ".join(prop_strings) + "}"
+                
+                # Create rejected document node
+                query = f"CREATE (r:RejectedDocument {props_str}) RETURN r"
+                
+                result = session.run(query, **properties)
+                logger.info(f"Created RejectedDocument node with id: {document_id}")
+            
+            driver.close()
+            
+        except Exception as e:
+            logger.error(f"Failed to store rejected document in Neo4j: {str(e)}")
+            raise
+    
+    def check_document_acceptance(self, state: DocumentState) -> str:
+        """
+        Check if document should be accepted or rejected.
+        
+        Args:
+            state: Current workflow state
+            
+        Returns:
+            Next node to execute
+        """
+        if state.get("is_accepted", False):
+            return "accept"
+        else:
+            return "reject"
+    
     def validate_document(self, state: DocumentState) -> DocumentState:
         """
-        Validate the input document.
+        Validate the input document (unchanged from original).
         
         Args:
             state: Current workflow state
@@ -202,11 +421,11 @@ class IngestionWorkflow:
             if file_size > 50 * 1024 * 1024:  # 50MB limit
                 raise ValueError("File too large. Maximum size is 50MB")
             
-            # Detect document type
-            doc_type = self.parser.detect_document_type(state["file_path"])
-            state["document_type"] = doc_type
+            # Document type already determined by recognition service
+            if not state.get("document_type"):
+                raise ValueError("Document type not determined during recognition")
             
-            logger.info(f"Document validated. Type: {doc_type}")
+            logger.info(f"Document validated. Type: {state['document_type']}")
             
         except Exception as e:
             state["errors"].append(f"Validation error: {str(e)}")
@@ -216,7 +435,7 @@ class IngestionWorkflow:
     
     def parse_document(self, state: DocumentState) -> DocumentState:
         """
-        Parse document using LlamaParse.
+        Parse document using LlamaParse (unchanged from original).
         
         Args:
             state: Current workflow state
@@ -261,7 +480,7 @@ class IngestionWorkflow:
     
     def extract_data(self, state: DocumentState) -> DocumentState:
         """
-        Extract structured data from parsed content.
+        Extract structured data from parsed content (unchanged from original).
         
         Args:
             state: Current workflow state
@@ -272,9 +491,10 @@ class IngestionWorkflow:
         logger.info(f"Extracting data for document type: {state['document_type']}")
         
         try:
-            # Get appropriate extractor
+            # Get appropriate extractor (handle both recognition service and original types)
+            doc_type = state["document_type"]
             extractor = self.extractors.get(
-                state["document_type"],
+                doc_type,
                 self.extractors.get("invoice")  # Default extractor
             )
             
@@ -301,7 +521,7 @@ class IngestionWorkflow:
     
     def transform_data(self, state: DocumentState) -> DocumentState:
         """
-        Transform extracted data to Neo4j schema.
+        Transform extracted data to Neo4j schema (unchanged from original).
         
         Args:
             state: Current workflow state
@@ -327,12 +547,13 @@ class IngestionWorkflow:
                     "document_type": doc_type,
                     "type": doc_type,  # Add type field like manual approach
                     "uploaded_at": datetime.utcnow().isoformat(),
+                    "recognition_confidence": state.get("recognition_result", {}).get("confidence", 0.0),
                     **state["upload_metadata"]
                 }
             }
             
             # Add account number and statement date if available
-            if doc_type == "utility_bill" and extracted:
+            if doc_type in ["utility_bill", "electricity_bill"] and extracted:
                 if extracted.get("account_number"):
                     doc_node["properties"]["account_number"] = extracted["account_number"]
                 if extracted.get("statement_date"):
@@ -340,8 +561,8 @@ class IngestionWorkflow:
             
             nodes.append(doc_node)
             
-            # Transform based on document type
-            if doc_type == "utility_bill":
+            # Transform based on document type (handle both recognition service and original types)
+            if doc_type in ["utility_bill", "electricity_bill"]:
                 # Create comprehensive utility bill node
                 bill_node = {
                     "labels": ["UtilityBill"],
@@ -1013,7 +1234,7 @@ class IngestionWorkflow:
     
     def validate_extracted_data(self, state: DocumentState) -> DocumentState:
         """
-        Validate extracted data quality.
+        Validate extracted data quality (unchanged from original).
         
         Args:
             state: Current workflow state
@@ -1033,8 +1254,8 @@ class IngestionWorkflow:
             extracted = state["extracted_data"]
             doc_type = state["document_type"]
             
-            # Document type specific validation
-            if doc_type == "utility_bill":
+            # Document type specific validation (handle both recognition service and original types)
+            if doc_type in ["utility_bill", "electricity_bill"]:
                 # Check required fields
                 required = ["billing_period_start", "billing_period_end", "total_kwh"]
                 for field in required:
@@ -1113,7 +1334,7 @@ class IngestionWorkflow:
     
     def load_to_neo4j(self, state: DocumentState) -> DocumentState:
         """
-        Load extracted data to Neo4j.
+        Load extracted data to Neo4j (unchanged from original).
         
         Args:
             state: Current workflow state
@@ -1128,8 +1349,8 @@ class IngestionWorkflow:
             
             # Create driver connection using the same credentials
             driver = GraphDatabase.driver(
-                "bolt://localhost:7687",
-                auth=("neo4j", "EhsAI2024!")
+                self.neo4j_uri,
+                auth=(self.neo4j_username, self.neo4j_password)
             )
             
             with driver.session() as session:
@@ -1179,7 +1400,7 @@ class IngestionWorkflow:
     
     def index_document(self, state: DocumentState) -> DocumentState:
         """
-        Index document for search and retrieval.
+        Index document for search and retrieval (unchanged from original).
         
         Args:
             state: Current workflow state
@@ -1220,7 +1441,7 @@ class IngestionWorkflow:
     
     def complete_processing(self, state: DocumentState) -> DocumentState:
         """
-        Complete document processing.
+        Complete document processing (unchanged from original).
         
         Args:
             state: Current workflow state
@@ -1237,7 +1458,7 @@ class IngestionWorkflow:
     
     def handle_error(self, state: DocumentState) -> DocumentState:
         """
-        Handle processing errors.
+        Handle processing errors (unchanged from original).
         
         Args:
             state: Current workflow state
@@ -1261,7 +1482,7 @@ class IngestionWorkflow:
     
     def check_validation(self, state: DocumentState) -> str:
         """
-        Check validation results and determine next step.
+        Check validation results and determine next step (unchanged from original).
         
         Args:
             state: Current workflow state
@@ -1281,7 +1502,7 @@ class IngestionWorkflow:
     
     def check_retry(self, state: DocumentState) -> str:
         """
-        Check if retry is needed.
+        Check if retry is needed (unchanged from original).
         
         Args:
             state: Current workflow state
@@ -1311,11 +1532,14 @@ class IngestionWorkflow:
         Returns:
             Final workflow state
         """
-        # Initialize state
+        # Initialize state with new fields
         initial_state: DocumentState = {
             "file_path": file_path,
             "document_id": document_id,
             "upload_metadata": metadata or {},
+            "recognition_result": None,
+            "is_accepted": False,
+            "rejection_reason": None,
             "document_type": None,
             "parsed_content": None,
             "extracted_data": None,
@@ -1340,7 +1564,7 @@ class IngestionWorkflow:
         documents: List[Dict[str, Any]]
     ) -> List[DocumentState]:
         """
-        Process multiple documents.
+        Process multiple documents (unchanged from original).
         
         Args:
             documents: List of documents with file_path, document_id, and metadata
@@ -1359,3 +1583,53 @@ class IngestionWorkflow:
             results.append(result)
         
         return results
+
+    def get_rejected_documents(self, limit: int = 50) -> List[Dict[str, Any]]:
+        """
+        Get list of rejected documents from Neo4j.
+        
+        Args:
+            limit: Maximum number of rejected documents to return
+            
+        Returns:
+            List of rejected document information
+        """
+        try:
+            from neo4j import GraphDatabase
+            
+            driver = GraphDatabase.driver(
+                self.neo4j_uri,
+                auth=(self.neo4j_username, self.neo4j_password)
+            )
+            
+            with driver.session() as session:
+                query = """
+                MATCH (r:RejectedDocument)
+                RETURN r
+                ORDER BY r.rejected_at DESC
+                LIMIT $limit
+                """
+                
+                result = session.run(query, limit=limit)
+                rejected_documents = []
+                
+                for record in result:
+                    node = record["r"]
+                    doc_info = dict(node)
+                    
+                    # Parse JSON fields if they exist
+                    if "key_terms" in doc_info and doc_info["key_terms"]:
+                        try:
+                            doc_info["key_terms"] = json.loads(doc_info["key_terms"])
+                        except:
+                            pass
+                    
+                    rejected_documents.append(doc_info)
+                
+                return rejected_documents
+            
+            driver.close()
+            
+        except Exception as e:
+            logger.error(f"Failed to get rejected documents: {str(e)}")
+            return []

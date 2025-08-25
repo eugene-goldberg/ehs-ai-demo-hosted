@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 30px; }
+        .summary { display: flex; justify-content: space-around; margin-bottom: 30px; }
+        .metric { text-align: center; padding: 15px; border-radius: 5px; }
+        .total { background-color: #e3f2fd; }
+        .passed { background-color: #e8f5e8; }
+        .failed { background-color: #ffebee; }
+        .success-rate { background-color: #f3e5f5; }
+        .test-section { margin-bottom: 30px; }
+        .test-item { margin-bottom: 15px; padding: 15px; border-left: 4px solid #ddd; background-color: #fafafa; }
+        .test-item.passed { border-left-color: #4caf50; }
+        .test-item.failed { border-left-color: #f44336; }
+        .test-name { font-weight: bold; color: #333; }
+        .test-description { color: #666; margin: 5px 0; }
+        .test-details { font-size: 0.9em; color: #777; }
+        .curl-command { background: #f8f8f8; padding: 8px; border-radius: 3px; font-family: monospace; margin: 5px 0; word-break: break-all; }
+        .response { background: #f0f0f0; padding: 8px; border-radius: 3px; font-family: monospace; max-height: 150px; overflow-y: auto; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>API Test Report</h1>
+            <p>Generated on: <span id="timestamp"></span></p>
+        </div>
+        <div class="summary">
+            <div class="metric total">
+                <h3 id="total-tests">0</h3>
+                <p>Total Tests</p>
+            </div>
+            <div class="metric passed">
+                <h3 id="passed-tests">0</h3>
+                <p>Passed</p>
+            </div>
+            <div class="metric failed">
+                <h3 id="failed-tests">0</h3>
+                <p>Failed</p>
+            </div>
+            <div class="metric success-rate">
+                <h3 id="success-rate">0%</h3>
+                <p>Success Rate</p>
+            </div>
+        </div>
+        <div id="test-results"></div>
+    </div>
+
+    <script>
+        // Test data will be injected here
+        const testData = TEST_DATA_PLACEHOLDER;
+        
+        // Update summary
+        document.getElementById('timestamp').textContent = testData.test_execution.timestamp;
+        document.getElementById('total-tests').textContent = testData.test_execution.total_tests;
+        document.getElementById('passed-tests').textContent = testData.test_execution.passed_tests;
+        document.getElementById('failed-tests').textContent = testData.test_execution.failed_tests;
+        document.getElementById('success-rate').textContent = testData.test_execution.success_rate + '%';
+        
+        // Render test results
+        const resultsContainer = document.getElementById('test-results');
+        testData.test_results.forEach(test => {
+            const testItem = document.createElement('div');
+            testItem.className = `test-item ${test.passed ? 'passed' : 'failed'}`;
+            testItem.innerHTML = `
+                <div class="test-name">${test.test_name} ${test.passed ? '✓' : '✗'}</div>
+                <div class="test-description">${test.description}</div>
+                <div class="test-details">
+                    <strong>Duration:</strong> ${test.duration}s | 
+                    <strong>Status:</strong> ${test.actual_status} | 
+                    <strong>Time:</strong> ${test.timestamp}
+                </div>
+                <div class="curl-command"><strong>Command:</strong> ${test.curl_command}</div>
+                <div class="response"><strong>Response:</strong> ${JSON.stringify(JSON.parse(test.response), null, 2)}</div>
+                ${!test.passed ? `<div style="color: red; font-weight: bold;">Error: ${test.error_message}</div>` : ''}
+            `;
+            resultsContainer.appendChild(testItem);
+        });
+    </script>
+</body>
+</html>

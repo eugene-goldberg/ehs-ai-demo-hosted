@@ -1,0 +1,13 @@
+{
+    "facility_filter": {
+        "facility_id": "FAC-001",
+        "facility_name": "Main Campus"
+    },
+    "date_range": {
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31"
+    },
+    "output_format": "json",
+    "include_emissions": true,
+    "include_cost_analysis": true
+}

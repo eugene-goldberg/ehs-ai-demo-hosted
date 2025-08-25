@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
 Comprehensive script to ingest all EHS documents into the system.
-Processes electric bill, water bill, and waste manifest documents.
+Processes all PDF documents in the data directory with enhanced rejection tracking.
 Includes comprehensive logging, error handling, and Neo4j verification.
 """
 
 import os
 import sys
 import logging
+import glob
 from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
@@ -52,7 +53,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_neo4j_summary():
-    """Get comprehensive database summary with detailed statistics."""
+    """Get comprehensive database summary with detailed statistics including rejected documents."""
     driver = GraphDatabase.driver(
         'bolt://localhost:7687', 
         auth=('neo4j', 'EhsAI2024!')
@@ -63,7 +64,8 @@ def get_neo4j_summary():
         'total_relationships': 0,
         'node_counts': {},
         'relationship_counts': {},
-        'detailed_stats': {}
+        'detailed_stats': {},
+        'rejected_documents': 0
     }
     
     try:
@@ -94,9 +96,14 @@ def get_neo4j_summary():
             for record in result:
                 summary['relationship_counts'][record['rel_type']] = record['count']
             
+            # Get rejected document count
+            result = session.run('MATCH (d:RejectedDocument) RETURN count(d) as count')
+            summary['rejected_documents'] = result.single()['count']
+            
             # Get detailed statistics for key entity types
             entity_queries = {
                 'Documents': 'MATCH (d:Document) RETURN count(d) as count',
+                'RejectedDocuments': 'MATCH (rd:RejectedDocument) RETURN count(rd) as count',
                 'Facilities': 'MATCH (f:Facility) RETURN count(f) as count',
                 'Customers': 'MATCH (c:Customer) RETURN count(c) as count',
                 'UtilityProviders': 'MATCH (u:UtilityProvider) RETURN count(u) as count',
@@ -156,12 +163,13 @@ def clear_neo4j_database():
 
 
 def print_summary(title, summary):
-    """Print database summary in a formatted way."""
+    """Print database summary in a formatted way including rejection statistics."""
     print(f"\n{'='*80}")
     print(f"{title}")
     print(f"{'='*80}")
     print(f"Total Nodes: {summary['total_nodes']}")
     print(f"Total Relationships: {summary['total_relationships']}")
+    print(f"Rejected Documents: {summary['rejected_documents']}")
     
     if summary['node_counts']:
         print(f"\nNode Counts by Label:")
@@ -180,10 +188,63 @@ def print_summary(title, summary):
                 print(f"  {entity}: {count}")
 
 
+def query_rejected_documents():
+    """Query Neo4j for rejected documents."""
+    driver = GraphDatabase.driver(
+        'bolt://localhost:7687', 
+        auth=('neo4j', 'EhsAI2024!')
+    )
+    
+    rejected_data = {}
+    
+    try:
+        with driver.session() as session:
+            # Get rejected documents with their reasons
+            query = """
+                MATCH (rd:RejectedDocument)
+                RETURN rd.document_id as document_id, 
+                       rd.file_path as file_path,
+                       rd.rejection_reason as rejection_reason,
+                       rd.confidence_score as confidence_score,
+                       rd.processed_at as processed_at
+                ORDER BY rd.processed_at DESC
+            """
+            
+            result = session.run(query)
+            rejected_data['rejected_documents'] = [dict(record) for record in result]
+                    
+    except Exception as e:
+        logger.error(f"Failed to query rejected documents: {e}")
+        rejected_data['rejected_documents'] = []
+    finally:
+        driver.close()
+    
+    return rejected_data
+
+
 def generate_document_id(doc_type):
     """Generate a unique document ID with timestamp."""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]  # Include milliseconds
     return f"{doc_type}_{timestamp}"
+
+
+def detect_document_type_from_filename(file_path):
+    """Detect document type from filename."""
+    filename = Path(file_path).name.lower()
+    
+    if "electric" in filename or "electricity" in filename or "power" in filename:
+        return "electric_bill"
+    elif "water" in filename:
+        return "water_bill"
+    elif "waste" in filename or "manifest" in filename:
+        return "waste_manifest"
+    elif "gas" in filename:
+        return "gas_bill"
+    elif "invoice" in filename:
+        return "invoice"
+    else:
+        # Generic document type for unknown files
+        return "unknown_document"
 
 
 def process_document(workflow, file_path, doc_type):
@@ -217,9 +278,10 @@ def process_document(workflow, file_path, doc_type):
         nodes_created = len(result.get("neo4j_nodes", []))
         relationships_created = len(result.get("neo4j_relationships", []))
         validation_results = result.get("validation_results", {})
+        was_rejected = result.get("rejected", False)
         
         # Log comprehensive status
-        if status == "completed":
+        if status == "completed" and not was_rejected:
             logger.info(f"✓ {doc_type.upper()} PROCESSED SUCCESSFULLY")
             logger.info(f"  • Document ID: {document_id}")
             logger.info(f"  • Processing Time: {processing_time:.2f} seconds")
@@ -263,7 +325,27 @@ def process_document(workflow, file_path, doc_type):
                 "relationships": relationships_created,
                 "processing_time": processing_time,
                 "document_id": document_id,
-                "validation": validation_results
+                "validation": validation_results,
+                "rejected": False
+            }
+        elif was_rejected:
+            rejection_reason = result.get("rejection_reason", "Unknown reason")
+            logger.warning(f"⚠️ {doc_type.upper()} DOCUMENT REJECTED")
+            logger.warning(f"  • Document ID: {document_id}")
+            logger.warning(f"  • Processing Time: {processing_time:.2f} seconds")
+            logger.warning(f"  • Rejection Reason: {rejection_reason}")
+            logger.warning(f"  • Confidence Score: {result.get('confidence_score', 'N/A')}")
+            
+            return {
+                "success": True,  # Still successful processing, but rejected
+                "errors": [], 
+                "nodes": 1,  # RejectedDocument node created
+                "relationships": 0,
+                "processing_time": processing_time,
+                "document_id": document_id,
+                "validation": validation_results,
+                "rejected": True,
+                "rejection_reason": rejection_reason
             }
         else:
             logger.error(f"✗ {doc_type.upper()} PROCESSING FAILED")
@@ -279,7 +361,8 @@ def process_document(workflow, file_path, doc_type):
                 "relationships": 0,
                 "processing_time": processing_time,
                 "document_id": document_id,
-                "validation": validation_results
+                "validation": validation_results,
+                "rejected": False
             }
             
     except Exception as e:
@@ -294,12 +377,13 @@ def process_document(workflow, file_path, doc_type):
             "relationships": 0,
             "processing_time": processing_time,
             "document_id": document_id,
-            "validation": {}
+            "validation": {},
+            "rejected": False
         }
 
 
 def query_neo4j_verification():
-    """Query Neo4j for comprehensive verification of ingested data."""
+    """Query Neo4j for comprehensive verification of ingested data including rejected documents."""
     driver = GraphDatabase.driver(
         'bolt://localhost:7687', 
         auth=('neo4j', 'EhsAI2024!')
@@ -334,6 +418,14 @@ def query_neo4j_verification():
                     OPTIONAL MATCH (ws)-[:RESULTED_IN]->(e:Emission)
                     RETURN d.id as doc_id, wm.manifest_tracking_number, wm.total_quantity,
                            wg.name as generator, df.name as disposal_facility, e.amount as emission_amount
+                    LIMIT 5
+                """,
+                "Rejected Documents": """
+                    MATCH (rd:RejectedDocument)
+                    RETURN rd.document_id as doc_id, rd.file_path as file_path,
+                           rd.rejection_reason as rejection_reason, rd.confidence_score as confidence_score,
+                           rd.processed_at as processed_at
+                    ORDER BY rd.processed_at DESC
                     LIMIT 5
                 """,
                 "All Emissions": """
@@ -390,11 +482,35 @@ def print_verification_results(verification_data):
                 break
 
 
+def scan_data_directory_for_pdfs(data_dir):
+    """Scan data directory for all PDF files and return list of (file_path, doc_type) tuples."""
+    data_path = Path(data_dir)
+    pdf_files = []
+    
+    if not data_path.exists():
+        logger.error(f"Data directory not found: {data_dir}")
+        return pdf_files
+    
+    # Find all PDF files in the data directory
+    pdf_patterns = ["*.pdf", "*.PDF"]
+    for pattern in pdf_patterns:
+        for pdf_file in data_path.glob(pattern):
+            if pdf_file.is_file():
+                doc_type = detect_document_type_from_filename(pdf_file.name)
+                pdf_files.append((str(pdf_file), doc_type))
+    
+    logger.info(f"Found {len(pdf_files)} PDF files in {data_dir}")
+    for file_path, doc_type in pdf_files:
+        logger.info(f"  • {Path(file_path).name} -> {doc_type}")
+    
+    return pdf_files
+
+
 def main():
     """Main comprehensive ingestion script."""
     print("=" * 100)
     print("EHS AI DEMO - COMPREHENSIVE DOCUMENT INGESTION")
-    print("Processing: Electric Bill, Water Bill, and Waste Manifest")
+    print("Processing ALL PDF documents in data directory with rejection tracking")
     print("=" * 100)
     
     # Check environment variables
@@ -428,11 +544,12 @@ def main():
     else:
         logger.error("✗ Failed to clear database, continuing anyway...")
     
-    # Initialize workflow
+    # Initialize workflow with OPENAI_API_KEY
     logger.info(f"\nInitializing IngestionWorkflow...")
     try:
         workflow = IngestionWorkflow(
             llama_parse_api_key=required_env_vars["LLAMA_PARSE_API_KEY"],
+            openai_api_key=required_env_vars["OPENAI_API_KEY"],  # Added OPENAI_API_KEY
             neo4j_uri=required_env_vars["NEO4J_URI"],
             neo4j_username=required_env_vars["NEO4J_USERNAME"], 
             neo4j_password=required_env_vars["NEO4J_PASSWORD"],
@@ -443,20 +560,20 @@ def main():
         logger.error(f"✗ Failed to initialize workflow: {e}")
         return
     
-    # Process all documents
-    # Use absolute paths based on script location
+    # Scan data directory for ALL PDF files
     data_dir = Path(__file__).parent.parent / "data"
-    documents_to_process = [
-        (str(data_dir / "electric_bill.pdf"), "electric_bill"),
-        (str(data_dir / "water_bill.pdf"), "water_bill"),
-        (str(data_dir / "waste_manifest.pdf"), "waste_manifest")
-    ]
+    documents_to_process = scan_data_directory_for_pdfs(data_dir)
+    
+    if not documents_to_process:
+        logger.error("No PDF files found in data directory!")
+        return
     
     results = []
     total_nodes_created = 0
     total_relationships_created = 0
     total_processing_time = 0
     successful_ingestions = 0
+    rejected_documents = 0
     
     script_start_time = datetime.now()
     
@@ -471,7 +588,8 @@ def main():
                 "relationships": 0,
                 "processing_time": 0,
                 "document_id": f"{doc_type}_missing",
-                "validation": {}
+                "validation": {},
+                "rejected": False
             })
             continue
         
@@ -484,6 +602,8 @@ def main():
             successful_ingestions += 1
             total_nodes_created += result["nodes"]
             total_relationships_created += result["relationships"]
+            if result.get("rejected", False):
+                rejected_documents += 1
         
         total_processing_time += result["processing_time"]
     
@@ -494,6 +614,21 @@ def main():
     logger.info("Getting final database state...")
     final_summary = get_neo4j_summary()
     print_summary("DATABASE STATE - AFTER INGESTION", final_summary)
+    
+    # Query and display rejected documents
+    logger.info("Querying rejected documents...")
+    rejected_data = query_rejected_documents()
+    if rejected_data['rejected_documents']:
+        print(f"\n{'='*80}")
+        print("REJECTED DOCUMENTS")
+        print(f"{'='*80}")
+        for i, rejected_doc in enumerate(rejected_data['rejected_documents'], 1):
+            print(f"{i}. Document ID: {rejected_doc['document_id']}")
+            print(f"   File Path: {rejected_doc['file_path']}")
+            print(f"   Rejection Reason: {rejected_doc['rejection_reason']}")
+            print(f"   Confidence Score: {rejected_doc['confidence_score']}")
+            print(f"   Processed At: {rejected_doc['processed_at']}")
+            print()
     
     # Get verification data
     logger.info("Running Neo4j verification queries...")
@@ -507,8 +642,10 @@ def main():
     print(f"Total Script Runtime: {script_total_time:.2f} seconds")
     print(f"Total Processing Time: {total_processing_time:.2f} seconds")
     print(f"Documents Attempted: {len(documents_to_process)}")
-    print(f"Successful Ingestions: {successful_ingestions}")
-    print(f"Failed Ingestions: {len(documents_to_process) - successful_ingestions}")
+    print(f"Successful Processing: {successful_ingestions}")
+    print(f"Accepted Documents: {successful_ingestions - rejected_documents}")
+    print(f"Rejected Documents: {rejected_documents}")
+    print(f"Failed Processing: {len(documents_to_process) - successful_ingestions}")
     print(f"\nData Created This Session:")
     print(f"  • Nodes Created: {total_nodes_created}")
     print(f"  • Relationships Created: {total_relationships_created}")
@@ -520,16 +657,28 @@ def main():
     print(f"\nDatabase Growth:")
     print(f"  • Total Nodes Added: {nodes_added}")
     print(f"  • Total Relationships Added: {relationships_added}")
+    print(f"  • Rejected Documents in DB: {final_summary['rejected_documents']}")
     
     # Show detailed results for each document
     print(f"\nDetailed Results by Document:")
     for i, result in enumerate(results):
         doc_name, doc_type = documents_to_process[i] if i < len(documents_to_process) else ("Unknown", "unknown")
-        status_icon = "✓" if result["success"] else "✗"
-        print(f"  {status_icon} {doc_type.upper()}: {result['processing_time']:.2f}s, "
+        if result.get("rejected", False):
+            status_icon = "⚠️"
+            status_text = "REJECTED"
+        elif result["success"]:
+            status_icon = "✓"
+            status_text = "ACCEPTED"
+        else:
+            status_icon = "✗"
+            status_text = "FAILED"
+            
+        print(f"  {status_icon} {doc_type.upper()} ({status_text}): {result['processing_time']:.2f}s, "
               f"{result['nodes']} nodes, {result['relationships']} relationships")
         if result.get("document_id"):
             print(f"    Document ID: {result['document_id']}")
+        if result.get("rejected", False):
+            print(f"    Rejection Reason: {result.get('rejection_reason', 'Unknown')}")
         if not result["success"] and result["errors"]:
             for error in result["errors"][:2]:  # Show first 2 errors
                 print(f"    Error: {error}")
@@ -537,7 +686,7 @@ def main():
     # Show validation summary
     print(f"\nValidation Summary:")
     for i, result in enumerate(results):
-        if result["success"]:
+        if result["success"] and not result.get("rejected", False):
             doc_type = documents_to_process[i][1]
             validation = result.get("validation", {})
             if validation:
@@ -560,15 +709,22 @@ def main():
     
     # Final status
     print(f"\n{'='*80}")
-    if successful_ingestions == len(documents_to_process):
-        print("🎉 ALL DOCUMENTS INGESTED SUCCESSFULLY!")
+    accepted_documents = successful_ingestions - rejected_documents
+    if accepted_documents == len(documents_to_process):
+        print("🎉 ALL DOCUMENTS ACCEPTED AND INGESTED SUCCESSFULLY!")
         print("   The EHS knowledge graph has been populated with comprehensive data.")
-    elif successful_ingestions > 0:
-        print(f"⚠️  PARTIAL SUCCESS: {successful_ingestions}/{len(documents_to_process)} documents ingested")
-        print("   Some documents were processed, but issues occurred with others.")
+    elif accepted_documents > 0:
+        print(f"⚠️  PARTIAL SUCCESS: {accepted_documents}/{len(documents_to_process)} documents accepted")
+        if rejected_documents > 0:
+            print(f"   {rejected_documents} documents were rejected during processing")
+        if (len(documents_to_process) - successful_ingestions) > 0:
+            print(f"   {len(documents_to_process) - successful_ingestions} documents failed to process")
     else:
-        print("❌ ALL INGESTIONS FAILED!")
-        print("   No documents were successfully processed. Check logs for details.")
+        print("❌ NO DOCUMENTS ACCEPTED!")
+        if rejected_documents > 0:
+            print(f"   {rejected_documents} documents were processed but rejected")
+        if (len(documents_to_process) - successful_ingestions) > 0:
+            print(f"   {len(documents_to_process) - successful_ingestions} documents failed to process")
     print(f"{'='*80}")
     
     # Log file location

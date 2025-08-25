@@ -1,0 +1,14 @@
+================================================================================
+Phase 1 Integration Tests Report
+================================================================================
+Test Suite: EHS AI Demo Phase 1 Enhanced Workflows
+Start Time: Sat Aug 23 08:36:50 CDT 2025
+API URL: http://localhost:8000
+Output Directory: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/src/test_api/test_scripts/test_results
+================================================================================
+
+[2025-08-23 08:36:50] [INFO] Test report: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/src/test_api/test_scripts/test_results/phase1_integration_test_report_20250823_083650.txt
+[2025-08-23 08:36:50] [INFO] Performance log: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/src/test_api/test_scripts/test_results/phase1_performance_comparison_20250823_083650.json
+[2025-08-23 08:36:50] [INFO] Checking API health...
+[2025-08-23 08:36:50] [ERROR] API health check failed: {"detail":[{"type":"int_parsing","loc":["path","item_id"],"msg":"Input should be a valid integer, unable to parse string as an integer","input":"health"}]}
+[2025-08-23 08:36:50] [ERROR] API health check failed. Cannot proceed with tests.

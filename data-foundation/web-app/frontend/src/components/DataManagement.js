@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import IngestionProgress from './IngestionProgress';
+import { API_ENDPOINTS } from '../config/api';
 
 const DataManagement = () => {
   const [processedDocuments, setProcessedDocuments] = useState([]);
+  const [rejectedDocuments, setRejectedDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isIngesting, setIsIngesting] = useState(false);
@@ -21,12 +23,29 @@ const DataManagement = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const documentsRes = await axios.get('http://localhost:8001/api/data/processed-documents');
-      setProcessedDocuments(documentsRes.data);
+      const [documentsRes, rejectedRes] = await Promise.all([
+        axios.get('http://localhost:8001/api/data/processed-documents'),
+        axios.get(API_ENDPOINTS.rejectedDocuments)
+      ]);
+      
+      // Extract documents array from API response or default to empty array
+      const processedDocs = Array.isArray(documentsRes.data) 
+        ? documentsRes.data 
+        : (documentsRes.data.documents || []);
+      
+      const rejectedDocs = Array.isArray(rejectedRes.data) 
+        ? rejectedRes.data 
+        : (rejectedRes.data.documents || []);
+      
+      setProcessedDocuments(processedDocs);
+      setRejectedDocuments(rejectedDocs);
       setError(null);
     } catch (err) {
       setError('Failed to fetch data. Please try again.');
       console.error('Error fetching data:', err);
+      // Ensure arrays are initialized even on error
+      setProcessedDocuments([]);
+      setRejectedDocuments([]);
     } finally {
       setLoading(false);
     }
@@ -533,6 +552,43 @@ const DataManagement = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Rejected Documents Section */}
+      <h2 className="table-title">Rejected Documents ({rejectedDocuments.length})</h2>
+      <div className="card">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Date Rejected</th>
+              <th>Original Filename</th>
+              <th>Rejection Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rejectedDocuments.length === 0 ? (
+              <tr>
+                <td colSpan="4">No documents rejected yet</td>
+              </tr>
+            ) : (
+              rejectedDocuments.map((doc, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{new Date(doc.date_rejected || doc.created_at).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}</td>
+                  <td>{doc.file_name || doc.original_filename || doc.filename || 'Unknown'}</td>
+                  <td>{doc.rejection_reason || doc.reason || 'No reason provided'}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
       
       {/* Hover Popup */}
       {hoveredRow !== null && processedDocuments[hoveredRow] && (
@@ -547,6 +603,7 @@ const DataManagement = () => {
           className="btn btn-secondary"
           onClick={() => {
             setProcessedDocuments([]);
+            setRejectedDocuments([]);
             setDocumentDetails({});
           }}
         >

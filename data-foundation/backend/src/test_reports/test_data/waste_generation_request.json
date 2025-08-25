@@ -1,0 +1,14 @@
+{
+    "facility_filter": {
+        "facility_id": "FAC-001"
+    },
+    "date_range": {
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31"
+    },
+    "output_format": "json",
+    "include_disposal_details": true,
+    "include_transport_details": true,
+    "include_emissions": true,
+    "hazardous_only": false
+}

@@ -1,0 +1,210 @@
+================================================================================
+NEO4J DATABASE PHASE 1 EXAMINATION REPORT
+================================================================================
+Generated: 2025-08-23 13:18:11
+Database: bolt://localhost:7687/neo4j
+
+1. DATABASE OVERVIEW
+----------------------------------------
+Total Node Labels: 27
+Total Nodes: 154
+Total Relationship Types: 22
+Total Relationships: 176
+
+2. NODE LABELS AND COUNTS
+----------------------------------------
+  __Node__                  :         43 nodes
+  __Entity__                :         37 nodes
+  entity                    :         37 nodes
+  Chunk                     :          6 nodes
+  DocumentChunk             :          5 nodes
+  Document                  :          3 nodes
+  Emission                  :          3 nodes
+  Meter                     :          3 nodes
+  Customer                  :          2 nodes
+  Facility                  :          2 nodes
+  UtilityProvider           :          2 nodes
+  DisposalFacility          :          1 nodes
+  Transporter               :          1 nodes
+  UtilityBill               :          1 nodes
+  Utilitybill               :          1 nodes
+  WasteGenerator            :          1 nodes
+  WasteItem                 :          1 nodes
+  WasteManifest             :          1 nodes
+  WasteShipment             :          1 nodes
+  Wastemanifest             :          1 nodes
+  WaterBill                 :          1 nodes
+  Waterbill                 :          1 nodes
+  Equipment                 :          0 nodes
+  Migration                 :          0 nodes
+  MonthlyUsageAllocation    :          0 nodes
+  Permit                    :          0 nodes
+  User                      :          0 nodes
+
+3. RELATIONSHIP TYPES AND COUNTS
+----------------------------------------
+  MENTIONS                  :         74 relationships
+  Is                        :         32 relationships
+  MONITORS                  :          8 relationships
+  BILLED_FOR                :          6 relationships
+  BILLED_TO                 :          6 relationships
+  RECORDED_IN               :          6 relationships
+  RESULTED_IN               :          6 relationships
+  SOURCE                    :          6 relationships
+  Current reading           :          4 relationships
+  EXTRACTED_TO              :          4 relationships
+  PROVIDED_BY               :          4 relationships
+  Previous reading          :          4 relationships
+  Rate                      :          4 relationships
+  CONTAINS_WASTE            :          2 relationships
+  DISPOSED_AT               :          2 relationships
+  DOCUMENTS                 :          2 relationships
+  GENERATED_BY              :          2 relationships
+  TRACKS                    :          2 relationships
+  TRANSPORTED_BY            :          2 relationships
+  AFFECTS_CONSUMPTION       :          0 relationships
+  LOCATED_AT                :          0 relationships
+  PERMITS                   :          0 relationships
+
+4. PHASE 1 OBJECTS ANALYSIS
+----------------------------------------
+
+AuditTrail:
+  Count: 0
+
+ProRating:
+  Count: 0
+
+RejectionTracking:
+  Count: 0
+
+Document:
+  Count: 3
+  Properties: 
+  Sample Node:
+    account_number: 85-23459-88-1
+    file_path: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/electric_bill.pdf
+    rejection_migration_date: 2025-08-23T13:17:58.831618
+    source: comprehensive_batch_ingestion
+    type: utility_bill
+    statement_date: July 5, 2025
+    source_file_path: unknown
+    uploaded_at: 2025-08-23T15:00:10.745237
+    processed_at: 2025-08-23T09:59:48.505854
+    id: electric_bill_20250823_095948_505
+    audit_migration_date: 2025-08-23T13:17:57.865150
+    status: PROCESSING
+    document_type: electric_bill
+
+Entity:
+  Count: 0
+
+Chunk:
+  Count: 6
+  Properties: 
+  Sample Node:
+    parser: llamaparse
+    ref_doc_id: 43c712f2-093e-418e-b2f1-e9fab98ff43c
+    source: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/electric_bill.pdf
+    id: 64b01ce9-3d3e-44b7-b175-305ab90e55e1
+    embedding: [-0.008022415451705456, -0.014472871087491512, 0.012758621945977211, -0.02206164225935936, 0.0003...
+    text: Here is the extracted information from the provided text:
+
+- **Billing period**: June 1, 2025 to ...
+    document_id: 43c712f2-093e-418e-b2f1-e9fab98ff43c
+    doc_id: 43c712f2-093e-418e-b2f1-e9fab98ff43c
+    _node_type: TextNode
+    document_type: utility_bill
+    _node_content: {"id_": "64b01ce9-3d3e-44b7-b175-305ab90e55e1", "embedding": null, "metadata": {"source": "/Users...
+
+
+5. NODE PROPERTIES SCHEMA
+----------------------------------------
+
+
+6. RELATIONSHIP PATTERNS
+----------------------------------------
+  (__Node__)-[MENTIONS]->(__Node__) : 37 times
+  (__Node__)-[Is]->(__Node__) : 16 times
+  (Meter)-[MONITORS]->(Facility) : 4 times
+  (__Node__)-[SOURCE]->(__Node__) : 3 times
+  (WaterBill)-[BILLED_TO]->(Facility) : 2 times
+  (Meter)-[RECORDED_IN]->(UtilityBill) : 2 times
+  (__Node__)-[Previous reading]->(__Node__) : 2 times
+  (__Node__)-[Rate]->(__Node__) : 2 times
+  (WaterBill)-[BILLED_FOR]->(Customer) : 2 times
+  (__Node__)-[Current reading]->(__Node__) : 2 times
+
+
+7. DATABASE CONSTRAINTS
+----------------------------------------
+  {'id': 14, 'name': 'constraint_907a464e', 'type': 'UNIQUENESS', 'entityType': 'NODE', 'labelsOrTypes': ['__Entity__'], 'properties': ['id'], 'ownedIndex': 'constraint_907a464e', 'propertyType': None}
+  {'id': 12, 'name': 'constraint_ec67c859', 'type': 'UNIQUENESS', 'entityType': 'NODE', 'labelsOrTypes': ['__Node__'], 'properties': ['id'], 'ownedIndex': 'constraint_ec67c859', 'propertyType': None}
+  {'id': 19, 'name': 'equipment_id_unique', 'type': 'UNIQUENESS', 'entityType': 'NODE', 'labelsOrTypes': ['Equipment'], 'properties': ['id'], 'ownedIndex': 'equipment_id_unique', 'propertyType': None}
+  {'id': 18, 'name': 'migration_name_unique', 'type': 'UNIQUENESS', 'entityType': 'NODE', 'labelsOrTypes': ['Migration'], 'properties': ['name'], 'ownedIndex': 'migration_name_unique', 'propertyType': None}
+  {'id': 24, 'name': 'permit_id_unique', 'type': 'UNIQUENESS', 'entityType': 'NODE', 'labelsOrTypes': ['Permit'], 'properties': ['id'], 'ownedIndex': 'permit_id_unique', 'propertyType': None}
+  {'id': 53, 'name': 'unique_allocation_id', 'type': 'UNIQUENESS', 'entityType': 'NODE', 'labelsOrTypes': ['MonthlyUsageAllocation'], 'properties': ['allocation_id'], 'ownedIndex': 'unique_allocation_id', 'propertyType': None}
+  {'id': 50, 'name': 'unique_original_filename', 'type': 'UNIQUENESS', 'entityType': 'NODE', 'labelsOrTypes': ['Document'], 'properties': ['original_filename'], 'ownedIndex': 'unique_original_filename', 'propertyType': None}
+  {'id': 62, 'name': 'unique_user_id', 'type': 'UNIQUENESS', 'entityType': 'NODE', 'labelsOrTypes': ['User'], 'properties': ['user_id'], 'ownedIndex': 'unique_user_id', 'propertyType': None}
+
+
+8. DATABASE INDEXES
+----------------------------------------
+  {'id': 13, 'name': 'constraint_907a464e', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['__Entity__'], 'properties': ['id'], 'indexProvider': 'range-1.0', 'owningConstraint': 'constraint_907a464e', 'lastRead': neo4j.time.DateTime(2025, 8, 23, 15, 1, 10, 975000000, tzinfo=<UTC>), 'readCount': 1030}
+  {'id': 11, 'name': 'constraint_ec67c859', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['__Node__'], 'properties': ['id'], 'indexProvider': 'range-1.0', 'owningConstraint': 'constraint_ec67c859', 'lastRead': neo4j.time.DateTime(2025, 8, 23, 15, 1, 11, 8000000, tzinfo=<UTC>), 'readCount': 7213}
+  {'id': 46, 'name': 'ehs_chunk_content_fulltext_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'FULLTEXT', 'entityType': 'NODE', 'labelsOrTypes': ['DocumentChunk'], 'properties': ['content', 'section_title', 'chunk_type'], 'indexProvider': 'fulltext-1.0', 'owningConstraint': None, 'lastRead': neo4j.time.DateTime(2025, 8, 21, 1, 30, 52, 798000000, tzinfo=<UTC>), 'readCount': 5}
+  {'id': 34, 'name': 'ehs_chunk_content_vector_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'VECTOR', 'entityType': 'NODE', 'labelsOrTypes': ['DocumentChunk'], 'properties': ['content_embedding'], 'indexProvider': 'vector-2.0', 'owningConstraint': None, 'lastRead': neo4j.time.DateTime(2025, 8, 21, 1, 31, 26, 126000000, tzinfo=<UTC>), 'readCount': 5}
+  {'id': 47, 'name': 'ehs_compliance_terms_fulltext_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'FULLTEXT', 'entityType': 'NODE', 'labelsOrTypes': ['Permit', 'Document', 'Facility'], 'properties': ['regulatory_authority', 'compliance_requirements', 'regulatory_references'], 'indexProvider': 'fulltext-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 44, 'name': 'ehs_document_content_fulltext_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'FULLTEXT', 'entityType': 'NODE', 'labelsOrTypes': ['Document'], 'properties': ['title', 'content', 'summary'], 'indexProvider': 'fulltext-1.0', 'owningConstraint': None, 'lastRead': neo4j.time.DateTime(2025, 8, 21, 1, 30, 52, 583000000, tzinfo=<UTC>), 'readCount': 12}
+  {'id': 31, 'name': 'ehs_document_content_vector_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'VECTOR', 'entityType': 'NODE', 'labelsOrTypes': ['Document'], 'properties': ['content_embedding'], 'indexProvider': 'vector-2.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 45, 'name': 'ehs_document_metadata_fulltext_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'FULLTEXT', 'entityType': 'NODE', 'labelsOrTypes': ['Document'], 'properties': ['document_type', 'source', 'author', 'keywords'], 'indexProvider': 'fulltext-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 33, 'name': 'ehs_document_summary_vector_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'VECTOR', 'entityType': 'NODE', 'labelsOrTypes': ['Document'], 'properties': ['summary_embedding'], 'indexProvider': 'vector-2.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 32, 'name': 'ehs_document_title_vector_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'VECTOR', 'entityType': 'NODE', 'labelsOrTypes': ['Document'], 'properties': ['title_embedding'], 'indexProvider': 'vector-2.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 16, 'name': 'ehs_documents', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'VECTOR', 'entityType': 'NODE', 'labelsOrTypes': ['DocumentChunk'], 'properties': ['embedding'], 'indexProvider': 'vector-2.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 48, 'name': 'ehs_environmental_terms_fulltext_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'FULLTEXT', 'entityType': 'NODE', 'labelsOrTypes': ['Equipment', 'Document', 'Permit'], 'properties': ['environmental_impact', 'safety_features', 'emission_factors'], 'indexProvider': 'fulltext-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 35, 'name': 'ehs_equipment_desc_vector_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'VECTOR', 'entityType': 'NODE', 'labelsOrTypes': ['Equipment'], 'properties': ['description_embedding'], 'indexProvider': 'vector-2.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 42, 'name': 'ehs_equipment_model_fulltext_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'FULLTEXT', 'entityType': 'NODE', 'labelsOrTypes': ['Equipment'], 'properties': ['model', 'equipment_type', 'manufacturer'], 'indexProvider': 'fulltext-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 43, 'name': 'ehs_equipment_specs_fulltext_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'FULLTEXT', 'entityType': 'NODE', 'labelsOrTypes': ['Equipment'], 'properties': ['specifications', 'description', 'serial_number'], 'indexProvider': 'fulltext-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 37, 'name': 'ehs_facility_desc_vector_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'VECTOR', 'entityType': 'NODE', 'labelsOrTypes': ['Facility'], 'properties': ['description_embedding'], 'indexProvider': 'vector-2.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 39, 'name': 'ehs_facility_description_fulltext_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'FULLTEXT', 'entityType': 'NODE', 'labelsOrTypes': ['Facility'], 'properties': ['description', 'facility_type', 'operational_status'], 'indexProvider': 'fulltext-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 38, 'name': 'ehs_facility_name_fulltext_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'FULLTEXT', 'entityType': 'NODE', 'labelsOrTypes': ['Facility'], 'properties': ['name', 'address', 'city'], 'indexProvider': 'fulltext-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 41, 'name': 'ehs_permit_compliance_fulltext_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'FULLTEXT', 'entityType': 'NODE', 'labelsOrTypes': ['Permit'], 'properties': ['compliance_requirements', 'conditions', 'limitations'], 'indexProvider': 'fulltext-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 36, 'name': 'ehs_permit_desc_vector_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'VECTOR', 'entityType': 'NODE', 'labelsOrTypes': ['Permit'], 'properties': ['description_embedding'], 'indexProvider': 'vector-2.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 40, 'name': 'ehs_permit_description_fulltext_idx', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'FULLTEXT', 'entityType': 'NODE', 'labelsOrTypes': ['Permit'], 'properties': ['permit_type', 'description', 'regulatory_authority'], 'indexProvider': 'fulltext-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 10, 'name': 'emission_date', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Emission'], 'properties': ['date'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 8, 'name': 'emission_id', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Emission'], 'properties': ['id'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': neo4j.time.DateTime(2025, 8, 17, 23, 29, 47, 758000000, tzinfo=<UTC>), 'readCount': 4}
+  {'id': 15, 'name': 'entity', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'VECTOR', 'entityType': 'NODE', 'labelsOrTypes': ['__Entity__'], 'properties': ['embedding'], 'indexProvider': 'vector-2.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 29, 'name': 'equipment_affects_consumption_index', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'RELATIONSHIP', 'labelsOrTypes': ['AFFECTS_CONSUMPTION'], 'properties': ['impact_factor'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': neo4j.time.DateTime(2025, 8, 20, 17, 41, 25, 674000000, tzinfo=<UTC>), 'readCount': 2}
+  {'id': 7, 'name': 'equipment_id_unique', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Equipment'], 'properties': ['id'], 'indexProvider': 'range-1.0', 'owningConstraint': 'equipment_id_unique', 'lastRead': neo4j.time.DateTime(2025, 8, 21, 12, 36, 9, 300000000, tzinfo=<UTC>), 'readCount': 65}
+  {'id': 22, 'name': 'equipment_installation_date_index', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Equipment'], 'properties': ['installation_date'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 6, 'name': 'equipment_located_at_index', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'RELATIONSHIP', 'labelsOrTypes': ['LOCATED_AT'], 'properties': ['created_at'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': neo4j.time.DateTime(2025, 8, 20, 17, 41, 25, 664000000, tzinfo=<UTC>), 'readCount': 2}
+  {'id': 21, 'name': 'equipment_model_index', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Equipment'], 'properties': ['model'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 20, 'name': 'equipment_type_index', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Equipment'], 'properties': ['equipment_type'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 3, 'name': 'facility_id', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Facility'], 'properties': ['id'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': neo4j.time.DateTime(2025, 8, 20, 17, 41, 25, 819000000, tzinfo=<UTC>), 'readCount': 6}
+  {'id': 4, 'name': 'facility_name', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Facility'], 'properties': ['name'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': neo4j.time.DateTime(2025, 8, 22, 1, 19, 54, 604000000, tzinfo=<UTC>), 'readCount': 55}
+  {'id': 56, 'name': 'idx_allocated_usage', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['MonthlyUsageAllocation'], 'properties': ['allocated_usage'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 55, 'name': 'idx_allocation_percentage', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['MonthlyUsageAllocation'], 'properties': ['allocation_percentage'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 54, 'name': 'idx_allocation_year_month', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['MonthlyUsageAllocation'], 'properties': ['usage_year', 'usage_month'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 57, 'name': 'idx_document_status', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Document'], 'properties': ['status'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 59, 'name': 'idx_rejected_at', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Document'], 'properties': ['rejected_at'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 60, 'name': 'idx_rejected_by_user_id', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Document'], 'properties': ['rejected_by_user_id'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 58, 'name': 'idx_rejection_reason', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Document'], 'properties': ['rejection_reason'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 51, 'name': 'idx_source_file_path', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Document'], 'properties': ['source_file_path'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 1, 'name': 'index_343aff4e', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'LOOKUP', 'entityType': 'NODE', 'labelsOrTypes': None, 'properties': None, 'indexProvider': 'token-lookup-1.0', 'owningConstraint': None, 'lastRead': neo4j.time.DateTime(2025, 8, 23, 18, 17, 59, 92000000, tzinfo=<UTC>), 'readCount': 34627}
+  {'id': 2, 'name': 'index_f7700477', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'LOOKUP', 'entityType': 'RELATIONSHIP', 'labelsOrTypes': None, 'properties': None, 'indexProvider': 'token-lookup-1.0', 'owningConstraint': None, 'lastRead': neo4j.time.DateTime(2025, 8, 23, 18, 12, 15, 79000000, tzinfo=<UTC>), 'readCount': 3492}
+  {'id': 17, 'name': 'migration_name_unique', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Migration'], 'properties': ['name'], 'indexProvider': 'range-1.0', 'owningConstraint': 'migration_name_unique', 'lastRead': neo4j.time.DateTime(2025, 8, 20, 17, 41, 25, 933000000, tzinfo=<UTC>), 'readCount': 12}
+  {'id': 26, 'name': 'permit_authority_index', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Permit'], 'properties': ['regulatory_authority'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 27, 'name': 'permit_expiration_date_index', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Permit'], 'properties': ['expiration_date'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': neo4j.time.DateTime(2025, 8, 21, 12, 37, 8, 134000000, tzinfo=<UTC>), 'readCount': 1}
+  {'id': 23, 'name': 'permit_id_unique', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Permit'], 'properties': ['id'], 'indexProvider': 'range-1.0', 'owningConstraint': 'permit_id_unique', 'lastRead': neo4j.time.DateTime(2025, 8, 21, 12, 37, 7, 879000000, tzinfo=<UTC>), 'readCount': 34}
+  {'id': 30, 'name': 'permit_permits_index', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'RELATIONSHIP', 'labelsOrTypes': ['PERMITS'], 'properties': ['effective_date'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': neo4j.time.DateTime(2025, 8, 20, 17, 41, 25, 677000000, tzinfo=<UTC>), 'readCount': 2}
+  {'id': 25, 'name': 'permit_type_index', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Permit'], 'properties': ['permit_type'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 28, 'name': 'permit_unit_index', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Permit'], 'properties': ['unit'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+  {'id': 52, 'name': 'unique_allocation_id', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['MonthlyUsageAllocation'], 'properties': ['allocation_id'], 'indexProvider': 'range-1.0', 'owningConstraint': 'unique_allocation_id', 'lastRead': None, 'readCount': 0}
+  {'id': 49, 'name': 'unique_original_filename', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['Document'], 'properties': ['original_filename'], 'indexProvider': 'range-1.0', 'owningConstraint': 'unique_original_filename', 'lastRead': None, 'readCount': 0}
+  {'id': 61, 'name': 'unique_user_id', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['User'], 'properties': ['user_id'], 'indexProvider': 'range-1.0', 'owningConstraint': 'unique_user_id', 'lastRead': None, 'readCount': 0}
+  {'id': 5, 'name': 'utility_bill_id', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['UtilityBill'], 'properties': ['id'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': neo4j.time.DateTime(2025, 8, 20, 17, 41, 25, 819000000, tzinfo=<UTC>), 'readCount': 6}
+  {'id': 9, 'name': 'utility_bill_time', 'state': 'ONLINE', 'populationPercent': 100.0, 'type': 'RANGE', 'entityType': 'NODE', 'labelsOrTypes': ['UtilityBill'], 'properties': ['period_start', 'period_end'], 'indexProvider': 'range-1.0', 'owningConstraint': None, 'lastRead': None, 'readCount': 0}
+
+================================================================================
+END OF REPORT
+================================================================================

@@ -1,0 +1,11 @@
+{
+    "date_range": {
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31"
+    },
+    "output_format": "json",
+    "hazardous_only": true,
+    "include_disposal_details": false,
+    "include_transport_details": false,
+    "include_emissions": false
+}

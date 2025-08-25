@@ -21,6 +21,9 @@ if src_dir not in sys.path:
 # Phase 1 Enhancement Imports
 from phase1_enhancements.phase1_integration import create_phase1_integration
 
+# Simple Rejection API Import
+from api.simple_rejection_api import simple_rejection_router
+
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -58,6 +61,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include the Simple Rejection API router
+app.include_router(simple_rejection_router)
 
 # Pydantic models for request/response validation
 class FacilityFilter(BaseModel):
@@ -686,6 +692,7 @@ async def startup_event():
         # Continue running even if Phase 1 fails to initialize
 
     logger.info("EHS Extraction API startup completed")
+    logger.info("Simple Rejection API endpoint available at: /api/v1/simple-rejected-documents")
 
 @app.on_event("shutdown") 
 async def shutdown_event():
