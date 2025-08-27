@@ -16,6 +16,20 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel, Field
 
+try:
+    from utils.llm_transcript_logger import log_llm_interaction
+except ImportError:
+    # If import fails, create a dummy function that does nothing
+    def log_llm_interaction(role, content, context=None):
+        pass
+
+try:
+    from utils.transcript_forwarder import forward_transcript_entry
+except ImportError:
+    # If import fails, create a no-op function
+    def forward_transcript_entry(role, content, context=None):
+        pass
+
 logger = logging.getLogger(__name__)
 
 
@@ -274,8 +288,62 @@ class UtilityBillExtractor(BaseExtractor):
                 content=content
             )
             
+            # Log the prompt as user interaction with robust error handling
+            try:
+                # Use the actual content being extracted rather than formatted_prompt structure
+                prompt_content = content  # Use the actual content being extracted
+                log_llm_interaction(
+                    role="user",
+                    content=prompt_content,
+                    context={
+                        "document_type": "utility_bill",
+                        "extractor_name": "UtilityBillExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+                # Forward transcript entry to web app backend
+                forward_transcript_entry(
+                    role="user",
+                    content=prompt_content,
+                    context={
+                        "document_type": "utility_bill",
+                        "extractor_name": "UtilityBillExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+            except Exception as log_error:
+                logger.warning(f"Failed to log user prompt interaction: {log_error}")
+            
             # Get LLM response
             response = self.llm.invoke(formatted_prompt)
+            
+            # Log the LLM response as assistant interaction with robust error handling
+            try:
+                log_llm_interaction(
+                    role="assistant",
+                    content=response.content,
+                    context={
+                        "document_type": "utility_bill",
+                        "extractor_name": "UtilityBillExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+                # Forward transcript entry to web app backend
+                forward_transcript_entry(
+                    role="assistant",
+                    content=response.content,
+                    context={
+                        "document_type": "utility_bill",
+                        "extractor_name": "UtilityBillExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+            except Exception as log_error:
+                logger.warning(f"Failed to log assistant response interaction: {log_error}")
             
             # Parse response
             extracted_data = self.parser.parse(response.content)
@@ -353,8 +421,62 @@ class WaterBillExtractor(BaseExtractor):
                 content=content
             )
             
+            # Log the prompt as user interaction with robust error handling
+            try:
+                # Use the actual content being extracted rather than formatted_prompt structure
+                prompt_content = content  # Use the actual content being extracted
+                log_llm_interaction(
+                    role="user",
+                    content=prompt_content,
+                    context={
+                        "document_type": "water_bill",
+                        "extractor_name": "WaterBillExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+                # Forward transcript entry to web app backend
+                forward_transcript_entry(
+                    role="user",
+                    content=prompt_content,
+                    context={
+                        "document_type": "water_bill",
+                        "extractor_name": "WaterBillExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+            except Exception as log_error:
+                logger.warning(f"Failed to log user prompt interaction: {log_error}")
+            
             # Get LLM response
             response = self.llm.invoke(formatted_prompt)
+            
+            # Log the LLM response as assistant interaction with robust error handling
+            try:
+                log_llm_interaction(
+                    role="assistant",
+                    content=response.content,
+                    context={
+                        "document_type": "water_bill",
+                        "extractor_name": "WaterBillExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+                # Forward transcript entry to web app backend
+                forward_transcript_entry(
+                    role="assistant",
+                    content=response.content,
+                    context={
+                        "document_type": "water_bill",
+                        "extractor_name": "WaterBillExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+            except Exception as log_error:
+                logger.warning(f"Failed to log assistant response interaction: {log_error}")
             
             # Parse response
             extracted_data = self.parser.parse(response.content)
@@ -418,8 +540,62 @@ class PermitExtractor(BaseExtractor):
                 content=content
             )
             
+            # Log the prompt as user interaction with robust error handling
+            try:
+                # Use the actual content being extracted rather than formatted_prompt structure
+                prompt_content = content  # Use the actual content being extracted
+                log_llm_interaction(
+                    role="user",
+                    content=prompt_content,
+                    context={
+                        "document_type": "permit",
+                        "extractor_name": "PermitExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+                # Forward transcript entry to web app backend
+                forward_transcript_entry(
+                    role="user",
+                    content=prompt_content,
+                    context={
+                        "document_type": "permit",
+                        "extractor_name": "PermitExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+            except Exception as log_error:
+                logger.warning(f"Failed to log user prompt interaction: {log_error}")
+            
             # Get LLM response
             response = self.llm.invoke(formatted_prompt)
+            
+            # Log the LLM response as assistant interaction with robust error handling
+            try:
+                log_llm_interaction(
+                    role="assistant",
+                    content=response.content,
+                    context={
+                        "document_type": "permit",
+                        "extractor_name": "PermitExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+                # Forward transcript entry to web app backend
+                forward_transcript_entry(
+                    role="assistant",
+                    content=response.content,
+                    context={
+                        "document_type": "permit",
+                        "extractor_name": "PermitExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+            except Exception as log_error:
+                logger.warning(f"Failed to log assistant response interaction: {log_error}")
             
             # Parse response
             extracted_data = self.parser.parse(response.content)
@@ -483,8 +659,62 @@ class InvoiceExtractor(BaseExtractor):
                 content=content
             )
             
+            # Log the prompt as user interaction with robust error handling
+            try:
+                # Use the actual content being extracted rather than formatted_prompt structure
+                prompt_content = content  # Use the actual content being extracted
+                log_llm_interaction(
+                    role="user",
+                    content=prompt_content,
+                    context={
+                        "document_type": "invoice",
+                        "extractor_name": "InvoiceExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+                # Forward transcript entry to web app backend
+                forward_transcript_entry(
+                    role="user",
+                    content=prompt_content,
+                    context={
+                        "document_type": "invoice",
+                        "extractor_name": "InvoiceExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+            except Exception as log_error:
+                logger.warning(f"Failed to log user prompt interaction: {log_error}")
+            
             # Get LLM response
             response = self.llm.invoke(formatted_prompt)
+            
+            # Log the LLM response as assistant interaction with robust error handling
+            try:
+                log_llm_interaction(
+                    role="assistant",
+                    content=response.content,
+                    context={
+                        "document_type": "invoice",
+                        "extractor_name": "InvoiceExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+                # Forward transcript entry to web app backend
+                forward_transcript_entry(
+                    role="assistant",
+                    content=response.content,
+                    context={
+                        "document_type": "invoice",
+                        "extractor_name": "InvoiceExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+            except Exception as log_error:
+                logger.warning(f"Failed to log assistant response interaction: {log_error}")
             
             # Parse response
             extracted_data = self.parser.parse(response.content)
@@ -622,8 +852,62 @@ class WasteManifestExtractor(BaseExtractor):
                 content=content
             )
             
+            # Log the prompt as user interaction with robust error handling
+            try:
+                # Use the actual content being extracted rather than formatted_prompt structure
+                prompt_content = content  # Use the actual content being extracted
+                log_llm_interaction(
+                    role="user",
+                    content=prompt_content,
+                    context={
+                        "document_type": "waste_manifest",
+                        "extractor_name": "WasteManifestExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+                # Forward transcript entry to web app backend
+                forward_transcript_entry(
+                    role="user",
+                    content=prompt_content,
+                    context={
+                        "document_type": "waste_manifest",
+                        "extractor_name": "WasteManifestExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+            except Exception as log_error:
+                logger.warning(f"Failed to log user prompt interaction: {log_error}")
+            
             # Get LLM response
             response = self.llm.invoke(formatted_prompt)
+            
+            # Log the LLM response as assistant interaction with robust error handling
+            try:
+                log_llm_interaction(
+                    role="assistant",
+                    content=response.content,
+                    context={
+                        "document_type": "waste_manifest",
+                        "extractor_name": "WasteManifestExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+                # Forward transcript entry to web app backend
+                forward_transcript_entry(
+                    role="assistant",
+                    content=response.content,
+                    context={
+                        "document_type": "waste_manifest",
+                        "extractor_name": "WasteManifestExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+            except Exception as log_error:
+                logger.warning(f"Failed to log assistant response interaction: {log_error}")
             
             # Parse response
             extracted_data = self.parser.parse(response.content)
@@ -706,7 +990,7 @@ class WasteManifestExtractor(BaseExtractor):
         return data
 
 
-class EquipmentSpecExtractor(BaseExtractor):
+class EquipmentSpecificationExtractor(BaseExtractor):
     """Extract data from equipment specifications."""
     
     def __init__(self, llm_model: str = "gpt-4"):
@@ -743,8 +1027,62 @@ class EquipmentSpecExtractor(BaseExtractor):
             # Format prompt
             formatted_prompt = self.prompt.format_messages(content=content)
             
+            # Log the prompt as user interaction with robust error handling
+            try:
+                # Use the actual content being extracted rather than formatted_prompt structure
+                prompt_content = content  # Use the actual content being extracted
+                log_llm_interaction(
+                    role="user",
+                    content=prompt_content,
+                    context={
+                        "document_type": "equipment_specification",
+                        "extractor_name": "EquipmentSpecificationExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+                # Forward transcript entry to web app backend
+                forward_transcript_entry(
+                    role="user",
+                    content=prompt_content,
+                    context={
+                        "document_type": "equipment_specification",
+                        "extractor_name": "EquipmentSpecificationExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+            except Exception as log_error:
+                logger.warning(f"Failed to log user prompt interaction: {log_error}")
+            
             # Get LLM response
             response = self.llm.invoke(formatted_prompt)
+            
+            # Log the LLM response as assistant interaction with robust error handling
+            try:
+                log_llm_interaction(
+                    role="assistant",
+                    content=response.content,
+                    context={
+                        "document_type": "equipment_specification",
+                        "extractor_name": "EquipmentSpecificationExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+                # Forward transcript entry to web app backend
+                forward_transcript_entry(
+                    role="assistant",
+                    content=response.content,
+                    context={
+                        "document_type": "equipment_specification",
+                        "extractor_name": "EquipmentSpecificationExtractor",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": metadata
+                    }
+                )
+            except Exception as log_error:
+                logger.warning(f"Failed to log assistant response interaction: {log_error}")
             
             # Parse JSON from response
             json_str = self.clean_json_string(response.content)
@@ -786,7 +1124,7 @@ def extract_ehs_data(
         "water_bill": WaterBillExtractor,
         "permit": PermitExtractor,
         "invoice": InvoiceExtractor,
-        "equipment_spec": EquipmentSpecExtractor,
+        "equipment_spec": EquipmentSpecificationExtractor,
         "waste_manifest": WasteManifestExtractor
     }
     

@@ -27,6 +27,9 @@ from phase1_enhancements.prorating_api import router as prorating_router
 # Simple Rejection API Import
 from api.simple_rejection_api import simple_rejection_router
 
+# Transcript API Import
+from api.transcript_api import router as transcript_router
+
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -70,6 +73,9 @@ app.include_router(simple_rejection_router)
 
 # Include the Prorating API router
 app.include_router(prorating_router)
+
+# Include the Transcript API router
+app.include_router(transcript_router)
 
 # Pydantic models for request/response validation
 class FacilityFilter(BaseModel):
@@ -760,6 +766,7 @@ async def startup_event():
 
     logger.info("EHS Extraction API startup completed")
     logger.info("Simple Rejection API endpoint available at: /api/v1/simple-rejected-documents")
+    logger.info("Transcript API endpoints available at: /api/data/transcript")
 
 @app.on_event("shutdown") 
 async def shutdown_event():

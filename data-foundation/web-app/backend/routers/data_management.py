@@ -1,11 +1,15 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File
 from fastapi.responses import FileResponse
-from typing import List
+from typing import List, Dict, Any, Optional
+from pydantic import BaseModel
 import uuid
 from datetime import datetime
 import logging
 import os
+import json
 from pathlib import Path
+import threading
+
 from models import (
     DataUploadRequest, 
     DataUploadResponse, 
@@ -24,6 +28,58 @@ router = APIRouter()
 # Mock data storage (in production, use a proper database)
 incidents_db = []
 compliance_db = []
+
+# File-based transcript storage with thread safety
+transcript_file_path = "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/web-app/backend/transcript_data.json"
+transcript_lock = threading.Lock()
+
+def load_transcript() -> List[Dict[str, Any]]:
+    """Load transcript data from file or return empty list if file doesn't exist or is corrupted."""
+    try:
+        if os.path.exists(transcript_file_path):
+            with open(transcript_file_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    return data
+                else:
+                    logger.warning(f"Invalid transcript file format, returning empty list")
+                    return []
+        else:
+            return []
+    except (json.JSONDecodeError, IOError) as e:
+        logger.error(f"Error loading transcript file: {str(e)}")
+        return []
+
+def save_transcript(data: List[Dict[str, Any]]) -> bool:
+    """Save transcript data to file with error handling."""
+    try:
+        # Ensure directory exists
+        os.makedirs(os.path.dirname(transcript_file_path), exist_ok=True)
+        
+        # Write to temporary file first, then rename for atomic operation
+        temp_file = transcript_file_path + ".tmp"
+        with open(temp_file, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        
+        # Atomic rename
+        os.rename(temp_file, transcript_file_path)
+        return True
+    except (IOError, OSError) as e:
+        logger.error(f"Error saving transcript file: {str(e)}")
+        # Clean up temp file if it exists
+        if os.path.exists(temp_file):
+            try:
+                os.remove(temp_file)
+            except:
+                pass
+        return False
+
+# Pydantic model for transcript add request
+class TranscriptAddRequest(BaseModel):
+    role: str
+    content: str
+    context: Optional[Dict[str, Any]] = None
+    timestamp: Optional[str] = None
 
 @router.post("/upload", response_model=DataUploadResponse)
 async def upload_data(file: UploadFile = File(...)):
@@ -526,3 +582,123 @@ async def download_document(document_id: str):
     except Exception as e:
         logger.error(f"Error downloading document {document_id}: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error while downloading file")
+
+@router.get("/transcript")
+async def get_transcript():
+    """Get the LLM transcript data from file storage"""
+    try:
+        with transcript_lock:
+            transcript_data = load_transcript()
+            return {"transcript": transcript_data}
+        
+    except Exception as e:
+        logger.error(f"Error retrieving transcript: {str(e)}")
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Error retrieving transcript: {str(e)}"
+        )
+
+@router.post("/transcript")
+async def add_transcript_entry(entry: Dict[str, Any]):
+    """Add an entry to the transcript store (deprecated - use /transcript/add)"""
+    try:
+        with transcript_lock:
+            # Load current transcript data
+            transcript_data = load_transcript()
+            
+            # Add timestamp if not present
+            if "timestamp" not in entry:
+                entry["timestamp"] = datetime.now().isoformat()
+            
+            # Add unique ID if not present
+            if "id" not in entry:
+                entry["id"] = str(uuid.uuid4())
+            
+            # Add entry to data
+            transcript_data.append(entry)
+            
+            # Save to file
+            if not save_transcript(transcript_data):
+                raise HTTPException(status_code=500, detail="Failed to save transcript to file")
+            
+            logger.info(f"Added transcript entry: {entry['id']}")
+            
+            return {"status": "success", "entry_id": entry["id"]}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error adding transcript entry: {str(e)}")
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Error adding transcript entry: {str(e)}"
+        )
+
+@router.post("/transcript/add")
+async def add_transcript_entry_structured(request: TranscriptAddRequest):
+    """Add an entry to the transcript store with structured input and thread safety"""
+    try:
+        with transcript_lock:
+            # Load current transcript data
+            transcript_data = load_transcript()
+            
+            # Create entry dictionary
+            entry = {
+                "id": str(uuid.uuid4()),
+                "role": request.role,
+                "content": request.content,
+                "context": request.context,
+                "timestamp": request.timestamp or datetime.now().isoformat()
+            }
+            
+            # Add entry to data
+            transcript_data.append(entry)
+            
+            # Enforce 10,000 entry limit by removing oldest entries
+            if len(transcript_data) > 10000:
+                entries_to_remove = len(transcript_data) - 10000
+                transcript_data = transcript_data[entries_to_remove:]
+                logger.info(f"Removed {entries_to_remove} oldest entries to maintain 10,000 entry limit")
+            
+            # Save to file
+            if not save_transcript(transcript_data):
+                raise HTTPException(status_code=500, detail="Failed to save transcript to file")
+            
+            logger.info(f"Added structured transcript entry: {entry['id']}")
+            
+            return {
+                "status": "success",
+                "message": "Transcript entry added successfully",
+                "entry": entry,
+                "total_entries": len(transcript_data)
+            }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error adding structured transcript entry: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error adding transcript entry: {str(e)}"
+        )
+
+@router.delete("/transcript")
+async def clear_transcript():
+    """Clear all transcript entries by clearing the file"""
+    try:
+        with transcript_lock:
+            # Save empty list to file
+            if not save_transcript([]):
+                raise HTTPException(status_code=500, detail="Failed to clear transcript file")
+            
+            logger.info("Transcript file cleared")
+            return {"status": "success", "message": "Transcript cleared"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error clearing transcript: {str(e)}")
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Error clearing transcript: {str(e)}"
+        )

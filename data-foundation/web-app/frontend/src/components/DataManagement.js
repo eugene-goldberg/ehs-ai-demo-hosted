@@ -12,6 +12,11 @@ const DataManagement = () => {
   const [downloadingFiles, setDownloadingFiles] = useState(new Set());
   const [isAiEngineRoomExpanded, setIsAiEngineRoomExpanded] = useState(false);
   
+  // Transcript state
+  const [transcriptData, setTranscriptData] = useState([]);
+  const [transcriptLoading, setTranscriptLoading] = useState(false);
+  const [transcriptError, setTranscriptError] = useState(null);
+  
   // Popup state
   const [hoveredRow, setHoveredRow] = useState(null);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
@@ -21,6 +26,13 @@ const DataManagement = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Fetch transcript data when AI Engine Room is expanded
+  useEffect(() => {
+    if (isAiEngineRoomExpanded) {
+      fetchTranscriptData();
+    }
+  }, [isAiEngineRoomExpanded]);
 
   const fetchData = async () => {
     try {
@@ -50,6 +62,21 @@ const DataManagement = () => {
       setRejectedDocuments([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchTranscriptData = async () => {
+    try {
+      setTranscriptLoading(true);
+      setTranscriptError(null);
+      const response = await axios.get('http://localhost:8001/api/data/transcript');
+      setTranscriptData(response.data.transcript || []);
+    } catch (err) {
+      console.error('Error fetching transcript data:', err);
+      setTranscriptError('Failed to load transcript data. Please try again.');
+      setTranscriptData([]);
+    } finally {
+      setTranscriptLoading(false);
     }
   };
 
@@ -199,6 +226,84 @@ const DataManagement = () => {
       maximumFractionDigits: 2,
       minimumFractionDigits: 0
     }).format(number) + (unit ? ` ${unit}` : '');
+  };
+
+  const formatTimestamp = (timestamp) => {
+    if (!timestamp) return '';
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    });
+  };
+
+  const getMessageRoleStyle = (role) => {
+    const baseStyle = {
+      display: 'inline-block',
+      padding: '2px 8px',
+      borderRadius: '12px',
+      fontSize: '12px',
+      fontWeight: '600',
+      textTransform: 'uppercase',
+      letterSpacing: '0.5px',
+      marginRight: '8px'
+    };
+
+    switch (role?.toLowerCase()) {
+      case 'system':
+        return { ...baseStyle, backgroundColor: '#fef3c7', color: '#92400e' };
+      case 'assistant':
+        return { ...baseStyle, backgroundColor: '#dbeafe', color: '#1e40af' };
+      case 'user':
+        return { ...baseStyle, backgroundColor: '#dcfce7', color: '#166534' };
+      default:
+        return { ...baseStyle, backgroundColor: '#f3f4f6', color: '#374151' };
+    }
+  };
+
+  const getMessageBubbleStyle = (role) => {
+    const baseStyle = {
+      padding: '12px 16px',
+      marginBottom: '8px',
+      borderRadius: '12px',
+      maxWidth: '80%',
+      wordBreak: 'break-word',
+      fontSize: '14px',
+      lineHeight: '1.5'
+    };
+
+    switch (role?.toLowerCase()) {
+      case 'system':
+        return { 
+          ...baseStyle, 
+          backgroundColor: '#fffbeb', 
+          border: '1px solid #fef3c7',
+          alignSelf: 'flex-start'
+        };
+      case 'assistant':
+        return { 
+          ...baseStyle, 
+          backgroundColor: '#eff6ff', 
+          border: '1px solid #dbeafe',
+          alignSelf: 'flex-start'
+        };
+      case 'user':
+        return { 
+          ...baseStyle, 
+          backgroundColor: '#f0fdf4', 
+          border: '1px solid #dcfce7',
+          alignSelf: 'flex-end'
+        };
+      default:
+        return { 
+          ...baseStyle, 
+          backgroundColor: '#f9fafb', 
+          border: '1px solid #f3f4f6',
+          alignSelf: 'flex-start'
+        };
+    }
   };
 
   const handleRowMouseEnter = async (event, docIndex) => {
@@ -581,9 +686,9 @@ const DataManagement = () => {
         </div>
       </div>
 
-      {/* AI Engine Room Section */}
+      {/* LLM Transcript Section */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '30px' }}>
-        <h2 className="table-title">AI Engine Room</h2>
+        <h2 className="table-title">LLM Interaction Transcript</h2>
         <button
           onClick={toggleAiEngineRoom}
           style={{
@@ -599,7 +704,7 @@ const DataManagement = () => {
             transition: 'background-color 0.2s ease',
             color: '#6b7280'
           }}
-          title={isAiEngineRoomExpanded ? 'Collapse AI Engine Room' : 'Expand AI Engine Room'}
+          title={isAiEngineRoomExpanded ? 'Collapse Transcript' : 'Expand Transcript'}
           onMouseEnter={(e) => {
             e.target.style.backgroundColor = '#f3f4f6';
           }}
@@ -614,19 +719,132 @@ const DataManagement = () => {
       {isAiEngineRoomExpanded && (
         <div className="card" style={{ marginTop: '10px' }}>
           <div style={{ padding: '20px' }}>
-            <iframe
-              src="https://n8n.srv928466.hstgr.cloud/workflow/new?projectId=7N9UCF4rUj7Wr0JZ"
-              style={{
-                width: '100%',
-                height: '600px',
-                border: 'none',
-                borderRadius: '8px',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-              }}
-              title="AI Engine Room - n8n Workflow"
-              loading="lazy"
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-presentation"
-            />
+            {/* Refresh Button */}
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'flex-end',
+              marginBottom: '16px'
+            }}>
+              <button
+                onClick={fetchTranscriptData}
+                disabled={transcriptLoading}
+                style={{
+                  backgroundColor: '#f3f4f6',
+                  color: '#374151',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  padding: '8px 16px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: transcriptLoading ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.2s ease',
+                  opacity: transcriptLoading ? 0.6 : 1
+                }}
+                onMouseEnter={(e) => {
+                  if (!transcriptLoading) {
+                    e.target.style.backgroundColor = '#e5e7eb';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!transcriptLoading) {
+                    e.target.style.backgroundColor = '#f3f4f6';
+                  }
+                }}
+              >
+                {transcriptLoading ? '🔄 Refreshing...' : '🔄 Refresh'}
+              </button>
+            </div>
+
+            {/* Transcript Display */}
+            <div style={{
+              border: '1px solid #e5e7eb',
+              borderRadius: '8px',
+              backgroundColor: '#fafafa',
+              minHeight: '300px',
+              maxHeight: '500px',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              {transcriptLoading ? (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '300px',
+                  color: '#6b7280',
+                  fontSize: '16px'
+                }}>
+                  Loading transcript...
+                </div>
+              ) : transcriptError ? (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '300px',
+                  color: '#dc2626',
+                  fontSize: '16px',
+                  textAlign: 'center',
+                  padding: '20px'
+                }}>
+                  {transcriptError}
+                </div>
+              ) : transcriptData.length === 0 ? (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '300px',
+                  color: '#6b7280',
+                  fontSize: '16px',
+                  textAlign: 'center'
+                }}>
+                  No transcript data available yet.<br />
+                  Run the ingestion process to see LLM interactions.
+                </div>
+              ) : (
+                <div style={{
+                  flex: 1,
+                  overflowY: 'auto',
+                  padding: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px'
+                }}>
+                  {transcriptData.map((message, index) => (
+                    <div key={index} style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: message.role?.toLowerCase() === 'user' ? 'flex-end' : 'flex-start'
+                    }}>
+                      {/* Message header with role and timestamp */}
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        marginBottom: '4px',
+                        fontSize: '12px',
+                        color: '#6b7280'
+                      }}>
+                        <span style={getMessageRoleStyle(message.role)}>
+                          {message.role || 'Unknown'}
+                        </span>
+                        {message.timestamp && (
+                          <span>{formatTimestamp(message.timestamp)}</span>
+                        )}
+                      </div>
+                      
+                      {/* Message content */}
+                      <div style={getMessageBubbleStyle(message.role)}>
+                        <div style={{ whiteSpace: 'pre-wrap' }}>
+                          {message.content || message.message || 'No content'}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
