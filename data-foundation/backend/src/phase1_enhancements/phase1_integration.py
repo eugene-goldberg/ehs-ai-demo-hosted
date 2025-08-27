@@ -746,6 +746,14 @@ class Phase1Integration:
             return {"success": False, "error": str(e)}
 
 
+# Global instance tracking
+_current_phase1_integration = None
+
+def get_current_phase1_integration():
+    """Get the current Phase1Integration instance."""
+    return _current_phase1_integration
+
+
 def create_phase1_integration(neo4j_uri: str = None, neo4j_username: str = None,
                              neo4j_password: str = None, neo4j_database: str = None) -> Phase1Integration:
     """
@@ -760,12 +768,14 @@ def create_phase1_integration(neo4j_uri: str = None, neo4j_username: str = None,
     Returns:
         Phase1Integration: Configured integration instance
     """
-    return Phase1Integration(
+    global _current_phase1_integration
+    _current_phase1_integration = Phase1Integration(
         neo4j_uri=neo4j_uri,
         neo4j_username=neo4j_username,
         neo4j_password=neo4j_password,
         neo4j_database=neo4j_database
     )
+    return _current_phase1_integration
 
 
 async def initialize_phase1_for_app(app: FastAPI, api_prefix: str = "/api/v1") -> Phase1Integration:

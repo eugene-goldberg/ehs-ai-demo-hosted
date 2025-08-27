@@ -20,6 +20,7 @@ if src_dir not in sys.path:
 
 # Phase 1 Enhancement Imports
 from phase1_enhancements.phase1_integration import create_phase1_integration
+from phase1_enhancements.prorating_api import router as prorating_router
 
 # Simple Rejection API Import
 from api.simple_rejection_api import simple_rejection_router
@@ -64,6 +65,9 @@ app.add_middleware(
 
 # Include the Simple Rejection API router
 app.include_router(simple_rejection_router)
+
+# Include the Prorating API router
+app.include_router(prorating_router)
 
 # Pydantic models for request/response validation
 class FacilityFilter(BaseModel):

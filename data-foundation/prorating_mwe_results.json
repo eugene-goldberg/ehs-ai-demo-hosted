@@ -1,0 +1,16 @@
+{
+  "started_at": "2025-08-25T21:10:19.910833",
+  "neo4j_connection": true,
+  "api_connection": true,
+  "document_created": true,
+  "prorating_called": false,
+  "allocations_verified": false,
+  "cleanup_completed": true,
+  "errors": [
+    "Prorating API call failed: API returned 500: Unknown error"
+  ],
+  "summary": {
+    "document_id": "37f6086f-1c9a-4e5f-a2cf-645d4a2f6038",
+    "file_name": "test_electric_bill_20250825_211019.pdf"
+  }
+}

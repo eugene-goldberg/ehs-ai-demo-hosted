@@ -323,8 +323,8 @@ const DataManagement = () => {
         </div>
 
         <div style={fieldStyle}>
-          <span style={labelStyle}>Total Usage</span>
-          <span style={valueStyle}>{formatNumber(data.total_kwh, 'kWh')}</span>
+          <span style={labelStyle}>Prorated Monthly Usage</span>
+          <span style={valueStyle}>{formatNumber(data.prorated_monthly_usage || data.total_kwh, 'kWh')}</span>
         </div>
 
         <div style={fieldStyle}>

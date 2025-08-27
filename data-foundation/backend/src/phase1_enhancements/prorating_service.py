@@ -160,30 +160,39 @@ class ProRatingService:
                     success=False
                 )
             
-            # Calculate allocations using calculator
-            allocations = self.calculator.allocate_to_calendar_months(
-                billing_period, facilities, method
-            )
+            # Calculate allocations for each facility using the correct method flow
+            all_allocations = []
             
-            if not allocations:
+            for facility in facilities:
+                try:
+                    facility_allocations = self._calculate_facility_allocations(
+                        billing_period, facility, method, facilities
+                    )
+                    all_allocations.extend(facility_allocations)
+                except Exception as e:
+                    error_msg = f"Error calculating allocations for facility {facility.facility_id}: {str(e)}"
+                    self.logger.error(error_msg)
+                    errors.append(error_msg)
+            
+            if not all_allocations:
                 error_msg = "No allocations generated from calculator"
                 self.logger.warning(error_msg)
                 errors.append(error_msg)
             
             # Create database records for allocations
-            for allocation in allocations:
+            for allocation in all_allocations:
                 try:
                     allocation_id = self._create_allocation_record(document_id, allocation)
                     if allocation_id:
                         allocations_created += 1
-                        total_usage_allocated += allocation.allocated_usage
-                        total_cost_allocated += allocation.allocated_cost
+                        total_usage_allocated += allocation.usage
+                        total_cost_allocated += allocation.cost
                         self.logger.debug(f"Created allocation {allocation_id}")
                     else:
-                        errors.append(f"Failed to create allocation for {allocation.usage_year}-{allocation.usage_month:02d}")
+                        errors.append(f"Failed to create allocation for {allocation.year}-{allocation.month:02d}")
                         
                 except Exception as e:
-                    error_msg = f"Error creating allocation for {allocation.usage_year}-{allocation.usage_month:02d}: {str(e)}"
+                    error_msg = f"Error creating allocation for {allocation.year}-{allocation.month:02d}: {str(e)}"
                     self.logger.error(error_msg)
                     errors.append(error_msg)
             
@@ -224,6 +233,49 @@ class ProRatingService:
                 errors=[error_msg],
                 success=False
             )
+
+    def _calculate_facility_allocations(self, 
+                                      billing_period: BillingPeriod,
+                                      facility: FacilityInfo,
+                                      method: ProRatingMethod,
+                                      all_facilities: List[FacilityInfo]) -> List[MonthlyAllocation]:
+        """
+        Calculate allocations for a specific facility using the correct method flow.
+        
+        Args:
+            billing_period: The billing period to allocate
+            facility: The specific facility
+            method: Pro-rating method to use
+            all_facilities: All facilities (needed for space-based and hybrid calculations)
+            
+        Returns:
+            List of MonthlyAllocation objects for this facility
+        """
+        if method == ProRatingMethod.TIME_BASED:
+            # Time-based allocation - directly returns monthly allocations
+            return self.calculator.calculate_time_based_allocation(billing_period)
+        
+        elif method == ProRatingMethod.SPACE_BASED:
+            # Space-based allocation requires total facility space
+            total_space = sum(f.square_footage for f in all_facilities if f.square_footage)
+            return self.calculator.calculate_space_based_allocation(
+                billing_period, facility, total_space
+            )
+        
+        elif method == ProRatingMethod.HYBRID:
+            # Hybrid allocation requires total facility space
+            total_space = sum(f.square_footage for f in all_facilities if f.square_footage)
+            return self.calculator.calculate_hybrid_allocation(
+                billing_period, facility, total_space
+            )
+        
+        else:
+            # If we need to use the daily allocation approach:
+            # 1. First calculate daily allocations
+            daily_allocations = self.calculator.calculate_daily_allocations(billing_period)
+            
+            # 2. Then convert to monthly allocations
+            return self.calculator.allocate_to_calendar_months(daily_allocations, billing_period)
 
     def batch_process_bills(self, 
                           bill_data: List[Dict[str, Any]],
@@ -321,7 +373,7 @@ class ProRatingService:
                         allocation_id = str(uuid.uuid4())
                         
                         query = """
-                        MATCH (d:ProcessedDocument {documentId: $document_id})
+                        MATCH (d:Document {id: $document_id})
                         CREATE (a:MonthlyUsageAllocation {
                             allocation_id: $allocation_id,
                             usage_year: $usage_year,
@@ -344,17 +396,17 @@ class ProRatingService:
                         parameters = {
                             "document_id": document_id,
                             "allocation_id": allocation_id,
-                            "usage_year": allocation.usage_year,
-                            "usage_month": allocation.usage_month,
-                            "allocation_method": allocation.allocation_method.value,
-                            "allocation_percentage": float(allocation.allocation_percentage),
-                            "allocated_usage": float(allocation.allocated_usage),
-                            "allocated_cost": float(allocation.allocated_cost),
+                            "usage_year": allocation.year,
+                            "usage_month": allocation.month,
+                            "allocation_method": allocation.allocation_method.value if hasattr(allocation, 'allocation_method') else 'unknown',
+                            "allocation_percentage": float(allocation.percentage),
+                            "allocated_usage": float(allocation.usage),
+                            "allocated_cost": float(allocation.cost),
                             "facility_id": allocation.facility_id,
-                            "facility_name": allocation.facility_name,
-                            "facility_square_feet": float(allocation.facility_square_feet),
-                            "days_in_month": allocation.days_in_month,
-                            "billing_days_in_month": allocation.billing_days_in_month,
+                            "facility_name": getattr(allocation, 'facility_name', 'Unknown'),
+                            "facility_square_feet": float(getattr(allocation, 'facility_square_feet', 0)),
+                            "days_in_month": allocation.days,
+                            "billing_days_in_month": allocation.days,
                             "created_at": datetime.now().isoformat()
                         }
                         
@@ -397,13 +449,13 @@ class ProRatingService:
         """
         try:
             query = """
-            MATCH (d:ProcessedDocument {documentId: $document_id})
+            MATCH (d:Document {id: $document_id})
             SET d.has_monthly_allocations = true,
                 d.allocation_count = $allocation_count,
                 d.total_allocated_usage = $total_usage,
                 d.total_allocated_cost = $total_cost,
                 d.allocations_updated_at = $updated_at
-            RETURN d.documentId as document_id
+            RETURN d.id as document_id
             """
             
             parameters = {
@@ -446,7 +498,7 @@ class ProRatingService:
             
             # Query for documents without allocations
             base_query = """
-            MATCH (d:ProcessedDocument)
+            MATCH (d:Document)
             WHERE NOT d.has_monthly_allocations = true
             """
             
@@ -490,7 +542,7 @@ class ProRatingService:
             
             offset = 0
             while offset < total_documents:
-                batch_query = base_query + f" RETURN d.documentId as document_id SKIP {offset} LIMIT {batch_size}"
+                batch_query = base_query + f" RETURN d.id as document_id SKIP {offset} LIMIT {batch_size}"
                 batch_result = self.graph.query(batch_query, parameters, session_params={"database": self.graph._database})
                 
                 for record in batch_result:
@@ -553,7 +605,7 @@ class ProRatingService:
         """
         try:
             query = """
-            MATCH (d:ProcessedDocument)-[:HAS_MONTHLY_ALLOCATION]->(a:MonthlyUsageAllocation)
+            MATCH (d:Document)-[:HAS_MONTHLY_ALLOCATION]->(a:MonthlyUsageAllocation)
             WHERE a.usage_year = $year AND a.usage_month = $month
             """
             
@@ -565,7 +617,7 @@ class ProRatingService:
             
             query += """
             RETURN 
-                count(DISTINCT d.documentId) as document_count,
+                count(DISTINCT d.id) as document_count,
                 count(a) as allocation_count,
                 sum(a.allocated_usage) as total_usage,
                 sum(a.allocated_cost) as total_cost,
@@ -638,7 +690,7 @@ class ProRatingService:
         """
         try:
             query = """
-            MATCH (d:ProcessedDocument)-[:HAS_MONTHLY_ALLOCATION]->(a:MonthlyUsageAllocation)
+            MATCH (d:Document)-[:HAS_MONTHLY_ALLOCATION]->(a:MonthlyUsageAllocation)
             WHERE a.facility_id = $facility_id
             AND (
                 (a.usage_year > $start_year) OR 
@@ -649,7 +701,7 @@ class ProRatingService:
                 (a.usage_year = $end_year AND a.usage_month <= $end_month)
             )
             RETURN 
-                d.documentId as document_id,
+                d.id as document_id,
                 d.fileName as document_name,
                 a.allocation_id as allocation_id,
                 a.usage_year as year,
@@ -709,10 +761,10 @@ class ProRatingService:
         """
         try:
             query = """
-            MATCH (d:ProcessedDocument)-[:HAS_MONTHLY_ALLOCATION]->(a:MonthlyUsageAllocation)
+            MATCH (d:Document)-[:HAS_MONTHLY_ALLOCATION]->(a:MonthlyUsageAllocation)
             WHERE a.allocation_id = $allocation_id
             RETURN 
-                d.documentId as document_id,
+                d.id as document_id,
                 d.fileName as document_name,
                 d.fileType as document_type,
                 d.createdAt as document_created,
@@ -774,7 +826,7 @@ class ProRatingService:
     def _document_exists(self, document_id: str) -> bool:
         """Check if document exists in the database."""
         try:
-            query = "MATCH (d:ProcessedDocument {documentId: $document_id}) RETURN d.documentId"
+            query = "MATCH (d:Document {id: $document_id}) RETURN d.id"
             result = self.graph.query(query, {"document_id": document_id}, session_params={"database": self.graph._database})
             return len(result) > 0
         except Exception:
@@ -786,7 +838,7 @@ class ProRatingService:
             allocation_id = str(uuid.uuid4())
             
             query = """
-            MATCH (d:ProcessedDocument {documentId: $document_id})
+            MATCH (d:Document {id: $document_id})
             CREATE (a:MonthlyUsageAllocation {
                 allocation_id: $allocation_id,
                 usage_year: $usage_year,
@@ -809,17 +861,17 @@ class ProRatingService:
             parameters = {
                 "document_id": document_id,
                 "allocation_id": allocation_id,
-                "usage_year": allocation.usage_year,
-                "usage_month": allocation.usage_month,
-                "allocation_method": allocation.allocation_method.value,
-                "allocation_percentage": float(allocation.allocation_percentage),
-                "allocated_usage": float(allocation.allocated_usage),
-                "allocated_cost": float(allocation.allocated_cost),
+                "usage_year": allocation.year,
+                "usage_month": allocation.month,
+                "allocation_method": getattr(allocation, 'allocation_method', 'unknown'),
+                "allocation_percentage": float(allocation.percentage),
+                "allocated_usage": float(allocation.usage),
+                "allocated_cost": float(allocation.cost),
                 "facility_id": allocation.facility_id,
-                "facility_name": allocation.facility_name,
-                "facility_square_feet": float(allocation.facility_square_feet),
-                "days_in_month": allocation.days_in_month,
-                "billing_days_in_month": allocation.billing_days_in_month,
+                "facility_name": getattr(allocation, 'facility_name', 'Unknown'),
+                "facility_square_feet": float(getattr(allocation, 'facility_square_feet', 0)),
+                "days_in_month": allocation.days,
+                "billing_days_in_month": allocation.days,
                 "created_at": datetime.now().isoformat()
             }
             
@@ -848,10 +900,10 @@ class ProRatingService:
         """Mark document as having allocations processed (for backfill)."""
         try:
             query = """
-            MATCH (d:ProcessedDocument {documentId: $document_id})
+            MATCH (d:Document {id: $document_id})
             SET d.has_monthly_allocations = true,
                 d.allocations_updated_at = $updated_at
-            RETURN d.documentId as document_id
+            RETURN d.id as document_id
             """
             
             result = self.graph.query(

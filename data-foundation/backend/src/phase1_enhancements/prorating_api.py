@@ -15,9 +15,10 @@ Dependencies:
 import os
 import uuid
 import logging
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from typing import Optional, Dict, Any, List
 from enum import Enum
+from decimal import Decimal
 
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from fastapi.responses import JSONResponse
@@ -25,15 +26,56 @@ from pydantic import BaseModel, Field, validator
 from starlette.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR, HTTP_503_SERVICE_UNAVAILABLE
 
 from .prorating_service import ProRatingService
+from .prorating_calculator import BillingPeriod, FacilityInfo as CalculatorFacilityInfo, ProRatingMethod as CalculatorProRatingMethod
 from src.graph_query import get_graphDB_driver
 from src.shared.common_fn import create_graph_database_connection
 
 # Initialize logging
 logger = logging.getLogger(__name__)
 
-# Create FastAPI router with prefix
+# Service will be initialized in startup event
+prorating_service = None
+
+# Dependencies
+async def get_prorating_service():
+    """Get the prorating service instance, ensuring it's initialized."""
+    global prorating_service
+    
+    if prorating_service is None:
+        # Try to get it from the phase1 integration if available
+        try:
+            from .phase1_integration import get_current_phase1_integration
+            integration = get_current_phase1_integration()
+            if integration and integration.prorating_service:
+                prorating_service = integration.prorating_service
+            else:
+                # Initialize directly if integration not available
+                from src.shared.common_fn import create_graph_database_connection
+                graph = create_graph_database_connection(
+                    os.getenv("NEO4J_URI", "bolt://localhost:7687"),
+                    os.getenv("NEO4J_USERNAME", "neo4j"),
+                    os.getenv("NEO4J_PASSWORD", "agentOS1!"),
+                    os.getenv("NEO4J_DATABASE", "neo4j")
+                )
+                from .prorating_service import ProRatingService
+                prorating_service = ProRatingService(graph)
+        except Exception as e:
+            logger.error(f"Failed to initialize prorating service: {e}")
+            raise HTTPException(
+                status_code=503,
+                detail="Pro-rating service initialization failed"
+            )
+    
+    if prorating_service is None:
+        raise HTTPException(
+            status_code=503,
+            detail="Pro-rating service is not available"
+        )
+    
+    return prorating_service
+
+# Create FastAPI router without prefix (prefix added during app integration)
 router = APIRouter(
-    prefix="/prorating",
     tags=["Pro-rating"],
     responses={
         404: {"description": "Resource not found"},
@@ -42,15 +84,15 @@ router = APIRouter(
     }
 )
 
-# Service will be initialized in startup event
-prorating_service = None
-
 class ProRatingMethod(str, Enum):
     """Supported pro-rating methods."""
     HEADCOUNT = "headcount"
-    FLOOR_AREA = "floor_area"
+    FLOOR_AREA = "floor_area" 
     REVENUE = "revenue"
     CUSTOM = "custom"
+    TIME_BASED = "time_based"
+    SPACE_BASED = "space_based"
+    HYBRID = "hybrid"
 
 class FacilityInfo(BaseModel):
     """Facility information for pro-rating calculations."""
@@ -160,19 +202,6 @@ def get_graph_connection():
             detail="Database connection failed"
         )
 
-def check_service_initialized():
-    """
-    Check if the pro-rating service has been initialized.
-    Raises HTTPException if service is not available.
-    """
-    if prorating_service is None:
-        logger.error("Pro-rating service not initialized")
-        raise HTTPException(
-            status_code=HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Pro-rating service is not available. Service initialization may be in progress."
-        )
-    return prorating_service
-
 def validate_document_exists(document_id: str, graph) -> Optional[Dict[str, Any]]:
     """
     Validate that a document exists in the database.
@@ -188,7 +217,9 @@ def validate_document_exists(document_id: str, graph) -> Optional[Dict[str, Any]
         query = """
         MATCH (d:Document {id: $document_id})
         RETURN d.id as id, d.fileName as file_name, d.status as status,
-               d.created_at as created_at, d.total_amount as total_amount
+               d.created_at as created_at, d.total_amount as total_amount,
+               d.start_date as start_date, d.end_date as end_date,
+               d.total_usage as total_usage, d.total_cost as total_cost
         """
         
         result = graph.query(query, params={"document_id": document_id})
@@ -201,6 +232,109 @@ def validate_document_exists(document_id: str, graph) -> Optional[Dict[str, Any]
         logger.error(f"Error validating document {document_id}: {str(e)}")
         return None
 
+def map_api_method_to_calculator_method(api_method: ProRatingMethod) -> CalculatorProRatingMethod:
+    """Map API method enum to calculator method enum."""
+    mapping = {
+        ProRatingMethod.TIME_BASED: CalculatorProRatingMethod.TIME_BASED,
+        ProRatingMethod.SPACE_BASED: CalculatorProRatingMethod.SPACE_BASED,
+        ProRatingMethod.HYBRID: CalculatorProRatingMethod.HYBRID,
+        # For other methods, default to hybrid
+        ProRatingMethod.HEADCOUNT: CalculatorProRatingMethod.HYBRID,
+        ProRatingMethod.FLOOR_AREA: CalculatorProRatingMethod.SPACE_BASED,
+        ProRatingMethod.REVENUE: CalculatorProRatingMethod.HYBRID,
+        ProRatingMethod.CUSTOM: CalculatorProRatingMethod.HYBRID
+    }
+    return mapping.get(api_method, CalculatorProRatingMethod.HYBRID)
+
+def convert_api_facilities_to_calculator_facilities(api_facilities: List[FacilityInfo]) -> List[CalculatorFacilityInfo]:
+    """Convert API FacilityInfo objects to calculator FacilityInfo objects."""
+    calculator_facilities = []
+    
+    for facility in api_facilities:
+        # Use floor_area as square_footage, default to 1000 if not provided
+        square_footage = Decimal(str(facility.floor_area)) if facility.floor_area else Decimal('1000')
+        
+        calculator_facility = CalculatorFacilityInfo(
+            facility_id=facility.facility_id,
+            square_footage=square_footage,
+            occupied_percentage=Decimal('1.0'),  # Default to 100% occupied
+            facility_name=facility.name
+        )
+        calculator_facilities.append(calculator_facility)
+    
+    return calculator_facilities
+
+def create_billing_period_from_document(doc_info: Dict[str, Any]) -> BillingPeriod:
+    """Create a BillingPeriod object from document information."""
+    # Extract dates
+    start_date = doc_info.get('start_date')
+    end_date = doc_info.get('end_date')
+    
+    # If dates are not available, use reasonable defaults or current month
+    if not start_date or not end_date:
+        current_date = date.today()
+        start_date = current_date.replace(day=1)
+        if current_date.month == 12:
+            end_date = current_date.replace(year=current_date.year + 1, month=1, day=1) - timedelta(days=1)
+        else:
+            end_date = current_date.replace(month=current_date.month + 1, day=1) - timedelta(days=1)
+    
+    # Convert string dates to date objects if necessary
+    if isinstance(start_date, str):
+        start_date = datetime.fromisoformat(start_date.replace('Z', '+00:00')).date()
+    if isinstance(end_date, str):
+        end_date = datetime.fromisoformat(end_date.replace('Z', '+00:00')).date()
+    
+    # Extract usage and cost
+    total_usage = doc_info.get('total_usage', 0)
+    total_cost = doc_info.get('total_cost') or doc_info.get('total_amount', 0)
+    
+    # Convert to Decimal
+    total_usage = Decimal(str(total_usage)) if total_usage else Decimal('0')
+    total_cost = Decimal(str(total_cost)) if total_cost else Decimal('0')
+    
+    return BillingPeriod(
+        start_date=start_date,
+        end_date=end_date,
+        total_usage=total_usage,
+        total_cost=total_cost,
+        facility_id=doc_info.get('facility_id'),
+        usage_type=doc_info.get('usage_type', 'utility')
+    )
+
+def convert_processed_bill_to_allocation_response(processed_bill, document_id: str) -> AllocationResponse:
+    """Convert ProcessedBill result to AllocationResponse format."""
+    # Create mock allocations based on the processed bill result
+    # In a real implementation, you'd query the database for the created allocations
+    allocations = []
+    
+    if processed_bill.success:
+        # Create a summary allocation result
+        allocation_result = AllocationResult(
+            facility_id="processed",
+            facility_name="Processed Allocations",
+            allocation_percentage=100.0,
+            allocated_amount=float(processed_bill.total_cost_allocated),
+            basis_value=float(processed_bill.total_usage_allocated),
+            method_used="processed"
+        )
+        allocations.append(allocation_result)
+    
+    summary = AllocationSummary(
+        total_amount=float(processed_bill.total_cost_allocated),
+        total_allocated=float(processed_bill.total_cost_allocated),
+        allocation_method="processed",
+        facility_count=processed_bill.allocations_created,
+        processing_timestamp=datetime.now()
+    )
+    
+    return AllocationResponse(
+        document_id=document_id,
+        allocations=allocations,
+        summary=summary,
+        status="success" if processed_bill.success else "error"
+    )
+
 @router.post("/process/{document_id}",
             summary="Process Single Document",
             description="Process a single document for pro-rating allocation",
@@ -208,6 +342,7 @@ def validate_document_exists(document_id: str, graph) -> Optional[Dict[str, Any]
 async def process_document(
     document_id: str,
     request: ProRatingRequest,
+    service: ProRatingService = Depends(get_prorating_service),
     graph=Depends(get_graph_connection)
 ):
     """
@@ -216,6 +351,7 @@ async def process_document(
     Args:
         document_id: UUID of the document to process
         request: Pro-rating request with method and facility information
+        service: ProRatingService instance (injected dependency)
         
     Returns:
         AllocationResponse with allocation results and summary
@@ -224,9 +360,6 @@ async def process_document(
         HTTPException: If document not found or processing fails
     """
     try:
-        # Check if service is initialized
-        service = check_service_initialized()
-        
         # Validate document exists
         doc_info = validate_document_exists(document_id, graph)
         if not doc_info:
@@ -242,23 +375,36 @@ async def process_document(
                 detail="Document ID mismatch between path and request body"
             )
         
-        # Process the allocation
-        allocation_result = await service.process_document_allocation(
+        # Create BillingPeriod from document data
+        billing_period = create_billing_period_from_document(doc_info)
+        
+        # Convert API facilities to calculator facilities
+        calculator_facilities = convert_api_facilities_to_calculator_facilities(request.facility_info)
+        
+        # Map API method to calculator method
+        calculator_method = map_api_method_to_calculator_method(request.method)
+        
+        # Process the utility bill using the correct method
+        processed_bill = service.process_utility_bill(
             document_id=document_id,
-            method=request.method,
-            facility_info=request.facility_info,
-            graph=graph
+            billing_period=billing_period,
+            facilities=calculator_facilities,
+            method=calculator_method
         )
         
-        if not allocation_result:
+        if not processed_bill or not processed_bill.success:
+            error_details = processed_bill.errors if processed_bill else ["Unknown processing error"]
             raise HTTPException(
                 status_code=HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Failed to process document allocation"
+                detail=f"Failed to process document allocation: {'; '.join(error_details)}"
             )
         
-        logger.info(f"Successfully processed allocation for document {document_id}")
+        logger.info(f"Successfully processed utility bill for document {document_id}")
         
-        return AllocationResponse(**allocation_result)
+        # Convert ProcessedBill to AllocationResponse
+        allocation_response = convert_processed_bill_to_allocation_response(processed_bill, document_id)
+        
+        return allocation_response
         
     except HTTPException:
         raise
@@ -276,6 +422,7 @@ async def process_document(
 async def batch_process_documents(
     request: BatchProcessRequest,
     background_tasks: BackgroundTasks,
+    service: ProRatingService = Depends(get_prorating_service),
     graph=Depends(get_graph_connection)
 ):
     """
@@ -284,6 +431,7 @@ async def batch_process_documents(
     Args:
         request: Batch processing request with document IDs and allocation parameters
         background_tasks: Background tasks for async processing
+        service: ProRatingService instance (injected dependency)
         
     Returns:
         List of AllocationResponse objects
@@ -292,9 +440,6 @@ async def batch_process_documents(
         HTTPException: If any documents not found or processing fails
     """
     try:
-        # Check if service is initialized
-        service = check_service_initialized()
-        
         # Validate all documents exist
         invalid_docs = []
         for doc_id in request.document_ids:
@@ -335,6 +480,7 @@ async def batch_process_documents(
            response_model=AllocationResponse)
 async def get_document_allocations(
     document_id: str,
+    service: ProRatingService = Depends(get_prorating_service),
     graph=Depends(get_graph_connection)
 ):
     """
@@ -342,6 +488,7 @@ async def get_document_allocations(
     
     Args:
         document_id: UUID of the document
+        service: ProRatingService instance (injected dependency)
         
     Returns:
         AllocationResponse with existing allocation data
@@ -350,9 +497,6 @@ async def get_document_allocations(
         HTTPException: If document not found or no allocations exist
     """
     try:
-        # Check if service is initialized
-        service = check_service_initialized()
-        
         # Validate document ID format
         try:
             uuid.UUID(document_id)
@@ -393,6 +537,7 @@ async def get_monthly_report(
     year: int,
     month: int,
     facility_id: Optional[str] = None,
+    service: ProRatingService = Depends(get_prorating_service),
     graph=Depends(get_graph_connection)
 ):
     """
@@ -402,6 +547,7 @@ async def get_monthly_report(
         year: Report year
         month: Report month (1-12)
         facility_id: Optional facility filter
+        service: ProRatingService instance (injected dependency)
         
     Returns:
         JSON response with monthly allocation summary
@@ -410,9 +556,6 @@ async def get_monthly_report(
         HTTPException: If invalid parameters or report generation fails
     """
     try:
-        # Check if service is initialized
-        service = check_service_initialized()
-        
         # Validate month
         if not 1 <= month <= 12:
             raise HTTPException(
@@ -466,6 +609,7 @@ async def get_monthly_report(
 async def trigger_backfill(
     request: BackfillRequest,
     background_tasks: BackgroundTasks,
+    service: ProRatingService = Depends(get_prorating_service),
     graph=Depends(get_graph_connection)
 ):
     """
@@ -474,6 +618,7 @@ async def trigger_backfill(
     Args:
         request: Backfill request with date range and processing parameters
         background_tasks: Background tasks for async processing
+        service: ProRatingService instance (injected dependency)
         
     Returns:
         JSON response with backfill status and job information
@@ -482,9 +627,6 @@ async def trigger_backfill(
         HTTPException: If invalid parameters or backfill initiation fails
     """
     try:
-        # Check if service is initialized
-        service = check_service_initialized()
-        
         # Validate date range
         if request.start_date > request.end_date:
             raise HTTPException(
@@ -554,6 +696,7 @@ async def get_facility_allocations(
     end_date: Optional[str] = None,
     limit: int = 100,
     offset: int = 0,
+    service: ProRatingService = Depends(get_prorating_service),
     graph=Depends(get_graph_connection)
 ):
     """
@@ -565,6 +708,7 @@ async def get_facility_allocations(
         end_date: Optional end date filter (YYYY-MM-DD)
         limit: Maximum number of results to return
         offset: Number of results to skip for pagination
+        service: ProRatingService instance (injected dependency)
         
     Returns:
         JSON response with facility allocation data
@@ -573,9 +717,6 @@ async def get_facility_allocations(
         HTTPException: If facility not found or query fails
     """
     try:
-        # Check if service is initialized
-        service = check_service_initialized()
-        
         # Validate pagination parameters
         if limit > 1000:
             raise HTTPException(
@@ -657,20 +798,27 @@ async def get_facility_allocations(
            summary="Pro-rating API Health Check",
            description="Check the health status of the pro-rating API and services",
            response_model=Dict[str, Any])
-async def prorating_health_check():
+async def prorating_health_check(service: ProRatingService = Depends(get_prorating_service)):
     """
     Health check endpoint for the pro-rating API.
+    
+    Args:
+        service: ProRatingService instance (injected dependency)
     
     Returns:
         JSON response with health status information
     """
     try:
         # Check pro-rating service health
-        service_healthy = prorating_service is not None
+        service_healthy = service is not None
         service_status = {}
         
         if service_healthy:
-            service_status = await prorating_service.get_service_health()
+            try:
+                connection_test = await service.test_connection()
+                service_status = {"healthy": connection_test, "connected": connection_test}
+            except Exception as e:
+                service_status = {"healthy": False, "error": str(e)}
         else:
             service_status = {"healthy": False, "error": "Service not initialized"}
         
@@ -693,7 +841,7 @@ async def prorating_health_check():
             "components": {
                 "prorating_service": {
                     "healthy": service_healthy,
-                    "initialized": prorating_service is not None,
+                    "initialized": service is not None,
                     **service_status
                 },
                 "database": {

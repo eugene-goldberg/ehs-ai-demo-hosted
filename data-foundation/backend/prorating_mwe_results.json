@@ -1,0 +1,73 @@
+{
+  "started_at": "2025-08-26T12:27:35.216763",
+  "neo4j_connection": true,
+  "api_connection": true,
+  "document_created": true,
+  "prorating_called": true,
+  "allocations_verified": true,
+  "cleanup_completed": true,
+  "errors": [],
+  "summary": {
+    "document_id": "0b6911b9-b776-4474-92fe-0e814503dcc2",
+    "file_name": "test_electric_bill_20250826_122735.pdf",
+    "node_labels": [
+      "Document",
+      "Electricitybill",
+      "ProcessedDocument"
+    ],
+    "api_response": {
+      "document_id": "0b6911b9-b776-4474-92fe-0e814503dcc2",
+      "allocations": [
+        {
+          "facility_id": "processed",
+          "facility_name": "Processed Allocations",
+          "allocation_percentage": 100.0,
+          "allocated_amount": 359.9993,
+          "basis_value": 2400.0018,
+          "method_used": "processed"
+        }
+      ],
+      "summary": {
+        "total_amount": 359.9993,
+        "total_allocated": 359.9993,
+        "allocation_method": "processed",
+        "facility_count": 3,
+        "processing_timestamp": "2025-08-26T12:27:36.500752"
+      },
+      "status": "success"
+    },
+    "allocations": {
+      "monthly_count": 3,
+      "prorating_count": 0,
+      "total_count": 3,
+      "total_allocated_amount": 359.9993,
+      "monthly_details": [
+        {
+          "allocation_percentage": 1.0,
+          "allocated_usage": 760.0007,
+          "allocated_cost": 113.9994,
+          "usage_year": 2025,
+          "allocation_id": "cae23eb3-64ec-487d-9ce0-7edcd21d4a4e",
+          "usage_month": 8
+        },
+        {
+          "allocation_percentage": 1.0,
+          "allocated_usage": 790.0006,
+          "allocated_cost": 118.4997,
+          "usage_year": 2025,
+          "allocation_id": "9aa5c7a9-3faa-4f40-9f8c-0bd7f756f1ca",
+          "usage_month": 8
+        },
+        {
+          "allocation_percentage": 1.0,
+          "allocated_usage": 850.0005,
+          "allocated_cost": 127.5002,
+          "usage_year": 2025,
+          "allocation_id": "e83468d4-4147-40de-bf6d-d753c9e9581d",
+          "usage_month": 8
+        }
+      ],
+      "prorating_details": []
+    }
+  }
+}

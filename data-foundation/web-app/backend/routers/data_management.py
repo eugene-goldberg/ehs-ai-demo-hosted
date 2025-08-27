@@ -334,11 +334,20 @@ async def get_document_details(document_id: str):
                 OPTIONAL MATCH (d)-[:EXTRACTED_TO]->(ub:UtilityBill)
                 OPTIONAL MATCH (d)-[:EXTRACTED_TO]->(wb:WaterBill)  
                 OPTIONAL MATCH (d)-[:TRACKS]->(wm:WasteManifest)
+                OPTIONAL MATCH (d)-[:HAS_MONTHLY_ALLOCATION]->(ma:MonthlyUsageAllocation)
+                WITH d, labels(d) as labels, ub, wb, wm, 
+                     collect(ma) as monthly_allocations
                 RETURN d, 
-                       labels(d) as labels,
+                       labels,
                        ub,
                        wb,
-                       wm
+                       wm,
+                       monthly_allocations,
+                       CASE 
+                           WHEN size(monthly_allocations) > 0 
+                           THEN monthly_allocations[0].allocated_usage
+                           ELSE null
+                       END as current_month_usage
             """, document_id=document_id)
             
             record = result.single()
@@ -353,9 +362,12 @@ async def get_document_details(document_id: str):
                 utility_bill = record['ub']
                 water_bill = record['wb']
                 waste_manifest = record['wm']
+                monthly_allocations = record['monthly_allocations']
+                current_month_usage = record['current_month_usage']
                 
                 logger.info(f"Found document with labels: {labels}")
                 logger.info(f"Related nodes - utility_bill: {utility_bill is not None}, water_bill: {water_bill is not None}, waste_manifest: {waste_manifest is not None}")
+                logger.info(f"Monthly allocations: {len(monthly_allocations) if monthly_allocations else 0}, Current month usage: {current_month_usage}")
                 
                 # Extract document type from labels
                 doc_type = 'Unknown'
@@ -370,6 +382,37 @@ async def get_document_details(document_id: str):
                 doc_properties = dict(document)
                 doc_properties['document_type'] = doc_type
                 doc_properties['labels'] = labels
+                
+                # Add prorated monthly usage from MonthlyUsageAllocation
+                if monthly_allocations and len(monthly_allocations) > 0:
+                    # Get current month's allocation
+                    from datetime import datetime
+                    current_date = datetime.now()
+                    current_year = current_date.year
+                    current_month = current_date.month
+                    
+                    logger.info(f"Processing {len(monthly_allocations)} monthly allocations")
+                    
+                    # Find allocation for current month
+                    prorated_usage = None
+                    for allocation in monthly_allocations:
+                        alloc_dict = dict(allocation)
+                        logger.info(f"Allocation: year={alloc_dict.get('usage_year')}, month={alloc_dict.get('usage_month')}, usage={alloc_dict.get('allocated_usage')}")
+                        if (alloc_dict.get('usage_year') == current_year and 
+                            alloc_dict.get('usage_month') == current_month):
+                            prorated_usage = alloc_dict.get('allocated_usage')
+                            logger.info(f"Found current month allocation: {prorated_usage}")
+                            break
+                    
+                    # If no current month allocation, use the first one
+                    if prorated_usage is None and len(monthly_allocations) > 0:
+                        prorated_usage = dict(monthly_allocations[0]).get('allocated_usage')
+                        logger.info(f"Using first allocation as fallback: {prorated_usage}")
+                    
+                    doc_properties['prorated_monthly_usage'] = prorated_usage
+                    logger.info(f"Added prorated_monthly_usage: {prorated_usage} to response")
+                else:
+                    logger.info("No monthly allocations found for this document")
                 
                 # Merge extracted data based on document type
                 if utility_bill:

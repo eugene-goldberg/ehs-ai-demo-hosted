@@ -1,0 +1,58 @@
+[
+  {
+    "endpoint": "/health",
+    "method": "GET",
+    "status": 200,
+    "expected": 200,
+    "success": true,
+    "description": "Main API Health Check"
+  },
+  {
+    "endpoint": "/api/v1/prorating/health",
+    "method": "GET",
+    "status": 200,
+    "expected": 200,
+    "success": true,
+    "description": "Prorating Health Check - Path: /api/v1/prorating/health"
+  },
+  {
+    "endpoint": "/prorating/health",
+    "method": "GET",
+    "status": "ERROR",
+    "expected": 200,
+    "success": false,
+    "description": "Prorating Health Check - Path: /prorating/health"
+  },
+  {
+    "endpoint": "/api/v1/prorating/api/v1/prorating/health",
+    "method": "GET",
+    "status": "ERROR",
+    "expected": 200,
+    "success": false,
+    "description": "Prorating Health Check - Path: /api/v1/prorating/api/v1/prorating/health"
+  },
+  {
+    "endpoint": "/api/prorating/health",
+    "method": "GET",
+    "status": "ERROR",
+    "expected": 200,
+    "success": false,
+    "description": "Prorating Health Check - Path: /api/prorating/health"
+  },
+  {
+    "endpoint": "/openapi.json",
+    "method": "GET",
+    "status": 200,
+    "expected": 200,
+    "success": true,
+    "description": "OpenAPI Schema (to check registered routes)"
+  },
+  {
+    "endpoint": "/api/v1/prorating/process/test_doc_123",
+    "method": "POST",
+    "status": "ERROR",
+    "expected": 200,
+    "success": false,
+    "description": "Process Document Prorating"
+  }
+]
