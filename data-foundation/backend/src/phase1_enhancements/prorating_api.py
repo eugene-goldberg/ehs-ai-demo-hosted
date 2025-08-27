@@ -27,8 +27,12 @@ from starlette.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND, 
 
 from .prorating_service import ProRatingService
 from .prorating_calculator import BillingPeriod, FacilityInfo as CalculatorFacilityInfo, ProRatingMethod as CalculatorProRatingMethod
-from src.graph_query import get_graphDB_driver
-from src.shared.common_fn import create_graph_database_connection
+try:
+    from graph_query import get_graphDB_driver
+    from shared.common_fn import create_graph_database_connection
+except ImportError:
+    from src.graph_query import get_graphDB_driver
+    from src.shared.common_fn import create_graph_database_connection
 
 # Initialize logging
 logger = logging.getLogger(__name__)

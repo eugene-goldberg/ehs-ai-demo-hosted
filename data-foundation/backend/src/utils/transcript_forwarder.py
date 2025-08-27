@@ -57,6 +57,8 @@ def _make_request(role: str, content: str, context: Optional[Dict] = None) -> bo
         
         # Make the POST request
         logger.info(f"Forwarding transcript entry - Role: {role}, Content length: {len(content)} chars")
+        logger.debug(f"Forwarding to URL: {WEB_APP_BACKEND_URL}")
+        logger.debug(f"Payload: {json.dumps(payload)[:200]}...")
         
         response = requests.post(
             WEB_APP_BACKEND_URL,

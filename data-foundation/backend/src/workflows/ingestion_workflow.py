@@ -488,6 +488,7 @@ class IngestionWorkflow:
         Returns:
             Updated state
         """
+        logger.info(f"=== WORKFLOW extract_data called ===")
         logger.info(f"Extracting data for document type: {state['document_type']}")
         
         try:

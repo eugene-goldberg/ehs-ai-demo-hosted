@@ -13,7 +13,7 @@ from fastapi import APIRouter, Query, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-from utils.llm_transcript_logger import get_global_logger, TranscriptLogger
+from src.utils.llm_transcript_logger import get_global_logger, TranscriptLogger
 
 # Configure logging
 logger = logging.getLogger(__name__)

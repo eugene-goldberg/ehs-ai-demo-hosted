@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "id": "09db4251-90dd-4424-8cf0-bfa4173d912c",
+    "role": "user",
+    "content": "\n    ELECTRIC BILL\n    Account Number: 12345\n    Bill Date: November 15, 2024\n    Due Date: December 5, 2024\n    \n    Service Period: October 1 - October 31, 2024\n    \n    Current Reading: 5432 kWh\n    Previous Reading: 5232 kWh\n    Usage This Period: 200 kWh\n    \n    Total Amount Due: $45.00\n    ",
+    "context": {
+      "document_type": "utility_bill",
+      "extractor_name": "UtilityBillExtractor",
+      "timestamp": "2025-08-27T15:11:32.584098",
+      "metadata": {
+        "filename": "test_bill.pdf",
+        "source": "test_script"
+      }
+    },
+    "timestamp": "2025-08-27T15:11:32.600594"
+  },
+  {
+    "id": "c64d8cd9-46cb-4478-9b44-3a68283e1613",
+    "role": "assistant",
+    "content": "{\n  \"billing_period_start\": \"2024-10-01\",\n  \"billing_period_end\": \"2024-10-31\",\n  \"statement_date\": \"2024-11-15\",\n  \"due_date\": \"2024-12-05\",\n  \"account_number\": \"12345\",\n  \"service_address\": null,\n  \"facility_name\": null,\n  \"facility_address\": null,\n  \"customer_name\": null,\n  \"customer_address\": null,\n  \"customer_attention\": null,\n  \"provider_name\": null,\n  \"provider_address\": null,\n  \"provider_phone\": null,\n  \"provider_website\": null,\n  \"provider_payment_address\": null,\n  \"total_kwh\": 200,\n  \"peak_kwh\": null,\n  \"off_peak_kwh\": null,\n  \"peak_demand_kw\": null,\n  \"gas_usage_therms\": null,\n  \"gas_usage_ccf\": null,\n  \"water_usage_gallons\": null,\n  \"water_usage_cubic_meters\": null,\n  \"total_cost\": 45.00,\n  \"energy_cost\": null,\n  \"demand_charges\": null,\n  \"base_service_charge\": null,\n  \"state_environmental_surcharge\": null,\n  \"grid_infrastructure_fee\": null,\n  \"charge_breakdown\": null,\n  \"rate_schedule\": null,\n  \"meter_readings\": [\n    {\n      \"meter_id\": null,\n      \"type\": \"electricity\",\n      \"service_type\": null,\n      \"previous_reading\": 5232,\n      \"current_reading\": 5432,\n      \"usage\": 200\n    }\n  ]\n}",
+    "context": {
+      "document_type": "utility_bill",
+      "extractor_name": "UtilityBillExtractor",
+      "timestamp": "2025-08-27T15:11:42.475667",
+      "metadata": {
+        "filename": "test_bill.pdf",
+        "source": "test_script"
+      }
+    },
+    "timestamp": "2025-08-27T15:11:42.478888"
+  }
+]

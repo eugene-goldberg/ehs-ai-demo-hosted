@@ -17,14 +17,14 @@ from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel, Field
 
 try:
-    from utils.llm_transcript_logger import log_llm_interaction
+    from src.utils.llm_transcript_logger import log_llm_interaction
 except ImportError:
     # If import fails, create a dummy function that does nothing
     def log_llm_interaction(role, content, context=None):
         pass
 
 try:
-    from utils.transcript_forwarder import forward_transcript_entry
+    from src.utils.transcript_forwarder import forward_transcript_entry
 except ImportError:
     # If import fails, create a no-op function
     def forward_transcript_entry(role, content, context=None):
@@ -281,6 +281,10 @@ class UtilityBillExtractor(BaseExtractor):
         Returns:
             Dictionary of extracted data
         """
+        logger.info("=== UtilityBillExtractor.extract() called ===")
+        logger.info(f"Content length: {len(content) if content else 0}")
+        logger.info(f"Metadata: {metadata}")
+        
         try:
             # Format prompt
             formatted_prompt = self.prompt.format_messages(
