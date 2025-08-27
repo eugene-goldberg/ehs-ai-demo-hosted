@@ -13,7 +13,8 @@ import {
   LinearProgress,
   Button,
   ButtonGroup,
-  Alert
+  Alert,
+  ListSubheader
 } from '@mui/material';
 import {
   TrendingUp,
@@ -35,6 +36,16 @@ const AnalyticsExecutive = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Location hierarchy mapping for display
+  const locationHierarchy = {
+    'global': 'Global View',
+    'northamerica': 'Global View → North America',
+    'illinois': 'Global View → North America → Illinois',
+    'algonquin': 'Global View → North America → Illinois → Algonquin Site',
+    'texas': 'Global View → North America → Texas',
+    'houston': 'Global View → North America → Texas → Houston'
+  };
 
   // Fetch dashboard data from API
   const fetchDashboardData = async () => {
@@ -257,7 +268,7 @@ const AnalyticsExecutive = () => {
                 EHS Executive Dashboard
               </Typography>
               <Chip 
-                label="Global View → North America → Illinois → Algonquin Site"
+                label={locationHierarchy[selectedLocation]}
                 variant="outlined"
                 size="small"
               />
@@ -265,7 +276,7 @@ const AnalyticsExecutive = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-              <FormControl size="small" sx={{ minWidth: 150 }}>
+              <FormControl size="small" sx={{ minWidth: 200 }}>
                 <InputLabel>Location</InputLabel>
                 <Select
                   value={selectedLocation}
@@ -273,9 +284,11 @@ const AnalyticsExecutive = () => {
                   onChange={(e) => setSelectedLocation(e.target.value)}
                 >
                   <MenuItem value="global">Global View</MenuItem>
-                  <MenuItem value="northamerica">North America</MenuItem>
-                  <MenuItem value="illinois">Illinois</MenuItem>
-                  <MenuItem value="algonquin">Algonquin Site</MenuItem>
+                  <ListSubheader>North America</ListSubheader>
+                  <ListSubheader sx={{ pl: 4 }}>Illinois</ListSubheader>
+                  <MenuItem value="algonquin" sx={{ pl: 6 }}>Algonquin Site</MenuItem>
+                  <ListSubheader sx={{ pl: 4 }}>Texas</ListSubheader>
+                  <MenuItem value="houston" sx={{ pl: 6 }}>Houston</MenuItem>
                 </Select>
               </FormControl>
               <ButtonGroup size="small">
