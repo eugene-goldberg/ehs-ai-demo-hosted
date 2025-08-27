@@ -7,8 +7,10 @@ and waste generation data from Neo4j database.
 import os
 import sys
 import logging
+import json
 from datetime import datetime, date
 from typing import Dict, List, Any, Optional
+from pathlib import Path
 import subprocess
 
 # Add the src directory to Python path to enable imports when running from backend directory
@@ -637,6 +639,67 @@ def _get_query_type_description(query_type: QueryType) -> str:
         QueryType.CUSTOM: "Custom queries provided by user"
     }
     return descriptions.get(query_type, "Custom extraction query")
+
+# Executive Dashboard endpoint
+@app.get("/api/v1/executive-dashboard")
+async def get_executive_dashboard(location: str, dateRange: str):
+    """
+    Get executive dashboard data for a specific location and date range.
+    
+    Args:
+        location: The location identifier (required)
+        dateRange: The date range identifier (required)
+    
+    Returns:
+        JSON data from the corresponding dashboard data file
+    """
+    logger.info(f"Processing executive dashboard request for location: {location}, dateRange: {dateRange}")
+    
+    try:
+        # Construct file path
+        dashboard_data_dir = Path("/Users/eugene/dev/ai/agentos/ehs-ai-demo/ehs-analytics/dashboard-data")
+        file_name = f"executive-dashboard-{location}-{dateRange}.json"
+        file_path = dashboard_data_dir / file_name
+        
+        logger.debug(f"Looking for dashboard data file at: {file_path}")
+        
+        # Check if file exists
+        if not file_path.exists():
+            logger.warning(f"Dashboard data file not found: {file_path}")
+            raise HTTPException(
+                status_code=404,
+                detail=f"Dashboard data not found for location '{location}' and date range '{dateRange}'. Expected file: {file_name}"
+            )
+        
+        # Read and parse JSON file
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                dashboard_data = json.load(f)
+            
+            logger.info(f"Successfully loaded dashboard data from {file_name}")
+            return dashboard_data
+            
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON in dashboard data file {file_path}: {str(e)}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Invalid JSON format in dashboard data file: {str(e)}"
+            )
+        except Exception as e:
+            logger.error(f"Error reading dashboard data file {file_path}: {str(e)}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Error reading dashboard data file: {str(e)}"
+            )
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Unexpected error in executive dashboard endpoint: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}"
+        )
 
 # Error handlers
 @app.exception_handler(HTTPException)
