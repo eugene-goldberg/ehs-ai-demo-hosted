@@ -10,7 +10,15 @@ from langchain_core.prompts import ChatPromptTemplate
 from src.shared.constants import GRAPH_CLEANUP_PROMPT
 from src.llm import get_llm
 from src.graphDB_dataAccess import graphDBdataAccess
-import time 
+import time
+
+# Import transcript logging utilities
+try:
+    from src.utils.transcript_forwarder import forward_transcript_entry
+except ImportError:
+    # If import fails, create a no-op function
+    def forward_transcript_entry(role, content, context=None):
+        pass 
 
 DROP_INDEX_QUERY = "DROP INDEX entities IF EXISTS;"
 LABELS_QUERY = "CALL db.labels()"
@@ -209,7 +217,39 @@ def graph_schema_consolidation(graph):
     chain = prompt | llm | parser
 
     nodes_relations_input = {'nodes': node_labels, 'relationships': relation_labels}
+    
+    # Log the schema consolidation request
+    try:
+        forward_transcript_entry(
+            role="user",
+            content=f"Graph Schema Consolidation Request:\n- Node labels: {len(node_labels)} labels\n- Relationship types: {len(relation_labels)} types\nLabels: {node_labels[:5]}... (showing first 5)",
+            context={
+                "component": "post_processing",
+                "function": "graph_schema_consolidation",
+                "node_count": len(node_labels),
+                "relation_count": len(relation_labels),
+                "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
+            }
+        )
+    except Exception as e:
+        logging.warning(f"Failed to forward schema consolidation request transcript: {e}")
+    
     mappings = chain.invoke({'input': nodes_relations_input})
+    
+    # Log the consolidation result
+    try:
+        forward_transcript_entry(
+            role="assistant",
+            content=f"Schema Consolidation Mappings:\nNodes: {mappings.get('nodes', {})}\nRelationships: {mappings.get('relationships', {})}",
+            context={
+                "component": "post_processing", 
+                "function": "graph_schema_consolidation",
+                "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
+            }
+        )
+    except Exception as e:
+        logging.warning(f"Failed to forward schema consolidation result transcript: {e}")
+    
     node_mapping = {old: new for new, old_list in mappings['nodes'].items() for old in old_list if new != old}
     relation_mapping = {old: new for new, old_list in mappings['relationships'].items() for old in old_list if new != old}
 

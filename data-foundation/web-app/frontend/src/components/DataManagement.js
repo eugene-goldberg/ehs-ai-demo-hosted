@@ -16,6 +16,7 @@ const DataManagement = () => {
   const [transcriptData, setTranscriptData] = useState([]);
   const [transcriptLoading, setTranscriptLoading] = useState(false);
   const [transcriptError, setTranscriptError] = useState(null);
+  const [hasLangSmithData, setHasLangSmithData] = useState(false);
   
   // Popup state
   const [hoveredRow, setHoveredRow] = useState(null);
@@ -29,10 +30,10 @@ const DataManagement = () => {
 
   // Fetch transcript data when AI Engine Room is expanded
   useEffect(() => {
-    if (isAiEngineRoomExpanded) {
+    if (isAiEngineRoomExpanded && !hasLangSmithData) {
       fetchTranscriptData();
     }
-  }, [isAiEngineRoomExpanded]);
+  }, [isAiEngineRoomExpanded, hasLangSmithData]);
 
   const fetchData = async () => {
     try {
@@ -66,6 +67,11 @@ const DataManagement = () => {
   };
 
   const fetchTranscriptData = async () => {
+    // Don't fetch from port 8001 if we already have LangSmith data
+    if (hasLangSmithData) {
+      return;
+    }
+
     try {
       setTranscriptLoading(true);
       setTranscriptError(null);
@@ -169,6 +175,9 @@ const DataManagement = () => {
 
   const handleBulkIngestion = async () => {
     setIsIngesting(true);
+    // Clear LangSmith flag when starting new ingestion
+    setHasLangSmithData(false);
+    
     try {
       const response = await axios.post('http://localhost:8000/api/v1/ingest/batch', {
         clear_database: true
@@ -176,6 +185,139 @@ const DataManagement = () => {
       
       if (response.data.status === 'success') {
         console.log(`Ingestion completed successfully! ${response.data.data.successful_ingestions}/3 documents processed.`);
+        
+        // Handle LangSmith traces if available
+        if (response.data.data.langsmith_traces && response.data.data.langsmith_traces.traces) {
+          const traces = response.data.data.langsmith_traces.traces;
+          console.log(`Found ${traces.length} LangSmith traces`);
+          
+          // Transform LangSmith traces into transcript format
+          const formattedTranscript = traces
+            .filter(trace => trace.run_type === 'llm' && trace.inputs && trace.outputs)
+            .map((trace, index) => {
+              // Extract user message from inputs
+              let userMessage = '';
+              let assistantMessage = '';
+              
+              try {
+                // Handle LangSmith trace input format: inputs.messages array
+                if (trace.inputs.messages && Array.isArray(trace.inputs.messages)) {
+                  // Extract the last user message from the messages array
+                  const userMessages = trace.inputs.messages.filter(msg => 
+                    msg.role === 'user' || msg.type === 'user' || 
+                    (msg.content && typeof msg.content === 'string')
+                  );
+                  
+                  if (userMessages.length > 0) {
+                    const lastUserMessage = userMessages[userMessages.length - 1];
+                    // Handle different message content structures
+                    if (typeof lastUserMessage.content === 'string') {
+                      userMessage = lastUserMessage.content;
+                    } else if (lastUserMessage.content && Array.isArray(lastUserMessage.content)) {
+                      // Handle content arrays (for multimodal messages)
+                      const textContent = lastUserMessage.content
+                        .filter(item => item.type === 'text')
+                        .map(item => item.text)
+                        .join(' ');
+                      userMessage = textContent;
+                    } else if (typeof lastUserMessage === 'string') {
+                      userMessage = lastUserMessage;
+                    }
+                  }
+                } else if (trace.inputs.input) {
+                  // Fallback to direct input field
+                  userMessage = trace.inputs.input;
+                } else if (trace.inputs.prompt) {
+                  // Another fallback for prompt field
+                  userMessage = trace.inputs.prompt;
+                }
+                
+                // Handle LangSmith trace output format: outputs.generations array
+                if (trace.outputs && trace.outputs.generations && Array.isArray(trace.outputs.generations)) {
+                  // Extract the assistant response from generations
+                  if (trace.outputs.generations.length > 0) {
+                    const generation = trace.outputs.generations[0];
+                    if (Array.isArray(generation) && generation.length > 0) {
+                      // Handle nested array structure: generations[0][0].text
+                      const firstGeneration = generation[0];
+                      if (firstGeneration && firstGeneration.text) {
+                        assistantMessage = firstGeneration.text;
+                      } else if (firstGeneration && firstGeneration.message && firstGeneration.message.content) {
+                        assistantMessage = firstGeneration.message.content;
+                      } else if (typeof firstGeneration === 'string') {
+                        assistantMessage = firstGeneration;
+                      }
+                    } else if (generation.text) {
+                      // Handle direct generation object with text
+                      assistantMessage = generation.text;
+                    } else if (generation.message && generation.message.content) {
+                      // Handle generation with message object
+                      assistantMessage = generation.message.content;
+                    } else if (typeof generation === 'string') {
+                      assistantMessage = generation;
+                    }
+                  }
+                } else if (trace.outputs && trace.outputs.output) {
+                  // Fallback to direct output field
+                  assistantMessage = trace.outputs.output;
+                } else if (trace.outputs && trace.outputs.content) {
+                  // Another fallback for content field
+                  assistantMessage = trace.outputs.content;
+                }
+                
+                // Removed debug console.log statements here
+                
+              } catch (e) {
+                console.error('Error parsing trace:', e, trace);
+              }
+              
+              // Return both user and assistant messages
+              const messages = [];
+              if (userMessage && userMessage.trim()) {
+                messages.push({
+                  id: `${trace.id}_user`,
+                  role: 'user',
+                  content: userMessage.trim(),
+                  timestamp: trace.start_time,
+                  context: {
+                    trace_id: trace.id,
+                    model: trace.extra?.invocation_params?.model || trace.extra?.metadata?.model || 'unknown',
+                    operation: trace.name || 'LLM Call'
+                  }
+                });
+              }
+              if (assistantMessage && assistantMessage.trim()) {
+                messages.push({
+                  id: `${trace.id}_assistant`,
+                  role: 'assistant',
+                  content: assistantMessage.trim(),
+                  timestamp: trace.end_time,
+                  context: {
+                    trace_id: trace.id,
+                    model: trace.extra?.invocation_params?.model || trace.extra?.metadata?.model || 'unknown',
+                    latency: trace.end_time && trace.start_time ? 
+                      ((new Date(trace.end_time) - new Date(trace.start_time)) / 1000).toFixed(2) + 's' : 
+                      'unknown'
+                  }
+                });
+              }
+              return messages;
+            })
+            .flat()
+            .filter(msg => msg.content && msg.content.trim()); // Filter out empty messages
+          
+          console.log(`Formatted ${formattedTranscript.length} transcript messages from ${traces.length} traces`);
+          
+          // Update transcript data and set LangSmith flag
+          setTranscriptData(formattedTranscript);
+          setHasLangSmithData(true);
+          
+          // Expand the AI Engine Room to show the transcript
+          if (formattedTranscript.length > 0) {
+            setIsAiEngineRoomExpanded(true);
+          }
+        }
+        
         // Refresh the data after ingestion
         fetchData();
         // Clear cached details
@@ -192,6 +334,13 @@ const DataManagement = () => {
 
   const toggleAiEngineRoom = () => {
     setIsAiEngineRoomExpanded(!isAiEngineRoomExpanded);
+  };
+
+  const handleRefreshTranscript = () => {
+    // Clear the LangSmith flag to allow fetching fresh data
+    setHasLangSmithData(false);
+    setTranscriptData([]);
+    fetchTranscriptData();
   };
 
   const getSeverityBadgeClass = (severity) => {
@@ -714,6 +863,18 @@ const DataManagement = () => {
         >
           {isAiEngineRoomExpanded ? '▼' : '▶'}
         </button>
+        {hasLangSmithData && (
+          <div style={{
+            fontSize: '12px',
+            color: '#059669',
+            backgroundColor: '#d1fae5',
+            padding: '2px 8px',
+            borderRadius: '4px',
+            fontWeight: '500'
+          }}>
+            LangSmith Data
+          </div>
+        )}
       </div>
       
       {isAiEngineRoomExpanded && (
@@ -726,7 +887,7 @@ const DataManagement = () => {
               marginBottom: '16px'
             }}>
               <button
-                onClick={fetchTranscriptData}
+                onClick={handleRefreshTranscript}
                 disabled={transcriptLoading}
                 style={{
                   backgroundColor: '#f3f4f6',
@@ -823,14 +984,30 @@ const DataManagement = () => {
                         display: 'flex',
                         alignItems: 'center',
                         marginBottom: '4px',
+                        gap: '8px',
                         fontSize: '12px',
                         color: '#6b7280'
                       }}>
-                        <span style={getMessageRoleStyle(message.role)}>
-                          {message.role || 'Unknown'}
+                        <span style={{
+                          fontWeight: 600,
+                          color: message.role?.toLowerCase() === 'user' ? '#3b82f6' : '#10b981'
+                        }}>
+                          {message.role?.toLowerCase() === 'user' ? 'User' : 'Assistant'}
                         </span>
+                        {message.context?.model && (
+                          <span style={{ opacity: 0.7 }}>
+                            • {message.context.model}
+                          </span>
+                        )}
+                        {message.context?.latency && (
+                          <span style={{ opacity: 0.7 }}>
+                            • {message.context.latency}
+                          </span>
+                        )}
                         {message.timestamp && (
-                          <span>{formatTimestamp(message.timestamp)}</span>
+                          <span style={{ opacity: 0.7 }}>
+                            • {new Date(message.timestamp).toLocaleTimeString()}
+                          </span>
                         )}
                       </div>
                       
@@ -984,6 +1161,8 @@ const DataManagement = () => {
             setProcessedDocuments([]);
             setRejectedDocuments([]);
             setDocumentDetails({});
+            setHasLangSmithData(false);
+            setTranscriptData([]);
           }}
         >
           Reset

@@ -21,6 +21,14 @@ from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 
+# Import transcript logging utilities
+try:
+    from src.utils.transcript_forwarder import forward_transcript_entry
+except ImportError:
+    # If import fails, create a no-op function
+    def forward_transcript_entry(role, content, context=None):
+        pass
+
 
 # State definitions
 class ExtractionState(TypedDict):
@@ -596,11 +604,41 @@ class DataExtractionWorkflow:
             Format your response as structured JSON.
             """
             
+            # Log LLM analysis request
+            try:
+                forward_transcript_entry(
+                    role="user",
+                    content=f"EHS Data Analysis Request:\n{prompt[:1000]}... (truncated to 1000 chars)",
+                    context={
+                        "component": "extraction_workflow",
+                        "function": "analyze_results",
+                        "query_type": state.get('query_type', 'unknown'),
+                        "result_count": len(state.get('query_results', [])),
+                        "timestamp": datetime.now().isoformat()
+                    }
+                )
+            except Exception as e:
+                logger.warning(f"Failed to forward analysis request transcript: {e}")
+            
             # Get LLM analysis
             response = self.llm.invoke([
                 SystemMessage(content="You are an EHS data analyst. Provide structured analysis of query results."),
                 HumanMessage(content=prompt)
             ])
+            
+            # Log LLM analysis response
+            try:
+                forward_transcript_entry(
+                    role="assistant",
+                    content=response.content,
+                    context={
+                        "component": "extraction_workflow",
+                        "function": "analyze_results",
+                        "timestamp": datetime.now().isoformat()
+                    }
+                )
+            except Exception as e:
+                logger.warning(f"Failed to forward analysis response transcript: {e}")
             
             # Parse response
             try:

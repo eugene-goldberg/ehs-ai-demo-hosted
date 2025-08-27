@@ -10,7 +10,7 @@ const IngestionProgress = ({ isIngesting }) => {
     'validate_data',
     'load',
     'index',
-    'complete'
+    'ai_analysis'
   ];
 
   const [currentStage, setCurrentStage] = useState(0);
@@ -52,7 +52,7 @@ const IngestionProgress = ({ isIngesting }) => {
               {completedStages.includes(stage) ? '✓' : 
                currentStage === index ? '⟳' : '○'}
             </span>
-            <span className="stage-name">{stage.replace('_', ' ')}</span>
+            <span className="stage-name">{stage.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
           </div>
         ))}
       </div>

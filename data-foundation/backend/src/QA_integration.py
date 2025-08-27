@@ -29,6 +29,14 @@ from langchain_groq import ChatGroq
 from langchain_anthropic import ChatAnthropic
 from langchain_fireworks import ChatFireworks
 from langchain_aws import ChatBedrock
+
+# Import transcript logging utilities
+try:
+    from src.utils.transcript_forwarder import forward_transcript_entry
+except ImportError:
+    # If import fails, create a no-op function
+    def forward_transcript_entry(role, content, context=None):
+        pass
 from langchain_community.chat_models import ChatOllama
 
 # Local imports
@@ -233,11 +241,41 @@ def process_documents(docs, question, messages, llm, model,chat_mode_settings):
         
         rag_chain = get_rag_chain(llm=llm)
         
+        # Log the user query to transcript
+        try:
+            forward_transcript_entry(
+                role="user",
+                content=f"Q&A Query: {question}\nContext length: {len(formatted_docs)} chars",
+                context={
+                    "component": "QA_integration",
+                    "function": "process_documents",
+                    "chat_mode": chat_mode_settings.get("mode", "unknown"),
+                    "timestamp": datetime.now().isoformat()
+                }
+            )
+        except Exception as e:
+            logging.warning(f"Failed to forward user transcript: {e}")
+        
         ai_response = rag_chain.invoke({
             "messages": messages[:-1],
             "context": formatted_docs,
             "input": question
         })
+        
+        # Log the AI response to transcript
+        try:
+            forward_transcript_entry(
+                role="assistant",
+                content=str(ai_response),
+                context={
+                    "component": "QA_integration",
+                    "function": "process_documents",
+                    "chat_mode": chat_mode_settings.get("mode", "unknown"),
+                    "timestamp": datetime.now().isoformat()
+                }
+            )
+        except Exception as e:
+            logging.warning(f"Failed to forward assistant transcript: {e}")
 
         result = {'sources': list(), 'nodedetails': dict(), 'entities': dict()}
         node_details = {"chunkdetails":list(),"entitydetails":list(),"communitydetails":list()}
@@ -274,10 +312,41 @@ def retrieve_documents(doc_retriever, messages):
     start_time = time.time()
     try:
         handler = CustomCallback()
+        
+        # Log the document retrieval request
+        try:
+            messages_str = str(messages[-1] if messages else "No messages")
+            forward_transcript_entry(
+                role="user",
+                content=f"Document Retrieval Query: {messages_str}",
+                context={
+                    "component": "QA_integration",
+                    "function": "retrieve_documents",
+                    "timestamp": datetime.now().isoformat()
+                }
+            )
+        except Exception as e:
+            logging.warning(f"Failed to forward retrieval transcript: {e}")
+        
         docs = doc_retriever.invoke({"messages": messages},{"callbacks":[handler]})
         transformed_question = handler.transformed_question
         if transformed_question:
             logging.info(f"Transformed question : {transformed_question}")
+            
+        # Log the retrieval results
+        try:
+            forward_transcript_entry(
+                role="assistant",
+                content=f"Retrieved {len(docs)} documents. Transformed question: {transformed_question}",
+                context={
+                    "component": "QA_integration",  
+                    "function": "retrieve_documents",
+                    "docs_count": len(docs),
+                    "timestamp": datetime.now().isoformat()
+                }
+            )
+        except Exception as e:
+            logging.warning(f"Failed to forward retrieval result transcript: {e}")
         doc_retrieval_time = time.time() - start_time
         logging.info(f"Documents retrieved in {doc_retrieval_time:.2f} seconds")
         
@@ -510,7 +579,36 @@ def summarize_and_log(history, stored_messages, llm):
         )
         summarization_chain = summarization_prompt | llm
 
+        # Log the summarization request
+        try:
+            forward_transcript_entry(
+                role="user",
+                content=f"Chat Summarization Request: Summarize {len(stored_messages)} messages",
+                context={
+                    "component": "QA_integration",
+                    "function": "summarize_messages",
+                    "message_count": len(stored_messages),
+                    "timestamp": datetime.now().isoformat()
+                }
+            )
+        except Exception as e:
+            logging.warning(f"Failed to forward summarization transcript: {e}")
+
         summary_message = summarization_chain.invoke({"chat_history": stored_messages})
+
+        # Log the summarization result
+        try:
+            forward_transcript_entry(
+                role="assistant",
+                content=f"Chat Summary: {summary_message.content if hasattr(summary_message, 'content') else str(summary_message)}",
+                context={
+                    "component": "QA_integration",
+                    "function": "summarize_messages",
+                    "timestamp": datetime.now().isoformat()
+                }
+            )
+        except Exception as e:
+            logging.warning(f"Failed to forward summary result transcript: {e}")
 
         with threading.Lock():
             history.clear()
@@ -551,7 +649,38 @@ def create_graph_chain(model, graph):
 
 def get_graph_response(graph_chain, question):
     try:
+        # Log the graph query
+        try:
+            forward_transcript_entry(
+                role="user",
+                content=f"Graph Query: {question}",
+                context={
+                    "component": "QA_integration",
+                    "function": "get_graph_response",
+                    "query_type": "graph_cypher",
+                    "timestamp": datetime.now().isoformat()
+                }
+            )
+        except Exception as e:
+            logging.warning(f"Failed to forward graph query transcript: {e}")
+        
         cypher_res = graph_chain.invoke({"query": question})
+        
+        # Log the graph response
+        try:
+            forward_transcript_entry(
+                role="assistant",
+                content=f"Graph Response: {cypher_res.get('result', 'No result')}",
+                context={
+                    "component": "QA_integration",
+                    "function": "get_graph_response",
+                    "query_type": "graph_cypher",
+                    "has_result": bool(cypher_res.get("result")),
+                    "timestamp": datetime.now().isoformat()
+                }
+            )
+        except Exception as e:
+            logging.warning(f"Failed to forward graph response transcript: {e}")
         
         response = cypher_res.get("result")
         cypher_query = ""

@@ -1,0 +1,111 @@
+{
+  "test_id": "langsmith_test_20250827_220813",
+  "start_time": "2025-08-27T22:08:13.260427",
+  "config": {
+    "api_base_url": "http://localhost:8000",
+    "clear_database": true,
+    "timeout_seconds": 300
+  },
+  "steps": {
+    "health_check": {
+      "completed": true,
+      "success": true,
+      "details": {
+        "status_code": 200,
+        "response_time": 0.028801,
+        "response_data": {
+          "service": "prorating_api",
+          "status": "healthy",
+          "timestamp": "2025-08-27T17:08:13.292476",
+          "version": "1.0.0",
+          "components": {
+            "prorating_service": {
+              "healthy": true,
+              "initialized": true,
+              "connected": true
+            },
+            "database": {
+              "healthy": true,
+              "error": null
+            }
+          }
+        }
+      }
+    },
+    "batch_ingestion": {
+      "completed": true,
+      "success": true,
+      "details": {
+        "status_code": 200,
+        "response_time": 140.88825702667236,
+        "request_payload": {
+          "clear_database": true
+        },
+        "response_headers": {
+          "date": "Wed, 27 Aug 2025 22:08:13 GMT",
+          "server": "uvicorn",
+          "content-length": "618",
+          "content-type": "application/json"
+        },
+        "response_data": {
+          "status": "success",
+          "message": "Batch ingestion completed. 0/3 documents processed successfully.",
+          "data": {
+            "documents_processed": [],
+            "successful_ingestions": 0,
+            "total_nodes_created": 21,
+            "total_relationships_created": 19,
+            "database_cleared": true,
+            "langsmith_traces": null
+          },
+          "metadata": {
+            "script_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/scripts/ingest_all_documents.py",
+            "return_code": 0,
+            "python_version": "3.13.5 (main, Jun 11 2025, 15:36:57) [Clang 17.0.0 (clang-1700.0.13.3)]",
+            "generated_at": "2025-08-27T22:08:13.295054",
+            "langsmith_project": null,
+            "ingestion_id": null
+          },
+          "processing_time": 140.883432,
+          "errors": []
+        }
+      }
+    },
+    "trace_analysis": {
+      "completed": true,
+      "success": false,
+      "details": {
+        "langsmith_available": false,
+        "traces_found": false,
+        "trace_count": 0,
+        "valid_traces": 0,
+        "invalid_traces": 0,
+        "trace_details": [],
+        "errors": [
+          "Error analyzing traces: 'NoneType' object is not iterable"
+        ],
+        "session_info": {}
+      }
+    },
+    "frontend_verification": {
+      "completed": true,
+      "success": false,
+      "details": {
+        "frontend_checks": {
+          "has_session_info": {},
+          "has_valid_traces": false,
+          "trace_fields_complete": true,
+          "json_serializable": true
+        },
+        "recommendations": [
+          "Enable LangSmith tracing by setting LANGSMITH_API_KEY",
+          "Ensure trace data is included in API response",
+          "Include session information in response metadata"
+        ]
+      }
+    }
+  },
+  "overall_success": false,
+  "errors": [],
+  "end_time": "2025-08-27T22:10:34.182516"
+}

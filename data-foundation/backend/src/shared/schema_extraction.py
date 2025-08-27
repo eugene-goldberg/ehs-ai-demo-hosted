@@ -4,6 +4,14 @@ from src.llm import get_llm
 from langchain_core.prompts import ChatPromptTemplate
 import logging
 
+# Import transcript logging utilities
+try:
+    from src.utils.transcript_forwarder import forward_transcript_entry
+except ImportError:
+    # If import fails, create a no-op function
+    def forward_transcript_entry(role, content, context=None):
+        pass
+
 class Schema(BaseModel):
     """Knowledge Graph Schema."""
 
@@ -54,7 +62,37 @@ def get_schema_local_storage(input_text,llm):
         include_raw=False,
     )
     
+    # Log schema extraction request  
+    try:
+        forward_transcript_entry(
+            role="user",
+            content=f"Schema Extraction (Local Storage) Request:\n{input_text[:500]}... (truncated to 500 chars)",
+            context={
+                "component": "schema_extraction",
+                "function": "get_schema_local_storage",
+                "text_length": len(input_text),
+                "timestamp": ""
+            }
+        )
+    except Exception as e:
+        logging.warning(f"Failed to forward schema request transcript: {e}")
+    
     raw_schema = runnable.invoke({"text": input_text})
+    
+    # Log schema extraction response
+    try:
+        forward_transcript_entry(
+            role="assistant",
+            content=f"Schema Extracted: {raw_schema}",
+            context={
+                "component": "schema_extraction",
+                "function": "get_schema_local_storage",
+                "timestamp": ""
+            }
+        )
+    except Exception as e:
+        logging.warning(f"Failed to forward schema response transcript: {e}")
+    
     return raw_schema
 
 
@@ -78,7 +116,40 @@ def schema_extraction_from_text(input_text:str, model:str, is_schema_description
             include_raw=False,
         )
 
+        # Log schema extraction request
+        try:
+            forward_transcript_entry(
+                role="user",
+                content=f"Schema Extraction Request:\nUsing prompt: {'WITH schema' if is_schema_description_checked else 'WITHOUT schema'}\nText: {input_text[:500]}... (truncated to 500 chars)",
+                context={
+                    "component": "schema_extraction",
+                    "function": "schema_extraction_from_text",
+                    "model": model,
+                    "with_schema": is_schema_description_checked,
+                    "text_length": len(input_text),
+                    "timestamp": ""
+                }
+            )
+        except Exception as e:
+            logging.warning(f"Failed to forward schema extraction request transcript: {e}")
+
         raw_schema = runnable.invoke({"text": input_text})
+        
+        # Log schema extraction response
+        try:
+            forward_transcript_entry(
+                role="assistant",
+                content=f"Schema Extracted: {raw_schema}",
+                context={
+                    "component": "schema_extraction",
+                    "function": "schema_extraction_from_text",
+                    "model": model,
+                    "timestamp": ""
+                }
+            )
+        except Exception as e:
+            logging.warning(f"Failed to forward schema extraction response transcript: {e}")
+        
         if raw_schema:
             return raw_schema
         else:

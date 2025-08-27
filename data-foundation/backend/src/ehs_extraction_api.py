@@ -39,6 +39,7 @@ import uvicorn
 
 from workflows.extraction_workflow import DataExtractionWorkflow, QueryType
 from api_response import create_api_response
+from langsmith_config import create_ingestion_session, is_langsmith_available
 
 # Load environment variables
 load_dotenv()
@@ -410,6 +411,13 @@ async def batch_ingest_documents(request: BatchIngestionRequest):
     """
     logger.info(f"Starting batch document ingestion (clear_database={request.clear_database})")
     
+    # Create LangSmith ingestion session if available
+    ingestion_id = f"batch_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
+    langsmith_session = None
+    if is_langsmith_available():
+        langsmith_session = create_ingestion_session(ingestion_id)
+        logger.info(f"LangSmith tracing enabled for ingestion session: {langsmith_session}")
+    
     start_time = datetime.utcnow()
     
     try:
@@ -435,6 +443,10 @@ async def batch_ingest_documents(request: BatchIngestionRequest):
         # Clear PYTHONPATH to avoid conflicts between our workflows and llama_index.workflows
         # The script will handle its own path setup
         env.pop('PYTHONPATH', None)
+        
+        # Pass ingestion ID to the script for LangSmith tracing
+        if langsmith_session:
+            env['LANGSMITH_INGESTION_ID'] = ingestion_id
         
         # Execute the script and capture output
         result = subprocess.run(
@@ -492,19 +504,83 @@ async def batch_ingest_documents(request: BatchIngestionRequest):
         
         # Check if script executed successfully
         if result.returncode == 0:
+            # Fetch LangSmith traces if available
+            langsmith_traces = None
+            if langsmith_session and is_langsmith_available():
+                try:
+                    logger.info(f"Fetching LangSmith traces for session: {langsmith_session}")
+                    
+                    # Run the trace download script
+                    traces_script_path = os.path.join(
+                        os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+                        "scripts",
+                        "download_langsmith_traces.py"
+                    )
+                    
+                    # Create traces output directory
+                    traces_output_dir = os.path.join(
+                        os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+                        "traces_output"
+                    )
+                    os.makedirs(traces_output_dir, exist_ok=True)
+                    
+                    # Execute trace download with proper environment
+                    trace_env = {**os.environ}
+                    trace_env['LANGSMITH_API_KEY'] = os.getenv('LANGCHAIN_API_KEY', '')
+                    
+                    # Run the download script - script will generate its own filename
+                    trace_result = subprocess.run(
+                        [
+                            sys.executable, 
+                            traces_script_path,
+                            "--project", "ehs-ai-demo-ingestion",
+                            "--hours", "1",  # Last 1 hour
+                            "--limit", "1000",
+                            "--output-dir", traces_output_dir
+                        ],
+                        capture_output=True,
+                        text=True,
+                        env=trace_env
+                    )
+                    
+                    if trace_result.returncode == 0:
+                        # Look for the generated trace file in the output directory
+                        trace_files = [f for f in os.listdir(traces_output_dir) if f.startswith('langsmith_traces_')]
+                        if trace_files:
+                            # Use the most recent trace file
+                            latest_trace_file = max(trace_files, key=lambda x: os.path.getctime(os.path.join(traces_output_dir, x)))
+                            trace_file_path = os.path.join(traces_output_dir, latest_trace_file)
+                            
+                            try:
+                                with open(trace_file_path, 'r') as f:
+                                    langsmith_traces = json.load(f)
+                                    logger.info(f"Successfully fetched {len(langsmith_traces.get('traces', []))} LangSmith traces from {latest_trace_file}")
+                            except Exception as e:
+                                logger.warning(f"Failed to read trace file {trace_file_path}: {str(e)}")
+                        else:
+                            logger.warning("No trace files found in output directory")
+                    else:
+                        logger.warning(f"Failed to fetch LangSmith traces: {trace_result.stderr}")
+                        
+                except Exception as e:
+                    logger.error(f"Error fetching LangSmith traces: {str(e)}")
+            
             response_data = {
                 "documents_processed": documents_results,
                 "successful_ingestions": successful_ingestions,
                 "total_nodes_created": total_nodes,
                 "total_relationships_created": total_relationships,
-                "database_cleared": request.clear_database
+                "database_cleared": request.clear_database,
+                "langsmith_traces": langsmith_traces
             }
             
             metadata = {
                 "script_path": script_path,
                 "return_code": result.returncode,
                 "python_version": sys.version,
-                "generated_at": start_time.isoformat()
+                "generated_at": start_time.isoformat(),
+                "langsmith_project": langsmith_session if langsmith_session else None,
+                "ingestion_id": ingestion_id if is_langsmith_available() else None
             }
             
             return BatchIngestionResponse(

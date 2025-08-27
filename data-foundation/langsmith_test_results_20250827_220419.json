@@ -1,0 +1,41 @@
+{
+  "test_id": "langsmith_test_20250827_220419",
+  "start_time": "2025-08-27T22:04:19.773051",
+  "config": {
+    "api_base_url": "http://localhost:8000",
+    "clear_database": true,
+    "timeout_seconds": 300
+  },
+  "steps": {
+    "health_check": {
+      "completed": true,
+      "success": false,
+      "details": {
+        "status_code": 404,
+        "response_time": 0.010883,
+        "response_data": null,
+        "error": "Health check returned 404"
+      }
+    },
+    "batch_ingestion": {
+      "completed": false,
+      "success": false,
+      "details": {}
+    },
+    "trace_analysis": {
+      "completed": false,
+      "success": false,
+      "details": {}
+    },
+    "frontend_verification": {
+      "completed": false,
+      "success": false,
+      "details": {}
+    }
+  },
+  "overall_success": false,
+  "errors": [
+    "Test execution failed: Health check failed - cannot proceed with test"
+  ],
+  "end_time": "2025-08-27T22:04:19.792214"
+}

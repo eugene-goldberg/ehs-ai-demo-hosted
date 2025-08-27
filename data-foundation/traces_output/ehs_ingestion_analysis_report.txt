@@ -1,0 +1,75 @@
+================================================================================
+LANGSMITH TRACE ANALYSIS REPORT - EHS INGESTION PROCESS
+================================================================================
+Generated: 2025-08-27 16:31:16
+Trace file: traces_output/langsmith_traces_ehs-ai-demo-ingestion_20250827_162844_limit1000_last1h.json
+
+EXECUTIVE SUMMARY
+----------------------------------------
+Total Traces Analyzed: 46
+Total LLM Calls: 6
+Unique Operation Types: 1
+Models Used: 1
+
+MODELS USED
+----------------------------------------
+unknown: 6 calls (100.0%)
+
+OPERATION TYPES
+----------------------------------------
+General LLM Call: 6 calls (100.0%)
+
+TOKEN USAGE STATISTICS
+----------------------------------------
+Total Input Tokens: 0
+Total Output Tokens: 0
+Total Tokens: 0
+Calls with Token Info: 0
+
+LATENCY ANALYSIS
+----------------------------------------
+Total Calls with Timing: 6
+Total Processing Time: 33.11 seconds
+Average Latency: 5.518 seconds
+Median Latency: 2.877 seconds
+Min Latency: 2.005 seconds
+Max Latency: 13.539 seconds
+
+AVERAGE LATENCY BY OPERATION:
+
+  General LLM Call: 5.518s (6 calls)
+
+ERROR ANALYSIS
+----------------------------------------
+Total Errors: 0
+Error Rate: 0.00%
+
+COST ANALYSIS (ESTIMATED)
+----------------------------------------
+Total Estimated Cost: $0.0000
+
+COSTS BY MODEL:
+
+  unknown:
+    Input Cost: $0.0000
+    Output Cost: $0.0000
+    Total Cost: $0.0000
+
+MOST TIME-CONSUMING OPERATIONS
+----------------------------------------
+1. General LLM Call:
+   Total Time: 33.11s
+   Average Time: 5.518s
+   Call Count: 6
+
+SAMPLE OPERATIONS
+----------------------------------------
+General LLM Call (Sample of 6 calls):
+  Name: ChatOpenAI
+  Tags: seq:step:1
+  Sample Input: {'messages': [[{'lc': 1, 'type': 'constructor', 'id': ['langchain', 'schema', 'messages', 'SystemMessage'], 'kwargs': {'content': 'You are an expert at extracting structured data from utility bills...
+  Sample Output: {'generations': [[{'text': '```json\n{\n  "billing_period_start": "2025-06-01",\n  "billing_period_end": "2025-06-30",\n  "statement_date": "2025-07-05",\n  "due_date": "2025-08-01",\n  "account_nu...
+
+================================================================================
+END OF REPORT
+================================================================================

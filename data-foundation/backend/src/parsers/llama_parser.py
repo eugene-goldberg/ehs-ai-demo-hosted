@@ -11,6 +11,14 @@ import nest_asyncio
 from llama_parse import LlamaParse
 from llama_index.core import Document
 from llama_index.core.node_parser import SimpleNodeParser
+
+# Import transcript logging utilities
+try:
+    from src.utils.transcript_forwarder import forward_transcript_entry
+except ImportError:
+    # If import fails, create a no-op function
+    def forward_transcript_entry(role, content, context=None):
+        pass
 from langchain.text_splitter import TokenTextSplitter
 
 # Apply nest_asyncio to handle async in notebooks/existing event loops
@@ -187,7 +195,44 @@ class EHSDocumentParser:
             )
             
             logger.info(f"Parsing document: {file_path}")
+            
+            # Log LlamaParse request
+            try:
+                forward_transcript_entry(
+                    role="user",
+                    content=f"LlamaParse Document Request:\nFile: {file_path}\nDocument Type: {document_type}\nParsing Instructions: {parsing_instruction[:500]}... (truncated)",
+                    context={
+                        "component": "llama_parser",
+                        "function": "parse_document",
+                        "document_type": document_type,
+                        "file_path": str(file_path),
+                        "timestamp": ""
+                    }
+                )
+            except Exception as e:
+                logger.warning(f"Failed to forward LlamaParse request transcript: {e}")
+            
             documents = parser.load_data(file_path)
+            
+            # Log LlamaParse response
+            try:
+                doc_summary = f"Parsed {len(documents)} pages from {document_type} document"
+                if documents:
+                    doc_summary += f"\nFirst page preview: {documents[0].text[:200]}..."
+                    
+                forward_transcript_entry(
+                    role="assistant",
+                    content=doc_summary,
+                    context={
+                        "component": "llama_parser",
+                        "function": "parse_document",
+                        "document_type": document_type,
+                        "page_count": len(documents),
+                        "timestamp": ""
+                    }
+                )
+            except Exception as e:
+                logger.warning(f"Failed to forward LlamaParse response transcript: {e}")
             
             # Add metadata
             for doc in documents:

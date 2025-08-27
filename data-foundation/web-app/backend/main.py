@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import data_management, analytics
+from src.api.langsmith_traces_api import router as langsmith_router
 import uvicorn
 
 app = FastAPI(title="EHS Compliance Platform API")
@@ -17,6 +18,7 @@ app.add_middleware(
 # Include routers
 app.include_router(data_management.router, prefix="/api/data", tags=["data"])
 app.include_router(analytics.router, prefix="/api/analytics", tags=["analytics"])
+app.include_router(langsmith_router, tags=["langsmith"])
 
 @app.get("/")
 def read_root():

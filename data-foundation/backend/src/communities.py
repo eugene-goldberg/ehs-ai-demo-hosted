@@ -7,6 +7,14 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import os
 from src.shared.common_fn import load_embedding_model
 
+# Import transcript logging utilities
+try:
+    from src.utils.transcript_forwarder import forward_transcript_entry
+except ImportError:
+    # If import fails, create a no-op function
+    def forward_transcript_entry(role, content, context=None):
+        pass
+
 
 COMMUNITY_PROJECTION_NAME = "communities"
 NODE_PROJECTION = "!Chunk&!Document&!__Community__"
@@ -296,7 +304,43 @@ def process_community_info(community, chain, is_parent=False):
             combined_text = " ".join(f"Summary {i+1}: {summary}" for i, summary in enumerate(community.get("texts", [])))
         else:
             combined_text = prepare_string(community)
+        
+        # Log the community summarization request
+        try:
+            community_id = community.get('communityId', 'unknown')
+            forward_transcript_entry(
+                role="user",
+                content=f"Community Summarization Request for Community {community_id}:\n{combined_text[:500]}... (truncated to 500 chars)",
+                context={
+                    "component": "communities",
+                    "function": "process_community_info",
+                    "community_id": community_id,
+                    "is_parent": is_parent,
+                    "text_length": len(combined_text),
+                    "timestamp": os.environ.get('TIMESTAMP', '')
+                }
+            )
+        except Exception as e:
+            logging.warning(f"Failed to forward community request transcript: {e}")
+        
         summary_response = chain.invoke({'community_info': combined_text})
+        
+        # Log the summarization response
+        try:
+            forward_transcript_entry(
+                role="assistant",
+                content=f"Community Summary Response:\n{summary_response}",
+                context={
+                    "component": "communities",
+                    "function": "process_community_info",
+                    "community_id": community.get('communityId', 'unknown'),
+                    "is_parent": is_parent,
+                    "timestamp": os.environ.get('TIMESTAMP', '')
+                }
+            )
+        except Exception as e:
+            logging.warning(f"Failed to forward community response transcript: {e}")
+        
         lines = summary_response.splitlines()
         title = "Untitled Community"
         summary = ""

@@ -27,6 +27,14 @@ from ..shared.common_fn import create_graph_database_connection
 
 logger = logging.getLogger(__name__)
 
+# Import transcript logging utilities
+try:
+    from src.utils.transcript_forwarder import forward_transcript_entry
+except ImportError:
+    # If import fails, create a no-op function
+    def forward_transcript_entry(role, content, context=None):
+        pass
+
 
 # Enhanced State definitions with Phase 1 fields
 class ExtractionState(TypedDict):
@@ -963,11 +971,42 @@ class DataExtractionWorkflowEnhanced:
             Format your response as structured JSON with enhanced Phase 1 insights.
             """
             
+            # Log enhanced LLM analysis request
+            try:
+                forward_transcript_entry(
+                    role="user",
+                    content=f"Enhanced EHS Data Analysis Request (with Phase 1 features):\n{prompt[:1000]}... (truncated to 1000 chars)",
+                    context={
+                        "component": "extraction_workflow_enhanced",
+                        "function": "analyze_results",
+                        "query_type": state.get('query_type', 'unknown'),
+                        "result_count": len(state.get('query_results', [])),
+                        "has_prorating": bool(state.get('prorating_allocations')),
+                        "timestamp": datetime.now().isoformat()
+                    }
+                )
+            except Exception as e:
+                logger.warning(f"Failed to forward enhanced analysis request transcript: {e}")
+            
             # Get LLM analysis
             response = self.llm.invoke([
                 SystemMessage(content="You are an enhanced EHS data analyst with Phase 1 capabilities. Provide structured analysis of query results including pro-rating and audit insights."),
                 HumanMessage(content=prompt)
             ])
+            
+            # Log enhanced LLM analysis response
+            try:
+                forward_transcript_entry(
+                    role="assistant",
+                    content=response.content,
+                    context={
+                        "component": "extraction_workflow_enhanced",
+                        "function": "analyze_results",
+                        "timestamp": datetime.now().isoformat()
+                    }
+                )
+            except Exception as e:
+                logger.warning(f"Failed to forward enhanced analysis response transcript: {e}")
             
             # Parse response
             try:
