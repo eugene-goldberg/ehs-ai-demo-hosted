@@ -3,6 +3,8 @@ import './App.css';
 import Sidebar from './components/Sidebar';
 import DataManagement from './components/DataManagement';
 import Analytics from './components/Analytics';
+import AnalyticsHierarchical from './components/AnalyticsHierarchical';
+import AnalyticsExecutive from './components/AnalyticsExecutive';
 
 function App() {
   const [activeView, setActiveView] = useState('data-management');
@@ -13,6 +15,10 @@ function App() {
         return <DataManagement />;
       case 'analytics':
         return <Analytics />;
+      case 'analytics-hierarchical':
+        return <AnalyticsHierarchical />;
+      case 'analytics-executive':
+        return <AnalyticsExecutive />;
       default:
         return <DataManagement />;
     }
