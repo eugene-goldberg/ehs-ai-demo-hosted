@@ -10,6 +10,7 @@ const DataManagement = () => {
   const [error, setError] = useState(null);
   const [isIngesting, setIsIngesting] = useState(false);
   const [downloadingFiles, setDownloadingFiles] = useState(new Set());
+  const [isAiEngineRoomExpanded, setIsAiEngineRoomExpanded] = useState(false);
   
   // Popup state
   const [hoveredRow, setHoveredRow] = useState(null);
@@ -160,6 +161,10 @@ const DataManagement = () => {
     } finally {
       setIsIngesting(false);
     }
+  };
+
+  const toggleAiEngineRoom = () => {
+    setIsAiEngineRoomExpanded(!isAiEngineRoomExpanded);
   };
 
   const getSeverityBadgeClass = (severity) => {
@@ -576,8 +581,58 @@ const DataManagement = () => {
         </div>
       </div>
 
+      {/* AI Engine Room Section */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '30px' }}>
+        <h2 className="table-title">AI Engine Room</h2>
+        <button
+          onClick={toggleAiEngineRoom}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '18px',
+            padding: '4px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '4px',
+            transition: 'background-color 0.2s ease',
+            color: '#6b7280'
+          }}
+          title={isAiEngineRoomExpanded ? 'Collapse AI Engine Room' : 'Expand AI Engine Room'}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = '#f3f4f6';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = 'transparent';
+          }}
+        >
+          {isAiEngineRoomExpanded ? '▼' : '▶'}
+        </button>
+      </div>
+      
+      {isAiEngineRoomExpanded && (
+        <div className="card" style={{ marginTop: '10px' }}>
+          <div style={{ padding: '20px' }}>
+            <iframe
+              src="https://n8n.srv928466.hstgr.cloud/workflow/new?projectId=7N9UCF4rUj7Wr0JZ"
+              style={{
+                width: '100%',
+                height: '600px',
+                border: 'none',
+                borderRadius: '8px',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+              }}
+              title="AI Engine Room - n8n Workflow"
+              loading="lazy"
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-presentation"
+            />
+          </div>
+        </div>
+      )}
+
       {/* Processed Documents Section */}
-      <h2 className="table-title">Processed Documents ({processedDocuments.length})</h2>
+      <h2 className="table-title" style={{ marginTop: '40px' }}>Processed Documents ({processedDocuments.length})</h2>
       <div className="card">
         <table className="data-table">
           <thead>

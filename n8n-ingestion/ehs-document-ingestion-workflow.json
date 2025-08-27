@@ -1,0 +1,705 @@
+{
+  "name": "EHS Document Ingestion Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:8000/api/audit/store-source",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file_path",
+              "value": "={{ $json.file_path }}"
+            },
+            {
+              "name": "file_name",
+              "value": "={{ $json.file_name }}"
+            },
+            {
+              "name": "file_size",
+              "value": "={{ $json.file_size }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "source",
+              "value": "n8n-workflow"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "store-source-file",
+      "name": "Store Source File",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate Document - Check file exists and detect document type\nconst fs = require('fs');\nconst path = require('path');\n\nconst filePath = $input.first().json.file_path;\nconst fileName = $input.first().json.file_name;\n\n// Check if file exists\nif (!fs.existsSync(filePath)) {\n  throw new Error(`File not found: ${filePath}`);\n}\n\n// Get file stats\nconst stats = fs.statSync(filePath);\nconst fileSize = stats.size;\n\n// Detect document type based on file extension and content\nconst fileExtension = path.extname(fileName).toLowerCase();\nlet documentType = 'unknown';\nlet category = 'general';\n\nswitch (fileExtension) {\n  case '.pdf':\n    documentType = 'pdf';\n    // Determine category based on filename patterns\n    if (fileName.toLowerCase().includes('utility') || fileName.toLowerCase().includes('bill')) {\n      category = 'utility_bill';\n    } else if (fileName.toLowerCase().includes('compliance') || fileName.toLowerCase().includes('report')) {\n      category = 'compliance_report';\n    } else if (fileName.toLowerCase().includes('permit') || fileName.toLowerCase().includes('license')) {\n      category = 'permit_license';\n    }\n    break;\n  case '.doc':\n  case '.docx':\n    documentType = 'word';\n    category = 'report';\n    break;\n  case '.xls':\n  case '.xlsx':\n    documentType = 'excel';\n    category = 'data_sheet';\n    break;\n  case '.txt':\n    documentType = 'text';\n    break;\n  case '.jpg':\n  case '.jpeg':\n  case '.png':\n  case '.tiff':\n    documentType = 'image';\n    break;\n  default:\n    throw new Error(`Unsupported file type: ${fileExtension}`);\n}\n\n// Return validation results\nreturn {\n  file_path: filePath,\n  file_name: fileName,\n  file_size: fileSize,\n  file_extension: fileExtension,\n  document_type: documentType,\n  category: category,\n  validation_status: 'valid',\n  timestamp: new Date().toISOString()\n};"
+      },
+      "id": "validate-document",
+      "name": "Validate Document",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:8000/api/quality/validate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file_path",
+              "value": "={{ $json.file_path }}"
+            },
+            {
+              "name": "file_name",
+              "value": "={{ $json.file_name }}"
+            },
+            {
+              "name": "document_type",
+              "value": "={{ $json.document_type }}"
+            },
+            {
+              "name": "category",
+              "value": "={{ $json.category }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "quality-validation",
+      "name": "Quality Validation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.cloud.llamaindex.ai/api/parsing/upload",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.LLAMA_CLOUD_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "multipart/form-data"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "value": "={{ $json.file_path }}"
+            },
+            {
+              "name": "parsing_instruction",
+              "value": "Extract all text content, maintain structure, and identify key data elements for EHS document processing"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "parse-document",
+      "name": "Parse Document",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1120,
+        300
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:8000/api/duplicates/check",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file_name",
+              "value": "={{ $json.file_name }}"
+            },
+            {
+              "name": "file_hash",
+              "value": "={{ $json.file_hash || '' }}"
+            },
+            {
+              "name": "content_hash",
+              "value": "={{ $json.content_hash || '' }}"
+            },
+            {
+              "name": "parsed_content",
+              "value": "={{ $json.parsed_content || '' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "duplicate-check",
+      "name": "Duplicate Check",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an expert EHS (Environmental, Health & Safety) data extraction system. Extract structured data from the provided document content based on the document category. Return data in JSON format with appropriate fields for the document type.\n\nFor utility bills, extract: supplier, account_number, billing_period, usage_amount, usage_unit, cost, due_date, service_address\nFor compliance reports, extract: report_type, reporting_period, compliance_status, violations, corrective_actions, inspector, facility\nFor permits/licenses, extract: permit_type, permit_number, issued_date, expiry_date, issuing_authority, facility, conditions\n\nAlways include: document_date, document_title, key_personnel, facility_location"
+            },
+            {
+              "role": "user",
+              "content": "Document Category: {{ $json.category }}\nDocument Type: {{ $json.document_type }}\nFile Name: {{ $json.file_name }}\n\nParsed Content:\n{{ $json.parsed_content || $json.text_content }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.1,
+          "maxTokens": 2000
+        }
+      },
+      "id": "extract-data",
+      "name": "Extract Data",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Transform Data - Transform to Neo4j schema\nconst extractedData = JSON.parse($input.first().json.message.content);\nconst originalData = $input.first().json;\n\n// Create Neo4j compatible node and relationship structures\nconst timestamp = new Date().toISOString();\nconst documentId = `doc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;\n\n// Base document node\nconst documentNode = {\n  labels: ['Document', 'EHSDocument'],\n  properties: {\n    id: documentId,\n    file_name: originalData.file_name,\n    document_type: originalData.document_type,\n    category: originalData.category,\n    file_path: originalData.file_path,\n    file_size: originalData.file_size,\n    created_at: timestamp,\n    status: 'processed',\n    ...extractedData\n  }\n};\n\n// Category-specific nodes and relationships\nlet additionalNodes = [];\nlet relationships = [];\n\nswitch (originalData.category) {\n  case 'utility_bill':\n    // Create supplier node\n    if (extractedData.supplier) {\n      const supplierId = `supplier_${extractedData.supplier.replace(/\\s+/g, '_').toLowerCase()}`;\n      additionalNodes.push({\n        labels: ['Supplier', 'UtilityProvider'],\n        properties: {\n          id: supplierId,\n          name: extractedData.supplier,\n          type: 'utility'\n        }\n      });\n      relationships.push({\n        from: documentId,\n        to: supplierId,\n        type: 'SUPPLIED_BY',\n        properties: {\n          account_number: extractedData.account_number,\n          billing_period: extractedData.billing_period\n        }\n      });\n    }\n    \n    // Create facility node if service address exists\n    if (extractedData.service_address || extractedData.facility_location) {\n      const facilityId = `facility_${(extractedData.service_address || extractedData.facility_location).replace(/\\s+/g, '_').toLowerCase()}`;\n      additionalNodes.push({\n        labels: ['Facility', 'Location'],\n        properties: {\n          id: facilityId,\n          address: extractedData.service_address || extractedData.facility_location,\n          type: 'service_location'\n        }\n      });\n      relationships.push({\n        from: documentId,\n        to: facilityId,\n        type: 'SERVICES_LOCATION',\n        properties: {}\n      });\n    }\n    break;\n    \n  case 'compliance_report':\n    // Create inspector node\n    if (extractedData.inspector) {\n      const inspectorId = `inspector_${extractedData.inspector.replace(/\\s+/g, '_').toLowerCase()}`;\n      additionalNodes.push({\n        labels: ['Person', 'Inspector'],\n        properties: {\n          id: inspectorId,\n          name: extractedData.inspector,\n          role: 'compliance_inspector'\n        }\n      });\n      relationships.push({\n        from: documentId,\n        to: inspectorId,\n        type: 'INSPECTED_BY',\n        properties: {\n          inspection_date: extractedData.document_date\n        }\n      });\n    }\n    \n    // Create facility node\n    if (extractedData.facility || extractedData.facility_location) {\n      const facilityId = `facility_${(extractedData.facility || extractedData.facility_location).replace(/\\s+/g, '_').toLowerCase()}`;\n      additionalNodes.push({\n        labels: ['Facility', 'Location'],\n        properties: {\n          id: facilityId,\n          name: extractedData.facility || extractedData.facility_location,\n          type: 'compliance_facility'\n        }\n      });\n      relationships.push({\n        from: documentId,\n        to: facilityId,\n        type: 'RELATES_TO_FACILITY',\n        properties: {}\n      });\n    }\n    break;\n    \n  case 'permit_license':\n    // Create issuing authority node\n    if (extractedData.issuing_authority) {\n      const authorityId = `authority_${extractedData.issuing_authority.replace(/\\s+/g, '_').toLowerCase()}`;\n      additionalNodes.push({\n        labels: ['Authority', 'RegulatoryBody'],\n        properties: {\n          id: authorityId,\n          name: extractedData.issuing_authority,\n          type: 'regulatory_authority'\n        }\n      });\n      relationships.push({\n        from: documentId,\n        to: authorityId,\n        type: 'ISSUED_BY',\n        properties: {\n          permit_number: extractedData.permit_number,\n          issued_date: extractedData.issued_date,\n          expiry_date: extractedData.expiry_date\n        }\n      });\n    }\n    break;\n}\n\n// Create person nodes for key personnel\nif (extractedData.key_personnel && Array.isArray(extractedData.key_personnel)) {\n  extractedData.key_personnel.forEach(person => {\n    const personId = `person_${person.replace(/\\s+/g, '_').toLowerCase()}`;\n    additionalNodes.push({\n      labels: ['Person', 'KeyPersonnel'],\n      properties: {\n        id: personId,\n        name: person,\n        role: 'key_personnel'\n      }\n    });\n    relationships.push({\n      from: documentId,\n      to: personId,\n      type: 'INVOLVES_PERSON',\n      properties: {}\n    });\n  });\n}\n\nreturn {\n  document_node: documentNode,\n  additional_nodes: additionalNodes,\n  relationships: relationships,\n  extracted_data: extractedData,\n  transformation_timestamp: timestamp\n};"
+      },
+      "id": "transform-data",
+      "name": "Transform Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Data Validation - Validate extracted data\nconst data = $input.first().json;\nconst extractedData = data.extracted_data;\nconst documentNode = data.document_node;\n\nconst validationErrors = [];\nconst validationWarnings = [];\n\n// Required fields validation\nconst requiredFields = ['document_date', 'document_title'];\nrequiredFields.forEach(field => {\n  if (!extractedData[field] || extractedData[field].trim() === '') {\n    validationErrors.push(`Missing required field: ${field}`);\n  }\n});\n\n// Category-specific validation\nswitch (documentNode.properties.category) {\n  case 'utility_bill':\n    const utilityRequiredFields = ['supplier', 'usage_amount', 'cost'];\n    utilityRequiredFields.forEach(field => {\n      if (!extractedData[field]) {\n        validationErrors.push(`Missing utility bill field: ${field}`);\n      }\n    });\n    \n    // Validate numeric fields\n    if (extractedData.usage_amount && isNaN(parseFloat(extractedData.usage_amount))) {\n      validationErrors.push('usage_amount must be numeric');\n    }\n    if (extractedData.cost && isNaN(parseFloat(extractedData.cost))) {\n      validationErrors.push('cost must be numeric');\n    }\n    break;\n    \n  case 'compliance_report':\n    const complianceRequiredFields = ['report_type', 'compliance_status'];\n    complianceRequiredFields.forEach(field => {\n      if (!extractedData[field]) {\n        validationErrors.push(`Missing compliance report field: ${field}`);\n      }\n    });\n    break;\n    \n  case 'permit_license':\n    const permitRequiredFields = ['permit_type', 'permit_number', 'issued_date'];\n    permitRequiredFields.forEach(field => {\n      if (!extractedData[field]) {\n        validationErrors.push(`Missing permit/license field: ${field}`);\n      }\n    });\n    \n    // Date validation\n    if (extractedData.expiry_date && extractedData.issued_date) {\n      const issuedDate = new Date(extractedData.issued_date);\n      const expiryDate = new Date(extractedData.expiry_date);\n      if (expiryDate <= issuedDate) {\n        validationErrors.push('Expiry date must be after issued date');\n      }\n    }\n    break;\n}\n\n// Date format validation\nconst dateFields = ['document_date', 'issued_date', 'expiry_date', 'due_date'];\ndateFields.forEach(field => {\n  if (extractedData[field]) {\n    const date = new Date(extractedData[field]);\n    if (isNaN(date.getTime())) {\n      validationErrors.push(`Invalid date format for ${field}: ${extractedData[field]}`);\n    }\n  }\n});\n\n// Data quality checks\nif (extractedData.document_title && extractedData.document_title.length < 3) {\n  validationWarnings.push('Document title is very short');\n}\n\nif (extractedData.facility_location && extractedData.facility_location.length < 10) {\n  validationWarnings.push('Facility location may be incomplete');\n}\n\n// Determine validation status\nconst validationStatus = validationErrors.length === 0 ? 'valid' : 'invalid';\nconst hasWarnings = validationWarnings.length > 0;\n\nif (validationStatus === 'invalid') {\n  throw new Error(`Data validation failed: ${validationErrors.join(', ')}`);\n}\n\nreturn {\n  ...data,\n  validation_status: validationStatus,\n  validation_errors: validationErrors,\n  validation_warnings: validationWarnings,\n  has_warnings: hasWarnings,\n  validation_timestamp: new Date().toISOString()\n};"
+      },
+      "id": "data-validation",
+      "name": "Data Validation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:8000/api/prorating/process",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "document_id",
+              "value": "={{ $json.document_node.properties.id }}"
+            },
+            {
+              "name": "category",
+              "value": "={{ $json.document_node.properties.category }}"
+            },
+            {
+              "name": "extracted_data",
+              "value": "={{ JSON.stringify($json.extracted_data) }}"
+            },
+            {
+              "name": "billing_period",
+              "value": "={{ $json.extracted_data.billing_period || '' }}"
+            },
+            {
+              "name": "usage_amount",
+              "value": "={{ $json.extracted_data.usage_amount || 0 }}"
+            },
+            {
+              "name": "cost",
+              "value": "={{ $json.extracted_data.cost || 0 }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "process-prorating",
+      "name": "Process Prorating",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2220,
+        300
+      ],
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "database": "neo4j",
+        "query": "// Create main document node\nCREATE (doc:{{ $json.document_node.labels.join(':') }} $documentProps)\n\n// Create additional nodes\n{% for node in $json.additional_nodes %}\nCREATE ({{ 'node' + loop.index }}:{{ node.labels.join(':') }} ${{ 'additionalNodeProps' + loop.index }})\n{% endfor %}\n\n// Create relationships\n{% for rel in $json.relationships %}\nMATCH (from { id: ${{ 'relFrom' + loop.index }} }), (to { id: ${{ 'relTo' + loop.index }} })\nCREATE (from)-[:{{ rel.type }}]->(to)\n{% endfor %}\n\nRETURN doc.id as document_id",
+        "parameters": {
+          "documentProps": "={{ $json.document_node.properties }}",
+          "additionalNodeProps1": "={{ $json.additional_nodes[0]?.properties || {} }}",
+          "additionalNodeProps2": "={{ $json.additional_nodes[1]?.properties || {} }}",
+          "additionalNodeProps3": "={{ $json.additional_nodes[2]?.properties || {} }}",
+          "relFrom1": "={{ $json.relationships[0]?.from || '' }}",
+          "relTo1": "={{ $json.relationships[0]?.to || '' }}",
+          "relFrom2": "={{ $json.relationships[1]?.from || '' }}",
+          "relTo2": "={{ $json.relationships[1]?.to || '' }}",
+          "relFrom3": "={{ $json.relationships[2]?.from || '' }}",
+          "relTo3": "={{ $json.relationships[2]?.to || '' }}"
+        }
+      },
+      "id": "load-to-neo4j",
+      "name": "Load to Neo4j",
+      "type": "n8n-nodes-base.neo4j",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        300
+      ],
+      "credentials": {
+        "neo4j": {
+          "id": "neo4j-credentials",
+          "name": "Neo4j EHS Database"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:8000/api/search/index",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "document_id",
+              "value": "={{ $json.document_node.properties.id }}"
+            },
+            {
+              "name": "file_name",
+              "value": "={{ $json.document_node.properties.file_name }}"
+            },
+            {
+              "name": "document_type",
+              "value": "={{ $json.document_node.properties.document_type }}"
+            },
+            {
+              "name": "category",
+              "value": "={{ $json.document_node.properties.category }}"
+            },
+            {
+              "name": "content",
+              "value": "={{ $json.extracted_data.parsed_content || $json.extracted_data.text_content || '' }}"
+            },
+            {
+              "name": "extracted_data",
+              "value": "={{ JSON.stringify($json.extracted_data) }}"
+            },
+            {
+              "name": "metadata",
+              "value": "={{ JSON.stringify({ file_size: $json.document_node.properties.file_size, created_at: $json.document_node.properties.created_at }) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "index-document",
+      "name": "Index Document",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Complete Processing - Mark as complete\nconst data = $input.first().json;\n\nconst completionResult = {\n  status: 'completed',\n  document_id: data.document_node?.properties?.id || data.document_id,\n  file_name: data.document_node?.properties?.file_name || data.file_name,\n  category: data.document_node?.properties?.category || data.category,\n  processing_time: Date.now() - new Date(data.document_node?.properties?.created_at || Date.now()).getTime(),\n  completed_at: new Date().toISOString(),\n  validation_status: data.validation_status,\n  has_warnings: data.has_warnings || false,\n  neo4j_created: true,\n  indexed: true,\n  prorated: data.document_node?.properties?.category === 'utility_bill',\n  summary: {\n    nodes_created: 1 + (data.additional_nodes?.length || 0),\n    relationships_created: data.relationships?.length || 0,\n    extraction_fields: Object.keys(data.extracted_data || {}).length,\n    validation_warnings: data.validation_warnings?.length || 0\n  }\n};\n\n// Log completion\nconsole.log(`Document processing completed: ${completionResult.document_id}`);\n\nreturn completionResult;"
+      },
+      "id": "complete-processing",
+      "name": "Complete Processing",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2880,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "error-trigger",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        680,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Error Handler - Handle errors and retries\nconst error = $input.first().json.error;\nconst executionData = $input.first().json.execution;\n\nconst errorInfo = {\n  error_type: error.name || 'UnknownError',\n  error_message: error.message || 'Unknown error occurred',\n  error_stack: error.stack || '',\n  failed_node: executionData.lastNodeExecuted || 'unknown',\n  execution_id: executionData.id,\n  timestamp: new Date().toISOString(),\n  retry_count: executionData.retryCount || 0,\n  max_retries: 3\n};\n\n// Determine if error is retryable\nconst retryableErrors = [\n  'ECONNRESET',\n  'ETIMEDOUT',\n  'ENOTFOUND',\n  'Rate limit',\n  'Service unavailable',\n  '503',\n  '502',\n  '429'\n];\n\nconst isRetryable = retryableErrors.some(retryableError => \n  errorInfo.error_message.includes(retryableError) || \n  errorInfo.error_type.includes(retryableError)\n);\n\nconst shouldRetry = isRetryable && errorInfo.retry_count < errorInfo.max_retries;\n\n// Log error\nconsole.error(`Workflow error in ${errorInfo.failed_node}: ${errorInfo.error_message}`);\n\nif (shouldRetry) {\n  console.log(`Retrying execution (attempt ${errorInfo.retry_count + 1}/${errorInfo.max_retries})`);\n  \n  // Return data to trigger retry\n  return {\n    ...errorInfo,\n    action: 'retry',\n    retry_delay: Math.min(1000 * Math.pow(2, errorInfo.retry_count), 30000) // Exponential backoff\n  };\n} else {\n  // Send to rejection handler\n  return {\n    ...errorInfo,\n    action: 'reject',\n    rejection_reason: 'processing_error',\n    final_error: true\n  };\n}"
+      },
+      "id": "error-handler",
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Rejection Handler - Handle rejected documents\nconst data = $input.first().json;\n\n// Determine rejection source and reason\nlet rejectionReason = 'unknown';\nlet rejectionSource = 'system';\nlet rejectionDetails = {};\n\nif (data.action === 'reject') {\n  // From error handler\n  rejectionReason = data.rejection_reason || 'processing_error';\n  rejectionSource = 'error_handler';\n  rejectionDetails = {\n    error_type: data.error_type,\n    error_message: data.error_message,\n    failed_node: data.failed_node,\n    retry_count: data.retry_count\n  };\n} else if (data.quality_status === 'rejected') {\n  // From quality validation\n  rejectionReason = 'quality_check_failed';\n  rejectionSource = 'quality_validator';\n  rejectionDetails = {\n    quality_issues: data.quality_issues || [],\n    quality_score: data.quality_score\n  };\n} else if (data.is_duplicate === true) {\n  // From duplicate check\n  rejectionReason = 'duplicate_document';\n  rejectionSource = 'duplicate_checker';\n  rejectionDetails = {\n    duplicate_id: data.duplicate_id,\n    similarity_score: data.similarity_score\n  };\n} else if (data.validation_status === 'invalid') {\n  // From data validation\n  rejectionReason = 'data_validation_failed';\n  rejectionSource = 'data_validator';\n  rejectionDetails = {\n    validation_errors: data.validation_errors || [],\n    validation_warnings: data.validation_warnings || []\n  };\n}\n\nconst rejectionRecord = {\n  document_id: data.document_id || data.document_node?.properties?.id || `rejected_${Date.now()}`,\n  file_name: data.file_name || data.document_node?.properties?.file_name || 'unknown',\n  file_path: data.file_path || data.document_node?.properties?.file_path,\n  rejection_reason: rejectionReason,\n  rejection_source: rejectionSource,\n  rejection_details: rejectionDetails,\n  rejected_at: new Date().toISOString(),\n  status: 'rejected',\n  requires_manual_review: [\n    'data_validation_failed',\n    'quality_check_failed'\n  ].includes(rejectionReason),\n  can_retry: rejectionReason === 'processing_error'\n};\n\n// Log rejection\nconsole.log(`Document rejected: ${rejectionRecord.document_id} - Reason: ${rejectionReason}`);\n\n// Send notification if manual review required\nif (rejectionRecord.requires_manual_review) {\n  console.log(`Manual review required for: ${rejectionRecord.document_id}`);\n}\n\nreturn rejectionRecord;"
+      },
+      "id": "rejection-handler",
+      "name": "Rejection Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        500
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Store Source File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Source File": {
+      "main": [
+        [
+          {
+            "node": "Validate Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Document": {
+      "main": [
+        [
+          {
+            "node": "Quality Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quality Validation": {
+      "main": [
+        [
+          {
+            "node": "Parse Document",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "string": [
+                {
+                  "value1": "={{ $json.quality_status }}",
+                  "operation": "equal",
+                  "value2": "approved"
+                }
+              ]
+            }
+          },
+          {
+            "node": "Rejection Handler",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "string": [
+                {
+                  "value1": "={{ $json.quality_status }}",
+                  "operation": "equal",
+                  "value2": "rejected"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    "Parse Document": {
+      "main": [
+        [
+          {
+            "node": "Duplicate Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Duplicate Check": {
+      "main": [
+        [
+          {
+            "node": "Extract Data",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "boolean": [
+                {
+                  "value1": "={{ $json.is_duplicate }}",
+                  "operation": "equal",
+                  "value2": false
+                }
+              ]
+            }
+          },
+          {
+            "node": "Rejection Handler",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "boolean": [
+                {
+                  "value1": "={{ $json.is_duplicate }}",
+                  "operation": "equal",
+                  "value2": true
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    "Extract Data": {
+      "main": [
+        [
+          {
+            "node": "Transform Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Data": {
+      "main": [
+        [
+          {
+            "node": "Data Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Validation": {
+      "main": [
+        [
+          {
+            "node": "Process Prorating",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "string": [
+                {
+                  "value1": "={{ $json.document_node.properties.category }}",
+                  "operation": "equal",
+                  "value2": "utility_bill"
+                }
+              ]
+            }
+          },
+          {
+            "node": "Load to Neo4j",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "string": [
+                {
+                  "value1": "={{ $json.document_node.properties.category }}",
+                  "operation": "notEqual",
+                  "value2": "utility_bill"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    "Process Prorating": {
+      "main": [
+        [
+          {
+            "node": "Load to Neo4j",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load to Neo4j": {
+      "main": [
+        [
+          {
+            "node": "Index Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Index Document": {
+      "main": [
+        [
+          {
+            "node": "Complete Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Handler": {
+      "main": [
+        [
+          {
+            "node": "Rejection Handler",
+            "type": "main",
+            "index": 0,
+            "conditions": {
+              "string": [
+                {
+                  "value1": "={{ $json.action }}",
+                  "operation": "equal",
+                  "value2": "reject"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-08-27T00:00:00.000Z",
+      "updatedAt": "2025-08-27T00:00:00.000Z",
+      "id": "ehs-document-processing",
+      "name": "EHS Document Processing"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-08-27T00:00:00.000Z",
+  "versionId": "1.0.0"
+}
