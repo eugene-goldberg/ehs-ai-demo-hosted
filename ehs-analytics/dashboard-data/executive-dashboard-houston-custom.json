@@ -1,0 +1,61 @@
+{
+  "globalScorecard": {
+    "ehsScore": 88,
+    "costSavings": 195000,
+    "carbonFootprint": 1050,
+    "riskLevel": "low"
+  },
+  "electricity": {
+    "goal": {
+      "actual": 86,
+      "target": 80,
+      "unit": "% efficiency"
+    },
+    "facts": {
+      "consumption": "2.1M kWh",
+      "cost": "$294K",
+      "co2": "630 tons CO₂"
+    },
+    "trend": [88, 87, 86, 85, 86, 87, 86, 86],
+    "analysis": "Peak summer cooling demands impacting efficiency slightly",
+    "recommendation": "Upgrade HVAC systems with thermal storage for peak shaving"
+  },
+  "water": {
+    "goal": {
+      "actual": 77,
+      "target": 85,
+      "unit": "% efficiency"
+    },
+    "facts": {
+      "consumption": "132K gallons",
+      "cost": "$40K",
+      "co2": "70 tons CO₂"
+    },
+    "trend": [79, 78, 77, 76, 77, 78, 77, 77],
+    "analysis": "Extreme heat and drought conditions affecting water efficiency",
+    "recommendation": "Implement xeriscaping and rainwater capture systems"
+  },
+  "waste": {
+    "goal": {
+      "actual": 94,
+      "target": 90,
+      "unit": "% diversion"
+    },
+    "facts": {
+      "generation": "39 tons",
+      "cost": "$10K saved",
+      "co2": "105 tons CO₂ avoided"
+    },
+    "trend": [94, 93, 94, 95, 94, 93, 94, 94],
+    "analysis": "Maintaining high performance despite increased summer activity",
+    "recommendation": "Continue successful programs through peak season"
+  },
+  "metadata": {
+    "location": "houston",
+    "dateRange": "custom",
+    "startDate": "2025-07-01",
+    "endDate": "2025-08-31",
+    "timestamp": "2025-08-27T10:00:00.000Z",
+    "dataVersion": "1.0"
+  }
+}

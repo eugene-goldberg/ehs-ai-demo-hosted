@@ -1,0 +1,59 @@
+{
+  "globalScorecard": {
+    "ehsScore": 84,
+    "costSavings": 1020000,
+    "carbonFootprint": 5400,
+    "riskLevel": "medium"
+  },
+  "electricity": {
+    "goal": {
+      "actual": 81,
+      "target": 80,
+      "unit": "% efficiency"
+    },
+    "facts": {
+      "consumption": "10.7M kWh",
+      "cost": "$1.5M",
+      "co2": "3,210 tons CO₂"
+    },
+    "trend": [79, 80, 81, 81, 82, 81, 80, 81],
+    "analysis": "Quarterly performance successfully meeting efficiency targets despite summer peak demands across all Texas facilities. Steady state performance indicates strong operational control.",
+    "recommendation": "Deploy battery storage systems across all facilities to optimize peak demand management and further improve efficiency metrics during high-consumption periods."
+  },
+  "water": {
+    "goal": {
+      "actual": 73,
+      "target": 85,
+      "unit": "% efficiency"
+    },
+    "facts": {
+      "consumption": "630K gallons",
+      "cost": "$189K",
+      "co2": "336 tons CO₂"
+    },
+    "trend": [75, 74, 73, 72, 73, 74, 73, 73],
+    "analysis": "Water scarcity is becoming a critical business risk for Texas operations. Persistent efficiency challenges below target levels indicate need for immediate intervention.",
+    "recommendation": "Implement aggressive water reduction targets and invest in advanced water recycling technologies to address scarcity risks and improve efficiency performance."
+  },
+  "waste": {
+    "goal": {
+      "actual": 90,
+      "target": 90,
+      "unit": "% diversion"
+    },
+    "facts": {
+      "generation": "188 tons",
+      "cost": "$51K saved",
+      "co2": "450 tons CO₂ avoided"
+    },
+    "trend": [88, 89, 89, 90, 91, 90, 89, 90],
+    "analysis": "Successfully meeting diversion targets with Houston site compensating for underperforming facilities. Consistent performance demonstrates effective waste management programs.",
+    "recommendation": "Replicate Houston's waste diversion best practices across all Texas sites to ensure consistent high performance and reduce dependency on single-site compensation."
+  },
+  "metadata": {
+    "location": "texas",
+    "dateRange": "quarter",
+    "timestamp": "2025-08-27T00:00:00Z",
+    "dataVersion": "1.0"
+  }
+}

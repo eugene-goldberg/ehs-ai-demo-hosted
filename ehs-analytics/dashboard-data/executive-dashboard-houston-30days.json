@@ -1,0 +1,59 @@
+{
+  "globalScorecard": {
+    "ehsScore": 91,
+    "costSavings": 310000,
+    "carbonFootprint": 1680,
+    "riskLevel": "low"
+  },
+  "electricity": {
+    "goal": {
+      "actual": 88,
+      "target": 80,
+      "unit": "% efficiency"
+    },
+    "facts": {
+      "consumption": "3.2M kWh",
+      "cost": "$448K",
+      "co2": "960 tons CO₂"
+    },
+    "trend": [84, 85, 86, 87, 88, 88, 89, 88],
+    "analysis": "Successful energy optimization programs have driven efficiency gains above target, with consistent performance throughout the month.",
+    "recommendation": "Maintain current efficiency gains and explore renewable energy options to further reduce carbon footprint."
+  },
+  "water": {
+    "goal": {
+      "actual": 79,
+      "target": 85,
+      "unit": "% efficiency"
+    },
+    "facts": {
+      "consumption": "195K gallons",
+      "cost": "$58K",
+      "co2": "104 tons CO₂"
+    },
+    "trend": [75, 76, 77, 78, 79, 79, 78, 79],
+    "analysis": "Water conservation efforts are showing positive results despite challenging Texas heat conditions, with steady improvement in efficiency metrics.",
+    "recommendation": "Expand greywater recycling systems to reach target efficiency and reduce overall consumption."
+  },
+  "waste": {
+    "goal": {
+      "actual": 95,
+      "target": 90,
+      "unit": "% diversion"
+    },
+    "facts": {
+      "generation": "58 tons",
+      "cost": "$16K saved",
+      "co2": "156 tons CO₂ avoided"
+    },
+    "trend": [92, 93, 94, 95, 96, 95, 94, 95],
+    "analysis": "Best-in-class waste management program consistently exceeds targets with excellent diversion rates and significant cost savings.",
+    "recommendation": "Mentor other sites on waste management best practices and pursue zero-waste certification."
+  },
+  "metadata": {
+    "location": "houston",
+    "dateRange": "30days",
+    "timestamp": "2025-08-27T00:00:00Z",
+    "dataVersion": "1.0"
+  }
+}

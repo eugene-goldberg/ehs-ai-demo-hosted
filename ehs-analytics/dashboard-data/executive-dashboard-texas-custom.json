@@ -1,0 +1,61 @@
+{
+  "globalScorecard": {
+    "ehsScore": 86,
+    "costSavings": 720000,
+    "carbonFootprint": 3800,
+    "riskLevel": "medium"
+  },
+  "electricity": {
+    "goal": {
+      "actual": 83,
+      "target": 80,
+      "unit": "% efficiency"
+    },
+    "facts": {
+      "consumption": "7.5M kWh",
+      "cost": "$1.05M",
+      "co2": "2,250 tons CO₂"
+    },
+    "trend": [81, 82, 83, 84, 83, 82, 83, 83],
+    "analysis": "Optimal spring weather conditions enabled significant efficiency gains before summer peak demand season",
+    "recommendation": "Maximize maintenance and upgrades during favorable conditions to prepare for summer peak season"
+  },
+  "water": {
+    "goal": {
+      "actual": 78,
+      "target": 85,
+      "unit": "% efficiency"
+    },
+    "facts": {
+      "consumption": "440K gallons",
+      "cost": "$132K",
+      "co2": "235 tons CO₂"
+    },
+    "trend": [76, 77, 77, 78, 79, 78, 77, 78],
+    "analysis": "Spring rains provided temporary relief from water stress, showing slight improvement in efficiency",
+    "recommendation": "Capture seasonal rainfall for summer usage to maintain efficiency gains"
+  },
+  "waste": {
+    "goal": {
+      "actual": 92,
+      "target": 90,
+      "unit": "% diversion"
+    },
+    "facts": {
+      "generation": "131 tons",
+      "cost": "$36K saved",
+      "co2": "315 tons CO₂ avoided"
+    },
+    "trend": [90, 91, 92, 93, 92, 91, 92, 92],
+    "analysis": "Spring cleaning initiatives boosted diversion rates across sites, exceeding target performance",
+    "recommendation": "Maintain momentum through summer months to sustain high diversion rates"
+  },
+  "metadata": {
+    "location": "texas",
+    "dateRange": "custom",
+    "startDate": "2025-05-01",
+    "endDate": "2025-06-30",
+    "timestamp": "2025-08-27T00:00:00Z",
+    "dataVersion": "1.0"
+  }
+}

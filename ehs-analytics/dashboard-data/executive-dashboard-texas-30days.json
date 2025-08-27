@@ -1,0 +1,59 @@
+{
+  "globalScorecard": {
+    "ehsScore": 85,
+    "costSavings": 680000,
+    "carbonFootprint": 3600,
+    "riskLevel": "medium"
+  },
+  "electricity": {
+    "goal": {
+      "actual": 82,
+      "target": 80,
+      "unit": "% efficiency"
+    },
+    "facts": {
+      "consumption": "7.1M kWh",
+      "cost": "$994K",
+      "co2": "2,130 tons CO₂"
+    },
+    "trend": [79, 80, 81, 82, 83, 82, 81, 82],
+    "analysis": "Strong performance across 4 Texas facilities despite grid challenges",
+    "recommendation": "Statewide renewable energy integration"
+  },
+  "water": {
+    "goal": {
+      "actual": 75,
+      "target": 85,
+      "unit": "% efficiency"
+    },
+    "facts": {
+      "consumption": "420K gallons",
+      "cost": "$126K",
+      "co2": "224 tons CO₂"
+    },
+    "trend": [77, 76, 75, 74, 75, 76, 75, 75],
+    "analysis": "Ongoing drought conditions impacting all Texas facilities",
+    "recommendation": "Comprehensive water resilience strategy"
+  },
+  "waste": {
+    "goal": {
+      "actual": 91,
+      "target": 90,
+      "unit": "% diversion"
+    },
+    "facts": {
+      "generation": "125 tons",
+      "cost": "$34K saved",
+      "co2": "300 tons CO₂ avoided"
+    },
+    "trend": [89, 90, 90, 91, 92, 91, 90, 91],
+    "analysis": "Strong waste programs across Texas sites led by Houston's excellence",
+    "recommendation": "Cross-site collaboration and standardization"
+  },
+  "metadata": {
+    "location": "texas",
+    "dateRange": "30days",
+    "timestamp": "2025-08-27T00:00:00Z",
+    "dataVersion": "1.0"
+  }
+}
