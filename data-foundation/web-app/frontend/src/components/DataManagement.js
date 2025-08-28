@@ -31,7 +31,7 @@ const DataManagement = () => {
   // Fetch transcript data when AI Engine Room is expanded
   useEffect(() => {
     if (isAiEngineRoomExpanded && !hasLangSmithData) {
-      fetchTranscriptData();
+      // fetchTranscriptData(); // Commented out since fetchTranscriptData function is commented out
     }
   }, [isAiEngineRoomExpanded, hasLangSmithData]);
 
@@ -66,25 +66,25 @@ const DataManagement = () => {
     }
   };
 
-  const fetchTranscriptData = async () => {
-    // Don't fetch from port 8001 if we already have LangSmith data
-    if (hasLangSmithData) {
-      return;
-    }
+  // const fetchTranscriptData = async () => {
+  //   // Don't fetch from port 8001 if we already have LangSmith data
+  //   if (hasLangSmithData) {
+  //     return;
+  //   }
 
-    try {
-      setTranscriptLoading(true);
-      setTranscriptError(null);
-      const response = await axios.get('http://localhost:8001/api/data/transcript');
-      setTranscriptData(response.data.transcript || []);
-    } catch (err) {
-      console.error('Error fetching transcript data:', err);
-      setTranscriptError('Failed to load transcript data. Please try again.');
-      setTranscriptData([]);
-    } finally {
-      setTranscriptLoading(false);
-    }
-  };
+  //   try {
+  //     setTranscriptLoading(true);
+  //     setTranscriptError(null);
+  //     const response = await axios.get('http://localhost:8001/api/data/transcript');
+  //     setTranscriptData(response.data.transcript || []);
+  //   } catch (err) {
+  //     console.error('Error fetching transcript data:', err);
+  //     setTranscriptError('Failed to load transcript data. Please try again.');
+  //     setTranscriptData([]);
+  //   } finally {
+  //     setTranscriptLoading(false);
+  //   }
+  // };
 
   const fetchDocumentDetails = async (documentId) => {
     if (documentDetails[documentId] || loadingDetails[documentId]) {
@@ -312,10 +312,10 @@ const DataManagement = () => {
           setTranscriptData(formattedTranscript);
           setHasLangSmithData(true);
           
-          // Expand the AI Engine Room to show the transcript
-          if (formattedTranscript.length > 0) {
-            setIsAiEngineRoomExpanded(true);
-          }
+          // Commented out: Automatic expansion of AI Engine Room when transcript data arrives
+          // if (formattedTranscript.length > 0) {
+          //   setIsAiEngineRoomExpanded(true);
+          // }
         }
         
         // Refresh the data after ingestion
@@ -340,7 +340,7 @@ const DataManagement = () => {
     // Clear the LangSmith flag to allow fetching fresh data
     setHasLangSmithData(false);
     setTranscriptData([]);
-    fetchTranscriptData();
+    // fetchTranscriptData(); // Commented out since fetchTranscriptData function is commented out
   };
 
   const getSeverityBadgeClass = (severity) => {
