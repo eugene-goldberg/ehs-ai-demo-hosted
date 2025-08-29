@@ -1,0 +1,312 @@
+{
+  "metadata": {
+    "generated_at": "2025-08-28T00:00:00Z",
+    "version": "2.0.0",
+    "source": "static_fallback",
+    "note": "This is sample static dashboard data for testing and fallback purposes",
+    "last_updated": "2025-08-28",
+    "cache_status": "static"
+  },
+  "summary": {
+    "overall_health_score": 85.0,
+    "alert_level": "YELLOW",
+    "status": "operational",
+    "period": {
+      "start_date": "2025-07-28",
+      "end_date": "2025-08-28", 
+      "period_days": 30
+    },
+    "facilities": {
+      "total_count": 8,
+      "active_alerts": 12,
+      "critical_facilities": 1
+    },
+    "incidents": {
+      "total": 24,
+      "today": 3,
+      "incident_rate": 1.2,
+      "trend": "decreasing"
+    },
+    "compliance": {
+      "audit_pass_rate": 89.5,
+      "training_completion": 82.1,
+      "overdue_items": 15,
+      "certification_rate": 91.3
+    }
+  },
+  "kpis": {
+    "summary": {
+      "total_kpis": 12,
+      "green_status": 7,
+      "yellow_status": 3, 
+      "red_status": 2
+    },
+    "safety_kpis": {
+      "incident_rate": {
+        "name": "Incident Rate",
+        "value": 1.2,
+        "unit": "per 1000 hours",
+        "status": "yellow",
+        "target": 1.0,
+        "threshold_warning": 1.1,
+        "threshold_critical": 1.5,
+        "trend": "improving",
+        "last_updated": "2025-08-28T08:00:00Z"
+      },
+      "near_miss_rate": {
+        "name": "Near Miss Rate",
+        "value": 3.5,
+        "unit": "per 1000 hours",
+        "status": "green",
+        "target": 4.0,
+        "threshold_warning": 3.8,
+        "threshold_critical": 4.5,
+        "trend": "stable"
+      },
+      "lost_time_incidents": {
+        "name": "Lost Time Incidents",
+        "value": 2,
+        "unit": "count",
+        "status": "red",
+        "target": 0,
+        "threshold_warning": 1,
+        "threshold_critical": 2,
+        "trend": "concerning"
+      }
+    },
+    "compliance_kpis": {
+      "training_completion": {
+        "name": "Training Completion Rate",
+        "value": 82.1,
+        "unit": "%",
+        "status": "yellow",
+        "target": 95.0,
+        "threshold_warning": 85.0,
+        "threshold_critical": 75.0,
+        "trend": "improving"
+      },
+      "audit_compliance": {
+        "name": "Audit Compliance Rate",
+        "value": 89.5,
+        "unit": "%", 
+        "status": "green",
+        "target": 90.0,
+        "threshold_warning": 85.0,
+        "threshold_critical": 80.0,
+        "trend": "stable"
+      }
+    }
+  },
+  "charts": {
+    "incident_trend": {
+      "title": "Monthly Incident Trend",
+      "type": "line",
+      "data": [
+        {"date": "2025-07-01", "value": 8},
+        {"date": "2025-07-15", "value": 6},
+        {"date": "2025-08-01", "value": 7},
+        {"date": "2025-08-15", "value": 4}
+      ],
+      "options": {
+        "yAxis": {"title": "Incidents"},
+        "xAxis": {"title": "Date"}
+      }
+    },
+    "compliance_pie": {
+      "title": "Compliance Status Distribution",
+      "type": "pie",
+      "data": [
+        {"label": "Compliant", "value": 75},
+        {"label": "Minor Issues", "value": 20},
+        {"label": "Major Issues", "value": 5}
+      ],
+      "options": {
+        "colors": ["#28a745", "#ffc107", "#dc3545"]
+      }
+    },
+    "facility_alerts": {
+      "title": "Active Alerts by Facility",
+      "type": "bar",
+      "data": [
+        {"facility": "Plant A", "alerts": 5},
+        {"facility": "Plant B", "alerts": 3},
+        {"facility": "Warehouse C", "alerts": 2},
+        {"facility": "Office D", "alerts": 1}
+      ],
+      "options": {
+        "yAxis": {"title": "Active Alerts"},
+        "xAxis": {"title": "Facility"}
+      }
+    }
+  },
+  "alerts": {
+    "summary": {
+      "total_active": 12,
+      "critical_count": 2,
+      "warning_count": 6,
+      "info_count": 4,
+      "alert_level": "YELLOW"
+    },
+    "recent_alerts": [
+      {
+        "id": "ALT001",
+        "facility": "Plant A",
+        "type": "safety",
+        "severity": "critical",
+        "message": "Equipment maintenance overdue by 30 days",
+        "created_at": "2025-08-27T14:30:00Z",
+        "status": "active"
+      },
+      {
+        "id": "ALT002", 
+        "facility": "Plant B",
+        "type": "compliance",
+        "severity": "warning",
+        "message": "Training certification expiring in 7 days",
+        "created_at": "2025-08-26T09:15:00Z",
+        "status": "active"
+      },
+      {
+        "id": "ALT003",
+        "facility": "Warehouse C",
+        "type": "environmental",
+        "severity": "warning",
+        "message": "Air quality monitoring required",
+        "created_at": "2025-08-25T16:45:00Z",
+        "status": "acknowledged"
+      }
+    ]
+  },
+  "trends": {
+    "metric_trends": {
+      "incident_rate": {
+        "trend": "decreasing",
+        "confidence": 0.75,
+        "change_percentage": -12.5,
+        "period": "30_days"
+      },
+      "training_completion": {
+        "trend": "increasing",
+        "confidence": 0.85,
+        "change_percentage": 8.3,
+        "period": "30_days"
+      }
+    },
+    "recent_anomalies": [
+      {
+        "metric": "incident_rate",
+        "detected_at": "2025-08-20T10:00:00Z",
+        "anomaly_type": "spike",
+        "severity": "medium",
+        "description": "Unusual increase in minor incidents at Plant B"
+      }
+    ]
+  },
+  "recommendations": {
+    "summary": {
+      "total": 8,
+      "pending_review": 3,
+      "in_progress": 3,
+      "completed": 2
+    },
+    "ai_generated_recommendations": [
+      {
+        "id": "REC001",
+        "priority": "high",
+        "category": "safety",
+        "title": "Implement Predictive Maintenance",
+        "description": "Based on incident patterns, implementing predictive maintenance could reduce equipment-related incidents by 40%",
+        "estimated_impact": "high",
+        "implementation_effort": "medium",
+        "status": "pending_review"
+      },
+      {
+        "id": "REC002",
+        "priority": "medium",
+        "category": "training",
+        "title": "Enhanced Safety Training Program",
+        "description": "Customize training programs based on facility-specific risk profiles",
+        "estimated_impact": "medium",
+        "implementation_effort": "low",
+        "status": "in_progress"
+      }
+    ]
+  },
+  "forecasts": {
+    "forecasts": {
+      "incident_prediction": {
+        "model": "time_series_arima",
+        "confidence": 0.82,
+        "next_30_days": {
+          "predicted_incidents": 6,
+          "confidence_range": [4, 9]
+        },
+        "factors": ["seasonal_patterns", "training_schedules", "maintenance_cycles"]
+      },
+      "compliance_forecast": {
+        "model": "regression_ensemble",
+        "confidence": 0.78,
+        "next_quarter": {
+          "predicted_compliance_rate": 92.5,
+          "confidence_range": [89.0, 95.0]
+        }
+      }
+    }
+  },
+  "status": {
+    "overall_status": "healthy",
+    "service_availability": 99.2,
+    "data_freshness": "current",
+    "last_data_update": "2025-08-28T07:30:00Z",
+    "performance_metrics": {
+      "response_time_ms": 245,
+      "error_rate": 1.2,
+      "cache_hit_rate": 78.5,
+      "data_quality_score": 94.8
+    },
+    "system_health": {
+      "database": "healthy",
+      "cache": "healthy",
+      "analytics": "healthy",
+      "external_apis": "healthy"
+    }
+  },
+  "facility_breakdown": [
+    {
+      "facility_id": "FAC001",
+      "facility_name": "Manufacturing Plant A", 
+      "location": "Texas, USA",
+      "active_alerts": 5,
+      "todays_incidents": 2,
+      "compliance_score": 87.5,
+      "risk_level": "medium"
+    },
+    {
+      "facility_id": "FAC002",
+      "facility_name": "Manufacturing Plant B",
+      "location": "California, USA",
+      "active_alerts": 3,
+      "todays_incidents": 1,
+      "compliance_score": 92.1,
+      "risk_level": "low"
+    },
+    {
+      "facility_id": "FAC003",
+      "facility_name": "Distribution Center C",
+      "location": "Illinois, USA",
+      "active_alerts": 2,
+      "todays_incidents": 0,
+      "compliance_score": 89.8,
+      "risk_level": "low"
+    },
+    {
+      "facility_id": "FAC004", 
+      "facility_name": "Office Complex D",
+      "location": "New York, USA",
+      "active_alerts": 1,
+      "todays_incidents": 0,
+      "compliance_score": 95.2,
+      "risk_level": "very_low"
+    }
+  ]
+}

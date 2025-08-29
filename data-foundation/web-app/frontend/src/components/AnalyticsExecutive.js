@@ -29,6 +29,7 @@ import {
   Info,
   LightbulbOutlined
 } from '@mui/icons-material';
+import { API_ENDPOINTS } from '../config/api';
 
 const AnalyticsExecutive = () => {
   const [selectedLocation, setSelectedLocation] = useState('algonquin');
@@ -55,7 +56,7 @@ const AnalyticsExecutive = () => {
     
     try {
       const response = await fetch(
-        `http://localhost:8000/api/v1/executive-dashboard?location=${selectedLocation}&dateRange=${selectedDateRange}`
+        `${API_ENDPOINTS.executiveDashboard}?location=${selectedLocation}&dateRange=${selectedDateRange}`
       );
       
       if (!response.ok) {
@@ -63,7 +64,72 @@ const AnalyticsExecutive = () => {
       }
       
       const data = await response.json();
-      setDashboardData(data);
+      
+      // Transform v2 API data to component format
+      const transformedData = {
+        globalScorecard: {
+          ehsScore: data.summary?.overall_health_score || 0,
+          costSavings: 0 // No cost savings in v2 API yet
+        },
+        riskAssessment: data.risk_assessment || {},
+        kpis: data.kpis || {},
+        recommendations: data.recommendations || {},
+        // Add mock data for missing sections to prevent errors
+        electricity: {
+          goal: { 
+            actual: data.kpis?.metrics?.overall_risk_score?.value || 0,
+            target: 100, 
+            unit: 'Score' 
+          },
+          facts: {
+            consumption: `Risk Score: ${data.kpis?.metrics?.overall_risk_score?.value || 0}`,
+            cost: `Status: ${data.kpis?.metrics?.overall_risk_score?.status || 'N/A'}`,
+            co2: 'Risk assessment data available'
+          },
+          analysis: `Risk Level: ${data.risk_assessment?.overall_risk_level || 'N/A'}. Total assessments: ${data.risk_assessment?.total_assessments || 0}`,
+          recommendation: data.recommendations?.risk_based_recommendations?.[0]?.description || 'No recommendations available'
+        },
+        water: {
+          goal: { 
+            actual: data.kpis?.metrics?.incident_rate?.value || 0,
+            target: 5, 
+            unit: 'Rate' 
+          },
+          facts: {
+            consumption: `Incident Rate: ${data.kpis?.metrics?.incident_rate?.value || 0}`,
+            cost: `Total Incidents: ${data.summary?.incidents?.total || 0}`,
+            co2: 'Safety metrics monitoring'
+          },
+          analysis: `Incident rate tracking shows ${data.kpis?.metrics?.incident_rate?.status || 'unknown'} status`,
+          recommendation: 'Continue safety monitoring and training programs'
+        },
+        waste: {
+          goal: { 
+            actual: data.kpis?.metrics?.audit_pass_rate?.value || 0,
+            target: 100, 
+            unit: '%' 
+          },
+          facts: {
+            generation: `Audit Pass Rate: ${data.kpis?.metrics?.audit_pass_rate?.value || 0}%`,
+            cost: `Training Completion: ${data.summary?.compliance?.training_completion || 0}%`,
+            co2: 'Compliance monitoring active'
+          },
+          analysis: `Audit performance shows ${data.kpis?.metrics?.audit_pass_rate?.status || 'unknown'} status`,
+          recommendation: 'Maintain compliance standards and improve audit processes'
+        },
+        compliance: {
+          goal: { 
+            actual: data.summary?.compliance?.audit_pass_rate || 0,
+            target: 100, 
+            unit: '%' 
+          },
+          facts: [`Audit Pass Rate: ${data.summary?.compliance?.audit_pass_rate || 0}%`],
+          analysis: 'Compliance metrics available',
+          recommendation: 'Maintain compliance standards'
+        }
+      };
+
+      setDashboardData(transformedData);
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
       setError(err.message);
@@ -369,8 +435,8 @@ const AnalyticsExecutive = () => {
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
                     <Warning sx={{ color: '#ff9800', mr: 1 }} />
                     <Chip 
-                      label="Medium Risk"
-                      color="warning"
+                      label={dashboardData.riskAssessment?.overall_risk_level || "Medium Risk"}
+                      color={dashboardData.riskAssessment?.overall_risk_level === 'LOW' ? 'success' : 'warning'}
                       variant="filled"
                       sx={{ fontSize: '1rem', px: 2, py: 1 }}
                     />
@@ -388,22 +454,22 @@ const AnalyticsExecutive = () => {
       {/* Three Thematic Detail Cards */}
       {(hasElectricityData || hasWaterData || hasWasteData) && (
         <Grid container spacing={3}>
-          {/* Electricity Consumption Card */}
+          {/* Risk Assessment Card (formerly Electricity) */}
           {hasElectricityData && (
             <Grid item xs={12} md={4}>
               <Card sx={{ height: '100%', boxShadow: 3 }}>
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                    <Bolt sx={{ color: '#ff9800', mr: 2, fontSize: 30 }} />
+                    <Warning sx={{ color: '#ff9800', mr: 2, fontSize: 30 }} />
                     <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                      Electricity Consumption
+                      Risk Assessment
                     </Typography>
                   </Box>
                   
                   {/* Goal Section */}
                   <Box sx={{ mb: 3, p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
                     <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
-                      Goal Performance
+                      Risk Score
                     </Typography>
                     {renderGauge(
                       dashboardData.electricity.goal.actual,
@@ -421,13 +487,13 @@ const AnalyticsExecutive = () => {
                       Key Facts
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Consumption:</strong> {dashboardData.electricity.facts.consumption}
+                      <strong>Risk Score:</strong> {dashboardData.electricity.facts.consumption}
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Cost:</strong> {dashboardData.electricity.facts.cost}
+                      <strong>Status:</strong> {dashboardData.electricity.facts.cost}
                     </Typography>
                     <Typography variant="body2">
-                      <strong>CO₂ Impact:</strong> {dashboardData.electricity.facts.co2}
+                      <strong>Assessment:</strong> {dashboardData.electricity.facts.co2}
                     </Typography>
                   </Box>
 
@@ -435,7 +501,7 @@ const AnalyticsExecutive = () => {
                   <Box sx={{ mb: 3, p: 2, backgroundColor: '#fff3e0', borderRadius: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                       <Typography variant="subtitle1" sx={{ fontWeight: 'bold', flexGrow: 1 }}>
-                        Trend Analysis
+                        Risk Analysis
                       </Typography>
                       {dashboardData.electricity.trend && getTrendIcon(dashboardData.electricity.trend)}
                     </Box>
@@ -466,22 +532,22 @@ const AnalyticsExecutive = () => {
             </Grid>
           )}
 
-          {/* Water Consumption Card */}
+          {/* Safety Incidents Card (formerly Water) */}
           {hasWaterData && (
             <Grid item xs={12} md={4}>
               <Card sx={{ height: '100%', boxShadow: 3 }}>
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                    <Water sx={{ color: '#2196f3', mr: 2, fontSize: 30 }} />
+                    <CheckCircle sx={{ color: '#2196f3', mr: 2, fontSize: 30 }} />
                     <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                      Water Consumption
+                      Safety Incidents
                     </Typography>
                   </Box>
                   
                   {/* Goal Section */}
                   <Box sx={{ mb: 3, p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
                     <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
-                      Goal Performance
+                      Incident Rate
                     </Typography>
                     {renderGauge(
                       dashboardData.water.goal.actual,
@@ -499,13 +565,13 @@ const AnalyticsExecutive = () => {
                       Key Facts
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Consumption:</strong> {dashboardData.water.facts.consumption}
+                      <strong>Rate:</strong> {dashboardData.water.facts.consumption}
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Cost:</strong> {dashboardData.water.facts.cost}
+                      <strong>Total:</strong> {dashboardData.water.facts.cost}
                     </Typography>
                     <Typography variant="body2">
-                      <strong>CO₂ Impact:</strong> {dashboardData.water.facts.co2}
+                      <strong>Status:</strong> {dashboardData.water.facts.co2}
                     </Typography>
                   </Box>
 
@@ -513,7 +579,7 @@ const AnalyticsExecutive = () => {
                   <Box sx={{ mb: 3, p: 2, backgroundColor: '#fff3e0', borderRadius: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                       <Typography variant="subtitle1" sx={{ fontWeight: 'bold', flexGrow: 1 }}>
-                        Trend Analysis
+                        Safety Analysis
                       </Typography>
                       {dashboardData.water.trend && getTrendIcon(dashboardData.water.trend)}
                     </Box>
@@ -544,22 +610,22 @@ const AnalyticsExecutive = () => {
             </Grid>
           )}
 
-          {/* Waste Generation Card */}
+          {/* Compliance Card (formerly Waste) */}
           {hasWasteData && (
             <Grid item xs={12} md={4}>
               <Card sx={{ height: '100%', boxShadow: 3 }}>
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                    <Delete sx={{ color: '#4caf50', mr: 2, fontSize: 30 }} />
+                    <Info sx={{ color: '#4caf50', mr: 2, fontSize: 30 }} />
                     <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                      Waste Generation
+                      Compliance
                     </Typography>
                   </Box>
                   
                   {/* Goal Section */}
                   <Box sx={{ mb: 3, p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
                     <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
-                      Goal Performance
+                      Audit Pass Rate
                     </Typography>
                     {renderGauge(
                       dashboardData.waste.goal.actual,
@@ -577,13 +643,13 @@ const AnalyticsExecutive = () => {
                       Key Facts
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Generation:</strong> {dashboardData.waste.facts.generation}
+                      <strong>Pass Rate:</strong> {dashboardData.waste.facts.generation}
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Cost Impact:</strong> {dashboardData.waste.facts.cost}
+                      <strong>Training:</strong> {dashboardData.waste.facts.cost}
                     </Typography>
                     <Typography variant="body2">
-                      <strong>CO₂ Avoided:</strong> {dashboardData.waste.facts.co2}
+                      <strong>Status:</strong> {dashboardData.waste.facts.co2}
                     </Typography>
                   </Box>
 
@@ -591,7 +657,7 @@ const AnalyticsExecutive = () => {
                   <Box sx={{ mb: 3, p: 2, backgroundColor: '#fff3e0', borderRadius: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                       <Typography variant="subtitle1" sx={{ fontWeight: 'bold', flexGrow: 1 }}>
-                        Trend Analysis
+                        Compliance Analysis
                       </Typography>
                       {dashboardData.waste.trend && getTrendIcon(dashboardData.waste.trend)}
                     </Box>

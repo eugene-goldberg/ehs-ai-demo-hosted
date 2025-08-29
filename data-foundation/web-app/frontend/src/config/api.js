@@ -1,15 +1,33 @@
 // API Configuration
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8001';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const DATA_API_BASE_URL = process.env.REACT_APP_DATA_API_URL || 'http://localhost:8001';
 
 export const API_ENDPOINTS = {
-  // Data Management endpoints
-  processedDocuments: `${API_BASE_URL}/api/data/processed-documents`,
-  processedDocumentById: (id) => `${API_BASE_URL}/api/data/processed-documents/${id}`,
-  rejectedDocuments: 'http://localhost:8000/api/v1/simple-rejected-documents',
+  // Data Management endpoints (port 8001)
+  processedDocuments: `${DATA_API_BASE_URL}/api/data/processed-documents`,
+  processedDocumentById: (id) => `${DATA_API_BASE_URL}/api/data/processed-documents/${id}`,
+  rejectedDocuments: `${API_BASE_URL}/api/v1/simple-rejected-documents`,
+  analyticsDashboard: `${DATA_API_BASE_URL}/api/analytics/dashboard`,
+  analyticsQuery: `${DATA_API_BASE_URL}/api/analytics/query`,
   
-  // Analytics endpoints
-  analyticsDashboard: `${API_BASE_URL}/api/analytics/dashboard`,
-  analyticsQuery: `${API_BASE_URL}/api/analytics/query`,
+  // Main backend endpoints (port 8000)
+  executiveDashboard: `${API_BASE_URL}/api/v2/executive-dashboard`,
+  ingestion: `${API_BASE_URL}/api/v1/ingest/batch`,
+  
+  // Add other endpoints as needed
 };
 
-export default API_BASE_URL;
+export default {
+  data: {
+    processedDocuments: API_ENDPOINTS.processedDocuments,
+    rejectedDocuments: API_ENDPOINTS.rejectedDocuments,
+  },
+  analytics: {
+    dashboard: API_ENDPOINTS.analyticsDashboard,
+    query: API_ENDPOINTS.analyticsQuery,
+  },
+  executive: {
+    dashboard: API_ENDPOINTS.executiveDashboard,
+  },
+  ingestion: API_ENDPOINTS.ingestion,
+};

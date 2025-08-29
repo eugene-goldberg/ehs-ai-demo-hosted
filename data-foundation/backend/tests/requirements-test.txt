@@ -1,0 +1,53 @@
+# Test Requirements for Risk Assessment Workflow Integration Tests
+# Install with: pip install -r tests/requirements-test.txt
+
+# Core testing framework
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+pytest-mock>=3.10.0
+pytest-xdist>=3.0.0  # For parallel test execution
+
+# Neo4j database connectivity
+neo4j>=5.0.0
+
+# LangChain and LangSmith for tracing (optional but recommended)
+langchain>=0.1.0
+langsmith>=0.1.0
+langchain-openai>=0.1.0
+langchain-anthropic>=0.1.0
+langchain-core>=0.1.0
+
+# OpenAI API
+openai>=1.0.0
+
+# Environment and configuration
+python-dotenv>=1.0.0
+
+# Data handling and utilities
+pydantic>=2.0.0
+
+# Logging and monitoring
+structlog>=23.0.0
+
+# HTTP requests for API testing
+requests>=2.31.0
+
+# Mock and testing utilities
+responses>=0.23.0
+factory-boy>=3.2.0
+
+# Performance and profiling
+memory-profiler>=0.61.0
+line-profiler>=4.0.0
+
+# Code quality and coverage
+coverage>=7.0.0
+pytest-cov>=4.0.0
+
+# Documentation generation
+pytest-html>=3.1.0
+
+# Optional: Development tools
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.0.0

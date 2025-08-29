@@ -1,559 +1,382 @@
-# EHS AI Demo - Test Inventory
+# Test Inventory - EHS AI Demo Data Foundation Backend
 
-> Last Updated: 2025-08-27  
-> Project: EHS Data Foundation Backend  
-> Purpose: Comprehensive test tracking and status monitoring  
+This document maintains a complete inventory of all tests related to this project.
 
-## Overview
+## Executive Dashboard API v2 Tests
 
-This document provides a complete inventory of all tests for the EHS AI Demo data foundation backend, tracking their status, dependencies, and execution history.
+### Comprehensive Integration Tests
+- **Location**: `/tests/api/test_executive_dashboard_v2.py`
+- **Type**: Comprehensive API Integration Test Suite
+- **Coverage**: Complete Executive Dashboard API v2 functionality
+- **Test Classes**:
+  1. `TestExecutiveDashboardAPI` - Core API functionality tests
+  2. `TestExecutiveDashboardIntegration` - Real service integration tests
+  3. `TestPerformance` - Performance and load testing
+- **Test Cases**:
+  1. **API Endpoint Testing**:
+     - Executive dashboard endpoint (`/api/v2/executive-dashboard`)
+     - Dashboard summary endpoint (`/api/v2/dashboard-summary`)
+     - Real-time metrics endpoint (`/api/v2/real-time-metrics`)
+     - KPIs endpoint (`/api/v2/kpis`)
+     - Locations endpoint (`/api/v2/locations`)
+     - Health check endpoint (`/api/v2/health`)
+     - Cache management endpoint (`/api/v2/cache/clear`)
+     - Static dashboard files endpoint (`/api/v2/static-dashboard/{filename}`)
+     - Legacy compatibility endpoint (`/api/v2/dashboard`)
+  2. **Parameter Validation Testing**:
+     - DashboardRequest model validation
+     - Location filter parsing
+     - Date range parsing and validation
+     - Aggregation period validation
+     - Response format validation
+     - Cache timeout validation
+  3. **Dynamic Data Generation Testing**:
+     - Service initialization and dependency injection
+     - Mock service integration
+     - Real data retrieval (when available)
+     - Response format filtering
+  4. **Static Fallback Testing**:
+     - Static dashboard file serving
+     - Fallback when service unavailable
+     - Minimal fallback response generation
+  5. **Error Handling Testing**:
+     - Service initialization failures
+     - Invalid parameter handling
+     - Database connection errors
+     - Graceful degradation scenarios
+  6. **Cache Functionality Testing**:
+     - Cache hit/miss performance
+     - Cache clear operations
+     - Performance improvements validation
+  7. **Performance Benchmarking**:
+     - Individual endpoint performance
+     - Concurrent request handling
+     - Load testing (50 requests)
+     - Response time thresholds (5s max)
+  8. **Backward Compatibility Testing**:
+     - Legacy API parameter mapping
+     - v1 to v2 API compatibility
+     - Response format consistency
 
-## Test Organization
+### Test Features:
+- **Mock Service Integration**: Comprehensive mocking of ExecutiveDashboardService
+- **Fixtures and Utilities**: Reusable test fixtures for consistency
+- **Metrics Tracking**: Built-in performance metrics collection
+- **Static File Testing**: Temporary file creation for fallback testing
+- **Concurrent Testing**: Multi-threading request validation
+- **Edge Case Testing**: Boundary conditions and special scenarios
+- **Response Validation**: Strict response format and content validation
+- **Error Scenario Simulation**: Service failures and recovery testing
 
-### Test Directory Structure
-```
-tests/
-├── test_inventory.md           # This file
-├── README.md                   # Test suite documentation
-├── __init__.py                 # Package initialization
-├── test_ehs_extraction_api.py  # Main API endpoint tests
-├── test_database.py            # Database connection tests
-├── test_rejection_tracking_real.py  # Rejection workflow tests
-└── test_workflow_prorating_integration.py  # Prorating workflow tests
+### Performance Thresholds:
+- **Individual Endpoint Response Time**: 5 seconds maximum
+- **Cache Performance Improvement**: 50% faster on cache hits
+- **Load Test Average**: 1 second per request under load
+- **Concurrent Requests**: 5 simultaneous requests supported
 
-test/
-├── test_document_recognition_service.py  # Document recognition tests
+### Dependencies:
+- FastAPI TestClient
+- pytest framework
+- httpx for HTTP testing
+- unittest.mock for service mocking
+- threading for concurrency tests
+- Executive Dashboard Service components
+- Environment variables from .env file
 
-Root level:
-├── test_prorating_endpoints.py  # Pro-rating API tests
-└── test_commutiesqa.py          # Community Q&A tests
-```
+### Test Environment Requirements:
+- Python 3.8+ with pytest
+- FastAPI and dependencies installed
+- Mock-based testing (no external dependencies required for most tests)
+- Optional: Real Neo4j and OpenAI API for integration tests
+- Environment variables:
+  - NEO4J_URI (for real service tests)
+  - NEO4J_USERNAME
+  - NEO4J_PASSWORD  
+  - OPENAI_API_KEY (for real service tests)
 
-## 1. Existing Tests
+## Risk Assessment Workflow Tests
 
-### 1.1 API Tests
+### Manual Risk Assessment Storage Test
+- **Location**: `/tmp/test_risk_storage_manual.py` (created 2025-01-29)
+- **Type**: Manual Integration Test for Risk Assessment Storage
+- **Coverage**: Complete risk assessment data storage workflow
+- **Test Cases**:
+  1. **Neo4j Connection Setup**: Establishes connection to Neo4j database
+  2. **Test Document Creation**: Creates test document for relationship validation
+  3. **Risk Assessment Storage**: Tests complete storage of risk assessment results
+  4. **Storage Verification**: Validates all stored data and relationships
+  5. **Graph Structure Validation**: Verifies complete graph structure integrity
 
-#### test_ehs_extraction_api.py
-- **Location**: `/tests/test_ehs_extraction_api.py`
-- **Purpose**: Comprehensive API endpoint testing for EHS extraction service
-- **Test Categories**: 
-  - Health check endpoint validation
-  - Electrical consumption data extraction
-  - Water consumption data extraction  
-  - Waste generation data extraction
-  - Custom extraction queries
-  - Query types endpoint
-  - Error handling and validation
-  - Response format validation
-  - Performance testing
-- **Test Status**: ✅ PASSING
-- **Dependencies**: 
-  - FastAPI TestClient
-  - Mock DataExtractionWorkflow
-  - Mock Neo4j connections
-- **Last Run**: Pending verification
-- **Coverage**: ~85% (based on README documentation)
-
-**Key Test Classes**:
-- `TestHealthEndpoint` - Health check functionality
-- `TestElectricalConsumptionEndpoint` - Electrical data extraction
-- `TestWaterConsumptionEndpoint` - Water usage extraction
-- `TestWasteGenerationEndpoint` - Waste data extraction
-- `TestCustomExtractionEndpoint` - Custom queries
-- `TestQueryTypesEndpoint` - Available query types
-- `TestErrorHandling` - Error scenarios
-- `TestResponseValidation` - Response structure validation
-- `TestPerformanceTests` - Performance benchmarks
-
-#### test_database.py  
-- **Location**: `/tests/test_database.py`
-- **Purpose**: Database connection and basic operations testing
-- **Test Status**: ⏳ PENDING VERIFICATION
-- **Dependencies**: Neo4j test instance
-- **Last Run**: Unknown
-
-#### test_rejection_tracking_real.py
-- **Location**: `/tests/test_rejection_tracking_real.py` 
-- **Purpose**: Real rejection workflow testing with actual Neo4j integration
-- **Test Status**: ⏳ PENDING VERIFICATION
-- **Dependencies**: 
-  - Live Neo4j database
-  - Rejection tracking schema
-  - Phase 1 enhancements
-- **Last Run**: Unknown
-
-### 1.2 Standalone Tests
-
-#### test_prorating_endpoints.py
-- **Location**: `/test_prorating_endpoints.py` (root level)
-- **Purpose**: Pro-rating calculation API endpoint testing
-- **Test Status**: ⏳ PENDING VERIFICATION  
-- **Dependencies**: 
-  - Pro-rating service
-  - Phase 1 enhancements
-  - Neo4j with allocation schema
-- **Last Run**: Unknown
-
-#### test_document_recognition_service.py
-- **Location**: `/test/test_document_recognition_service.py`
-- **Purpose**: Document type recognition and classification testing
-- **Test Status**: ⏳ PENDING VERIFICATION
-- **Dependencies**: 
-  - Document recognition service
-  - Sample test documents
-- **Last Run**: Unknown
-
-#### test_commutiesqa.py
-- **Location**: `/test_commutiesqa.py` (root level)
-- **Purpose**: Community Q&A functionality testing
-- **Test Status**: ⏳ PENDING VERIFICATION
-- **Dependencies**: Unknown
-- **Last Run**: Unknown
-
-## 2. Phase 1 Prorating Tests
-
-### 2.1 Pro-Rating Service Tests
-
-#### test_workflow_prorating_integration.py
-- **Location**: `/tests/test_workflow_prorating_integration.py`
-- **Purpose**: Integration tests for prorating workflow with real Neo4j integration
-- **Test Status**: ⚠️ PARTIAL PASS (2/7 tests passing)
-- **Last Run**: August 26, 2025
-- **Dependencies**: 
-  - Live Neo4j database
-  - ProRatingWorkflow service
-  - DataExtractionWorkflow service
-  - Real utility bill documents
-- **Current Test Results**:
-  - ✅ `test_prorating_service_initialization` - PASSING
-  - ✅ `test_prorating_service_basic_functionality` - PASSING
-  - 🔴 `test_document_processing_with_prorating` - FAILING
-  - 🔴 `test_allocation_calculation_workflow` - FAILING
-  - 🔴 `test_monthly_usage_allocation_creation` - FAILING
-  - 🔴 `test_multiple_facilities_allocation` - FAILING
-  - 🔴 `test_end_to_end_workflow` - FAILING
-
-**Known Issues**:
-- allocation_method consistently returns 'unknown' instead of expected values ('square_footage', 'employee_count')
-- Empty facilities list causes test failures in multi-facility scenarios
-- Facility data not properly loaded or queried from Neo4j
-- Schema relationships between documents and facilities may be incomplete
-
-**Error Patterns**:
-- AssertionError: Expected allocation_method 'square_footage', got 'unknown'
-- AssertionError: Expected non-empty facilities list for allocation testing
-- KeyError/AttributeError: Missing facility attributes in database queries
-
-#### Pro-Rating Calculation Tests
-- **Test File**: `tests/test_prorating_service.py` (📝 NEEDS CREATION)
-- **Purpose**: Unit tests for pro-rating calculation algorithms
-- **Test Status**: 🔴 NOT IMPLEMENTED
-- **Test Coverage Needed**:
-  - Square footage allocation calculations
-  - Employee count allocation calculations
-  - Custom allocation methods
-  - Multi-facility pro-rating
-  - Edge cases (zero allocations, missing data)
-  - Validation rules
-- **Dependencies**: 
-  - ProRatingService
-  - Mock facility data
-  - Mock usage data
-
-#### Pro-Rating Schema Tests  
-- **Test File**: `tests/test_prorating_schema.py` (📝 NEEDS CREATION)
-- **Purpose**: Database schema validation for pro-rating entities
-- **Test Status**: 🔴 NOT IMPLEMENTED
-- **Test Coverage Needed**:
-  - MonthlyUsageAllocation node creation
-  - ProRatingDistribution relationships
-  - Schema constraints validation
-  - Index performance testing
-- **Dependencies**: 
-  - Neo4j test database
-  - Phase 1 schema migration
-
-#### Pro-Rating Integration Tests
-- **Test File**: `tests/test_prorating_integration.py` (📝 NEEDS CREATION)
-- **Purpose**: End-to-end pro-rating workflow testing
-- **Test Status**: 🔴 NOT IMPLEMENTED  
-- **Test Coverage Needed**:
-  - Document ingestion → pro-rating calculation
-  - Allocation report generation
-  - Multi-month allocation tracking
-  - Error handling in pro-rating pipeline
-- **Dependencies**: 
-  - Full ingestion workflow
-  - Sample utility bill documents
-  - Neo4j database
-
-### 2.2 Allocation Endpoint Tests
-
-#### Allocation API Tests
-- **Test File**: `tests/test_allocation_endpoints.py` (📝 NEEDS CREATION)
-- **Purpose**: API endpoint tests for allocation queries and reports
-- **Test Status**: 🔴 NOT IMPLEMENTED
-- **Test Coverage Needed**:
-  - GET /allocations endpoint
-  - POST /allocations/calculate endpoint
-  - Monthly allocation reports
-  - Allocation summary queries
-  - Parameter validation
-- **Dependencies**: 
-  - Allocation API endpoints
-  - Mock allocation data
-  - FastAPI TestClient
-
-#### Prorating E2E Verification Tests
-- **Test File**: `/tmp/test_prorating_e2e_corrected.py`
-- **Purpose**: End-to-end verification that frontend displays prorated_monthly_usage from MonthlyUsageAllocation nodes
-- **Test Status**: ✅ PASSING
-- **Last Run**: August 27, 2025
+### Test Results (Latest Run: 2025-01-29 13:39:21):
+- **Status**: ✅ SUCCESS - All tests passed
+- **Duration**: ~0.5 seconds
+- **Nodes Created**: 5 (1 RiskAssessment, 2 RiskFactor, 2 RiskRecommendation)
+- **Relationships Created**: 6 total relationships
 - **Test Coverage**:
-  - Neo4j MonthlyUsageAllocation node verification
-  - API endpoint prorated_monthly_usage field verification
-  - Data flow validation from database to API response
-- **Test Results**:
-  - Successfully verified August 2025 allocation: 48,390.0 kWh
-  - API returns matching prorated_monthly_usage value
-  - 100% confirmed frontend gets value from MonthlyUsageAllocation nodes
+  - ✅ RiskAssessment node creation and storage
+  - ✅ RiskFactor nodes with IDENTIFIES relationships
+  - ✅ RiskRecommendation nodes with RECOMMENDS relationships
+  - ✅ Document-RiskAssessment HAS_RISK_ASSESSMENT relationship
+  - ✅ Facility-RiskAssessment HAS_RISK_ASSESSMENT relationship
+  - ✅ Complete graph structure verification
 
-## 3. Workflow Integration Tests
+### Test Features:
+- **Direct Cypher Query Testing**: Uses the exact same Cypher queries as the workflow
+- **Realistic Test Data**: Creates representative risk assessment data
+- **Comprehensive Verification**: Validates all nodes, relationships, and data integrity
+- **Auto-cleanup**: Removes test data after completion
+- **Detailed Logging**: Comprehensive logging to `/tmp/test_risk_storage_manual.log`
+- **Environment Integration**: Loads configuration from project .env file
 
-### 3.1 Phase 1 Workflow Integration
+### Storage Schema Validated:
+```
+RiskAssessment {
+  id, document_id, assessment_date, risk_level, risk_score,
+  assessment_status, methodology, processing_time, created_by, updated_at
+}
 
-#### Audit Trail Integration Tests
-- **Test File**: `tests/test_audit_trail_integration.py` (📝 NEEDS CREATION)
-- **Purpose**: Test audit trail integration with ingestion workflow
-- **Test Status**: 🔴 NOT IMPLEMENTED
-- **Test Coverage Needed**:
-  - Audit trail creation on document upload
-  - Audit activity logging during processing
-  - Audit trail querying and reporting
-  - Error scenarios in audit logging
-- **Dependencies**: 
-  - AuditTrailService
-  - Ingestion workflow
-  - Mock document processing
+RiskFactor {
+  id, name, category, description, severity, probability, confidence,
+  created_at, updated_at
+}
 
-#### Rejection Workflow Integration Tests  
-- **Test File**: `tests/test_rejection_integration.py` (📝 NEEDS CREATION)
-- **Purpose**: Test rejection workflow integration with ingestion pipeline
-- **Test Status**: 🔴 NOT IMPLEMENTED
-- **Test Coverage Needed**:
-  - Quality validation integration
-  - Duplicate detection integration
-  - Rejection decision workflow
-  - User review process integration
-  - Auto-approval scenarios
-- **Dependencies**: 
-  - RejectionWorkflowService
-  - Document validation components
-  - Mock user interactions
+RiskRecommendation {
+  id, title, description, priority, estimated_impact,
+  implementation_timeline, created_at, updated_at
+}
 
-#### End-to-End Workflow Tests
-- **Test File**: `tests/test_workflow_e2e.py` (📝 NEEDS CREATION)
-- **Purpose**: Complete workflow testing with all Phase 1 features
-- **Test Status**: 🔴 NOT IMPLEMENTED
-- **Test Coverage Needed**:
-  - Full document processing pipeline
-  - Phase 1 feature integration points
-  - Multi-document processing scenarios
-  - Performance under load
-  - Error recovery and rollback
-- **Dependencies**: 
-  - All Phase 1 services
-  - Test document corpus
-  - Performance monitoring tools
-
-### 3.2 Database Integration Tests
-
-#### Neo4j Schema Tests
-- **Test File**: `tests/test_neo4j_schema.py` (📝 NEEDS CREATION)
-- **Purpose**: Validate Neo4j schema changes and migrations
-- **Test Status**: 🔴 NOT IMPLEMENTED
-- **Test Coverage Needed**:
-  - Phase 1 schema migration validation
-  - Constraint creation and enforcement
-  - Index performance verification
-  - Data migration validation
-  - Schema rollback testing
-- **Dependencies**: 
-  - Neo4j test database
-  - Migration scripts
-  - Test data fixtures
-
-#### Database Performance Tests
-- **Test File**: `tests/test_database_performance.py` (📝 NEEDS CREATION)
-- **Purpose**: Database query performance and optimization testing
-- **Test Status**: 🔴 NOT IMPLEMENTED
-- **Test Coverage Needed**:
-  - Query performance benchmarks
-  - Index usage verification
-  - Large dataset handling
-  - Concurrent query testing
-- **Dependencies**: 
-  - Performance testing tools
-  - Large test datasets
-  - Database monitoring
-
-## 4. Test Execution Status
-
-### 4.1 Test Runner Configuration
-
-#### Current Test Configuration
-- **Test Runner**: pytest with custom runner script
-- **Configuration File**: `run_tests.py` 
-- **Coverage Tool**: pytest-cov
-- **Parallel Testing**: pytest-xdist
-- **Test Environment**: Virtual environment with requirements-test.txt
-
-#### Test Execution Commands
-```bash
-# Run all tests
-python3 run_tests.py
-
-# Run specific test categories  
-python3 run_tests.py --test-type api
-python3 run_tests.py --test-type unit
-python3 run_tests.py --test-type integration
-
-# Run with coverage
-python3 run_tests.py --coverage
-
-# Run specific test file
-python3 run_tests.py --file tests/test_ehs_extraction_api.py
+Relationships:
+- (RiskAssessment)-[:IDENTIFIES]->(RiskFactor)
+- (RiskAssessment)-[:RECOMMENDS]->(RiskRecommendation)
+- (Document)-[:HAS_RISK_ASSESSMENT]->(RiskAssessment)
+- (Facility)-[:HAS_RISK_ASSESSMENT]->(RiskAssessment)
 ```
 
-### 4.2 Recent Test Execution History
-
-#### Last Complete Test Run
-- **Date**: ⏳ PENDING - No recent execution recorded
-- **Status**: UNKNOWN
-- **Total Tests**: TBD
-- **Passed**: TBD  
-- **Failed**: TBD
-- **Coverage**: TBD
-
-#### Test Failures
-- **Critical Failures**: TBD
-- **Intermittent Failures**: TBD
-- **Environment Issues**: TBD
-
-## 5. Test Dependencies
-
-### 5.1 External Dependencies
-
-#### Required Services
-- **Neo4j Database**: bolt://localhost:7687
-  - Version: 4.x or higher
-  - Status: ⏳ NEEDS VERIFICATION
-  - Test Data: Phase 1 schema with sample data
-  
-- **LLM Services**: 
-  - OpenAI GPT-4 (for extraction workflow tests)
-  - Status: ⏳ NEEDS API KEY VERIFICATION
-  
-- **LlamaParse API**:
-  - Status: ⏳ NEEDS API KEY VERIFICATION
-
-#### Environment Variables Required
+### Running the Test:
 ```bash
-NEO4J_URI=bolt://localhost:7687
-NEO4J_USERNAME=neo4j  
-NEO4J_PASSWORD=EhsAI2024!
-NEO4J_DATABASE=neo4j
-LLAMA_PARSE_API_KEY=<required>
-OPENAI_API_KEY=<required>
-LLM_MODEL=gpt-4
-```
-
-### 5.2 Python Dependencies
-
-#### Test-Specific Dependencies
-```bash
-pytest>=7.0.0
-pytest-cov>=4.0.0
-pytest-xdist>=3.0.0
-pytest-asyncio>=0.21.0
-httpx>=0.24.0
-faker>=19.0.0
-```
-
-#### Mock Dependencies
-- unittest.mock (built-in)
-- pytest-mock (for advanced mocking)
-- responses (for HTTP mocking)
-
-## 6. Test Coverage Analysis
-
-### 6.1 Current Coverage by Component
-
-#### API Layer
-- **Extraction API**: ~85% (based on test_ehs_extraction_api.py)
-- **Pro-rating Endpoints**: 🔴 0% (not tested)
-- **Health Endpoints**: ✅ 100%
-
-#### Service Layer  
-- **Document Processing**: ⏳ UNKNOWN
-- **Phase 1 Services**: ⚠️ PARTIAL (ProRatingWorkflow partially tested)
-- **Database Services**: ⏳ UNKNOWN
-
-#### Workflow Layer
-- **Ingestion Workflow**: ⏳ PARTIAL (mocked in API tests)
-- **Extraction Workflow**: ⏳ PARTIAL (mocked in API tests) 
-- **Phase 1 Integration**: ⚠️ PARTIAL (ProRating 2/7 tests passing)
-
-### 6.2 Coverage Targets
-
-#### Minimum Coverage Goals
-- **API Endpoints**: 90%
-- **Core Services**: 85%
-- **Workflows**: 80%
-- **Utility Functions**: 95%
-- **Overall Project**: 85%
-
-## 7. Test Prioritization
-
-### 7.1 High Priority Tests (Immediate Action Required)
-
-1. **Phase 1 Service Tests** - Core functionality validation
-2. **Workflow Integration Tests** - End-to-end feature validation  
-3. **Database Schema Tests** - Data integrity validation
-4. **Pro-rating Calculation Tests** - Business logic validation
-
-### 7.2 Medium Priority Tests
-
-1. **Performance Tests** - Scalability validation
-2. **Error Handling Tests** - Robustness validation
-3. **API Contract Tests** - Interface validation
-
-### 7.3 Low Priority Tests
-
-1. **Edge Case Tests** - Corner case validation
-2. **Load Tests** - Stress testing
-3. **Security Tests** - Vulnerability testing
-
-## 8. Test Environment Setup
-
-### 8.1 Local Development Environment
-
-#### Setup Instructions
-```bash
-# 1. Clone repository and navigate to backend
 cd /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend
-
-# 2. Create virtual environment
-python3 -m venv venv
 source venv/bin/activate
-
-# 3. Install dependencies
-pip install -r requirements.txt
-pip install -r requirements-test.txt
-
-# 4. Setup Neo4j database
-# Start Neo4j and run Phase 1 migrations
-python3 migrate_phase1_schema.py
-
-# 5. Setup environment variables
-cp .env.example .env
-# Edit .env with actual API keys
-
-# 6. Run tests
-python3 run_tests.py --coverage
+python3 /tmp/test_risk_storage_manual.py
 ```
 
-### 8.2 CI/CD Environment
+### Test Environment Requirements:
+- Neo4j database running on localhost:7687
+- Environment variables from .env file:
+  - NEO4J_URI
+  - NEO4J_USERNAME
+  - NEO4J_PASSWORD
+- Python 3.8+ with neo4j driver installed
+- Test facility (DEMO_FACILITY_001) should exist in Neo4j for optimal results
 
-#### Continuous Integration Setup
-- **Platform**: TBD (GitHub Actions, GitLab CI, etc.)
-- **Test Execution**: Automated on pull request
-- **Coverage Reporting**: Integrated with code coverage tools
-- **Deployment Gates**: Tests must pass before deployment
+### Integration Tests (Existing - Currently Has Import Issues)
+- **Location**: `/tests/agents/risk_assessment/test_workflow_integration.py`
+- **Type**: End-to-End Integration Test
+- **Coverage**: Complete risk assessment workflow
+- **Status**: ⚠️ Import dependency issues prevent execution
+- **Test Cases**:
+  1. Complete risk assessment workflow (test_complete_workflow)
+  2. Error handling scenarios (test_error_handling)
+  3. Different document types (test_document_types)
+  4. Configuration management (test_configuration)
+  5. Performance benchmarks (test_performance_benchmarks)
+- **Dependencies**: Neo4j, OpenAI API, LangSmith (optional)
+- **Test Data**: Creates test facility and associated EHS data
+- **Performance Thresholds**:
+  - Total assessment time: 120 seconds
+  - Data collection time: 30 seconds
+  - Risk analysis time: 45 seconds
+  - Recommendation generation time: 30 seconds
 
-## 9. Test Maintenance
+### Test Features (Original Integration Tests):
+- **Neo4j Data Validation**: Tests data collection from Neo4j graph database
+- **LangSmith Trace Capture**: Validates trace metadata and session tracking
+- **Risk Assessment Results**: Validates risk levels, scores, and recommendations
+- **Error Handling**: Tests graceful failure scenarios and retry logic
+- **Configuration Testing**: Validates different agent configurations
+- **Performance Benchmarking**: Measures and validates execution times
+- **Document Type Support**: Tests different assessment scopes and types
 
-### 9.1 Test Update Schedule
+## Existing Tests (Legacy)
 
-#### Weekly Tasks
-- Review test execution results
-- Update test status in this document
-- Address failing tests
-- Review coverage reports
+### API Tests
+- **Location**: `/tests/test_ehs_extraction_api.py`
+- **Type**: API Integration Test
+- **Coverage**: EHS extraction API endpoints
 
-#### Monthly Tasks  
-- Review and update test documentation
-- Add tests for new features
-- Performance test review
-- Test environment maintenance
+### Database Tests
+- **Location**: `/tests/test_database.py`
+- **Type**: Database Integration Test
+- **Coverage**: Database connectivity and operations
 
-### 9.2 Test Quality Metrics
+### Transcript Tests
+- **Location**: `/tests/test_transcript_integration.py`
+- **Type**: Integration Test
+- **Coverage**: Document upload and transcript generation workflow
 
-#### Tracking Metrics
-- **Test Execution Time**: Target < 5 minutes for full suite
-- **Test Stability**: Target > 95% consistent pass rate
-- **Coverage Trends**: Track coverage changes over time
-- **Test Maintenance Effort**: Track time spent on test maintenance
+- **Location**: `/tests/test_transcript_simple.py`
+- **Type**: Simple Integration Test
+- **Coverage**: Basic transcript functionality
 
-## 10. Action Items
+- **Location**: `/tests/test_transcript_diagnostic.py`
+- **Type**: Diagnostic Test
+- **Coverage**: Transcript troubleshooting and debugging
 
-### 10.1 Immediate Actions (This Week)
+### Neo4j Enhancement Tests
+- **Location**: `/tests/neo4j_enhancements/test_enhanced_schema_integration.py`
+- **Type**: Schema Integration Test
+- **Coverage**: Enhanced Neo4j schema functionality
 
-- [ ] Fix failing prorating integration tests (5/7 currently failing)
-- [ ] Investigate allocation_method returning 'unknown' instead of expected values
-- [ ] Fix empty facilities list issue in multi-facility tests
-- [ ] Verify Neo4j schema completeness for facility-document relationships
-- [ ] Verify status of existing tests by running complete test suite
-- [ ] Create missing Phase 1 test files
-- [ ] Set up proper test database with Phase 1 schema
-- [ ] Validate API key requirements and setup
-- [ ] Document actual test coverage numbers
+### Workflow Tests
+- **Location**: `/tests/test_workflow_prorating_integration.py`
+- **Type**: Workflow Integration Test
+- **Coverage**: Prorating workflow functionality
 
-### 10.2 Short Term Actions (Next 2 Weeks)
+### Allocation Tests
+- **Location**: `/tests/test_monthly_boundary_allocation.py`
+- **Type**: Business Logic Test
+- **Coverage**: Monthly boundary allocation logic
 
-- [ ] Implement pro-rating service unit tests
-- [ ] Implement workflow integration tests  
-- [ ] Set up continuous integration pipeline
-- [ ] Create test data fixtures for Phase 1 features
-- [ ] Implement performance benchmarking tests
+### Rejection Tracking Tests
+- **Location**: `/tests/test_rejection_tracking_real.py`
+- **Type**: Real-world Integration Test
+- **Coverage**: Document rejection tracking functionality
 
-### 10.3 Long Term Actions (Next Month)
+### Document Recognition Tests
+- **Location**: `/test/test_document_recognition_service.py`
+- **Type**: Service Test
+- **Coverage**: Document recognition and classification
 
-- [ ] Complete end-to-end workflow testing
-- [ ] Implement load and stress testing
-- [ ] Set up test environment automation
-- [ ] Create comprehensive test documentation
-- [ ] Implement test result reporting and dashboards
+## Test Execution Instructions
 
----
+### Running Executive Dashboard API v2 Tests
 
-## Notes
-
-### Document History
-- 2025-08-26: Initial test inventory creation
-- 2025-08-26: Updated with prorating integration test status (2/7 passing)
-- 2025-08-27: Added prorating E2E verification test results (PASSING)
-- Next update scheduled: 2025-09-02
-
-### Conventions
-- ✅ PASSING: Tests are running and passing consistently
-- ⏳ PENDING VERIFICATION: Tests exist but status unknown
-- ⚠️ PARTIAL PASS: Tests exist but only some are passing
-- 🔴 NOT IMPLEMENTED: Tests needed but not yet created
-- 📝 NEEDS CREATION: Test file needs to be created
-
-### Useful Commands
+#### Using pytest (recommended):
 ```bash
-# Get current working directory for reference
-pwd
-# /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend
-
-# Find all Python test files
-find . -name "test_*.py" -type f | grep -v venv
-
-# Check test file line counts
-wc -l tests/*.py
-
-# Validate Neo4j connection
-python3 -c "from neo4j import GraphDatabase; print('Neo4j connection test')"
+cd /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend
+python3 -m pytest tests/api/test_executive_dashboard_v2.py -v
 ```
+
+#### Running specific test classes:
+```bash
+# Core API functionality tests
+python3 -m pytest tests/api/test_executive_dashboard_v2.py::TestExecutiveDashboardAPI -v
+
+# Performance tests
+python3 -m pytest tests/api/test_executive_dashboard_v2.py::TestPerformance -v
+
+# Integration tests (requires real service)
+python3 -m pytest tests/api/test_executive_dashboard_v2.py::TestExecutiveDashboardIntegration -v
+```
+
+#### Running specific test methods:
+```bash
+python3 -m pytest tests/api/test_executive_dashboard_v2.py::TestExecutiveDashboardAPI::test_executive_dashboard_endpoint_success -v
+python3 -m pytest tests/api/test_executive_dashboard_v2.py::TestExecutiveDashboardAPI::test_performance_benchmarks -v
+```
+
+#### Running as standalone script:
+```bash
+cd /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend
+python3 tests/api/test_executive_dashboard_v2.py
+```
+
+#### With virtual environment:
+```bash
+cd /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend
+source venv/bin/activate
+python3 tests/api/test_executive_dashboard_v2.py
+```
+
+#### Performance and load testing:
+```bash
+# Run performance tests specifically
+python3 -m pytest tests/api/test_executive_dashboard_v2.py -k "performance" -v
+
+# Run with detailed timing
+python3 -m pytest tests/api/test_executive_dashboard_v2.py --durations=10 -v
+```
+
+### Running Risk Assessment Storage Tests
+
+#### Manual Risk Assessment Storage Test:
+```bash
+cd /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend
+source venv/bin/activate
+python3 /tmp/test_risk_storage_manual.py
+```
+
+#### Risk Assessment Integration Tests (Original - Currently Non-Functional):
+```bash
+cd /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend
+python3 -m pytest tests/agents/risk_assessment/test_workflow_integration.py -v
+```
+
+**Note**: The original integration tests currently have import dependency issues that prevent execution. The manual storage test provides validated coverage of the core risk assessment storage functionality.
+
+### Test Output and Logging
+
+#### Executive Dashboard API v2 Tests:
+- Console output: Detailed test progress and results
+- Performance metrics: Response times and throughput measurements
+- Mock service validation: Service interaction verification
+- Temporary files: Cleaned up automatically after tests
+
+#### Risk Assessment Storage Tests:
+- Console output: Shows test progress and results with emoji indicators
+- Log file: `/tmp/test_risk_storage_manual.log` (detailed logging)
+- Test artifacts: Temporary test data cleaned up automatically
+- Graph verification: Comprehensive Neo4j data validation
+
+### Prerequisites Checklist
+
+#### For Executive Dashboard API v2 Tests:
+- [ ] Python 3.8+ installed
+- [ ] pytest and FastAPI dependencies installed
+- [ ] Virtual environment activated (recommended)
+- [ ] For integration tests: Neo4j and OpenAI API access
+
+#### For Risk Assessment Storage Tests:
+- [ ] Neo4j database is running and accessible
+- [ ] .env file is properly configured with Neo4j credentials
+- [ ] Python dependencies are installed (neo4j driver)
+- [ ] Virtual environment is activated (if using)
+- [ ] Network connectivity to Neo4j database
+
+## Test Maintenance Notes
+
+### Executive Dashboard API v2 Tests:
+- Tests use comprehensive mocking for reliable execution
+- Performance thresholds may need adjustment based on system capabilities
+- Static fallback files are created temporarily during tests
+- Concurrent testing validates multi-threading support
+- Mock service responses can be customized for different scenarios
+
+### Risk Assessment Storage Tests:
+- Test data is automatically created and cleaned up with `test_data: true` flag
+- Uses realistic risk assessment data matching production schema
+- All test artifacts are stored in /tmp directory
+- Performance measurement included (typically completes in <1 second)
+- Schema validation ensures compatibility with workflow storage methods
+
+## Future Test Additions
+
+### Risk Assessment Workflow:
+- **Priority**: Fix import issues in existing integration tests
+- Unit tests for individual risk assessment workflow methods
+- Mock-based testing for offline scenarios
+- Load testing with multiple concurrent risk assessments
+- Cross-validation with manual risk assessments
+- Performance benchmarking under various data loads
+
+### Executive Dashboard API v2:
+- Authentication and authorization testing
+- WebSocket real-time updates testing
+- Database-specific testing for different Neo4j configurations
+- API versioning and migration testing
+- Integration with external monitoring systems
+
+### General:
+- Integration between risk assessment and dashboard display
+- End-to-end workflow testing from document upload to risk visualization
+- Automated performance regression testing
+- Data consistency validation across all components

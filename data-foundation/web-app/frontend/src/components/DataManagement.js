@@ -39,7 +39,7 @@ const DataManagement = () => {
     try {
       setLoading(true);
       const [documentsRes, rejectedRes] = await Promise.all([
-        axios.get('http://localhost:8001/api/data/processed-documents'),
+        axios.get(API_ENDPOINTS.processedDocuments),
         axios.get(API_ENDPOINTS.rejectedDocuments)
       ]);
       
@@ -93,7 +93,7 @@ const DataManagement = () => {
 
     try {
       setLoadingDetails(prev => ({ ...prev, [documentId]: true }));
-      const response = await axios.get(`http://localhost:8001/api/data/processed-documents/${documentId}`);
+      const response = await axios.get(API_ENDPOINTS.processedDocumentById(documentId));
       setDocumentDetails(prev => ({ ...prev, [documentId]: response.data }));
     } catch (err) {
       console.error('Error fetching document details:', err);
@@ -112,7 +112,7 @@ const DataManagement = () => {
     try {
       setDownloadingFiles(prev => new Set(prev).add(doc.id));
       
-      const response = await axios.get(`http://localhost:8001/api/data/documents/${doc.id}/download`, {
+      const response = await axios.get(`${API_ENDPOINTS.processedDocuments.replace('/processed-documents', '')}/documents/${doc.id}/download`, {
         responseType: 'blob',
         timeout: 30000 // 30 second timeout for large files
       });

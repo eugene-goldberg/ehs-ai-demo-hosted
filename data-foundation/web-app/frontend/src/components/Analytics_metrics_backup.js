@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 
 const Analytics = () => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -52,7 +53,7 @@ const Analytics = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:8001/api/analytics/dashboard');
+      const response = await axios.get(API_ENDPOINTS.analyticsDashboard);
       setDashboardData(response.data);
       setError(null);
     } catch (err) {
@@ -65,7 +66,7 @@ const Analytics = () => {
 
   const fetchAnalyticsQuery = async (metricType) => {
     try {
-      const response = await axios.post('http://localhost:8001/api/analytics/query', {
+      const response = await axios.post(API_ENDPOINTS.analyticsQuery, {
         metric_type: metricType,
         date_range: {
           start: '2024-01-01',

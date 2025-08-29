@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 
 const AnalyticsHierarchical = () => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -134,7 +135,7 @@ const AnalyticsHierarchical = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:8001/api/analytics/dashboard');
+      const response = await axios.get(API_ENDPOINTS.analyticsDashboard);
       setDashboardData(response.data);
       setError(null);
     } catch (err) {

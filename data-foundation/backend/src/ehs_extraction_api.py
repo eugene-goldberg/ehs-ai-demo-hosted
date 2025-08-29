@@ -30,6 +30,9 @@ from api.simple_rejection_api import simple_rejection_router
 # Transcript API Import
 from api.transcript_api import router as transcript_router
 
+# Executive Dashboard V2 API Import
+from api.executive_dashboard_v2 import router as executive_dashboard_v2_router
+
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -77,6 +80,9 @@ app.include_router(prorating_router)
 
 # Include the Transcript API router
 app.include_router(transcript_router)
+
+# Include the Executive Dashboard V2 API router
+app.include_router(executive_dashboard_v2_router, prefix="/api/v2")
 
 # Pydantic models for request/response validation
 class FacilityFilter(BaseModel):
@@ -423,9 +429,8 @@ async def batch_ingest_documents(request: BatchIngestionRequest):
     try:
         # Get the script path relative to the API file location
         script_path = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-            "scripts",
-            "ingest_all_documents.py"
+            os.path.dirname(os.path.dirname(__file__)),
+            "run_batch_ingestion.py"
         )
         
         # Verify script exists

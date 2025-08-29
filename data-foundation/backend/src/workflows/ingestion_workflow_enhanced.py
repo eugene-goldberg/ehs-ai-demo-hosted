@@ -18,19 +18,19 @@ from langchain_anthropic import ChatAnthropic
 from pydantic import BaseModel, Field
 
 # Phase 1 Enhancement Imports
-from ..phase1_enhancements.audit_trail_service import AuditTrailService
-from ..phase1_enhancements.rejection_workflow_service import (
+from src.phase1_enhancements.audit_trail_service import AuditTrailService
+from src.phase1_enhancements.rejection_workflow_service import (
     RejectionWorkflowService, 
     RejectionReason, 
     ValidationResult
 )
-from ..phase1_enhancements.prorating_service import ProRatingService
-from ..shared.common_fn import create_graph_database_connection
+from src.phase1_enhancements.prorating_service import ProRatingService
+from src.shared.common_fn import create_graph_database_connection
 
 # Existing imports
-from ..parsers.llama_parser import EHSDocumentParser
-from ..indexing.document_indexer import EHSDocumentIndexer
-from ..extractors.ehs_extractors import (
+from src.parsers.llama_parser import EHSDocumentParser
+# from src.indexing.document_indexer import EHSDocumentIndexer
+from src.extractors.ehs_extractors import (
     UtilityBillExtractor,
     WaterBillExtractor,
     PermitExtractor,
@@ -126,12 +126,12 @@ class EnhancedIngestionWorkflow:
         
         # Initialize existing components
         self.parser = EHSDocumentParser(api_key=llama_parse_api_key)
-        self.indexer = EHSDocumentIndexer(
-            neo4j_uri=neo4j_uri,
-            neo4j_username=neo4j_username,
-            neo4j_password=neo4j_password,
-            llm_model=llm_model
-        )
+        # self.indexer = EHSDocumentIndexer(
+        #             neo4j_uri=neo4j_uri,
+        #             neo4j_username=neo4j_username,
+        #             neo4j_password=neo4j_password,
+        #             llm_model=llm_model
+        #         )
         
         # Initialize extractors
         self.extractors = {

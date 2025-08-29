@@ -18,7 +18,6 @@
 - You must alsways keep every test file under the ../test subdirectory within the given project structure
 - When working with software libraries and frameworks such as LangCHain, LangGraph, LlamaIndex, LlamaParse, neo4j-grahrag-python .. - you must first use the context7 MCP tool to get the information on the latests available version, as well as the documented examples on how to properly use these libraries
 - Once you have implemented a new feature or an increment of a feature - you must run of of the tests for that feature as well as all of the tests available for all other features (i.e. conduct a regression test) to make sure that the new feature did not brake any existing features
-- You must not use zen MCP tool for any tasks unless explicitly instructed by the user
 - You must not perform any git commands unless explicitly instructed by the user
 - you must alsways use the file-creator sub-agent for any file (Python or otherwise) creation or modification.
 - you must alsways use the file-creator for any HTML, Javascript, CSS creation or modification. 
@@ -42,7 +41,6 @@
 - You must keep updating the current status memory after implementing every feature or function
 - You must not make any speculative conclusions regarding the SDKs or APIs. Instead you must use the Context7 MCP tool to obtain the latest information on a particular SDK, API or library
 - Before creating a new functionality which involves making use of a particular SDK, API, or library you should use the exa search MCP tool to obtain the information on the real-world best practices and specific well-regarded reference implementations
-- You must use zen MCP ONLY when asked to commenicate with Google Gemini and NOT for any other purpose
 - You must not attemp to create any new Python venv untill you are 100% certain that a given project does not have one already
 
 

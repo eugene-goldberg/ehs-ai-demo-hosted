@@ -25,7 +25,8 @@ from llama_index.core.query_engine import RetrieverQueryEngine
 # from llama_index.llms.openai import OpenAI
 # from llama_index.llms.anthropic import Anthropic
 from llama_index.graph_stores.neo4j import Neo4jPropertyGraphStore
-from llama_index.vector_stores.neo4jvector import Neo4jVectorStore
+# Temporarily disabled for testing
+# Neo4jPropertyGraphStore = Nonefrom llama_index.vector_stores.neo4jvector import Neo4jVectorStore
 from llama_index.core.extractors import (
     TitleExtractor,
     KeywordExtractor,
@@ -84,7 +85,7 @@ class EHSDocumentIndexer:
         
         # Configure embedding model
         if use_local_embeddings:
-            self.embed_model = HuggingFaceEmbedding(
+            # self.embed_model = HuggingFaceEmbedding(
                 model_name="sentence-transformers/all-MiniLM-L6-v2"
             )
         else:

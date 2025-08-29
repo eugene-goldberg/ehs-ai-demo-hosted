@@ -11,6 +11,12 @@ import logging
 import glob
 from pathlib import Path
 from datetime import datetime
+
+# Add backend/src directory to path FIRST, before any other imports
+backend_src_path = Path(__file__).parent.parent / "backend" / "src"
+sys.path.insert(0, str(backend_src_path))
+
+# Now import other modules
 from dotenv import load_dotenv
 from neo4j import GraphDatabase
 
@@ -21,19 +27,8 @@ sys.path.append(str(Path(__file__).parent.parent))
 env_path = Path(__file__).parent.parent / "backend" / ".env"
 load_dotenv(env_path, override=True)
 
-# Try different import paths to handle different execution contexts
-try:
-    # When run from the API with PYTHONPATH set to backend/src
-    from workflows.ingestion_workflow import IngestionWorkflow
-except ImportError:
-    try:
-        # When run directly from scripts directory
-        from backend.src.workflows.ingestion_workflow import IngestionWorkflow
-    except ImportError:
-        # Add backend/src to path and try again
-        backend_src_path = Path(__file__).parent.parent / "backend" / "src"
-        sys.path.insert(0, str(backend_src_path))
-        from workflows.ingestion_workflow import IngestionWorkflow
+# Import the risk assessment workflow directly since we've already set up the path
+from workflows.ingestion_workflow_with_risk_assessment import RiskAssessmentIntegratedWorkflow
 
 # Create logs directory if it doesn't exist
 script_dir = Path(__file__).parent
@@ -317,6 +312,28 @@ def process_document(workflow, file_path, doc_type):
                 logger.info(f"  • Disposal Facility: {extracted.get('facility_name', 'N/A')}")
                 waste_items = extracted.get('waste_items', [])
                 logger.info(f"  • Waste Items: {len(waste_items)} types")
+            
+            # Show risk assessment results if available
+            if result.get("risk_assessment_enabled") and result.get("risk_level"):
+                logger.info(f"\n  Risk Assessment Results:")
+                logger.info(f"  • Risk Level: {result.get('risk_level', 'N/A')}")
+                logger.info(f"  • Risk Score: {result.get('risk_score', 'N/A')}")
+                
+                risk_factors = result.get('risk_factors', [])
+                if risk_factors:
+                    logger.info(f"  • Risk Factors: {len(risk_factors)} identified")
+                    for factor in risk_factors[:3]:  # Show first 3 factors
+                        logger.info(f"    - {factor}")
+                    if len(risk_factors) > 3:
+                        logger.info(f"    ... and {len(risk_factors) - 3} more factors")
+                
+                recommendations = result.get('risk_recommendations', [])
+                if recommendations:
+                    logger.info(f"  • Recommendations: {len(recommendations)} provided")
+                    for rec in recommendations[:2]:  # Show first 2 recommendations
+                        logger.info(f"    - {rec}")
+                    if len(recommendations) > 2:
+                        logger.info(f"    ... and {len(recommendations) - 2} more recommendations")
                 
             return {
                 "success": True, 
@@ -545,17 +562,18 @@ def main():
         logger.error("✗ Failed to clear database, continuing anyway...")
     
     # Initialize workflow with OPENAI_API_KEY
-    logger.info(f"\nInitializing IngestionWorkflow...")
+    logger.info(f"\nInitializing RiskAssessmentIntegratedWorkflow...")
     try:
-        workflow = IngestionWorkflow(
+        workflow = RiskAssessmentIntegratedWorkflow(
             llama_parse_api_key=required_env_vars["LLAMA_PARSE_API_KEY"],
             openai_api_key=required_env_vars["OPENAI_API_KEY"],  # Added OPENAI_API_KEY
             neo4j_uri=required_env_vars["NEO4J_URI"],
             neo4j_username=required_env_vars["NEO4J_USERNAME"], 
             neo4j_password=required_env_vars["NEO4J_PASSWORD"],
-            llm_model="gpt-4o-2024-11-20"  # Use the latest model from env config
+            llm_model="gpt-4o-2024-11-20",  # Use the latest model from env config
+            enable_risk_assessment=True  # Enable risk assessment
         )
-        logger.info("✓ IngestionWorkflow initialized successfully")
+        logger.info("✓ RiskAssessmentIntegratedWorkflow initialized successfully with risk assessment enabled")
     except Exception as e:
         logger.error(f"✗ Failed to initialize workflow: {e}")
         return
