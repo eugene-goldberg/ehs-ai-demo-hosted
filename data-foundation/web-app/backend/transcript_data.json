@@ -4229,5 +4229,1500 @@
       "timestamp": ""
     },
     "timestamp": "2025-08-30T08:10:47.960465"
+  },
+  {
+    "id": "1dab91e0-2a31-464b-9b8e-e09ae73b3492",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount   | Quantity | Total Amount |\n|------------------------------------------------------|----------|----------|--------------|\n| Basic Fee wmView                                     | 130,00 € | 1        | 130,00 €     |\n| Basis fee for additional user accounts                | 10,00 €  | 0        | 0,00 €       |\n| Basic Fee wmPos                                      | 50,00 €  | 0        | 0,00 €       |\n| Basic Fee wmGuide                                    | 1.000,00 €| 0       | 0,00 €       |\n| Change of user accounts                               | 10,00 €  | 0        | 0,00 €       |\n| Transaction Fee T1                                   | 0,58 €   | 14       | 8,12 €       |\n| Transaction Fee T2                                   | 0,70 €   | 0        | 0,00 €       |\n| Transaction Fee T3                                   | 1,50 €   | 162      | 243,00 €     |\n| Transaction Fee T4                                   | 0,50 €   | 0        | 0,00 €       |\n| Transaction Fee T5                                   | 0,80 €   | 0        | 0,00 €       |\n| Transaction Fee T6                                   | 1,80 €   | 0        | 0,00 €       |\n| Transaction Fee G1                                   | 0,30 €   | 0        | 0,00 €       |\n| Transaction Fee G2                                   | 0,30 €   | 0        | 0,00 €       |\n| Transaction Fee G3                                   | 0,40 €   | 0        | 0,00 €       |\n| Transaction Fee G4                                   | 0,40 €   | 0        | 0,00 €       |\n| Transaction Fee G5                                   | 0,30 €   | 0        | 0,00 €       |\n| Transaction Fee G6                                   | 0,30 €   | 0        | 0,00 €       |\n| **Total**                                           |          |          | **381,12 €** |\n| **VAT 19 %**                                        |          |          | **72,41 €**  |\n| **Gross Amount incl. VAT**                          |          |          | **453,53 €** |\n\n### Dates and Time Periods\n- Invoice Period: **01.02.2024 - 29.02.2024**\n- Date: **1. März 2024**\n\n### Quantities and Measurements\n- Quantity of Transaction Fee T1: **14**\n- Quantity of Transaction Fee T3: **162**\n\n### Costs and Financial Information\n- Basic Fee wmView: **130,00 €**\n- Total Amount (without VAT): **381,12 €**\n- VAT (19%): **72,41 €**\n- Gross Amount (including VAT): **453,53 €**\n\n### Compliance-related Information\n- VAT No: **DE199378386**\n- Terms of Payment: Immediate payment without discount. Any bank charges must be paid by the invoice recipient.\n\n### Environmental Metrics\n- No specific environmental metrics were provided in the text.\n\nThis structured data summarizes the key financial and compliance-related information from the invoice.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n#### Amount in Euro\n| Section       | Amount in Euro |\n|---------------|----------------|\n| T1            | 0,58           |\n| T2            | 0,70           |\n| T3            | 1,50           |\n| T4            | 0,50           |\n| T5            | 0,80           |\n| T6            | 1,80           |\n| G1            | 0,30           |\n| G2            | 0,30           |\n| G3            | 0,40           |\n| G4            | 0,40           |\n| G5            | 0,30           |\n| G6            | 0,30           |\n\n#### User Account Summary\n| User Account   | T1 | T2 | T3 | T4 | T5 | T6 | G1 | G2 | G3 | G4 | G5 | G6 | Total Amount |\n|----------------|----|----|----|----|----|----|----|----|----|----|----|----|---------------|\n| user-account-1 | 10 | 0  | 99 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 154,30 €      |\n| user-account-2 | 4  | 0  | 63 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 96,82 €       |\n\n#### Transaction Fee Summary\n| Section       | T1      | T2      | T3      | T4      | T5      | T6      | G1      | G2      | G3      | G4      | G5      | G6      | Total in Euro |\n|---------------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|----------------|\n| Queries in Total | 14      | 0       | 162     | 0       | 0       | 0       | 0       | 0       | 0       | 0       | 0       | 0       | 14            |\n| Total in Euro | 8,12 €  | 0,00 €  | 243,00 €| 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 251,12 €      |\n\n### Costs and Financial Information\n- **Total Amount for user-account-1**: 154,30 €\n- **Total Amount for user-account-2**: 96,82 €\n- **Total in Euro for Queries**: 251,12 €\n\n### Compliance-related Information\n- The explanation of the query fee categories (T1 to T6 and G1 to G6) can be found on the website: wmaccess.com\n\n### Environmental Metrics\n- No specific environmental metrics were provided in the text.\n\nThis structured data captures all relevant information from the provided text.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n| Query Reference         | T1 | T2 | T3 | T4 | T5 | T6 | Cost (€) |\n|-------------------------|----|----|----|----|----|----|----------|\n| *Not specified*         | 4  | 0  | 9  | 0  | 0  | 0  | 15,82    |\n| AZR/31/27439            | 0  | 0  | 12 | 0  | 0  | 0  | 18,00    |\n| CCL/3715                | 0  | 0  | 4  | 0  | 0  | 0  | 6,00     |\n| CRS/28432               | 5  | 0  | 36 | 0  | 0  | 0  | 56,90    |\n| Cs/52113                | 0  | 0  | 19 | 0  | 0  | 0  | 28,50    |\n| GS 32090                | 1  | 0  | 7  | 0  | 0  | 0  | 11,08    |\n| Kpi/22695               | 2  | 0  | 6  | 0  | 0  | 0  | 10,16    |\n| PG 7772                 | 0  | 0  | 11 | 0  | 0  | 0  | 16,50    |\n| Rjn/11138               | 0  | 0  | 15 | 0  | 0  | 0  | 22,50    |\n| SF-M 596/99-08          | 0  | 0  | 5  | 0  | 0  | 0  | 7,50     |\n| Ttrb/17885              | 1  | 0  | 23 | 0  | 0  | 0  | 35,08    |\n| WPN:24791               | 1  | 0  | 4  | 0  | 0  | 0  | 6,58     |\n| Wwt/15658               | 0  | 0  | 11 | 0  | 0  | 0  | 16,50    |\n\n### Costs and Financial Information\n- **Costs for each Query in Euro**:\n- 0,58\n- 0,70\n- 1,50\n- 0,50\n- 0,80\n- 1,80\n\n### Compliance-related Information\n- No specific compliance-related information was provided in the text.\n\n### Environmental Metrics\n- No environmental metrics were provided in the text.\n\n### Quantities and Measurements\n- Quantities are represented in the table under columns T1 to T6, indicating counts for each query reference.\n\nThis structured data provides a clear overview of the invoice details, including the period, query references, associated costs, and quantities.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:11:11.450398",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:11:11.457017"
+  },
+  {
+    "id": "91af77cd-73f0-4cde-b412-8e09235a62c2",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount   | Quantity | Total Amount |\n|----------...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:11:11.464741"
+  },
+  {
+    "id": "23f42df0-5b54-493e-8012-9873b22f32c9",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2024-03-01\",\n  \"due_date\": null,\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Basic Fee wmView\",\n      \"quantity\": 1,\n      \"unit_price\": 130,\n      \"total\": 130\n    },\n    {\n      \"description\": \"Basis fee for additional user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Basic Fee wmPos\",\n      \"quantity\": 0,\n      \"unit_price\": 50,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Basic Fee wmGuide\",\n      \"quantity\": 0,\n      \"unit_price\": 1000,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Change of user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Transaction Fee T1\",\n      \"quantity\": 14,\n      \"unit_price\": 0.58,\n      \"total\": 8.12\n    },\n    {\n      \"description\": \"Transaction Fee T3\",\n      \"quantity\": 162,\n      \"unit_price\": 1.5,\n      \"total\": 243\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 381.12,\n  \"tax_amount\": 72.41,\n  \"total_amount\": 453.53\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:11:20.193666",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:11:20.203436"
+  },
+  {
+    "id": "e9844c74-4054-4000-a13d-20aeb2a24887",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:11:20.218028"
+  },
+  {
+    "id": "95480a32-bf5b-4dfa-938d-af82e96a2e95",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount (without VAT) | Quantity | Total Amount |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:11:43.662830"
+  },
+  {
+    "id": "14460059-30c0-463f-b1a8-306469e6c0de",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount (without VAT) | Quantity | Total Amount |\n|------------------------------------------------------|----------------------|----------|--------------|\n| Basic Fee wmView                                     | 130,00 €             | 1        | 130,00 €     |\n| Basis fee for additional user accounts                | 10,00 €              | 0        | 0,00 €       |\n| Basic Fee wmPos                                      | 50,00 €              | 0        | 0,00 €       |\n| Basic Fee wmGuide                                    | 1.000,00 €          | 0        | 0,00 €       |\n| Change of user accounts                               | 10,00 €              | 0        | 0,00 €       |\n| Transaction Fee T1                                   | 0,58 €               | 14       | 8,12 €       |\n| Transaction Fee T2                                   | 0,70 €               | 0        | 0,00 €       |\n| Transaction Fee T3                                   | 1,50 €               | 162      | 243,00 €     |\n| Transaction Fee T4                                   | 0,50 €               | 0        | 0,00 €       |\n| Transaction Fee T5                                   | 0,80 €               | 0        | 0,00 €       |\n| Transaction Fee T6                                   | 1,80 €               | 0        | 0,00 €       |\n| Transaction Fee G1                                   | 0,30 €               | 0        | 0,00 €       |\n| Transaction Fee G2                                   | 0,30 €               | 0        | 0,00 €       |\n| Transaction Fee G3                                   | 0,40 €               | 0        | 0,00 €       |\n| Transaction Fee G4                                   | 0,40 €               | 0        | 0,00 €       |\n| Transaction Fee G5                                   | 0,30 €               | 0        | 0,00 €       |\n| Transaction Fee G6                                   | 0,30 €               | 0        | 0,00 €       |\n| **Total**                                           |                      |          | **381,12 €** |\n| **VAT 19 %**                                        |                      |          | **72,41 €**  |\n| **Gross Amount incl. VAT**                           |                      |          | **453,53 €** |\n\n### Dates and Time Periods\n- Invoice Period: **01.02.2024 - 29.02.2024**\n- Date: **1. März 2024**\n\n### Quantities and Measurements\n- Quantity of Transaction Fee T1: **14**\n- Quantity of Transaction Fee T3: **162**\n\n### Costs and Financial Information\n- Total Amount (without VAT): **381,12 €**\n- VAT: **72,41 €**\n- Gross Amount (including VAT): **453,53 €**\n\n### Compliance-related Information\n- VAT No: **DE199378386**\n- Terms of Payment: Immediate payment without discount. Any bank charges must be paid by the invoice recipient.\n\n### Environmental Metrics\n(No specific environmental metrics were provided in the text.)\n\nThis structured data summarizes the key financial and compliance-related information from the invoice.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n#### Amount in Euro\n| Section        | Amount in Euro |\n|----------------|----------------|\n| T1             | 0,58           |\n| T2             | 0,70           |\n| T3             | 1,50           |\n| T4             | 0,50           |\n| T5             | 0,80           |\n| T6             | 1,80           |\n| G1             | 0,30           |\n| G2             | 0,30           |\n| G3             | 0,40           |\n| G4             | 0,40           |\n| G5             | 0,30           |\n| G6             | 0,30           |\n\n#### User Account Summary\n| User Account   | T1 | T2 | T3 | T4 | T5 | T6 | G1 | G2 | G3 | G4 | G5 | G6 | Total Amount |\n|----------------|----|----|----|----|----|----|----|----|----|----|----|----|---------------|\n| user-account-1 | 10 | 0  | 99 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 154,30 €      |\n| user-account-2 | 4  | 0  | 63 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 96,82 €       |\n\n#### Transaction Fee Summary\n| Section        | T1      | T2      | T3      | T4      | T5      | T6      | G1      | G2      | G3      | G4      | G5      | G6      | Total in Euro |\n|----------------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|----------------|\n| Queries in Total | 14      | 0       | 162     | 0       | 0       | 0       | 0       | 0       | 0       | 0       | 0       | 0       | 0              |\n| Total in Euro  | 8,12 €  | 0,00 €  | 243,00 €| 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 251,12 €       |\n\n### Costs and Financial Information\n- **Total Amount for user-account-1**: 154,30 €\n- **Total Amount for user-account-2**: 96,82 €\n- **Total in Euro for Transaction Fees**: 251,12 €\n\n### Compliance-related Information\n- The explanation of the query fee categories (T1 to T6 and G1 to G6) can be found on the website: wmaccess.com/abfragekategorien\n\n### Environmental Metrics\n- No specific environmental metrics were provided in the text.\n\nThis structured data captures all relevant information from the provided text.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n| Query Reference         | T1 | T2 | T3 | T4 | T5 | T6 | Total Cost (€) |\n|-------------------------|----|----|----|----|----|----|-----------------|\n| *Not specified*         | 4  | 0  | 9  | 0  | 0  | 0  | 15,82           |\n| AZR/31/27439            | 0  | 0  | 12 | 0  | 0  | 0  | 18,00           |\n| CCL/3715                | 0  | 0  | 4  | 0  | 0  | 0  | 6,00            |\n| CRS/28432               | 5  | 0  | 36 | 0  | 0  | 0  | 56,90           |\n| Cs/52113                | 0  | 0  | 19 | 0  | 0  | 0  | 28,50           |\n| GS 32090                | 1  | 0  | 7  | 0  | 0  | 0  | 11,08           |\n| Kpi/22695               | 2  | 0  | 6  | 0  | 0  | 0  | 10,16           |\n| PG 7772                 | 0  | 0  | 11 | 0  | 0  | 0  | 16,50           |\n| Rjn/11138               | 0  | 0  | 15 | 0  | 0  | 0  | 22,50           |\n| SF-M 596/99-08          | 0  | 0  | 5  | 0  | 0  | 0  | 7,50            |\n| Ttrb/17885              | 1  | 0  | 23 | 0  | 0  | 0  | 35,08           |\n| WPN:24791               | 1  | 0  | 4  | 0  | 0  | 0  | 6,58            |\n| Wwt/15658               | 0  | 0  | 11 | 0  | 0  | 0  | 16,50           |\n\n### Costs and Financial Information\n- **Total Costs for Queries**:\n- *Not specified*: 15,82 €\n- AZR/31/27439: 18,00 €\n- CCL/3715: 6,00 €\n- CRS/28432: 56,90 €\n- Cs/52113: 28,50 €\n- GS 32090: 11,08 €\n- Kpi/22695: 10,16 €\n- PG 7772: 16,50 €\n- Rjn/11138: 22,50 €\n- SF-M 596/99-08: 7,50 €\n- Ttrb/17885: 35,08 €\n- WPN:24791: 6,58 €\n- Wwt/15658: 16,50 €\n\n### Quantities and Measurements\n- **Price for each Query in Euro**:\n- 0,58 €\n- 0,70 €\n- 1,50 €\n- 0,50 €\n- 0,80 €\n- 1,80 €\n\n### Compliance-related Information\n- No specific compliance-related information was provided in the text.\n\n### Environmental Metrics\n- No environmental metrics were provided in the text.\n\nThis structured data summarizes the key information extracted from the provided text.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:11:43.652232",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:11:43.671620"
+  },
+  {
+    "id": "cc31dca6-aa09-42a2-8047-d9f775c3aa72",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2024-03-01\",\n  \"due_date\": null,\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Basic Fee wmView\",\n      \"quantity\": 1,\n      \"unit_price\": 130.00,\n      \"total\": 130.00\n    },\n    {\n      \"description\": \"Basis fee for additional user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Basic Fee wmPos\",\n      \"quantity\": 0,\n      \"unit_price\": 50.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Basic Fee wmGuide\",\n      \"quantity\": 0,\n      \"unit_price\": 1000.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Change of user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Transaction Fee T1\",\n      \"quantity\": 14,\n      \"unit_price\": 0.58,\n      \"total\": 8.12\n    },\n    {\n      \"description\": \"Transaction Fee T3\",\n      \"quantity\": 162,\n      \"unit_price\": 1.50,\n      \"total\": 243.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 381.12,\n  \"tax_amount\": 72.41,\n  \"total_amount\": 453.53\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:11:52.411203",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:11:52.417549"
+  },
+  {
+    "id": "7a6273e3-cf99-47f3-b352-6aef0d69c47e",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:41:15.400240"
+  },
+  {
+    "id": "e24e5957-2126-4c7a-9bd0-33f414f05982",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                           |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:41:29.435318"
+  },
+  {
+    "id": "3cc55293-92dd-451c-a773-59ca9f4e16f3",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                           |\n|-----------|-------------------------|----------|-------------------------------------------------------|\n| 1         | Open Top Roll-off       | 1        | Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric) |\n\n### Dates and Time Periods\n- Generator Certification Date: **07/15/2025**\n- Transporter Acknowledgment Date: **07/1** (incomplete, likely intended to be **07/15/2025**)\n\n### Quantities and Measurements\n- Quantity of waste: **1** (Open Top Roll-off)\n\n### Costs and Financial Information\n- Purchase Order Number: **98765**\n\n### Compliance-related Information\n- Generator EPA ID: **CAL000123456**\n- Facility EPA ID: **CAL000654321**\n- Certification statement confirming compliance with shipping regulations.\n\n### Environmental Metrics\n- Waste Type: **Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)**\n- Waste Classification: **Non-hazardous solid waste**\n\n### Contact Information\n- **Generator/Shipper:**\n- Name: Apex Manufacturing Inc.\n- Address: 789 Production Way, Mechanicsburg, CA 93011\n- Contact: John Doe, EHS Manager\n- Phone: (555) 123-7890\n\n- **Transporter:**\n- Carrier Name: Evergreen Environmental\n- Address: 333 Disposal Rd, Greenville, CA 91101\n- Phone: (555) 555-1234\n- Vehicle ID: Truck 72\n- Driver: M. Smith\n\n- **Receiving Facility:**\n- Name: Green Valley Landfill\n- Address: 100 Landfill Lane, Greenville, CA 91102\n\nThis structured data provides a clear overview of the waste manifest details, including compliance and environmental metrics.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:41:29.428454",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-2.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:41:29.441775"
+  },
+  {
+    "id": "1198656a-7e60-482f-91ff-c887d0e1feec",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": \"98765\",\n  \"invoice_date\": \"2025-07-15\",\n  \"due_date\": \"2025-07-15\",\n  \"vendor_name\": \"Evergreen Environmental\",\n  \"vendor_address\": \"333 Disposal Rd, Greenville, CA 91101\",\n  \"line_items\": [\n    {\n      \"line_item\": 1,\n      \"container_type\": \"Open Top Roll-off\",\n      \"quantity\": 1,\n      \"description\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\"\n    }\n  ],\n  \"waste_disposal_items\": [\n    {\n      \"generator_epa_id\": \"CAL000123456\",\n      \"facility_epa_id\": \"CAL000654321\",\n      \"waste_type\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\",\n      \"waste_classification\": \"Non-hazardous solid waste\"\n    }\n  ],\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": null,\n  \"tax_amount\": null,\n  \"total_amount\": null\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:41:39.104501",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-2.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:41:39.113412"
+  },
+  {
+    "id": "37a268bb-4810-4b92-8444-8632e8029c0c",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:41:39.120515"
+  },
+  {
+    "id": "940a66d1-e4cc-4f0b-ba72-32e0678344a3",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                           |\n|-----------|-------------------------|----------|-------------------------------------------------------|\n| 1         | Open Top Roll-off       | 1        | Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric) |\n\n### Dates and Time Periods\n- Generator Certification Date: **07/15/2025**\n- Transporter Acknowledgment Date: **07/1** (incomplete, likely intended to be **07/15/2025**)\n\n### Quantities and Measurements\n- Quantity of waste: **1** (Open Top Roll-off)\n\n### Costs and Financial Information\n- Purchase Order Number: **98765**\n\n### Compliance-related Information\n- Generator EPA ID: **CAL000123456**\n- Facility EPA ID: **CAL000654321**\n- Declaration of compliance with international and national governmental regulations.\n\n### Environmental Metrics\n- Waste Type: **Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)**\n- Waste Classification: **Non-hazardous solid waste**\n\n### Contact Information\n- **Generator/Shipper:**\n- Name: Apex Manufacturing Inc.\n- Address: 789 Production Way, Mechanicsburg, CA 93011\n- Contact: John Doe, EHS Manager\n- Phone: (555) 123-7890\n\n- **Transporter:**\n- Carrier Name: Evergreen Environmental\n- Address: 333 Disposal Rd, Greenville, CA 91101\n- Phone: (555) 555-1234\n- Vehicle ID: Truck 72\n- Driver: M. Smith\n\n- **Receiving Facility:**\n- Name: Green Valley Landfill\n- Address: 100 Landfill Lane, Greenville, CA 91102\n\nThis structured data provides a clear overview of the waste manifest, including all relevant details regarding the generator, transporter, receiving facility, waste description, and compliance information.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:41:51.561391",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-2.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:41:51.568161"
+  },
+  {
+    "id": "5f3deb17-2c37-406f-ad34-2d85de96e81a",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                           |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:41:51.578812"
+  },
+  {
+    "id": "3ebec9eb-788a-4ed9-b843-1f447131ba04",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": \"98765\",\n  \"invoice_date\": \"2025-07-15\",\n  \"due_date\": \"2025-07-15\",\n  \"vendor_name\": \"Evergreen Environmental\",\n  \"vendor_address\": \"333 Disposal Rd, Greenville, CA 91101\",\n  \"line_items\": [\n    {\n      \"line_item\": 1,\n      \"container_type\": \"Open Top Roll-off\",\n      \"quantity\": 1,\n      \"description\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\"\n    }\n  ],\n  \"waste_disposal_items\": [\n    {\n      \"generator_epa_id\": \"CAL000123456\",\n      \"facility_epa_id\": \"CAL000654321\",\n      \"waste_type\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\",\n      \"waste_classification\": \"Non-hazardous solid waste\"\n    }\n  ],\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": null,\n  \"tax_amount\": null,\n  \"total_amount\": null\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:41:58.248391",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-2.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:41:58.259254"
+  },
+  {
+    "id": "22404dc7-0fa2-4582-8f11-af8de08197d1",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:41:58.268842"
+  },
+  {
+    "id": "461172f7-24d2-4ac5-ab6f-5fe4e20d35de",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                            ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:42:10.559125"
+  },
+  {
+    "id": "7aa74ef2-ce3e-4b0f-9332-2da6e686c73d",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                               |\n|-----------|-------------------------|----------|-----------------------------------------------------------|\n| 1         | Open Top Roll-off       | 1        | Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric) |\n\n### Dates and Time Periods\n- Generator Certification Date: **07/15/2025**\n- Transporter Acknowledgment Date: **07/1** (incomplete, likely intended to be **07/15/2025**)\n\n### Quantities and Measurements\n- Quantity of waste: **1** (Open Top Roll-off)\n\n### Costs and Financial Information\n- Purchase Order Number: **98765**\n\n### Compliance-related Information\n- Generator EPA ID: **CAL000123456**\n- Facility EPA ID: **CAL000654321**\n- Declaration of compliance with international and national governmental regulations.\n\n### Environmental Metrics\n- Waste Type: **Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)**\n- Waste Classification: **Non-hazardous solid waste**\n\n### Contact Information\n- **Generator/Shipper:**\n- Name: Apex Manufacturing Inc.\n- Address: 789 Production Way, Mechanicsburg, CA 93011\n- Contact: John Doe, EHS Manager\n- Phone: (555) 123-7890\n\n- **Transporter:**\n- Carrier Name: Evergreen Environmental\n- Address: 333 Disposal Rd, Greenville, CA 91101\n- Phone: (555) 555-1234\n- Vehicle ID: Truck 72\n- Driver: M. Smith\n\n- **Receiving Facility:**\n- Name: Green Valley Landfill\n- Address: 100 Landfill Lane, Greenville, CA 91102\n\nThis structured data provides a clear overview of the waste manifest details, including compliance, contact information, and waste characteristics.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:42:10.553152",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-2.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:42:10.567036"
+  },
+  {
+    "id": "04363a5c-7536-43fa-95f4-c3807d0ca4b6",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": \"98765\",\n  \"invoice_date\": \"2025-07-15\",\n  \"due_date\": \"2025-07-15\",\n  \"vendor_name\": \"Evergreen Environmental\",\n  \"vendor_address\": \"333 Disposal Rd, Greenville, CA 91101\",\n  \"line_items\": [\n    {\n      \"line_item\": 1,\n      \"container_type\": \"Open Top Roll-off\",\n      \"quantity\": 1,\n      \"description\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\"\n    }\n  ],\n  \"waste_disposal_items\": [\n    {\n      \"generator_epa_id\": \"CAL000123456\",\n      \"facility_epa_id\": \"CAL000654321\",\n      \"waste_type\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\",\n      \"waste_classification\": \"Non-hazardous solid waste\"\n    }\n  ],\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": null,\n  \"tax_amount\": null,\n  \"total_amount\": null\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:42:17.825620",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-2.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:42:17.837601"
+  },
+  {
+    "id": "cb4f6ee8-e2fa-42e7-9970-675dba53f3e8",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:42:17.844781"
+  },
+  {
+    "id": "b03a6b4b-4004-48b7-8f62-7977f3dfdabb",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage     ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:42:35.791274"
+  },
+  {
+    "id": "ee15ff26-1298-4a6a-8e23-e44c780a1882",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage        |\n|---------------|--------------|------------------|------------------|--------------|\n| WTR-MAIN-01   | Commercial    | 8,765,400 gal    | 9,015,400 gal    | 250,000 gal  |\n\n2. **Current Charges Breakdown**\n| Description                                                       | Rate                | Amount      |\n|-------------------------------------------------------------------|---------------------|-------------|\n| Water Consumption (250,000 Gallons)                               | $0.0150 / Gallon    | $3,750.00   |\n| Sewer Service Charge (Based on water usage)                       |                     | $950.00     |\n| Stormwater Management Fee                                          |                     | $125.00     |\n| State Water Conservation Tax                                       |                     | $61.50      |\n| Infrastructure Improvement Surcharge                                |                     | $5.00       |\n| **Total Current Charges**                                          |                     | **$4,891.50** |\n\n### Dates and Time Periods\n- Statement Date: **July 6, 2025**\n- Due Date: **August 5, 2025**\n- Billing Period: **June 1, 2025 to June 30, 2025**\n\n### Quantities and Measurements\n- Water Usage: **250,000 gallons**\n- Previous Meter Read: **8,765,400 gallons**\n- Current Meter Read: **9,015,400 gallons**\n\n### Costs and Financial Information\n- Amount Due: **$4,891.50**\n- Water Consumption Charge: **$3,750.00**\n- Sewer Service Charge: **$950.00**\n- Stormwater Management Fee: **$125.00**\n- State Water Conservation Tax: **$61.50**\n- Infrastructure Improvement Surcharge: **$5.00**\n\n### Compliance-related Information\n- State Water Conservation Tax indicates compliance with state regulations regarding water usage.\n\n### Environmental Metrics\n- Water Consumption: **250,000 gallons** (indicates the amount of water used, relevant for environmental impact assessments).\n\nThis structured data provides a clear overview of the water utility statement for Apex Manufacturing Inc.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:42:35.774006",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-3.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:42:35.808227"
+  },
+  {
+    "id": "f39e2fe8-4ec0-430a-9633-8d785dbc7055",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-06\",\n  \"due_date\": \"2025-08-05\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Water Consumption\",\n      \"quantity\": 250000,\n      \"unit_price\": 0.015,\n      \"total\": 3750.00\n    },\n    {\n      \"description\": \"Sewer Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 950.00\n    },\n    {\n      \"description\": \"Stormwater Management Fee\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 125.00\n    },\n    {\n      \"description\": \"State Water Conservation Tax\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 61.50\n    },\n    {\n      \"description\": \"Infrastructure Improvement Surcharge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 5.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 4891.50,\n  \"tax_amount\": null,\n  \"total_amount\": 4891.50\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:42:44.723749",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-3.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:42:44.738650"
+  },
+  {
+    "id": "230dc213-1167-4280-b601-884924bd9176",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:42:44.747250"
+  },
+  {
+    "id": "ea4830c0-d76b-4ace-83df-45f1bacce139",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage     ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:42:58.077676"
+  },
+  {
+    "id": "b4efe61c-4060-4be8-a3a3-74dba984134f",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage        |\n|---------------|--------------|------------------|------------------|--------------|\n| WTR-MAIN-01   | Commercial    | 8,765,400 gal    | 9,015,400 gal    | 250,000 gal  |\n\n2. **Current Charges Breakdown**\n| Description                                                       | Rate                | Amount      |\n|-------------------------------------------------------------------|---------------------|-------------|\n| Water Consumption (250,000 Gallons)                               | $0.0150 / Gallon    | $3,750.00   |\n| Sewer Service Charge (Based on water usage)                       |                     | $950.00     |\n| Stormwater Management Fee                                          |                     | $125.00     |\n| State Water Conservation Tax                                       |                     | $61.50      |\n| Infrastructure Improvement Surcharge                                |                     | $5.00       |\n| **Total Current Charges**                                          |                     | **$4,891.50** |\n\n### Dates and Time Periods\n- Statement Date: **July 6, 2025**\n- Due Date: **August 5, 2025**\n- Billing Period: **June 1, 2025 to June 30, 2025**\n\n### Quantities and Measurements\n- Water Usage: **250,000 gallons**\n- Previous Meter Read: **8,765,400 gallons**\n- Current Meter Read: **9,015,400 gallons**\n\n### Costs and Financial Information\n- Amount Due: **$4,891.50**\n- Water Consumption Charge: **$3,750.00**\n- Sewer Service Charge: **$950.00**\n- Stormwater Management Fee: **$125.00**\n- State Water Conservation Tax: **$61.50**\n- Infrastructure Improvement Surcharge: **$5.00**\n\n### Compliance-related Information\n- State Water Conservation Tax indicates compliance with state regulations regarding water usage.\n\n### Environmental Metrics\n- Water Consumption: **250,000 gallons** (indicates the amount of water used, relevant for environmental impact assessments).\n\nThis structured data provides a clear overview of the water utility statement for Apex Manufacturing Inc.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:42:58.072137",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-3.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:42:58.086373"
+  },
+  {
+    "id": "24f05493-61a0-4825-902c-2583d478edc8",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-06\",\n  \"due_date\": \"2025-08-05\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Water Consumption\",\n      \"quantity\": 250000,\n      \"unit_price\": 0.015,\n      \"total\": 3750.00\n    },\n    {\n      \"description\": \"Sewer Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 950.00\n    },\n    {\n      \"description\": \"Stormwater Management Fee\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 125.00\n    },\n    {\n      \"description\": \"State Water Conservation Tax\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 61.50\n    },\n    {\n      \"description\": \"Infrastructure Improvement Surcharge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 5.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 4891.50,\n  \"tax_amount\": null,\n  \"total_amount\": 4891.50\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:43:07.245460",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-3.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:43:07.254896"
+  },
+  {
+    "id": "fdf97844-a091-4ca4-bc94-7478d7c14554",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:43:07.264557"
+  },
+  {
+    "id": "ef5907ae-d3c7-480c-a613-16cd14011075",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage     ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:43:19.481618"
+  },
+  {
+    "id": "a1c780c0-b038-49c1-bd58-6ef4fa7117e4",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage        |\n|---------------|--------------|------------------|------------------|--------------|\n| WTR-MAIN-01   | Commercial    | 8,765,400 gal    | 9,015,400 gal    | 250,000 gal  |\n\n2. **Current Charges Breakdown**\n| Description                                                       | Rate                | Amount      |\n|-------------------------------------------------------------------|---------------------|-------------|\n| Water Consumption (250,000 Gallons)                               | $0.0150 / Gallon    | $3,750.00   |\n| Sewer Service Charge (Based on water usage)                       |                     | $950.00     |\n| Stormwater Management Fee                                          |                     | $125.00     |\n| State Water Conservation Tax                                        |                     | $61.50      |\n| Infrastructure Improvement Surcharge                               |                     | $5.00       |\n| **Total Current Charges**                                          |                     | **$4,891.50** |\n\n### Dates and Time Periods\n- Statement Date: **July 6, 2025**\n- Due Date: **August 5, 2025**\n- Billing Period: **June 1, 2025 to June 30, 2025**\n\n### Quantities and Measurements\n- Water Usage: **250,000 gallons**\n- Previous Meter Read: **8,765,400 gallons**\n- Current Meter Read: **9,015,400 gallons**\n\n### Costs and Financial Information\n- Amount Due: **$4,891.50**\n- Water Consumption Charge: **$3,750.00**\n- Sewer Service Charge: **$950.00**\n- Stormwater Management Fee: **$125.00**\n- State Water Conservation Tax: **$61.50**\n- Infrastructure Improvement Surcharge: **$5.00**\n\n### Compliance-related Information\n- State Water Conservation Tax indicates compliance with state regulations regarding water usage.\n\n### Environmental Metrics\n- Water Consumption: **250,000 gallons** (indicates the amount of water used, relevant for environmental impact assessments).\n\nThis structured data provides a clear overview of the water utility statement for Apex Manufacturing Inc.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:43:19.474398",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-3.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:43:19.490538"
+  },
+  {
+    "id": "a89ff8fe-0715-4f05-a69b-c3d13810da29",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-06\",\n  \"due_date\": \"2025-08-05\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Water Consumption\",\n      \"quantity\": 250000,\n      \"unit_price\": 0.015,\n      \"total\": 3750.00\n    },\n    {\n      \"description\": \"Sewer Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 950.00\n    },\n    {\n      \"description\": \"Stormwater Management Fee\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 125.00\n    },\n    {\n      \"description\": \"State Water Conservation Tax\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 61.50\n    },\n    {\n      \"description\": \"Infrastructure Improvement Surcharge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 5.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 4891.50,\n  \"tax_amount\": null,\n  \"total_amount\": 4891.50\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:43:31.637582",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-3.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:43:31.648613"
+  },
+  {
+    "id": "14ab0631-2007-473e-b76b-c234aa852f30",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:43:31.659935"
+  },
+  {
+    "id": "8ff9a9c3-e2ca-4227-bc7e-fd3511b04a60",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Reading |\n|--------------|---------------------------|------------------|------------------|\n| MTR-7743-A   | Commercial - Peak         | 543210 kWh       | 613210 kWh       |\n| MTR-7743-B   | Commercial - Off-Peak     | 891234 kWh       | 951234 kWh       |\n| **Total Consumption** |                   |                  | **130,000 kWh**  |\n\n**Current Charges Breakdown**\n| Description                                   | Rate              | Amount      |\n|-----------------------------------------------|-------------------|-------------|\n| Peak Demand Usage (70,000 kWh)               | $0.1255 / kWh     | $8,785.00   |\n| Off-Peak Demand Usage (60,000 kWh)           | $0.0890 / kWh     | $5,340.00   |\n| Base Service Charge                           |                   | $250.00     |\n| State Environmental Surcharge                 |                   | $875.50     |\n| Grid Infrastructure Fee                        |                   | $182.39     |\n| **Total Current Charges**                     |                   | **$15,432.89** |\n\n### Dates and Time Periods\n- Statement Date: **July 5, 2025**\n- Due Date: **August 1, 2025**\n- Billing Period: **June 1, 2025 to June 30, 2025**\n\n### Quantities and Measurements\n- Total Consumption: **130,000 kWh**\n- Peak Demand Usage: **70,000 kWh**\n- Off-Peak Demand Usage: **60,000 kWh**\n\n### Costs and Financial Information\n- Amount Due: **$15,432.89**\n- Peak Demand Usage Charge: **$8,785.00**\n- Off-Peak Demand Usage Charge: **$5,340.00**\n- Base Service Charge: **$250.00**\n- State Environmental Surcharge: **$875.50**\n- Grid Infrastructure Fee: **$182.39**\n\n### Compliance-related Information\n- State Environmental Surcharge: **$875.50** (indicates compliance with environmental regulations)\n\n### Environmental Metrics\n- State Environmental Surcharge: **$875.50** (could be related to environmental compliance costs)\n\nThis structured data provides a clear overview of the utility statement for Apex Manufacturing Inc.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:43:50.170639",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-1.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:43:50.176682"
+  },
+  {
+    "id": "3ae69bba-3fab-493f-8467-b9fcb5e1516f",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Rea...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:43:50.184448"
+  },
+  {
+    "id": "7bb84178-afa8-4f1b-9ea5-67ed310bf9f3",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-05\",\n  \"due_date\": \"2025-08-01\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Peak Demand Usage (70,000 kWh)\",\n      \"quantity\": 70000,\n      \"unit_price\": 0.1255,\n      \"total\": 8785.00\n    },\n    {\n      \"description\": \"Off-Peak Demand Usage (60,000 kWh)\",\n      \"quantity\": 60000,\n      \"unit_price\": 0.0890,\n      \"total\": 5340.00\n    },\n    {\n      \"description\": \"Base Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 250.00\n    },\n    {\n      \"description\": \"State Environmental Surcharge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 875.50\n    },\n    {\n      \"description\": \"Grid Infrastructure Fee\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 182.39\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": 875.50,\n  \"subtotal\": null,\n  \"tax_amount\": null,\n  \"total_amount\": 15432.89\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:43:58.053283",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-1.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:43:58.062156"
+  },
+  {
+    "id": "1d144ffe-f194-42dc-8a05-5e12950d5590",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:43:58.071423"
+  },
+  {
+    "id": "66f481d2-5afa-49ea-b88a-ced72f49a1cb",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Reading |\n|--------------|---------------------------|------------------|------------------|\n| MTR-7743-A   | Commercial - Peak         | 543210 kWh       | 613210 kWh       |\n| MTR-7743-B   | Commercial - Off-Peak     | 891234 kWh       | 951234 kWh       |\n| **Total Consumption** |                   |                  | **130,000 kWh**  |\n\n**Current Charges Breakdown**\n| Description                                   | Rate              | Amount      |\n|-----------------------------------------------|-------------------|-------------|\n| Peak Demand Usage (70,000 kWh)               | $0.1255 / kWh     | $8,785.00   |\n| Off-Peak Demand Usage (60,000 kWh)           | $0.0890 / kWh     | $5,340.00   |\n| Base Service Charge                           |                   | $250.00     |\n| State Environmental Surcharge                 |                   | $875.50     |\n| Grid Infrastructure Fee                        |                   | $182.39     |\n| **Total Current Charges**                     |                   | **$15,432.89** |\n\n### Dates and Time Periods\n- Statement Date: July 5, 2025\n- Due Date: August 1, 2025\n- Billing Period: June 1, 2025 to June 30, 2025\n\n### Quantities and Measurements\n- Total Consumption: 130,000 kWh\n- Peak Demand Usage: 70,000 kWh\n- Off-Peak Demand Usage: 60,000 kWh\n\n### Costs and Financial Information\n- Amount Due: $15,432.89\n- Peak Demand Usage Charge: $8,785.00\n- Off-Peak Demand Usage Charge: $5,340.00\n- Base Service Charge: $250.00\n- State Environmental Surcharge: $875.50\n- Grid Infrastructure Fee: $182.39\n\n### Compliance-related Information\n- State Environmental Surcharge: $875.50 (indicates compliance with environmental regulations)\n\n### Environmental Metrics\n- State Environmental Surcharge: $875.50 (could be related to environmental compliance costs)\n\nThis structured data provides a clear overview of the utility statement for Apex Manufacturing Inc.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:44:11.064412",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-1.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:44:11.081672"
+  },
+  {
+    "id": "7a93f68a-e7bb-45cb-9941-c6add53c7e68",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Rea...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:44:11.090297"
+  },
+  {
+    "id": "878a69aa-309d-436f-9da9-c28d376f671f",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-05\",\n  \"due_date\": \"2025-08-01\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Peak Demand Usage (70,000 kWh)\",\n      \"quantity\": 70000,\n      \"unit_price\": 0.1255,\n      \"total\": 8785.00\n    },\n    {\n      \"description\": \"Off-Peak Demand Usage (60,000 kWh)\",\n      \"quantity\": 60000,\n      \"unit_price\": 0.0890,\n      \"total\": 5340.00\n    },\n    {\n      \"description\": \"Base Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 250.00\n    },\n    {\n      \"description\": \"State Environmental Surcharge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 875.50\n    },\n    {\n      \"description\": \"Grid Infrastructure Fee\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 182.39\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": 875.50,\n  \"subtotal\": 15432.89,\n  \"tax_amount\": null,\n  \"total_amount\": 15432.89\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:44:17.612420",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-1.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:44:17.619795"
+  },
+  {
+    "id": "3ab5fc31-1e21-40e3-82a5-0675a53400f4",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:44:17.628730"
+  },
+  {
+    "id": "1043ee8e-c3d1-4ab3-b398-59663e288ee1",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Reading |\n|--------------|---------------------------|------------------|------------------|\n| MTR-7743-A   | Commercial - Peak         | 543210 kWh       | 613210 kWh       |\n| MTR-7743-B   | Commercial - Off-Peak     | 891234 kWh       | 951234 kWh       |\n| **Total Consumption** |                   |                  | **130,000 kWh**  |\n\n**Current Charges Breakdown**\n| Description                                   | Rate              | Amount      |\n|-----------------------------------------------|-------------------|-------------|\n| Peak Demand Usage (70,000 kWh)               | $0.1255 / kWh     | $8,785.00   |\n| Off-Peak Demand Usage (60,000 kWh)           | $0.0890 / kWh     | $5,340.00   |\n| Base Service Charge                           |                   | $250.00     |\n| State Environmental Surcharge                 |                   | $875.50     |\n| Grid Infrastructure Fee                        |                   | $182.39     |\n| **Total Current Charges**                     |                   | **$15,432.89** |\n\n### Dates and Time Periods\n- Statement Date: **July 5, 2025**\n- Due Date: **August 1, 2025**\n- Billing Period: **June 1, 2025 to June 30, 2025**\n\n### Quantities and Measurements\n- Total Consumption: **130,000 kWh**\n- Peak Demand Usage: **70,000 kWh**\n- Off-Peak Demand Usage: **60,000 kWh**\n\n### Costs and Financial Information\n- Amount Due: **$15,432.89**\n- Peak Demand Usage Charge: **$8,785.00**\n- Off-Peak Demand Usage Charge: **$5,340.00**\n- Base Service Charge: **$250.00**\n- State Environmental Surcharge: **$875.50**\n- Grid Infrastructure Fee: **$182.39**\n\n### Compliance-related Information\n- State Environmental Surcharge: **$875.50** (indicates compliance with environmental regulations)\n\n### Environmental Metrics\n- State Environmental Surcharge: **$875.50** (could be related to environmental compliance costs)\n\nThis structured data provides a clear overview of the utility statement for Apex Manufacturing Inc.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:44:31.209112",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-1.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:44:31.214916"
+  },
+  {
+    "id": "a03fcffd-4333-4da6-9c3d-b9064d6eb43d",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Rea...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:44:31.222346"
+  },
+  {
+    "id": "fe3f27e7-a9d5-403f-b75a-7c0cbdb3d890",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-05\",\n  \"due_date\": \"2025-08-01\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Peak Demand Usage (70,000 kWh)\",\n      \"quantity\": 70000,\n      \"unit_price\": 0.1255,\n      \"total\": 8785.00\n    },\n    {\n      \"description\": \"Off-Peak Demand Usage (60,000 kWh)\",\n      \"quantity\": 60000,\n      \"unit_price\": 0.0890,\n      \"total\": 5340.00\n    },\n    {\n      \"description\": \"Base Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 250.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": 875.50,\n  \"subtotal\": null,\n  \"tax_amount\": null,\n  \"total_amount\": 15432.89\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:44:40.587173",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-1.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:44:40.598205"
+  },
+  {
+    "id": "e55ae99f-189c-4264-b7b3-ec36c2eb22c1",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:44:40.613613"
+  },
+  {
+    "id": "cce330fd-3b6d-4120-aa25-a9bc7dcac549",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount (without VAT) | Quantity | Total Amount |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:44:58.683606"
+  },
+  {
+    "id": "1f86754f-f2fe-4271-b487-5ddb58d42eb0",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount (without VAT) | Quantity | Total Amount |\n|------------------------------------------------------|----------------------|----------|--------------|\n| Basic Fee wmView                                     | 130,00 €             | 1        | 130,00 €     |\n| Basis fee for additional user accounts                | 10,00 €              | 0        | 0,00 €       |\n| Basic Fee wmPos                                      | 50,00 €              | 0        | 0,00 €       |\n| Basic Fee wmGuide                                    | 1.000,00 €          | 0        | 0,00 €       |\n| Change of user accounts                               | 10,00 €              | 0        | 0,00 €       |\n| Transaction Fee T1                                   | 0,58 €               | 14       | 8,12 €       |\n| Transaction Fee T2                                   | 0,70 €               | 0        | 0,00 €       |\n| Transaction Fee T3                                   | 1,50 €               | 162      | 243,00 €     |\n| Transaction Fee T4                                   | 0,50 €               | 0        | 0,00 €       |\n| Transaction Fee T5                                   | 0,80 €               | 0        | 0,00 €       |\n| Transaction Fee T6                                   | 1,80 €               | 0        | 0,00 €       |\n| Transaction Fee G1                                   | 0,30 €               | 0        | 0,00 €       |\n| Transaction Fee G2                                   | 0,30 €               | 0        | 0,00 €       |\n| Transaction Fee G3                                   | 0,40 €               | 0        | 0,00 €       |\n| Transaction Fee G4                                   | 0,40 €               | 0        | 0,00 €       |\n| Transaction Fee G5                                   | 0,30 €               | 0        | 0,00 €       |\n| Transaction Fee G6                                   | 0,30 €               | 0        | 0,00 €       |\n| **Total**                                           |                      |          | **381,12 €** |\n| **VAT 19 %**                                        |                      |          | **72,41 €**  |\n| **Gross Amount incl. VAT**                           |                      |          | **453,53 €** |\n\n### Dates and Time Periods\n- Invoice Period: **01.02.2024 - 29.02.2024**\n- Date: **1. März 2024**\n\n### Quantities and Measurements\n- Quantity of Transaction Fee T1: **14**\n- Quantity of Transaction Fee T3: **162**\n\n### Costs and Financial Information\n- Total Amount (without VAT): **381,12 €**\n- VAT: **72,41 €**\n- Gross Amount including VAT: **453,53 €**\n\n### Compliance-related Information\n- VAT No: **DE199378386**\n- Terms of Payment: Immediate payment without discount. Any bank charges must be paid by the invoice recipient.\n\n### Environmental Metrics\n(No specific environmental metrics were provided in the text.)\n\nThis structured data summarizes the key financial and compliance-related information from the invoice.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n#### Amount in Euro\n| Section        | Amount in Euro |\n|----------------|-----------------|\n| T1             | 0,58            |\n| T2             | 0,70            |\n| T3             | 1,50            |\n| T4             | 0,50            |\n| T5             | 0,80            |\n| T6             | 1,80            |\n| G1             | 0,30            |\n| G2             | 0,30            |\n| G3             | 0,40            |\n| G4             | 0,40            |\n| G5             | 0,30            |\n| G6             | 0,30            |\n\n#### User Account Summary\n| User Account   | T1 | T2 | T3 | T4 | T5 | T6 | G1 | G2 | G3 | G4 | G5 | G6 | Total Cost |\n|----------------|----|----|----|----|----|----|----|----|----|----|----|----|------------|\n| user-account-1 | 10 | 0  | 99 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 154,30 €   |\n| user-account-2 | 4  | 0  | 63 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 96,82 €    |\n\n#### Transaction Fee Segmentation\n| Section        | T1 | T2 | T3 | T4 | T5 | T6 | G1 | G2 | G3 | G4 | G5 | G6 | Total in Euro |\n|----------------|----|----|----|----|----|----|----|----|----|----|----|----|----------------|\n| Queries in Total | 14 | 0  | 162 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 251,12 €       |\n| Total in Euro  | 8,12 € | 0,00 € | 243,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 251,12 €       |\n\n### Costs and Financial Information\n- **Total Cost for user-account-1**: 154,30 €\n- **Total Cost for user-account-2**: 96,82 €\n- **Total in Euro for Queries**: 251,12 €\n\n### Compliance-related Information\n- The explanation of the query fee categories (T1 to T6 and G1 to G6) can be found on the website: wmaccess.com/abfragekategorien\n\n### Environmental Metrics\n- No specific environmental metrics were provided in the text.\n\nThis structured data summarizes the key financial and operational details from the invoice.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n| Query Reference         | T1 | T2 | T3 | T4 | T5 | T6 | Cost (€) |\n|-------------------------|----|----|----|----|----|----|----------|\n| *Not specified*         | 4  | 0  | 9  | 0  | 0  | 0  | 15,82    |\n| AZR/31/27439            | 0  | 0  | 12 | 0  | 0  | 0  | 18,00    |\n| CCL/3715                | 0  | 0  | 4  | 0  | 0  | 0  | 6,00     |\n| CRS/28432               | 5  | 0  | 36 | 0  | 0  | 0  | 56,90    |\n| Cs/52113                | 0  | 0  | 19 | 0  | 0  | 0  | 28,50    |\n| GS 32090                | 1  | 0  | 7  | 0  | 0  | 0  | 11,08    |\n| Kpi/22695               | 2  | 0  | 6  | 0  | 0  | 0  | 10,16    |\n| PG 7772                 | 0  | 0  | 11 | 0  | 0  | 0  | 16,50    |\n| Rjn/11138               | 0  | 0  | 15 | 0  | 0  | 0  | 22,50    |\n| SF-M 596/99-08          | 0  | 0  | 5  | 0  | 0  | 0  | 7,50     |\n| Ttrb/17885              | 1  | 0  | 23 | 0  | 0  | 0  | 35,08    |\n| WPN:24791               | 1  | 0  | 4  | 0  | 0  | 0  | 6,58     |\n| Wwt/15658               | 0  | 0  | 11 | 0  | 0  | 0  | 16,50    |\n\n### Costs and Financial Information\n- **Costs for each Query in Euro**:\n- 0,58\n- 0,70\n- 1,50\n- 0,50\n- 0,80\n- 1,80\n\n### Compliance-related Information\n- No specific compliance-related information was provided in the text.\n\n### Environmental Metrics\n- No environmental metrics were provided in the text.\n\n### Quantities and Measurements\n- Quantities are represented in the table under columns T1 to T6 for each query reference.\n\nThis structured data summarizes the key information extracted from the provided text.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:44:58.678467",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:44:58.691141"
+  },
+  {
+    "id": "2a41f82b-b1b3-41aa-9bc7-58ec380fd0c7",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2024-03-01\",\n  \"due_date\": null,\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Basic Fee wmView\",\n      \"quantity\": 1,\n      \"unit_price\": 130.00,\n      \"total\": 130.00\n    },\n    {\n      \"description\": \"Basis fee for additional user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Basic Fee wmPos\",\n      \"quantity\": 0,\n      \"unit_price\": 50.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Basic Fee wmGuide\",\n      \"quantity\": 0,\n      \"unit_price\": 1000.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Change of user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Transaction Fee T1\",\n      \"quantity\": 14,\n      \"unit_price\": 0.58,\n      \"total\": 8.12\n    },\n    {\n      \"description\": \"Transaction Fee T3\",\n      \"quantity\": 162,\n      \"unit_price\": 1.50,\n      \"total\": 243.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 381.12,\n  \"tax_amount\": 72.41,\n  \"total_amount\": 453.53\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:45:08.607736",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:45:08.616256"
+  },
+  {
+    "id": "ae334e0c-8bca-4d00-9dd1-7f440c3f074b",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:45:08.623969"
+  },
+  {
+    "id": "ebba58b7-9939-4081-8621-64e7429e2e5b",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount   | Quantity | Total Amount |\n|----------...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:45:31.978573"
+  },
+  {
+    "id": "91c5fc73-3891-4b5d-b62a-0f8ec7c96734",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount   | Quantity | Total Amount |\n|------------------------------------------------------|----------|----------|--------------|\n| Basic Fee wmView                                     | 130,00 € | 1        | 130,00 €     |\n| Basis fee for additional user accounts                | 10,00 €  | 0        | 0,00 €       |\n| Basic Fee wmPos                                      | 50,00 €  | 0        | 0,00 €       |\n| Basic Fee wmGuide                                    | 1.000,00 €| 0       | 0,00 €       |\n| Change of user accounts                               | 10,00 €  | 0        | 0,00 €       |\n| Transaction Fee T1                                   | 0,58 €   | 14       | 8,12 €       |\n| Transaction Fee T2                                   | 0,70 €   | 0        | 0,00 €       |\n| Transaction Fee T3                                   | 1,50 €   | 162      | 243,00 €     |\n| Transaction Fee T4                                   | 0,50 €   | 0        | 0,00 €       |\n| Transaction Fee T5                                   | 0,80 €   | 0        | 0,00 €       |\n| Transaction Fee T6                                   | 1,80 €   | 0        | 0,00 €       |\n| Transaction Fee G1                                   | 0,30 €   | 0        | 0,00 €       |\n| Transaction Fee G2                                   | 0,30 €   | 0        | 0,00 €       |\n| Transaction Fee G3                                   | 0,40 €   | 0        | 0,00 €       |\n| Transaction Fee G4                                   | 0,40 €   | 0        | 0,00 €       |\n| Transaction Fee G5                                   | 0,30 €   | 0        | 0,00 €       |\n| Transaction Fee G6                                   | 0,30 €   | 0        | 0,00 €       |\n| **Total**                                           |          |          | **381,12 €** |\n| **VAT 19 %**                                        |          |          | **72,41 €**  |\n| **Gross Amount incl. VAT**                          |          |          | **453,53 €** |\n\n### Dates and Time Periods\n- Invoice Period: **01.02.2024 - 29.02.2024**\n- Date: **1. März 2024**\n\n### Quantities and Measurements\n- Quantities for transaction fees:\n- T1: 14\n- T3: 162\n\n### Costs and Financial Information\n- Basic Fee wmView: **130,00 €**\n- Total: **381,12 €**\n- VAT: **72,41 €**\n- Gross Amount incl. VAT: **453,53 €**\n\n### Compliance-related Information\n- VAT No: **DE199378386**\n- Terms of Payment: Immediate payment without discount. Any bank charges must be paid by the invoice recipient.\n\n### Environmental Metrics\n- No specific environmental metrics were provided in the text.\n\nThis structured data summarizes the key financial and compliance-related information from the invoice.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n#### Amount in Euro\n| Section        | Amount in Euro |\n|----------------|----------------|\n| T1             | 0,58           |\n| T2             | 0,70           |\n| T3             | 1,50           |\n| T4             | 0,50           |\n| T5             | 0,80           |\n| T6             | 1,80           |\n| G1             | 0,30           |\n| G2             | 0,30           |\n| G3             | 0,40           |\n| G4             | 0,40           |\n| G5             | 0,30           |\n| G6             | 0,30           |\n\n#### User Account Summary\n| User Account   | T1 | T2 | T3 | T4 | T5 | T6 | G1 | G2 | G3 | G4 | G5 | G6 | Total Amount |\n|----------------|----|----|----|----|----|----|----|----|----|----|----|----|--------------|\n| user-account-1 | 10 | 0  | 99 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 154,30 €     |\n| user-account-2 | 4  | 0  | 63 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 96,82 €      |\n\n#### Transaction Fee Summary\n| Section        | T1      | T2      | T3      | T4      | T5      | T6      | G1      | G2      | G3      | G4      | G5      | G6      | Total in Euro |\n|----------------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|----------------|\n| Queries in Total | 14      | 0       | 162     | 0       | 0       | 0       | 0       | 0       | 0       | 0       | 0       | 0       | 0              |\n| Total in Euro  | 8,12 €  | 0,00 €  | 243,00 €| 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 251,12 €       |\n\n### Costs and Financial Information\n- **Total Amount for user-account-1**: 154,30 €\n- **Total Amount for user-account-2**: 96,82 €\n- **Total in Euro for Queries**: 251,12 €\n\n### Compliance-related Information\n- The explanation of the query fee categories (T1 to T6 and G1 to G6) can be found on the website: wmaccess.com/abfragekategorien\n\n### Environmental Metrics\n- No specific environmental metrics were provided in the text.\n\nThis structured data captures all relevant information from the provided text.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n| Query Reference         | T1 | T2 | T3 | T4 | T5 | T6 | Cost (€) |\n|-------------------------|----|----|----|----|----|----|----------|\n| *Not specified*         | 4  | 0  | 9  | 0  | 0  | 0  | 15,82    |\n| AZR/31/27439            | 0  | 0  | 12 | 0  | 0  | 0  | 18,00    |\n| CCL/3715                | 0  | 0  | 4  | 0  | 0  | 0  | 6,00     |\n| CRS/28432               | 5  | 0  | 36 | 0  | 0  | 0  | 56,90    |\n| Cs/52113                | 0  | 0  | 19 | 0  | 0  | 0  | 28,50    |\n| GS 32090                | 1  | 0  | 7  | 0  | 0  | 0  | 11,08    |\n| Kpi/22695               | 2  | 0  | 6  | 0  | 0  | 0  | 10,16    |\n| PG 7772                 | 0  | 0  | 11 | 0  | 0  | 0  | 16,50    |\n| Rjn/11138               | 0  | 0  | 15 | 0  | 0  | 0  | 22,50    |\n| SF-M 596/99-08          | 0  | 0  | 5  | 0  | 0  | 0  | 7,50     |\n| Ttrb/17885              | 1  | 0  | 23 | 0  | 0  | 0  | 35,08    |\n| WPN:24791               | 1  | 0  | 4  | 0  | 0  | 0  | 6,58     |\n| Wwt/15658               | 0  | 0  | 11 | 0  | 0  | 0  | 16,50    |\n\n### Costs and Financial Information\n- **Costs for each Query in Euro**:\n- 0,58\n- 0,70\n- 1,50\n- 0,50\n- 0,80\n- 1,80\n\n### Compliance-related Information\n- No specific compliance-related information was provided in the text.\n\n### Environmental Metrics\n- No environmental metrics were provided in the text.\n\n### Quantities and Measurements\n- Quantities are represented in the table under columns T1 to T6, indicating counts for each query reference.\n\nThis structured data summarizes the key information extracted from the provided text.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:45:31.968828",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:45:31.997166"
+  },
+  {
+    "id": "bb7bf05e-d160-4b37-ba06-d3d0a4d8ade3",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2024-03-01\",\n  \"due_date\": null,\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Basic Fee wmView\",\n      \"quantity\": 1,\n      \"unit_price\": 130,\n      \"total\": 130\n    },\n    {\n      \"description\": \"Basis fee for additional user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Basic Fee wmPos\",\n      \"quantity\": 0,\n      \"unit_price\": 50,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Basic Fee wmGuide\",\n      \"quantity\": 0,\n      \"unit_price\": 1000,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Change of user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Transaction Fee T1\",\n      \"quantity\": 14,\n      \"unit_price\": 0.58,\n      \"total\": 8.12\n    },\n    {\n      \"description\": \"Transaction Fee T3\",\n      \"quantity\": 162,\n      \"unit_price\": 1.5,\n      \"total\": 243\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 381.12,\n  \"tax_amount\": 72.41,\n  \"total_amount\": 453.53\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:45:41.638636",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:45:41.649139"
+  },
+  {
+    "id": "f061f7ae-2d0b-4d02-bee8-5c441da86bdd",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:45:41.658652"
+  },
+  {
+    "id": "40a16e95-80e0-4233-b6f3-48281a6e057a",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount (without VAT) | Quantity | Total Amount |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:46:01.511510"
+  },
+  {
+    "id": "5a3dfaec-7c1f-4cc5-8741-abb31f8081a1",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount (without VAT) | Quantity | Total Amount |\n|------------------------------------------------------|-----------------------|----------|--------------|\n| Basic Fee wmView                                     | 130,00 €              | 1        | 130,00 €     |\n| Basis fee for additional user accounts                | 10,00 €               | 0        | 0,00 €       |\n| Basic Fee wmPos                                      | 50,00 €               | 0        | 0,00 €       |\n| Basic Fee wmGuide                                    | 1.000,00 €           | 0        | 0,00 €       |\n| Change of user accounts                               | 10,00 €               | 0        | 0,00 €       |\n| Transaction Fee T1                                   | 0,58 €                | 14       | 8,12 €       |\n| Transaction Fee T2                                   | 0,70 €                | 0        | 0,00 €       |\n| Transaction Fee T3                                   | 1,50 €                | 162      | 243,00 €     |\n| Transaction Fee T4                                   | 0,50 €                | 0        | 0,00 €       |\n| Transaction Fee T5                                   | 0,80 €                | 0        | 0,00 €       |\n| Transaction Fee T6                                   | 1,80 €                | 0        | 0,00 €       |\n| Transaction Fee G1                                   | 0,30 €                | 0        | 0,00 €       |\n| Transaction Fee G2                                   | 0,30 €                | 0        | 0,00 €       |\n| Transaction Fee G3                                   | 0,40 €                | 0        | 0,00 €       |\n| Transaction Fee G4                                   | 0,40 €                | 0        | 0,00 €       |\n| Transaction Fee G5                                   | 0,30 €                | 0        | 0,00 €       |\n| Transaction Fee G6                                   | 0,30 €                | 0        | 0,00 €       |\n| **Total**                                           |                       |          | **381,12 €** |\n| **VAT 19 %**                                        |                       |          | **72,41 €**  |\n| **Gross Amount incl. VAT**                           |                       |          | **453,53 €** |\n\n### Dates and Time Periods\n- Invoice Period: **01.02.2024 - 29.02.2024**\n- Date: **1. März 2024**\n\n### Quantities and Measurements\n- Quantity of Transaction Fee T1: **14**\n- Quantity of Transaction Fee T3: **162**\n\n### Costs and Financial Information\n- Basic Fee wmView: **130,00 €**\n- Total Amount (without VAT): **381,12 €**\n- VAT (19%): **72,41 €**\n- Gross Amount (incl. VAT): **453,53 €**\n\n### Compliance-related Information\n- Terms of Payment: Immediate payment without discount. Any bank charges must be paid by the invoice recipient.\n\n### Environmental Metrics\n- No specific environmental metrics were provided in the text.\n\nThis structured data summarizes the key financial and compliance-related information from the invoice.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n#### Amount in Euro\n| Section        | Amount in Euro |\n|----------------|----------------|\n| T1             | 0,58           |\n| T2             | 0,70           |\n| T3             | 1,50           |\n| T4             | 0,50           |\n| T5             | 0,80           |\n| T6             | 1,80           |\n| G1             | 0,30           |\n| G2             | 0,30           |\n| G3             | 0,40           |\n| G4             | 0,40           |\n| G5             | 0,30           |\n| G6             | 0,30           |\n\n#### User Account Summary\n| User Account   | T1 | T2 | T3 | T4 | T5 | T6 | G1 | G2 | G3 | G4 | G5 | G6 | Total Amount |\n|----------------|----|----|----|----|----|----|----|----|----|----|----|----|---------------|\n| user-account-1 | 10 | 0  | 99 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 154,30 €      |\n| user-account-2 | 4  | 0  | 63 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 96,82 €       |\n\n#### Transaction Fee Segmentation\n| Section        | T1     | T2     | T3     | T4     | T5     | T6     | G1     | G2     | G3     | G4     | G5     | G6     | Total in Euro |\n|----------------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|----------------|\n| Queries in Total | 14     | 0      | 162    | 0      | 0      | 0      | 0      | 0      | 0      | 0      | 0      | 0      | 0              |\n| Total in Euro  | 8,12 € | 0,00 € | 243,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 251,12 €      |\n\n### Costs and Financial Information\n- **Total Amount for user-account-1**: 154,30 €\n- **Total Amount for user-account-2**: 96,82 €\n- **Total in Euro for Queries**: 251,12 €\n\n### Compliance-related Information\n- The explanation of the query fee categories (T1 to T6 and G1 to G6) can be found on the website: wmaccess.com/abfragekategorien\n\n### Environmental Metrics\n- No specific environmental metrics were provided in the text.\n\nThis structured data captures all relevant information from the provided text.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n| Query Reference         | T1 | T2 | T3 | T4 | T5 | T6 | Cost (€) |\n|-------------------------|----|----|----|----|----|----|----------|\n| *Not specified*         | 4  | 0  | 9  | 0  | 0  | 0  | 15,82    |\n| AZR/31/27439            | 0  | 0  | 12 | 0  | 0  | 0  | 18,00    |\n| CCL/3715                | 0  | 0  | 4  | 0  | 0  | 0  | 6,00     |\n| CRS/28432               | 5  | 0  | 36 | 0  | 0  | 0  | 56,90    |\n| Cs/52113                | 0  | 0  | 19 | 0  | 0  | 0  | 28,50    |\n| GS 32090                | 1  | 0  | 7  | 0  | 0  | 0  | 11,08    |\n| Kpi/22695               | 2  | 0  | 6  | 0  | 0  | 0  | 10,16    |\n| PG 7772                 | 0  | 0  | 11 | 0  | 0  | 0  | 16,50    |\n| Rjn/11138               | 0  | 0  | 15 | 0  | 0  | 0  | 22,50    |\n| SF-M 596/99-08          | 0  | 0  | 5  | 0  | 0  | 0  | 7,50     |\n| Ttrb/17885              | 1  | 0  | 23 | 0  | 0  | 0  | 35,08    |\n| WPN:24791               | 1  | 0  | 4  | 0  | 0  | 0  | 6,58     |\n| Wwt/15658               | 0  | 0  | 11 | 0  | 0  | 0  | 16,50    |\n\n### Costs and Financial Information\n- **Costs for each Query in Euro**:\n- 0,58\n- 0,70\n- 1,50\n- 0,50\n- 0,80\n- 1,80\n\n### Compliance-related Information\n- No specific compliance-related information was provided in the text.\n\n### Environmental Metrics\n- No environmental metrics were provided in the text.\n\n### Quantities and Measurements\n- Quantities are represented in the table under columns T1 to T6 for each query reference.\n\nThis structured data summarizes the key information extracted from the provided text.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:46:01.504439",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:46:01.523520"
+  },
+  {
+    "id": "f5a2c1a2-0dd5-4120-8265-8ece3f2e7556",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2024-03-01\",\n  \"due_date\": null,\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Basic Fee wmView\",\n      \"quantity\": 1,\n      \"unit_price\": 130,\n      \"total\": 130\n    },\n    {\n      \"description\": \"Basis fee for additional user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Basic Fee wmPos\",\n      \"quantity\": 0,\n      \"unit_price\": 50,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Basic Fee wmGuide\",\n      \"quantity\": 0,\n      \"unit_price\": 1000,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Change of user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Transaction Fee T1\",\n      \"quantity\": 14,\n      \"unit_price\": 0.58,\n      \"total\": 8.12\n    },\n    {\n      \"description\": \"Transaction Fee T3\",\n      \"quantity\": 162,\n      \"unit_price\": 1.5,\n      \"total\": 243\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 381.12,\n  \"tax_amount\": 72.41,\n  \"total_amount\": 453.53\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:46:09.338120",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:46:09.354839"
+  },
+  {
+    "id": "3b2886c3-90e0-4a0d-a8c7-49b2b4a638d1",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:52:29.029508"
+  },
+  {
+    "id": "a0923b8c-a894-4e15-ad79-b784fb453962",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                           |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:52:42.450685"
+  },
+  {
+    "id": "0b9b8a41-3136-4167-9876-d67eae70bb05",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                           |\n|-----------|-------------------------|----------|-------------------------------------------------------|\n| 1         | Open Top Roll-off       | 1        | Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric) |\n\n### Dates and Time Periods\n- Generator Certification Date: **07/15/2025**\n- Transporter Acknowledgment Date: **07/1** (incomplete, likely intended to be **07/15/2025**)\n\n### Quantities and Measurements\n- Quantity of waste: **1** (Open Top Roll-off)\n\n### Costs and Financial Information\n- Purchase Order Number: **98765**\n\n### Compliance-related Information\n- Generator EPA ID: **CAL000123456**\n- Facility EPA ID: **CAL000654321**\n- Certification statement confirming compliance with shipping and transport regulations.\n\n### Environmental Metrics\n- Waste Type: **Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)**\n- Waste Classification: **Non-hazardous solid waste**\n\n### Contact Information\n- **Generator/Shipper:**\n- Name: Apex Manufacturing Inc.\n- Address: 789 Production Way, Mechanicsburg, CA 93011\n- Contact: John Doe, EHS Manager\n- Phone: (555) 123-7890\n\n- **Transporter:**\n- Carrier Name: Evergreen Environmental\n- Address: 333 Disposal Rd, Greenville, CA 91101\n- Phone: (555) 555-1234\n- Vehicle ID: Truck 72\n- Driver: M. Smith\n\n- **Receiving Facility:**\n- Name: Green Valley Landfill\n- Address: 100 Landfill Lane, Greenville, CA 91102\n\nThis structured data provides a clear overview of the waste manifest, including all relevant details regarding the generator, transporter, receiving facility, waste description, and compliance information.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:52:42.443001",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-2.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:52:42.458638"
+  },
+  {
+    "id": "72500f56-2786-4950-9afe-31ce8df995f0",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": \"98765\",\n  \"invoice_date\": \"2025-07-15\",\n  \"due_date\": \"2025-07-15\",\n  \"vendor_name\": \"Evergreen Environmental\",\n  \"vendor_address\": \"333 Disposal Rd, Greenville, CA 91101\",\n  \"line_items\": [\n    {\n      \"line_item\": 1,\n      \"container_type\": \"Open Top Roll-off\",\n      \"quantity\": 1,\n      \"description\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\"\n    }\n  ],\n  \"waste_disposal_items\": [\n    {\n      \"generator_epa_id\": \"CAL000123456\",\n      \"facility_epa_id\": \"CAL000654321\",\n      \"waste_type\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\",\n      \"waste_classification\": \"Non-hazardous solid waste\"\n    }\n  ],\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": null,\n  \"tax_amount\": null,\n  \"total_amount\": null\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:52:48.167803",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-2.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:52:48.181329"
+  },
+  {
+    "id": "e457edb6-2f2b-43c1-ab9d-9c6b0c3d48b1",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:52:48.198704"
+  },
+  {
+    "id": "28bc87e8-5f4b-41ff-a097-b2028d376fd1",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                           |\n|-----------|-------------------------|----------|-------------------------------------------------------|\n| 1         | Open Top Roll-off       | 1        | Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric) |\n\n### Dates and Time Periods\n- Generator Certification Date: **07/15/2025**\n- Transporter Acknowledgment Date: **07/1** (incomplete, likely intended to be **07/15/2025**)\n\n### Quantities and Measurements\n- Quantity of waste: **1** (Open Top Roll-off)\n\n### Costs and Financial Information\n- Purchase Order Number: **98765**\n\n### Compliance-related Information\n- Generator EPA ID: **CAL000123456**\n- Facility EPA ID: **CAL000654321**\n- Declaration of compliance with international and national governmental regulations.\n\n### Environmental Metrics\n- Waste Type: **Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)**\n- Waste Classification: **Non-hazardous solid waste**\n\n### Contact Information\n- **Generator/Shipper:**\n- Name: Apex Manufacturing Inc.\n- Address: 789 Production Way, Mechanicsburg, CA 93011\n- Contact: John Doe, EHS Manager\n- Phone: (555) 123-7890\n\n- **Transporter:**\n- Carrier Name: Evergreen Environmental\n- Address: 333 Disposal Rd, Greenville, CA 91101\n- Phone: (555) 555-1234\n- Vehicle ID: Truck 72\n- Driver: M. Smith\n\n- **Receiving Facility:**\n- Name: Green Valley Landfill\n- Address: 100 Landfill Lane, Greenville, CA 91102\n\nThis structured data provides a clear overview of the waste manifest and related information.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:53:00.260541",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-2.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:53:00.268258"
+  },
+  {
+    "id": "92001748-8642-4f78-afa9-3e0d6f5d1c2d",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                           |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:53:00.275420"
+  },
+  {
+    "id": "78098308-e430-47d1-9417-76a645c2621c",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": \"98765\",\n  \"invoice_date\": \"2025-07-15\",\n  \"due_date\": \"2025-07-15\",\n  \"vendor_name\": \"Evergreen Environmental\",\n  \"vendor_address\": \"333 Disposal Rd, Greenville, CA 91101\",\n  \"line_items\": [\n    {\n      \"line_item\": 1,\n      \"container_type\": \"Open Top Roll-off\",\n      \"quantity\": 1,\n      \"description\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\"\n    }\n  ],\n  \"waste_disposal_items\": [\n    {\n      \"generator_epa_id\": \"CAL000123456\",\n      \"facility_epa_id\": \"CAL000654321\",\n      \"waste_type\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\",\n      \"waste_classification\": \"Non-hazardous solid waste\"\n    }\n  ],\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": null,\n  \"tax_amount\": null,\n  \"total_amount\": null\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:53:09.173219",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-2.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:53:09.187290"
+  },
+  {
+    "id": "64546164-1042-47f3-983c-a32cbfc47222",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:53:09.201865"
+  },
+  {
+    "id": "70890df9-d5d4-4c68-ba2d-71a84d06a4b3",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                           |\n|-----------|-------------------------|----------|-------------------------------------------------------|\n| 1         | Open Top Roll-off       | 1        | Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric) |\n\n### Dates and Time Periods\n- Generator Certification Date: **07/15/2025**\n- Transporter Acknowledgment Date: **07/1** (incomplete, likely intended to be **07/15/2025**)\n\n### Quantities and Measurements\n- Quantity of waste: **1** (Open Top Roll-off)\n\n### Costs and Financial Information\n- Purchase Order Number: **98765**\n\n### Compliance-related Information\n- Generator EPA ID: **CAL000123456**\n- Facility EPA ID: **CAL000654321**\n- Certification statement confirming compliance with shipping regulations.\n\n### Environmental Metrics\n- Waste Type: **Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)**\n- Waste Classification: **Non-hazardous solid waste**\n\n### Contact Information\n- **Generator/Shipper:**\n- Name: Apex Manufacturing Inc.\n- Address: 789 Production Way, Mechanicsburg, CA 93011\n- Contact: John Doe, EHS Manager\n- Phone: (555) 123-7890\n\n- **Transporter:**\n- Carrier Name: Evergreen Environmental\n- Address: 333 Disposal Rd, Greenville, CA 91101\n- Phone: (555) 555-1234\n- Vehicle ID: Truck 72\n- Driver: M. Smith\n\n- **Receiving Facility:**\n- Name: Green Valley Landfill\n- Address: 100 Landfill Lane, Greenville, CA 91102\n\nThis structured data provides a clear overview of the waste manifest, including all relevant details regarding the generator, transporter, receiving facility, waste description, and compliance information.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:53:21.686196",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-2.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:53:21.691728"
+  },
+  {
+    "id": "4f9128e8-a2dd-4105-945d-c741eac13407",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                           |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:53:21.699240"
+  },
+  {
+    "id": "7e99885f-a981-404f-911c-3a424b4a9721",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": \"98765\",\n  \"invoice_date\": \"2025-07-15\",\n  \"due_date\": \"2025-07-15\",\n  \"vendor_name\": \"Evergreen Environmental\",\n  \"vendor_address\": \"333 Disposal Rd, Greenville, CA 91101\",\n  \"line_items\": [\n    {\n      \"line_item\": 1,\n      \"container_type\": \"Open Top Roll-off\",\n      \"quantity\": 1,\n      \"description\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\"\n    }\n  ],\n  \"waste_disposal_items\": [\n    {\n      \"generator_epa_id\": \"CAL000123456\",\n      \"facility_epa_id\": \"CAL000654321\",\n      \"waste_type\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\",\n      \"waste_classification\": \"Non-hazardous solid waste\"\n    }\n  ],\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": null,\n  \"tax_amount\": null,\n  \"total_amount\": null\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:53:27.426750",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-2.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:53:27.434083"
+  },
+  {
+    "id": "53c79a9b-0b24-432f-bb22-0bafd1039ce2",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:53:27.443476"
+  },
+  {
+    "id": "71cb1b7c-2221-4f91-9be8-5db42d4468af",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage     ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:53:39.645630"
+  },
+  {
+    "id": "d9628648-6034-4cb1-9cd7-4802adb1d2ba",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage        |\n|---------------|--------------|------------------|------------------|--------------|\n| WTR-MAIN-01   | Commercial    | 8,765,400 gal    | 9,015,400 gal    | 250,000 gal  |\n\n2. **Current Charges Breakdown**\n| Description                                                       | Rate                | Amount      |\n|-------------------------------------------------------------------|---------------------|-------------|\n| Water Consumption (250,000 Gallons)                               | $0.0150 / Gallon    | $3,750.00   |\n| Sewer Service Charge (Based on water usage)                       |                     | $950.00     |\n| Stormwater Management Fee                                          |                     | $125.00     |\n| State Water Conservation Tax                                        |                     | $61.50      |\n| Infrastructure Improvement Surcharge                               |                     | $5.00       |\n| **Total Current Charges**                                          |                     | **$4,891.50** |\n\n### Dates and Time Periods\n- Statement Date: **July 6, 2025**\n- Due Date: **August 5, 2025**\n- Billing Period: **June 1, 2025 to June 30, 2025**\n\n### Quantities and Measurements\n- Water Usage: **250,000 gallons**\n- Previous Meter Read: **8,765,400 gallons**\n- Current Meter Read: **9,015,400 gallons**\n\n### Costs and Financial Information\n- Amount Due: **$4,891.50**\n- Water Consumption Charge: **$3,750.00**\n- Sewer Service Charge: **$950.00**\n- Stormwater Management Fee: **$125.00**\n- State Water Conservation Tax: **$61.50**\n- Infrastructure Improvement Surcharge: **$5.00**\n\n### Compliance-related Information\n- State Water Conservation Tax indicates compliance with state regulations regarding water usage.\n\n### Environmental Metrics\n- Water Consumption: **250,000 gallons** (indicates the amount of water used, relevant for environmental impact assessments).\n\nThis structured data provides a clear overview of the water utility statement for Apex Manufacturing Inc.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:53:39.639590",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-3.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:53:39.654158"
+  },
+  {
+    "id": "db30086e-710d-400c-b030-e60b1ca74540",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-06\",\n  \"due_date\": \"2025-08-05\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Water Consumption\",\n      \"quantity\": 250000,\n      \"unit_price\": 0.015,\n      \"total\": 3750.00\n    },\n    {\n      \"description\": \"Sewer Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 950.00\n    },\n    {\n      \"description\": \"Stormwater Management Fee\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 125.00\n    },\n    {\n      \"description\": \"State Water Conservation Tax\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 61.50\n    },\n    {\n      \"description\": \"Infrastructure Improvement Surcharge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 5.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 4891.50,\n  \"tax_amount\": null,\n  \"total_amount\": 4891.50\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:53:47.140435",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-3.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:53:47.145924"
+  },
+  {
+    "id": "e838ef29-a93c-4a70-a6ac-bbb8fed0064f",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:53:47.153903"
+  },
+  {
+    "id": "aa3177a8-3635-4e6f-af47-465cd8f387e8",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage        |\n|---------------|--------------|------------------|------------------|--------------|\n| WTR-MAIN-01   | Commercial    | 8,765,400 gal    | 9,015,400 gal    | 250,000 gal  |\n\n2. **Current Charges Breakdown**\n| Description                                                       | Rate                | Amount      |\n|-------------------------------------------------------------------|---------------------|-------------|\n| Water Consumption (250,000 Gallons)                               | $0.0150 / Gallon    | $3,750.00   |\n| Sewer Service Charge (Based on water usage)                       |                     | $950.00     |\n| Stormwater Management Fee                                          |                     | $125.00     |\n| State Water Conservation Tax                                        |                     | $61.50      |\n| Infrastructure Improvement Surcharge                               |                     | $5.00       |\n| **Total Current Charges**                                          |                     | **$4,891.50** |\n\n### Dates and Time Periods\n- Statement Date: **July 6, 2025**\n- Due Date: **August 5, 2025**\n- Billing Period: **June 1, 2025 to June 30, 2025**\n\n### Quantities and Measurements\n- Water Usage: **250,000 gallons**\n- Previous Meter Read: **8,765,400 gallons**\n- Current Meter Read: **9,015,400 gallons**\n\n### Costs and Financial Information\n- Amount Due: **$4,891.50**\n- Breakdown of Charges:\n- Water Consumption: **$3,750.00**\n- Sewer Service Charge: **$950.00**\n- Stormwater Management Fee: **$125.00**\n- State Water Conservation Tax: **$61.50**\n- Infrastructure Improvement Surcharge: **$5.00**\n\n### Compliance-related Information\n- State Water Conservation Tax indicates compliance with state regulations regarding water usage.\n\n### Environmental Metrics\n- Water Consumption: **250,000 gallons** indicates the amount of water used, which can be relevant for environmental assessments.\n\nThis structured data provides a clear overview of the water utility statement for Apex Manufacturing Inc.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:54:05.252633",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-3.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:54:05.258967"
+  },
+  {
+    "id": "9a63a06a-8086-4a1c-a483-d308ece3c9e2",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage     ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:54:05.266111"
+  },
+  {
+    "id": "1cd898a6-7e7f-4b14-a214-12fb6a73e86e",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-06\",\n  \"due_date\": \"2025-08-05\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Water Consumption\",\n      \"quantity\": 250000,\n      \"unit_price\": 0.015,\n      \"total\": 3750.00\n    },\n    {\n      \"description\": \"Sewer Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 950.00\n    },\n    {\n      \"description\": \"Stormwater Management Fee\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 125.00\n    },\n    {\n      \"description\": \"State Water Conservation Tax\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 61.50\n    },\n    {\n      \"description\": \"Infrastructure Improvement Surcharge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 5.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": 61.50,\n  \"subtotal\": 4891.50,\n  \"tax_amount\": null,\n  \"total_amount\": 4891.50\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:54:12.671583",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-3.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:54:12.680406"
+  },
+  {
+    "id": "c873a6b9-7ffb-4c47-9e78-4d484bda6c48",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:54:12.687818"
+  },
+  {
+    "id": "0841173f-f8ab-4de9-b076-c67ab56ce223",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage     ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:54:25.265630"
+  },
+  {
+    "id": "5cff8993-61f9-4fa1-8d27-db86c2338b32",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage        |\n|---------------|--------------|------------------|------------------|--------------|\n| WTR-MAIN-01   | Commercial    | 8,765,400 gal    | 9,015,400 gal    | 250,000 gal  |\n\n2. **Current Charges Breakdown**\n| Description                                                       | Rate                | Amount      |\n|-------------------------------------------------------------------|---------------------|-------------|\n| Water Consumption (250,000 Gallons)                               | $0.0150 / Gallon    | $3,750.00   |\n| Sewer Service Charge (Based on water usage)                       |                     | $950.00     |\n| Stormwater Management Fee                                          |                     | $125.00     |\n| State Water Conservation Tax                                        |                     | $61.50      |\n| Infrastructure Improvement Surcharge                               |                     | $5.00       |\n| **Total Current Charges**                                          |                     | **$4,891.50** |\n\n### Dates and Time Periods\n- Statement Date: **July 6, 2025**\n- Due Date: **August 5, 2025**\n- Billing Period: **June 1, 2025 to June 30, 2025**\n\n### Quantities and Measurements\n- Water Usage: **250,000 gallons**\n- Previous Meter Read: **8,765,400 gallons**\n- Current Meter Read: **9,015,400 gallons**\n\n### Costs and Financial Information\n- Amount Due: **$4,891.50**\n- Water Consumption Charge: **$3,750.00**\n- Sewer Service Charge: **$950.00**\n- Stormwater Management Fee: **$125.00**\n- State Water Conservation Tax: **$61.50**\n- Infrastructure Improvement Surcharge: **$5.00**\n\n### Compliance-related Information\n- State Water Conservation Tax indicates compliance with state regulations regarding water usage.\n\n### Environmental Metrics\n- Water Consumption: **250,000 gallons** (indicates the amount of water used, relevant for environmental impact assessments).\n\nThis structured data provides a clear overview of the water utility statement for Apex Manufacturing Inc.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:54:25.255839",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-3.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:54:25.279036"
+  },
+  {
+    "id": "03557eb3-4b3b-4cb4-bf80-7a82e6584984",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-06\",\n  \"due_date\": \"2025-08-05\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Water Consumption\",\n      \"quantity\": 250000,\n      \"unit_price\": 0.015,\n      \"total\": 3750.00\n    },\n    {\n      \"description\": \"Sewer Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 950.00\n    },\n    {\n      \"description\": \"Stormwater Management Fee\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 125.00\n    },\n    {\n      \"description\": \"State Water Conservation Tax\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 61.50\n    },\n    {\n      \"description\": \"Infrastructure Improvement Surcharge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 5.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 4891.50,\n  \"tax_amount\": null,\n  \"total_amount\": 4891.50\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:54:32.010433",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-3.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:54:32.021199"
+  },
+  {
+    "id": "3cd38969-eedc-440d-abf0-a3b4d4f169a0",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:54:32.031068"
+  },
+  {
+    "id": "7b4a921e-4f8d-4958-9ea7-e394a85d072a",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Rea...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:54:49.950745"
+  },
+  {
+    "id": "a0f588ba-2ea6-4a9f-b9f7-ab19331036bd",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Reading |\n|--------------|---------------------------|------------------|------------------|\n| MTR-7743-A   | Commercial - Peak         | 543210 kWh       | 613210 kWh       |\n| MTR-7743-B   | Commercial - Off-Peak     | 891234 kWh       | 951234 kWh       |\n| **Total Consumption** |                   |                  | **130,000 kWh**  |\n\n**Current Charges Breakdown**\n| Description                                   | Rate              | Amount      |\n|-----------------------------------------------|-------------------|-------------|\n| Peak Demand Usage (70,000 kWh)               | $0.1255 / kWh     | $8,785.00   |\n| Off-Peak Demand Usage (60,000 kWh)           | $0.0890 / kWh     | $5,340.00   |\n| Base Service Charge                           |                   | $250.00     |\n| State Environmental Surcharge                 |                   | $875.50     |\n| Grid Infrastructure Fee                        |                   | $182.39     |\n| **Total Current Charges**                     |                   | **$15,432.89** |\n\n### Dates and Time Periods\n- Statement Date: July 5, 2025\n- Due Date: August 1, 2025\n- Billing Period: June 1, 2025 to June 30, 2025\n\n### Quantities and Measurements\n- Total Consumption: 130,000 kWh\n- Peak Demand Usage: 70,000 kWh\n- Off-Peak Demand Usage: 60,000 kWh\n\n### Costs and Financial Information\n- Amount Due: $15,432.89\n- Peak Demand Usage Charge: $8,785.00\n- Off-Peak Demand Usage Charge: $5,340.00\n- Base Service Charge: $250.00\n- State Environmental Surcharge: $875.50\n- Grid Infrastructure Fee: $182.39\n\n### Compliance-related Information\n- State Environmental Surcharge: $875.50 (indicates compliance with environmental regulations)\n\n### Environmental Metrics\n- State Environmental Surcharge: $875.50 (could be related to environmental compliance costs)\n\nThis structured data provides a clear overview of the utility statement for Apex Manufacturing Inc.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:54:49.940690",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-1.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:54:49.963271"
+  },
+  {
+    "id": "f77fb0ad-1cd9-440b-b7f4-3b3e4d01ddd1",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-05\",\n  \"due_date\": \"2025-08-01\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Peak Demand Usage (70,000 kWh)\",\n      \"quantity\": 70000,\n      \"unit_price\": 0.1255,\n      \"total\": 8785.00\n    },\n    {\n      \"description\": \"Off-Peak Demand Usage (60,000 kWh)\",\n      \"quantity\": 60000,\n      \"unit_price\": 0.0890,\n      \"total\": 5340.00\n    },\n    {\n      \"description\": \"Base Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 250.00\n    },\n    {\n      \"description\": \"State Environmental Surcharge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 875.50\n    },\n    {\n      \"description\": \"Grid Infrastructure Fee\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 182.39\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": 875.50,\n  \"subtotal\": 15432.89,\n  \"tax_amount\": null,\n  \"total_amount\": 15432.89\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:54:58.911572",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-1.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:54:58.919860"
+  },
+  {
+    "id": "d5d25890-252b-42ec-8951-387875b5f587",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:54:58.930709"
+  },
+  {
+    "id": "52e769e5-8e7c-46ad-b979-7e6bf3652d95",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Reading |\n|--------------|---------------------------|------------------|------------------|\n| MTR-7743-A   | Commercial - Peak         | 543210 kWh       | 613210 kWh       |\n| MTR-7743-B   | Commercial - Off-Peak     | 891234 kWh       | 951234 kWh       |\n| **Total Consumption** |                   |                  | **130,000 kWh**  |\n\n**Current Charges Breakdown**\n| Description                                   | Rate              | Amount      |\n|-----------------------------------------------|-------------------|-------------|\n| Peak Demand Usage (70,000 kWh)               | $0.1255 / kWh     | $8,785.00   |\n| Off-Peak Demand Usage (60,000 kWh)           | $0.0890 / kWh     | $5,340.00   |\n| Base Service Charge                           |                   | $250.00     |\n| State Environmental Surcharge                 |                   | $875.50     |\n| Grid Infrastructure Fee                        |                   | $182.39     |\n| **Total Current Charges**                     |                   | **$15,432.89** |\n\n### Dates and Time Periods\n- Statement Date: July 5, 2025\n- Due Date: August 1, 2025\n- Billing Period: June 1, 2025 to June 30, 2025\n\n### Quantities and Measurements\n- Total Consumption: 130,000 kWh\n- Peak Demand Usage: 70,000 kWh\n- Off-Peak Demand Usage: 60,000 kWh\n\n### Costs and Financial Information\n- Amount Due: $15,432.89\n- Peak Demand Usage Charge: $8,785.00\n- Off-Peak Demand Usage Charge: $5,340.00\n- Base Service Charge: $250.00\n- State Environmental Surcharge: $875.50\n- Grid Infrastructure Fee: $182.39\n\n### Compliance-related Information\n- State Environmental Surcharge: $875.50 (indicates compliance with environmental regulations)\n\n### Environmental Metrics\n- State Environmental Surcharge: $875.50 (could be related to environmental compliance costs)\n\nThis structured data provides a clear overview of the utility statement for Apex Manufacturing Inc.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:55:17.171459",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-1.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:55:17.177698"
+  },
+  {
+    "id": "3d03e80d-91bf-469b-acbb-05b9178b69a3",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Rea...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:55:17.185642"
+  },
+  {
+    "id": "56789541-0b2d-4a01-a899-32215def6f07",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-05\",\n  \"due_date\": \"2025-08-01\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Peak Demand Usage (70,000 kWh)\",\n      \"quantity\": 70000,\n      \"unit_price\": 0.1255,\n      \"total\": 8785.00\n    },\n    {\n      \"description\": \"Off-Peak Demand Usage (60,000 kWh)\",\n      \"quantity\": 60000,\n      \"unit_price\": 0.0890,\n      \"total\": 5340.00\n    },\n    {\n      \"description\": \"Base Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 250.00\n    },\n    {\n      \"description\": \"State Environmental Surcharge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 875.50\n    },\n    {\n      \"description\": \"Grid Infrastructure Fee\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 182.39\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": 875.50,\n  \"subtotal\": null,\n  \"tax_amount\": null,\n  \"total_amount\": 15432.89\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:55:25.161681",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-1.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:55:25.181705"
+  },
+  {
+    "id": "d3f9b916-0cd9-4cec-a453-f9c2bc83b640",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:55:25.195992"
+  },
+  {
+    "id": "668b4678-e8b0-42c4-a35f-192d4355d775",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n#### Electricity Usage Details\n| Meter ID     | Service Type              | Previous Reading | Current Re...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:55:43.198915"
+  },
+  {
+    "id": "becf3a35-2c0f-4490-aaac-67311f96d49e",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n#### Electricity Usage Details\n| Meter ID     | Service Type              | Previous Reading | Current Reading |\n|--------------|---------------------------|------------------|------------------|\n| MTR-7743-A   | Commercial - Peak         | 543210 kWh       | 613210 kWh       |\n| MTR-7743-B   | Commercial - Off-Peak     | 891234 kWh       | 951234 kWh       |\n| **Total Consumption** |                   |                  | **130,000 kWh**  |\n\n#### Current Charges Breakdown\n| Description                                   | Rate              | Amount      |\n|-----------------------------------------------|-------------------|-------------|\n| Peak Demand Usage (70,000 kWh)               | $0.1255 / kWh     | $8,785.00   |\n| Off-Peak Demand Usage (60,000 kWh)           | $0.0890 / kWh     | $5,340.00   |\n| Base Service Charge                           |                   | $250.00     |\n| State Environmental Surcharge                 |                   | $875.50     |\n| Grid Infrastructure Fee                        |                   | $182.39     |\n| **Total Current Charges**                     |                   | **$15,432.89** |\n\n### Dates and Time Periods\n- Statement Date: July 5, 2025\n- Due Date: August 1, 2025\n- Billing Period: June 1, 2025 to June 30, 2025\n\n### Quantities and Measurements\n- Total Consumption: 130,000 kWh\n- Peak Demand Usage: 70,000 kWh\n- Off-Peak Demand Usage: 60,000 kWh\n\n### Costs and Financial Information\n- Amount Due: $15,432.89\n- Peak Demand Usage Charge: $8,785.00\n- Off-Peak Demand Usage Charge: $5,340.00\n- Base Service Charge: $250.00\n- State Environmental Surcharge: $875.50\n- Grid Infrastructure Fee: $182.39\n\n### Compliance-related Information\n- State Environmental Surcharge: $875.50 (implies compliance with environmental regulations)\n\n### Environmental Metrics\n- State Environmental Surcharge: $875.50 (indicates a charge related to environmental impact)\n\nThis structured data provides a clear overview of the utility statement for Apex Manufacturing Inc.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:55:43.185892",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-1.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:55:43.211693"
+  },
+  {
+    "id": "71f39364-7624-46be-95a3-ac818e355a4f",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-05\",\n  \"due_date\": \"2025-08-01\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Peak Demand Usage (70,000 kWh)\",\n      \"quantity\": 70000,\n      \"unit_price\": 0.1255,\n      \"total\": 8785.00\n    },\n    {\n      \"description\": \"Off-Peak Demand Usage (60,000 kWh)\",\n      \"quantity\": 60000,\n      \"unit_price\": 0.0890,\n      \"total\": 5340.00\n    },\n    {\n      \"description\": \"Base Service Charge\",\n      \"quantity\": 1,\n      \"unit_price\": 250.00,\n      \"total\": 250.00\n    },\n    {\n      \"description\": \"State Environmental Surcharge\",\n      \"quantity\": 1,\n      \"unit_price\": 875.50,\n      \"total\": 875.50\n    },\n    {\n      \"description\": \"Grid Infrastructure Fee\",\n      \"quantity\": 1,\n      \"unit_price\": 182.39,\n      \"total\": 182.39\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": 875.50,\n  \"subtotal\": 15432.89,\n  \"tax_amount\": null,\n  \"total_amount\": 15432.89\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:55:50.755355",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-1.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:55:50.769576"
+  },
+  {
+    "id": "dda8074f-c933-41d7-b663-219d6f22cf81",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:55:50.779120"
+  },
+  {
+    "id": "79b7f292-e023-4a4c-bdfe-e49ceb93afbf",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount   | Quantity | Total Amount |\n|----------...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:56:14.224415"
+  },
+  {
+    "id": "ffc59ae0-73a4-4fcf-a690-858ae6fbde58",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount   | Quantity | Total Amount |\n|------------------------------------------------------|----------|----------|--------------|\n| Basic Fee wmView                                     | 130,00 € | 1        | 130,00 €     |\n| Basis fee for additional user accounts                | 10,00 €  | 0        | 0,00 €       |\n| Basic Fee wmPos                                      | 50,00 €  | 0        | 0,00 €       |\n| Basic Fee wmGuide                                    | 1.000,00 €| 0       | 0,00 €       |\n| Change of user accounts                               | 10,00 €  | 0        | 0,00 €       |\n| Transaction Fee T1                                   | 0,58 €   | 14       | 8,12 €       |\n| Transaction Fee T2                                   | 0,70 €   | 0        | 0,00 €       |\n| Transaction Fee T3                                   | 1,50 €   | 162      | 243,00 €     |\n| Transaction Fee T4                                   | 0,50 €   | 0        | 0,00 €       |\n| Transaction Fee T5                                   | 0,80 €   | 0        | 0,00 €       |\n| Transaction Fee T6                                   | 1,80 €   | 0        | 0,00 €       |\n| Transaction Fee G1                                   | 0,30 €   | 0        | 0,00 €       |\n| Transaction Fee G2                                   | 0,30 €   | 0        | 0,00 €       |\n| Transaction Fee G3                                   | 0,40 €   | 0        | 0,00 €       |\n| Transaction Fee G4                                   | 0,40 €   | 0        | 0,00 €       |\n| Transaction Fee G5                                   | 0,30 €   | 0        | 0,00 €       |\n| Transaction Fee G6                                   | 0,30 €   | 0        | 0,00 €       |\n| **Total**                                           |          |          | **381,12 €** |\n| **VAT 19 %**                                        |          |          | **72,41 €**  |\n| **Gross Amount incl. VAT**                          |          |          | **453,53 €** |\n\n### Dates and Time Periods\n- Invoice Period: **01.02.2024 - 29.02.2024**\n- Date: **1. März 2024**\n\n### Quantities and Measurements\n- Quantities for services:\n- Basic Fee wmView: 1\n- Transaction Fee T1: 14\n- Transaction Fee T3: 162\n\n### Costs and Financial Information\n- Basic Fee wmView: **130,00 €**\n- Total Amount (without VAT): **381,12 €**\n- VAT (19%): **72,41 €**\n- Gross Amount (including VAT): **453,53 €**\n\n### Compliance-related Information\n- Terms of Payment: Immediate payment without discount. Any bank charges must be paid by the invoice recipient.\n\n### Environmental Metrics\n- No specific environmental metrics were provided in the text.\n\nThis structured data summarizes the key financial and compliance-related information from the invoice.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n#### Amount in Euro\n| Section       | Amount in Euro |\n|---------------|----------------|\n| T1            | 0,58           |\n| T2            | 0,70           |\n| T3            | 1,50           |\n| T4            | 0,50           |\n| T5            | 0,80           |\n| T6            | 1,80           |\n| G1            | 0,30           |\n| G2            | 0,30           |\n| G3            | 0,40           |\n| G4            | 0,40           |\n| G5            | 0,30           |\n| G6            | 0,30           |\n\n#### User Account Summary\n| User Account   | T1 | T2 | T3 | T4 | T5 | T6 | G1 | G2 | G3 | G4 | G5 | G6 | Total Amount |\n|----------------|----|----|----|----|----|----|----|----|----|----|----|----|---------------|\n| user-account-1 | 10 | 0  | 99 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 154,30 €      |\n| user-account-2 | 4  | 0  | 63 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 96,82 €       |\n\n#### Transaction Fee Segmentation\n| Section       | T1     | T2     | T3     | T4     | T5     | T6     | G1     | G2     | G3     | G4     | G5     | G6     | Total in Euro |\n|---------------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|----------------|\n| Queries in Total | 14     | 0      | 162    | 0      | 0      | 0      | 0      | 0      | 0      | 0      | 0      | 0      | 0              |\n| Total in Euro | 8,12 € | 0,00 € | 243,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 251,12 €       |\n\n### Costs and Financial Information\n- **Total Amount for user-account-1**: 154,30 €\n- **Total Amount for user-account-2**: 96,82 €\n- **Total in Euro for Queries**: 251,12 €\n\n### Compliance-related Information\n- The explanation of the query fee categories (T1 to T6 and G1 to G6) can be found on the website: wmaccess.com/abfragekategorien\n\n### Environmental Metrics\n- No specific environmental metrics were provided in the text.\n\nThis structured data captures all relevant information from the provided text.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n| Query Reference         | T1 | T2 | T3 | T4 | T5 | T6 | Total Cost (€) |\n|-------------------------|----|----|----|----|----|----|-----------------|\n| *Not specified*         | 4  | 0  | 9  | 0  | 0  | 0  | 15,82           |\n| AZR/31/27439            | 0  | 0  | 12 | 0  | 0  | 0  | 18,00           |\n| CCL/3715                | 0  | 0  | 4  | 0  | 0  | 0  | 6,00            |\n| CRS/28432               | 5  | 0  | 36 | 0  | 0  | 0  | 56,90           |\n| Cs/52113                | 0  | 0  | 19 | 0  | 0  | 0  | 28,50           |\n| GS 32090                | 1  | 0  | 7  | 0  | 0  | 0  | 11,08           |\n| Kpi/22695               | 2  | 0  | 6  | 0  | 0  | 0  | 10,16           |\n| PG 7772                 | 0  | 0  | 11 | 0  | 0  | 0  | 16,50           |\n| Rjn/11138               | 0  | 0  | 15 | 0  | 0  | 0  | 22,50           |\n| SF-M 596/99-08          | 0  | 0  | 5  | 0  | 0  | 0  | 7,50            |\n| Ttrb/17885              | 1  | 0  | 23 | 0  | 0  | 0  | 35,08           |\n| WPN:24791               | 1  | 0  | 4  | 0  | 0  | 0  | 6,58            |\n| Wwt/15658               | 0  | 0  | 11 | 0  | 0  | 0  | 16,50           |\n\n### Costs and Financial Information\n- **Total Costs for Queries**:\n- *Not specified*: 15,82 €\n- AZR/31/27439: 18,00 €\n- CCL/3715: 6,00 €\n- CRS/28432: 56,90 €\n- Cs/52113: 28,50 €\n- GS 32090: 11,08 €\n- Kpi/22695: 10,16 €\n- PG 7772: 16,50 €\n- Rjn/11138: 22,50 €\n- SF-M 596/99-08: 7,50 €\n- Ttrb/17885: 35,08 €\n- WPN:24791: 6,58 €\n- Wwt/15658: 16,50 €\n\n### Quantities and Measurements\n- **Price for each Query in Euro**:\n- 0,58\n- 0,70\n- 1,50\n- 0,50\n- 0,80\n- 1,80\n\n### Compliance-related Information\n- No specific compliance-related information was provided in the text.\n\n### Environmental Metrics\n- No environmental metrics were provided in the text.\n\nThis structured data summarizes the key information extracted from the provided text.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:56:14.219032",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:56:14.244634"
+  },
+  {
+    "id": "095a352b-4762-4b1a-b494-d0e30422b1ae",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2024-03-01\",\n  \"due_date\": null,\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Basic Fee wmView\",\n      \"quantity\": 1,\n      \"unit_price\": 130,\n      \"total\": 130\n    },\n    {\n      \"description\": \"Basis fee for additional user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Basic Fee wmPos\",\n      \"quantity\": 0,\n      \"unit_price\": 50,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Basic Fee wmGuide\",\n      \"quantity\": 0,\n      \"unit_price\": 1000,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Change of user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Transaction Fee T1\",\n      \"quantity\": 14,\n      \"unit_price\": 0.58,\n      \"total\": 8.12\n    },\n    {\n      \"description\": \"Transaction Fee T3\",\n      \"quantity\": 162,\n      \"unit_price\": 1.5,\n      \"total\": 243\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 381.12,\n  \"tax_amount\": 72.41,\n  \"total_amount\": 453.53\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:56:27.880147",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:56:27.899158"
+  },
+  {
+    "id": "3034f06f-b3e6-4873-94fa-83c4953743fb",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:56:27.918506"
+  },
+  {
+    "id": "e0e421c0-39d2-4b8b-8b59-495521b7cf3e",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount (without VAT) | Quantity | Total Amount |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:56:46.169234"
+  },
+  {
+    "id": "439aa152-e813-4f6b-8eb4-891c9f17652a",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount (without VAT) | Quantity | Total Amount |\n|------------------------------------------------------|----------------------|----------|--------------|\n| Basic Fee wmView                                     | 130,00 €             | 1        | 130,00 €     |\n| Basis fee for additional user accounts                | 10,00 €              | 0        | 0,00 €       |\n| Basic Fee wmPos                                      | 50,00 €              | 0        | 0,00 €       |\n| Basic Fee wmGuide                                    | 1.000,00 €          | 0        | 0,00 €       |\n| Change of user accounts                               | 10,00 €              | 0        | 0,00 €       |\n| Transaction Fee T1                                   | 0,58 €               | 14       | 8,12 €       |\n| Transaction Fee T2                                   | 0,70 €               | 0        | 0,00 €       |\n| Transaction Fee T3                                   | 1,50 €               | 162      | 243,00 €     |\n| Transaction Fee T4                                   | 0,50 €               | 0        | 0,00 €       |\n| Transaction Fee T5                                   | 0,80 €               | 0        | 0,00 €       |\n| Transaction Fee T6                                   | 1,80 €               | 0        | 0,00 €       |\n| Transaction Fee G1                                   | 0,30 €               | 0        | 0,00 €       |\n| Transaction Fee G2                                   | 0,30 €               | 0        | 0,00 €       |\n| Transaction Fee G3                                   | 0,40 €               | 0        | 0,00 €       |\n| Transaction Fee G4                                   | 0,40 €               | 0        | 0,00 €       |\n| Transaction Fee G5                                   | 0,30 €               | 0        | 0,00 €       |\n| Transaction Fee G6                                   | 0,30 €               | 0        | 0,00 €       |\n| **Total**                                           |                      |          | **381,12 €** |\n| **VAT 19 %**                                        |                      |          | **72,41 €**  |\n| **Gross Amount incl. VAT**                           |                      |          | **453,53 €** |\n\n### Dates and Time Periods\n- Invoice Period: **01.02.2024 - 29.02.2024**\n- Date: **1. März 2024**\n\n### Quantities and Measurements\n- Quantities for transaction fees:\n- T1: 14\n- T3: 162\n\n### Costs and Financial Information\n- Total Amount (without VAT): **381,12 €**\n- VAT (19%): **72,41 €**\n- Gross Amount (including VAT): **453,53 €**\n- Bank Account Information:\n- IBAN: **DE29 1234 5678 9012 3456 78**\n- BIC: **GENODE51MIC**\n\n### Compliance-related Information\n- Terms of Payment: Immediate payment without discount. Any bank charges must be paid by the invoice recipient.\n\n### Environmental Metrics\n- No specific environmental metrics were provided in the text.\n\nThis structured data captures all relevant information from the invoice text.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n#### Amount in Euro\n| Section        | Amount in Euro |\n|----------------|----------------|\n| T1             | 0,58           |\n| T2             | 0,70           |\n| T3             | 1,50           |\n| T4             | 0,50           |\n| T5             | 0,80           |\n| T6             | 1,80           |\n| G1             | 0,30           |\n| G2             | 0,30           |\n| G3             | 0,40           |\n| G4             | 0,40           |\n| G5             | 0,30           |\n| G6             | 0,30           |\n\n#### User Account Summary\n| User Account   | T1 | T2 | T3 | T4 | T5 | T6 | G1 | G2 | G3 | G4 | G5 | G6 | Total Amount |\n|----------------|----|----|----|----|----|----|----|----|----|----|----|----|---------------|\n| user-account-1 | 10 | 0  | 99 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 154,30 €      |\n| user-account-2 | 4  | 0  | 63 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 96,82 €       |\n\n#### Transaction Fee Segmentation\n| Section        | T1     | T2     | T3     | T4     | T5     | T6     | G1     | G2     | G3     | G4     | G5     | G6     | Total in Euro |\n|----------------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|----------------|\n| Queries in Total | 14     | 0      | 162    | 0      | 0      | 0      | 0      | 0      | 0      | 0      | 0      | 0      | 0              |\n| Total in Euro  | 8,12 € | 0,00 € | 243,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 0,00 € | 251,12 €      |\n\n### Costs and Financial Information\n- **Total Amount for user-account-1**: 154,30 €\n- **Total Amount for user-account-2**: 96,82 €\n- **Total in Euro for Queries**: 251,12 €\n\n### Compliance-related Information\n- The explanation of the query fee categories (T1 to T6 and G1 to G6) can be found on the website: wmaccess.com/abfragekategorien\n\n### Environmental Metrics\n- No specific environmental metrics were provided in the text.\n\nThis structured data captures all relevant information from the provided text.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n| Query Reference         | T1 | T2 | T3 | T4 | T5 | T6 | Total Cost (€) |\n|-------------------------|----|----|----|----|----|----|-----------------|\n| *Not specified*         | 4  | 0  | 9  | 0  | 0  | 0  | 15,82           |\n| AZR/31/27439            | 0  | 0  | 12 | 0  | 0  | 0  | 18,00           |\n| CCL/3715                | 0  | 0  | 4  | 0  | 0  | 0  | 6,00            |\n| CRS/28432               | 5  | 0  | 36 | 0  | 0  | 0  | 56,90           |\n| Cs/52113                | 0  | 0  | 19 | 0  | 0  | 0  | 28,50           |\n| GS 32090                | 1  | 0  | 7  | 0  | 0  | 0  | 11,08           |\n| Kpi/22695               | 2  | 0  | 6  | 0  | 0  | 0  | 10,16           |\n| PG 7772                 | 0  | 0  | 11 | 0  | 0  | 0  | 16,50           |\n| Rjn/11138               | 0  | 0  | 15 | 0  | 0  | 0  | 22,50           |\n| SF-M 596/99-08          | 0  | 0  | 5  | 0  | 0  | 0  | 7,50            |\n| Ttrb/17885              | 1  | 0  | 23 | 0  | 0  | 0  | 35,08           |\n| WPN:24791               | 1  | 0  | 4  | 0  | 0  | 0  | 6,58            |\n| Wwt/15658               | 0  | 0  | 11 | 0  | 0  | 0  | 16,50           |\n\n### Costs and Financial Information\n- **Total Costs for Queries**:\n- *Not specified*: 15,82 €\n- AZR/31/27439: 18,00 €\n- CCL/3715: 6,00 €\n- CRS/28432: 56,90 €\n- Cs/52113: 28,50 €\n- GS 32090: 11,08 €\n- Kpi/22695: 10,16 €\n- PG 7772: 16,50 €\n- Rjn/11138: 22,50 €\n- SF-M 596/99-08: 7,50 €\n- Ttrb/17885: 35,08 €\n- WPN:24791: 6,58 €\n- Wwt/15658: 16,50 €\n\n- **Price for each Query in Euro**:\n- 0,58 €\n- 0,70 €\n- 1,50 €\n- 0,50 €\n- 0,80 €\n- 1,80 €\n\n### Compliance-related Information\n- No specific compliance-related information was provided in the text.\n\n### Environmental Metrics\n- No environmental metrics were provided in the text.\n\n### Quantities and Measurements\n- Quantities for each query segment (T1 to T6) are listed in the table above.\n\nThis structured data provides a clear overview of the invoice details, including costs, quantities, and the relevant time period.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:56:46.159681",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:56:46.183586"
+  },
+  {
+    "id": "8b5b9bc3-1c16-4e56-acb5-958054cc2690",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2024-03-01\",\n  \"due_date\": null,\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Basic Fee wmView\",\n      \"quantity\": 1,\n      \"unit_price\": 130.00,\n      \"total\": 130.00\n    },\n    {\n      \"description\": \"Basis fee for additional user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Basic Fee wmPos\",\n      \"quantity\": 0,\n      \"unit_price\": 50.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Basic Fee wmGuide\",\n      \"quantity\": 0,\n      \"unit_price\": 1000.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Change of user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Transaction Fee T1\",\n      \"quantity\": 14,\n      \"unit_price\": 0.58,\n      \"total\": 8.12\n    },\n    {\n      \"description\": \"Transaction Fee T3\",\n      \"quantity\": 162,\n      \"unit_price\": 1.50,\n      \"total\": 243.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 381.12,\n  \"tax_amount\": 72.41,\n  \"total_amount\": 453.53\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:56:57.712516",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:56:57.719487"
+  },
+  {
+    "id": "39e44077-2d7c-4acb-a417-5c89629a656f",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:56:57.728071"
+  },
+  {
+    "id": "2111b182-8e77-4f02-8463-e377152f4e07",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount (without VAT) | Quantity | Total Amount |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-08-30T08:57:15.962890"
+  },
+  {
+    "id": "c5ac6531-0bcb-4446-87f4-d12421160e5c",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount (without VAT) | Quantity | Total Amount |\n|------------------------------------------------------|----------------------|----------|--------------|\n| Basic Fee wmView                                     | 130,00 €             | 1        | 130,00 €     |\n| Basis fee for additional user accounts                | 10,00 €              | 0        | 0,00 €       |\n| Basic Fee wmPos                                      | 50,00 €              | 0        | 0,00 €       |\n| Basic Fee wmGuide                                    | 1.000,00 €          | 0        | 0,00 €       |\n| Change of user accounts                               | 10,00 €              | 0        | 0,00 €       |\n| Transaction Fee T1                                   | 0,58 €               | 14       | 8,12 €       |\n| Transaction Fee T2                                   | 0,70 €               | 0        | 0,00 €       |\n| Transaction Fee T3                                   | 1,50 €               | 162      | 243,00 €     |\n| Transaction Fee T4                                   | 0,50 €               | 0        | 0,00 €       |\n| Transaction Fee T5                                   | 0,80 €               | 0        | 0,00 €       |\n| Transaction Fee T6                                   | 1,80 €               | 0        | 0,00 €       |\n| Transaction Fee G1                                   | 0,30 €               | 0        | 0,00 €       |\n| Transaction Fee G2                                   | 0,30 €               | 0        | 0,00 €       |\n| Transaction Fee G3                                   | 0,40 €               | 0        | 0,00 €       |\n| Transaction Fee G4                                   | 0,40 €               | 0        | 0,00 €       |\n| Transaction Fee G5                                   | 0,30 €               | 0        | 0,00 €       |\n| Transaction Fee G6                                   | 0,30 €               | 0        | 0,00 €       |\n| **Total**                                           |                      |          | **381,12 €** |\n| **VAT 19 %**                                        |                      |          | **72,41 €**  |\n| **Gross Amount incl. VAT**                           |                      |          | **453,53 €** |\n\n### Dates and Time Periods\n- Invoice Period: **01.02.2024 - 29.02.2024**\n- Date: **1. März 2024**\n\n### Quantities and Measurements\n- Quantity of Transaction Fee T1: **14**\n- Quantity of Transaction Fee T3: **162**\n\n### Costs and Financial Information\n- Basic Fee wmView: **130,00 €**\n- Total Amount (without VAT): **381,12 €**\n- VAT (19%): **72,41 €**\n- Gross Amount including VAT: **453,53 €**\n\n### Compliance-related Information\n- VAT No: **DE199378386**\n- Terms of Payment: Immediate payment without discount. Any bank charges must be paid by the invoice recipient.\n\n### Environmental Metrics\n(No environmental metrics were provided in the text.)\n\nThis structured data summarizes the key financial and compliance-related information from the invoice.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n#### Amount in Euro\n| Section        | Amount in Euro |\n|----------------|----------------|\n| T1             | 0,58           |\n| T2             | 0,70           |\n| T3             | 1,50           |\n| T4             | 0,50           |\n| T5             | 0,80           |\n| T6             | 1,80           |\n| G1             | 0,30           |\n| G2             | 0,30           |\n| G3             | 0,40           |\n| G4             | 0,40           |\n| G5             | 0,30           |\n| G6             | 0,30           |\n\n#### User Account Summary\n| User Account   | T1 | T2 | T3 | T4 | T5 | T6 | G1 | G2 | G3 | G4 | G5 | G6 | Total Amount |\n|----------------|----|----|----|----|----|----|----|----|----|----|----|----|---------------|\n| user-account-1 | 10 | 0  | 99 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 154,30 €      |\n| user-account-2 | 4  | 0  | 63 | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 96,82 €       |\n\n#### Transaction Fee Summary\n| Section        | T1      | T2      | T3      | T4      | T5      | T6      | G1      | G2      | G3      | G4      | G5      | G6      | Total in Euro |\n|----------------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|----------------|\n| Queries in Total | 14      | 0       | 162     | 0       | 0       | 0       | 0       | 0       | 0       | 0       | 0       | 0       | 0              |\n| Total in Euro  | 8,12 €  | 0,00 €  | 243,00 €| 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 0,00 €  | 251,12 €       |\n\n### Costs and Financial Information\n- **Total Amount for user-account-1**: 154,30 €\n- **Total Amount for user-account-2**: 96,82 €\n- **Total in Euro for Queries**: 251,12 €\n\n### Compliance-related Information\n- The explanation of the query fee categories (T1 to T6 and G1 to G6) can be found on the website: wmaccess.com/abfragekategorien\n\n### Environmental Metrics\n- No specific environmental metrics were provided in the text.\n\nThis structured data captures all relevant information from the provided text.\n---\nHere is the structured data extracted from the provided text:\n\n### Dates and Time Periods\n- **Period**: 01.02.2024 to 29.02.2024\n\n### Tables with Numerical Data\n| Query Reference         | T1 | T2 | T3 | T4 | T5 | T6 | Cost (€) |\n|-------------------------|----|----|----|----|----|----|----------|\n| *Not specified*         | 4  | 0  | 9  | 0  | 0  | 0  | 15,82    |\n| AZR/31/27439            | 0  | 0  | 12 | 0  | 0  | 0  | 18,00    |\n| CCL/3715                | 0  | 0  | 4  | 0  | 0  | 0  | 6,00     |\n| CRS/28432               | 5  | 0  | 36 | 0  | 0  | 0  | 56,90    |\n| Cs/52113                | 0  | 0  | 19 | 0  | 0  | 0  | 28,50    |\n| GS 32090                | 1  | 0  | 7  | 0  | 0  | 0  | 11,08    |\n| Kpi/22695               | 2  | 0  | 6  | 0  | 0  | 0  | 10,16    |\n| PG 7772                 | 0  | 0  | 11 | 0  | 0  | 0  | 16,50    |\n| Rjn/11138               | 0  | 0  | 15 | 0  | 0  | 0  | 22,50    |\n| SF-M 596/99-08          | 0  | 0  | 5  | 0  | 0  | 0  | 7,50     |\n| Ttrb/17885              | 1  | 0  | 23 | 0  | 0  | 0  | 35,08    |\n| WPN:24791               | 1  | 0  | 4  | 0  | 0  | 0  | 6,58     |\n| Wwt/15658               | 0  | 0  | 11 | 0  | 0  | 0  | 16,50    |\n\n### Costs and Financial Information\n- **Costs for each Query in Euro**:\n- 0,58\n- 0,70\n- 1,50\n- 0,50\n- 0,80\n- 1,80\n\n### Compliance-related Information\n- No specific compliance-related information was provided in the text.\n\n### Environmental Metrics\n- No environmental metrics were provided in the text.\n\n### Quantities and Measurements\n- Quantities are represented in the table under columns T1 to T6 for each query reference.\n\nThis structured data provides a clear overview of the invoice details, including the period, query references, associated costs, and quantities.",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:57:15.955608",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:57:15.973085"
+  },
+  {
+    "id": "7cae5860-b8f6-496a-86c4-1420fb220fa3",
+    "role": "assistant",
+    "content": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2024-03-01\",\n  \"due_date\": null,\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Basic Fee wmView\",\n      \"quantity\": 1,\n      \"unit_price\": 130.00,\n      \"total\": 130.00\n    },\n    {\n      \"description\": \"Basis fee for additional user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Basic Fee wmPos\",\n      \"quantity\": 0,\n      \"unit_price\": 50.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Basic Fee wmGuide\",\n      \"quantity\": 0,\n      \"unit_price\": 1000.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Change of user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Transaction Fee T1\",\n      \"quantity\": 14,\n      \"unit_price\": 0.58,\n      \"total\": 8.12\n    },\n    {\n      \"description\": \"Transaction Fee T3\",\n      \"quantity\": 162,\n      \"unit_price\": 1.50,\n      \"total\": 243.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 381.12,\n  \"tax_amount\": 72.41,\n  \"total_amount\": 453.53\n}",
+    "context": {
+      "document_type": "invoice",
+      "extractor_name": "InvoiceExtractor",
+      "timestamp": "2025-08-30T08:57:26.398732",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-4.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-08-30T08:57:26.413702"
   }
 ]

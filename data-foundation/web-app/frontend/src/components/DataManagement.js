@@ -308,6 +308,31 @@ const DataManagement = () => {
           
           console.log(`Formatted ${formattedTranscript.length} transcript messages from ${traces.length} traces`);
           
+          // Fetch ingestion instructions and prepend to transcript
+          try {
+            const instructionsResponse = await axios.get('http://localhost:8001/api/ingestion-instructions');
+            if (instructionsResponse.data && instructionsResponse.data.content) {
+              // Create system message with instructions
+              const systemMessage = {
+                id: 'system_instructions',
+                role: 'system',
+                content: instructionsResponse.data.content,
+                timestamp: new Date().toISOString(),
+                context: {
+                  operation: 'Ingestion Instructions',
+                  source: 'System'
+                }
+              };
+              
+              // Prepend system message to transcript
+              formattedTranscript.unshift(systemMessage);
+              console.log('Prepended ingestion instructions to transcript');
+            }
+          } catch (instructionsError) {
+            console.warn('Failed to fetch ingestion instructions:', instructionsError);
+            // Continue without instructions - graceful error handling
+          }
+          
           // Update transcript data and set LangSmith flag
           setTranscriptData(formattedTranscript);
           setHasLangSmithData(true);
@@ -990,9 +1015,11 @@ const DataManagement = () => {
                       }}>
                         <span style={{
                           fontWeight: 600,
-                          color: message.role?.toLowerCase() === 'user' ? '#3b82f6' : '#10b981'
+                          color: message.role?.toLowerCase() === 'system' ? '#f59e0b' :
+                                message.role?.toLowerCase() === 'user' ? '#3b82f6' : '#10b981'
                         }}>
-                          {message.role?.toLowerCase() === 'user' ? 'User' : 'Assistant'}
+                          {message.role?.toLowerCase() === 'system' ? 'System' :
+                           message.role?.toLowerCase() === 'user' ? 'User' : 'Assistant'}
                         </span>
                         {message.context?.model && (
                           <span style={{ opacity: 0.7 }}>
