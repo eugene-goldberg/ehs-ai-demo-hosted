@@ -13,10 +13,14 @@ from pathlib import Path
 current_dir = Path(__file__).parent.absolute()
 sys.path.insert(0, str(current_dir))
 
-# Set up environment
-os.environ.setdefault('PYTHONPATH', str(current_dir))
+# Also add the src directory to Python path
+src_dir = current_dir / 'src'
+sys.path.insert(0, str(src_dir))
 
-from src.workflows.ingestion_workflow_with_risk_assessment import RiskAssessmentIntegratedWorkflow
+# Set up environment
+os.environ.setdefault('PYTHONPATH', f"{str(current_dir)}:{str(src_dir)}")
+
+from ehs_workflows.ingestion_workflow_with_risk_assessment import RiskAssessmentIntegratedWorkflow
 # from ingestion.database.document_store import DocumentStore
 import logging
 from dotenv import load_dotenv

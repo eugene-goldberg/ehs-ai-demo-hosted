@@ -1,12 +1,12 @@
 from langchain.docstore.document import Document
-from src.shared.llm_graph_builder_exception import LLMGraphBuilderException
+from shared.llm_graph_builder_exception import LLMGraphBuilderException
 from youtube_transcript_api import YouTubeTranscriptApi 
 from youtube_transcript_api.proxies import GenericProxyConfig
 import logging
 from urllib.parse import urlparse,parse_qs
 from difflib import SequenceMatcher
 from datetime import timedelta
-from src.shared.constants import YOUTUBE_CHUNK_SIZE_SECONDS
+from shared.constants import YOUTUBE_CHUNK_SIZE_SECONDS
 import os
 import re
 

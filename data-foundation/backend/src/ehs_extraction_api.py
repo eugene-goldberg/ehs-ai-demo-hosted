@@ -40,7 +40,7 @@ from pydantic import BaseModel, Field, validator
 from dotenv import load_dotenv
 import uvicorn
 
-from workflows.extraction_workflow import DataExtractionWorkflow, QueryType
+from ehs_workflows.extraction_workflow import DataExtractionWorkflow, QueryType
 from api_response import create_api_response
 from langsmith_config import create_ingestion_session, is_langsmith_available
 

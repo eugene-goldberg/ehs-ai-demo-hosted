@@ -18,19 +18,19 @@ from langchain_anthropic import ChatAnthropic
 from pydantic import BaseModel, Field
 
 # Phase 1 Enhancement Imports
-from src.phase1_enhancements.audit_trail_service import AuditTrailService
-from src.phase1_enhancements.rejection_workflow_service import (
+from phase1_enhancements.audit_trail_service import AuditTrailService
+from phase1_enhancements.rejection_workflow_service import (
     RejectionWorkflowService, 
     RejectionReason, 
     ValidationResult
 )
-from src.phase1_enhancements.prorating_service import ProRatingService
-from src.shared.common_fn import create_graph_database_connection
+from phase1_enhancements.prorating_service import ProRatingService
+from shared.common_fn import create_graph_database_connection
 
 # Existing imports
-from src.parsers.llama_parser import EHSDocumentParser
-# from src.indexing.document_indexer import EHSDocumentIndexer
-from src.extractors.ehs_extractors import (
+from parsers.llama_parser import EHSDocumentParser
+# from indexing.document_indexer import EHSDocumentIndexer
+from extractors.ehs_extractors import (
     UtilityBillExtractor,
     WaterBillExtractor,
     PermitExtractor,

@@ -29,8 +29,8 @@ from neo4j import GraphDatabase, Transaction
 from neo4j.time import Date as Neo4jDate, DateTime as Neo4jDateTime, Time as Neo4jTime
 
 # Local imports
-from ...langsmith_config import config as langsmith_config, tracing_context, tag_ingestion_trace
-from ...shared.common_fn import create_graph_database_connection
+from langsmith_config import config as langsmith_config, tracing_context, tag_ingestion_trace
+from shared.common_fn import create_graph_database_connection
 
 logger = logging.getLogger(__name__)
 

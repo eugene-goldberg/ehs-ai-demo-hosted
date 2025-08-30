@@ -19,14 +19,14 @@ from langchain_anthropic import ChatAnthropic
 from pydantic import BaseModel, Field
 
 # Enhanced workflow imports
-from .ingestion_workflow_enhanced import (
+from ehs_workflows.ingestion_workflow_enhanced import (
     EnhancedIngestionWorkflow,
     DocumentState as BaseDocumentState,
     ProcessingStatus
 )
 
 # Risk Assessment Agent import
-from ..agents.risk_assessment.agent import (
+from agents.risk_assessment.agent import (
     RiskAssessmentAgent,
     RiskAssessmentState,
     RiskLevel,
@@ -35,16 +35,16 @@ from ..agents.risk_assessment.agent import (
 )
 
 # Phase 1 Enhancement Imports
-from ..phase1_enhancements.audit_trail_service import AuditTrailService
-from ..phase1_enhancements.rejection_workflow_service import (
+from phase1_enhancements.audit_trail_service import AuditTrailService
+from phase1_enhancements.rejection_workflow_service import (
     RejectionWorkflowService, 
     RejectionReason, 
     ValidationResult
 )
-from ..phase1_enhancements.prorating_service import ProRatingService
-from ..shared.common_fn import create_graph_database_connection
-from ..langsmith_config import config as langsmith_config, tracing_context, tag_ingestion_trace
-from ..setup_langsmith import setup_langsmith_tracing, set_langsmith_project
+from phase1_enhancements.prorating_service import ProRatingService
+from shared.common_fn import create_graph_database_connection
+from langsmith_config import config as langsmith_config, tracing_context, tag_ingestion_trace
+from setup_langsmith import setup_langsmith_tracing, set_langsmith_project
 
 logger = logging.getLogger(__name__)
 

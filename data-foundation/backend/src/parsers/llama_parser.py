@@ -14,7 +14,7 @@ from llama_index.core.node_parser import SimpleNodeParser
 
 # Import transcript logging utilities
 try:
-    from src.utils.transcript_forwarder import forward_transcript_entry
+    from utils.transcript_forwarder import forward_transcript_entry
 except ImportError:
     # If import fails, create a no-op function
     def forward_transcript_entry(role, content, context=None):

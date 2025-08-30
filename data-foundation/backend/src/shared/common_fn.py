@@ -1,6 +1,6 @@
 import hashlib
 import logging
-from src.document_sources.youtube import create_youtube_url
+from document_sources.youtube import create_youtube_url
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_google_vertexai import VertexAIEmbeddings
 from langchain_openai import OpenAIEmbeddings

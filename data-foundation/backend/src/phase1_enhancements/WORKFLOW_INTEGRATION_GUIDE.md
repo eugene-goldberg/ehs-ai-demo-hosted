@@ -647,7 +647,7 @@ import os
 from unittest.mock import Mock, patch
 from datetime import datetime
 
-from src.workflows.ingestion_workflow import IngestionWorkflow, DocumentState
+from src.ehs_workflows.ingestion_workflow import IngestionWorkflow, DocumentState
 from src.phase1_enhancements.integration_config import Phase1IntegrationConfig
 
 class TestWorkflowIntegration:
@@ -789,8 +789,8 @@ from pathlib import Path
 # Add src to path
 sys.path.append(str(Path(__file__).parent.parent / "src"))
 
-from workflows.ingestion_workflow import IngestionWorkflow
-from workflows.extraction_workflow import DataExtractionWorkflow
+from ehs_workflows.ingestion_workflow import IngestionWorkflow
+from ehs_workflows.extraction_workflow import DataExtractionWorkflow
 from phase1_enhancements.phase1_integration import Phase1Integration
 
 async def test_ingestion_integration():

@@ -20,16 +20,16 @@ from neo4j.graph import Node, Relationship
 from pydantic import BaseModel, Field
 
 # Phase 1 imports
-from ..phase1_enhancements.audit_trail_service import AuditTrailService
-from ..phase1_enhancements.rejection_workflow_service import RejectionWorkflowService
-from ..phase1_enhancements.prorating_service import ProRatingService
-from ..shared.common_fn import create_graph_database_connection
+from phase1_enhancements.audit_trail_service import AuditTrailService
+from phase1_enhancements.rejection_workflow_service import RejectionWorkflowService
+from phase1_enhancements.prorating_service import ProRatingService
+from shared.common_fn import create_graph_database_connection
 
 logger = logging.getLogger(__name__)
 
 # Import transcript logging utilities
 try:
-    from src.utils.transcript_forwarder import forward_transcript_entry
+    from utils.transcript_forwarder import forward_transcript_entry
 except ImportError:
     # If import fails, create a no-op function
     def forward_transcript_entry(role, content, context=None):

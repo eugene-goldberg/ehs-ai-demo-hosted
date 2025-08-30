@@ -1,0 +1,45 @@
+{
+  "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/test/test_documents/electricity_bills/electric_bill.pdf",
+  "document_id": "test_doc_20250830_064539",
+  "upload_metadata": {
+    "source": "test_script",
+    "test_run": true,
+    "uploaded_by": "test_user",
+    "upload_timestamp": "2025-08-30T06:45:39.547235"
+  },
+  "document_type": "utility_bill",
+  "parsed_content": null,
+  "extracted_data": null,
+  "validation_results": null,
+  "indexed": false,
+  "errors": [
+    "Quality validation error: 'coroutine' object has no attribute 'quality_score'"
+  ],
+  "retry_count": 2,
+  "neo4j_nodes": null,
+  "neo4j_relationships": null,
+  "processing_time": null,
+  "status": "failed",
+  "source_file_path": "/tmp/audit_trail_storage/test_doc_20250830_064539/electric_bill.pdf",
+  "original_filename": "electric_bill.pdf",
+  "audit_trail_id": null,
+  "rejection_id": null,
+  "rejection_reason": null,
+  "rejection_status": null,
+  "validation_score": null,
+  "is_duplicate": false,
+  "prorating_allocation_id": null,
+  "phase1_processing": {
+    "file_stored": true,
+    "validation_started": "2025-08-30T11:45:39.688522",
+    "document_type_detected": "utility_bill",
+    "file_size": 46123,
+    "error_occurred": {
+      "timestamp": "2025-08-30T11:45:39.689542",
+      "retry_count": 2,
+      "errors": [
+        "Quality validation error: 'coroutine' object has no attribute 'quality_score'"
+      ]
+    }
+  }
+}
