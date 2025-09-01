@@ -1,0 +1,204 @@
+{
+  "facilities": [
+    {
+      "id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:60",
+      "labels": [
+        "Facility"
+      ],
+      "props": {
+        "id": "facility_apex_manufacturing___plant_a",
+        "address": "789 Production Way, Mechanicsburg, CA 93011",
+        "name": "Apex Manufacturing - Plant A"
+      }
+    },
+    {
+      "id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:74",
+      "labels": [
+        "Facility"
+      ],
+      "props": {
+        "id": "DEMO_FACILITY_001",
+        "established_date": "2020-01-01",
+        "address": "Demo Location",
+        "employee_count": 250,
+        "name": "DEMO_FACILITY_001",
+        "industry_sector": "Chemical Manufacturing",
+        "type": "Manufacturing",
+        "operational_status": "Active"
+      }
+    },
+    {
+      "id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:90",
+      "labels": [
+        "Facility"
+      ],
+      "props": {
+        "created_date": "2025-08-30T12:46:30.888000000+00:00",
+        "location": "Test Location for PDF Ingestion",
+        "name": "Test Facility TEST_FACILITY_PDF_001",
+        "test_facility": true,
+        "facility_id": "TEST_FACILITY_PDF_001",
+        "type": "Test Manufacturing"
+      }
+    },
+    {
+      "id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:180",
+      "labels": [
+        "Facility"
+      ],
+      "props": {
+        "created_date": "2025-08-29T14:28:41.540000000+00:00",
+        "location": "Demo Location",
+        "name": "Demo Facility DEMO_FACILITY_001",
+        "facility_id": "DEMO_FACILITY_001",
+        "type": "Manufacturing"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:59",
+      "rel_type": "BILLED_TO",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:60"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:60",
+      "rel_type": "BILLED_TO",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:59"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:63",
+      "rel_type": "MONITORS",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:60"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:60",
+      "rel_type": "MONITORS",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:63"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:180",
+      "rel_type": "HAS_DOCUMENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:181"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:181",
+      "rel_type": "HAS_DOCUMENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:180"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:180",
+      "rel_type": "HAS_DOCUMENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:186"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:186",
+      "rel_type": "HAS_DOCUMENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:180"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:180",
+      "rel_type": "HAS_INCIDENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:187"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:187",
+      "rel_type": "HAS_INCIDENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:180"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:180",
+      "rel_type": "HAS_INCIDENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:72"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:72",
+      "rel_type": "HAS_INCIDENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:180"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:74",
+      "rel_type": "BELONGS_TO",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:75"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:75",
+      "rel_type": "BELONGS_TO",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:74"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:74",
+      "rel_type": "BELONGS_TO",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:76"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:76",
+      "rel_type": "BELONGS_TO",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:74"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:74",
+      "rel_type": "HAS_INCIDENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:77"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:77",
+      "rel_type": "HAS_INCIDENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:74"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:74",
+      "rel_type": "HAS_INCIDENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:78"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:78",
+      "rel_type": "HAS_INCIDENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:74"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:74",
+      "rel_type": "HAS_RISK_ASSESSMENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:79"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:79",
+      "rel_type": "HAS_RISK_ASSESSMENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:74"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:74",
+      "rel_type": "HAS_RISK_ASSESSMENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:80"
+    },
+    {
+      "start_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:80",
+      "rel_type": "HAS_RISK_ASSESSMENT",
+      "rel_props": {},
+      "end_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:74"
+    }
+  ]
+}

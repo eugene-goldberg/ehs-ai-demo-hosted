@@ -1,0 +1,406 @@
+{
+  "timestamp": "2025-08-31T11:41:32.624721",
+  "base_url": "http://localhost:8000",
+  "endpoints_tested": 20,
+  "endpoints_passed": 11,
+  "endpoints_failed": 9,
+  "detailed_results": [
+    {
+      "endpoint": "/api/environmental/electricity/facts",
+      "params": {},
+      "status": "PASSED",
+      "response_time_ms": 10.59,
+      "status_code": 200,
+      "data_count": 4,
+      "expected_fields_present": [
+        "id",
+        "category",
+        "title",
+        "description"
+      ],
+      "missing_fields": [],
+      "error": null,
+      "sample_data": {
+        "id": "07bf7215-9408-467e-ba89-029687ef4940",
+        "category": "electricity",
+        "title": "Total Electricity Consumption",
+        "description": "Calculated total consumption for electricity",
+        "value": 83200.0,
+        "unit": "kWh",
+        "location_path": null,
+        "timestamp": "2025-08-31T11:41:32.691827",
+        "metadata": {
+          "source": "calculated",
+          "metric_type": "total_consumption"
+        }
+      }
+    },
+    {
+      "endpoint": "/api/environmental/electricity/facts?location_path=california",
+      "params": {
+        "location_path": "california"
+      },
+      "status": "FAILED",
+      "response_time_ms": 5.83,
+      "status_code": 200,
+      "data_count": 0,
+      "expected_fields_present": [],
+      "missing_fields": [],
+      "error": "No data returned",
+      "sample_data": null
+    },
+    {
+      "endpoint": "/api/environmental/electricity/risks",
+      "params": {},
+      "status": "PASSED",
+      "response_time_ms": 8.8,
+      "status_code": 200,
+      "data_count": 1,
+      "expected_fields_present": [
+        "id",
+        "category",
+        "title",
+        "description"
+      ],
+      "missing_fields": [],
+      "error": null,
+      "sample_data": {
+        "id": "dca5b762-23e8-4cb7-a134-10b87ba872dd",
+        "category": "electricity",
+        "title": "low_efficiency",
+        "description": "Average efficiency (0.00) below threshold (0.8)",
+        "severity": "medium",
+        "probability": "unknown",
+        "impact": "Upgrade to more efficient systems",
+        "location_path": null,
+        "identified_date": "2025-08-31T11:41:32.706329",
+        "metadata": {}
+      }
+    },
+    {
+      "endpoint": "/api/environmental/electricity/risks?location_path=california",
+      "params": {
+        "location_path": "california"
+      },
+      "status": "FAILED",
+      "response_time_ms": 7.64,
+      "status_code": 200,
+      "data_count": 0,
+      "expected_fields_present": [],
+      "missing_fields": [],
+      "error": "No data returned",
+      "sample_data": null
+    },
+    {
+      "endpoint": "/api/environmental/electricity/recommendations",
+      "params": {},
+      "status": "PASSED",
+      "response_time_ms": 13.66,
+      "status_code": 200,
+      "data_count": 3,
+      "expected_fields_present": [
+        "id",
+        "category",
+        "title",
+        "description"
+      ],
+      "missing_fields": [],
+      "error": null,
+      "sample_data": {
+        "id": "54455600-8609-4529-b84f-30b76f999571",
+        "category": "electricity",
+        "title": "Consider LED lighting upgrades and energy-efficien...",
+        "description": "Consider LED lighting upgrades and energy-efficient equipment",
+        "priority": "medium",
+        "effort_level": "medium",
+        "potential_impact": "Positive environmental impact expected",
+        "location_path": null,
+        "created_date": "2025-08-31T11:41:32.728252",
+        "metadata": {}
+      }
+    },
+    {
+      "endpoint": "/api/environmental/electricity/recommendations?location_path=california",
+      "params": {
+        "location_path": "california"
+      },
+      "status": "FAILED",
+      "response_time_ms": 5.14,
+      "status_code": 200,
+      "data_count": 0,
+      "expected_fields_present": [],
+      "missing_fields": [],
+      "error": "No data returned",
+      "sample_data": null
+    },
+    {
+      "endpoint": "/api/environmental/water/facts",
+      "params": {},
+      "status": "PASSED",
+      "response_time_ms": 75.88,
+      "status_code": 200,
+      "data_count": 4,
+      "expected_fields_present": [
+        "id",
+        "category",
+        "title",
+        "description"
+      ],
+      "missing_fields": [],
+      "error": null,
+      "sample_data": {
+        "id": "00edd2d6-cac2-4994-ba89-8e46202e46ba",
+        "category": "water",
+        "title": "Total Water Consumption",
+        "description": "Calculated total consumption for water",
+        "value": 41600.0,
+        "unit": "gallons",
+        "location_path": null,
+        "timestamp": "2025-08-31T11:41:32.809104",
+        "metadata": {
+          "source": "calculated",
+          "metric_type": "total_consumption"
+        }
+      }
+    },
+    {
+      "endpoint": "/api/environmental/water/facts?location_path=california",
+      "params": {
+        "location_path": "california"
+      },
+      "status": "FAILED",
+      "response_time_ms": 37.73,
+      "status_code": 200,
+      "data_count": 0,
+      "expected_fields_present": [],
+      "missing_fields": [],
+      "error": "No data returned",
+      "sample_data": null
+    },
+    {
+      "endpoint": "/api/environmental/water/risks",
+      "params": {},
+      "status": "FAILED",
+      "response_time_ms": 7.32,
+      "status_code": 200,
+      "data_count": 0,
+      "expected_fields_present": [],
+      "missing_fields": [],
+      "error": "No data returned",
+      "sample_data": null
+    },
+    {
+      "endpoint": "/api/environmental/water/recommendations",
+      "params": {},
+      "status": "PASSED",
+      "response_time_ms": 7.45,
+      "status_code": 200,
+      "data_count": 1,
+      "expected_fields_present": [
+        "id",
+        "category",
+        "title",
+        "description"
+      ],
+      "missing_fields": [],
+      "error": null,
+      "sample_data": {
+        "id": "16d9aa9e-fdb6-409e-b832-e79defe4cc47",
+        "category": "water",
+        "title": "Implement water monitoring systems for leak detect...",
+        "description": "Implement water monitoring systems for leak detection",
+        "priority": "medium",
+        "effort_level": "medium",
+        "potential_impact": "Positive environmental impact expected",
+        "location_path": null,
+        "created_date": "2025-08-31T11:41:32.862169",
+        "metadata": {}
+      }
+    },
+    {
+      "endpoint": "/api/environmental/water/recommendations?location_path=california",
+      "params": {
+        "location_path": "california"
+      },
+      "status": "FAILED",
+      "response_time_ms": 6.5,
+      "status_code": 200,
+      "data_count": 0,
+      "expected_fields_present": [],
+      "missing_fields": [],
+      "error": "No data returned",
+      "sample_data": null
+    },
+    {
+      "endpoint": "/api/environmental/waste/facts",
+      "params": {},
+      "status": "PASSED",
+      "response_time_ms": 9.51,
+      "status_code": 200,
+      "data_count": 4,
+      "expected_fields_present": [
+        "id",
+        "category",
+        "title",
+        "description"
+      ],
+      "missing_fields": [],
+      "error": null,
+      "sample_data": {
+        "id": "a72aee33-5f32-4441-8b98-93cbbc8ce0e6",
+        "category": "waste",
+        "title": "Total Waste Generated",
+        "description": "Calculated total generated for waste",
+        "value": 7490.0,
+        "unit": "lbs",
+        "location_path": null,
+        "timestamp": "2025-08-31T11:41:32.878028",
+        "metadata": {
+          "source": "calculated",
+          "metric_type": "total_generated"
+        }
+      }
+    },
+    {
+      "endpoint": "/api/environmental/waste/facts?location_path=california",
+      "params": {
+        "location_path": "california"
+      },
+      "status": "FAILED",
+      "response_time_ms": 24.3,
+      "status_code": 200,
+      "data_count": 0,
+      "expected_fields_present": [],
+      "missing_fields": [],
+      "error": "No data returned",
+      "sample_data": null
+    },
+    {
+      "endpoint": "/api/environmental/waste/risks",
+      "params": {},
+      "status": "PASSED",
+      "response_time_ms": 7.15,
+      "status_code": 200,
+      "data_count": 1,
+      "expected_fields_present": [
+        "id",
+        "category",
+        "title",
+        "description"
+      ],
+      "missing_fields": [],
+      "error": null,
+      "sample_data": {
+        "id": "f02bcb77-d30b-4bae-a342-27802a39a6fd",
+        "category": "waste",
+        "title": "low_recycling",
+        "description": "Recycling rate (0.0%) below minimum threshold (30.0%)",
+        "severity": "high",
+        "probability": "unknown",
+        "impact": "Improve recycling programs and waste sorting",
+        "location_path": null,
+        "identified_date": "2025-08-31T11:41:32.909926",
+        "metadata": {}
+      }
+    },
+    {
+      "endpoint": "/api/environmental/waste/risks?location_path=california",
+      "params": {
+        "location_path": "california"
+      },
+      "status": "FAILED",
+      "response_time_ms": 4.69,
+      "status_code": 200,
+      "data_count": 0,
+      "expected_fields_present": [],
+      "missing_fields": [],
+      "error": "No data returned",
+      "sample_data": null
+    },
+    {
+      "endpoint": "/api/environmental/waste/recommendations",
+      "params": {},
+      "status": "PASSED",
+      "response_time_ms": 7.45,
+      "status_code": 200,
+      "data_count": 2,
+      "expected_fields_present": [
+        "id",
+        "category",
+        "title",
+        "description"
+      ],
+      "missing_fields": [],
+      "error": null,
+      "sample_data": {
+        "id": "6b1e76c8-e64f-47d5-bf24-cecb5212e18a",
+        "category": "waste",
+        "title": "Increase recycling education and bin availability",
+        "description": "Increase recycling education and bin availability",
+        "priority": "medium",
+        "effort_level": "medium",
+        "potential_impact": "Positive environmental impact expected",
+        "location_path": null,
+        "created_date": "2025-08-31T11:41:32.922061",
+        "metadata": {}
+      }
+    },
+    {
+      "endpoint": "/api/environmental/waste/recommendations?location_path=california",
+      "params": {
+        "location_path": "california"
+      },
+      "status": "FAILED",
+      "response_time_ms": 9.08,
+      "status_code": 200,
+      "data_count": 0,
+      "expected_fields_present": [],
+      "missing_fields": [],
+      "error": "No data returned",
+      "sample_data": null
+    },
+    {
+      "endpoint": "/api/environmental/llm-assessment (Electricity assessment)",
+      "params": {
+        "categories": [
+          "electricity"
+        ],
+        "custom_prompt": "What are the main electricity consumption risks for data centers?"
+      },
+      "status": "PASSED",
+      "response_time_ms": 5.94,
+      "status_code": 200,
+      "error": null,
+      "response_length": 150
+    },
+    {
+      "endpoint": "/api/environmental/llm-assessment (Water assessment with location)",
+      "params": {
+        "categories": [
+          "water"
+        ],
+        "location_path": "california",
+        "custom_prompt": "How can we reduce water waste in manufacturing?"
+      },
+      "status": "PASSED",
+      "response_time_ms": 3.74,
+      "status_code": 200,
+      "error": null,
+      "response_length": 150
+    },
+    {
+      "endpoint": "/api/environmental/llm-assessment (Waste assessment)",
+      "params": {
+        "categories": [
+          "waste"
+        ],
+        "custom_prompt": "What are best practices for waste management?"
+      },
+      "status": "PASSED",
+      "response_time_ms": 3.15,
+      "status_code": 200,
+      "error": null,
+      "response_length": 150
+    }
+  ]
+}

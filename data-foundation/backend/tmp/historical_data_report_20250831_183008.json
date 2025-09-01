@@ -1,0 +1,159 @@
+{
+  "report_timestamp": "2025-08-31T18:30:08.646453",
+  "total_facilities": 3,
+  "facilities": {
+    "DEMO_FACILITY_001": {
+      "name": "DEMO_FACILITY_001",
+      "type": "Manufacturing"
+    },
+    "facility_apex_manufacturing___plant_a": {
+      "name": "Apex Manufacturing - Plant A",
+      "type": null
+    },
+    "null": {
+      "name": "Demo Facility DEMO_FACILITY_001",
+      "type": "Manufacturing"
+    }
+  },
+  "data_analysis": {
+    "electricity_consumption": {
+      "facilities_with_data": 2,
+      "facility_analysis": {
+        "DEMO_FACILITY_001": {
+          "min_date": "2025-07-31",
+          "max_date": "2025-08-29",
+          "total_records": 30,
+          "date_range_days": 30,
+          "months_of_data": 2,
+          "has_6_months": false,
+          "avg_consumption_kwh": 1486.6666666666667,
+          "total_cost_usd": 5352.0
+        },
+        "facility_apex_manufacturing___plant_a": {
+          "min_date": "2025-07-31",
+          "max_date": "2025-08-29",
+          "total_records": 30,
+          "date_range_days": 30,
+          "months_of_data": 2,
+          "has_6_months": false,
+          "avg_consumption_kwh": 1286.6666666666667,
+          "total_cost_usd": 4632.0
+        }
+      }
+    },
+    "water_consumption": {
+      "facilities_with_data": 2,
+      "facility_analysis": {
+        "DEMO_FACILITY_001": {
+          "min_date": "2025-07-31",
+          "max_date": "2025-08-29",
+          "total_records": 30,
+          "months_of_data": 2,
+          "has_6_months": false,
+          "avg_consumption_gallons": 743.3333333333334,
+          "total_cost_usd": 66.92,
+          "source_types": {
+            "Well": 30
+          }
+        },
+        "facility_apex_manufacturing___plant_a": {
+          "min_date": "2025-07-31",
+          "max_date": "2025-08-29",
+          "total_records": 30,
+          "months_of_data": 2,
+          "has_6_months": false,
+          "avg_consumption_gallons": 643.3333333333334,
+          "total_cost_usd": 57.93,
+          "source_types": {
+            "Municipal": 30
+          }
+        }
+      }
+    },
+    "waste_generation": {
+      "facilities_with_data": 2,
+      "facility_analysis": {
+        "DEMO_FACILITY_001": {
+          "min_date": "2025-07-31",
+          "max_date": "2025-08-28",
+          "total_records": 20,
+          "months_of_data": 2,
+          "has_6_months": false,
+          "total_amount_pounds": 4245,
+          "total_disposal_cost_usd": 3992.5,
+          "waste_types": {
+            "Hazardous": 5,
+            "Non-Hazardous": 5,
+            "Recyclable": 5,
+            "Organic": 5
+          },
+          "waste_type_amounts": {
+            "Hazardous": 935,
+            "Non-Hazardous": 1130,
+            "Recyclable": 1110,
+            "Organic": 1070
+          },
+          "disposal_methods": {
+            "Incineration": 5,
+            "Landfill": 15
+          }
+        },
+        "facility_apex_manufacturing___plant_a": {
+          "min_date": "2025-07-31",
+          "max_date": "2025-08-28",
+          "total_records": 20,
+          "months_of_data": 2,
+          "has_6_months": false,
+          "total_amount_pounds": 3245,
+          "total_disposal_cost_usd": 2992.5,
+          "waste_types": {
+            "Hazardous": 5,
+            "Non-Hazardous": 5,
+            "Recyclable": 5,
+            "Organic": 5
+          },
+          "waste_type_amounts": {
+            "Hazardous": 685,
+            "Non-Hazardous": 880,
+            "Recyclable": 860,
+            "Organic": 820
+          },
+          "disposal_methods": {
+            "Incineration": 5,
+            "Landfill": 15
+          }
+        }
+      }
+    }
+  },
+  "completeness_summary": {
+    "total_facilities_with_environmental_data": 2,
+    "facilities_with_6_months_data": {
+      "electricity": 0,
+      "water": 0,
+      "waste": 0
+    },
+    "facilities_meeting_6_month_requirement": {
+      "DEMO_FACILITY_001": {
+        "electricity": false,
+        "water": false,
+        "waste": false,
+        "all_categories": false
+      },
+      "facility_apex_manufacturing___plant_a": {
+        "electricity": false,
+        "water": false,
+        "waste": false,
+        "all_categories": false
+      }
+    }
+  },
+  "recommendations": [
+    "Facility DEMO_FACILITY_001: Need 4 more months of electricity data",
+    "Facility DEMO_FACILITY_001: Need 4 more months of water data",
+    "Facility DEMO_FACILITY_001: Need 4 more months of waste data",
+    "Facility facility_apex_manufacturing___plant_a: Need 4 more months of electricity data",
+    "Facility facility_apex_manufacturing___plant_a: Need 4 more months of water data",
+    "Facility facility_apex_manufacturing___plant_a: Need 4 more months of waste data"
+  ]
+}

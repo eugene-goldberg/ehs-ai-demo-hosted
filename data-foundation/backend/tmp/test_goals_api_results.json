@@ -1,0 +1,108 @@
+{
+  "timestamp": "2025-08-31T15:42:01.255610",
+  "base_url": "http://localhost:8000",
+  "total_tests": 11,
+  "passed_tests": 10,
+  "failed_tests": 1,
+  "results": [
+    {
+      "endpoint": "/api/goals/health",
+      "method": "GET",
+      "status_code": 200,
+      "success": true,
+      "response_time": 0.0010650157928466797,
+      "error_message": null,
+      "data_summary": "Status: healthy, Total Goals: 6"
+    },
+    {
+      "endpoint": "/api/goals/annual",
+      "method": "GET",
+      "status_code": 200,
+      "success": true,
+      "response_time": 0.0058040618896484375,
+      "error_message": null,
+      "data_summary": "Goals: 6, Sites: 2, Categories: 3"
+    },
+    {
+      "endpoint": "/api/goals/annual/algonquin_illinois",
+      "method": "GET",
+      "status_code": 200,
+      "success": true,
+      "response_time": 0.003155231475830078,
+      "error_message": null,
+      "data_summary": "Site: algonquin_illinois, Goals: 3, Categories: 3"
+    },
+    {
+      "endpoint": "/api/goals/annual/houston_texas",
+      "method": "GET",
+      "status_code": 200,
+      "success": true,
+      "response_time": 0.0022847652435302734,
+      "error_message": null,
+      "data_summary": "Site: houston_texas, Goals: 3, Categories: 3"
+    },
+    {
+      "endpoint": "/api/goals/annual/invalid_site",
+      "method": "GET",
+      "status_code": 404,
+      "success": true,
+      "response_time": 0.0029158592224121094,
+      "error_message": null,
+      "data_summary": "Correctly returned 404 for invalid site"
+    },
+    {
+      "endpoint": "/api/goals/summary",
+      "method": "GET",
+      "status_code": 500,
+      "success": false,
+      "response_time": 0.0049321651458740234,
+      "error_message": null,
+      "data_summary": "HTTP 500"
+    },
+    {
+      "endpoint": "/api/goals/progress/algonquin_illinois",
+      "method": "GET",
+      "status_code": 200,
+      "success": true,
+      "response_time": 0.2786240577697754,
+      "error_message": null,
+      "data_summary": "Site: algonquin_illinois, Progress entries: 3, Status: mixed"
+    },
+    {
+      "endpoint": "/api/goals/progress/houston_texas",
+      "method": "GET",
+      "status_code": 200,
+      "success": true,
+      "response_time": 0.02042102813720703,
+      "error_message": null,
+      "data_summary": "Site: houston_texas, Progress entries: 3, Status: mixed"
+    },
+    {
+      "endpoint": "/api/goals/progress/invalid_site",
+      "method": "GET",
+      "status_code": 404,
+      "success": true,
+      "response_time": 0.008195877075195312,
+      "error_message": null,
+      "data_summary": "Correctly returned 404 for invalid site"
+    },
+    {
+      "endpoint": "/api/goals/annual (structure test)",
+      "method": "GET",
+      "status_code": 200,
+      "success": true,
+      "response_time": 0.0015900135040283203,
+      "error_message": null,
+      "data_summary": "Content-type valid: True, Goal structure valid: True"
+    },
+    {
+      "endpoint": "/api/goals/* (consistency test)",
+      "method": "GET",
+      "status_code": 200,
+      "success": true,
+      "response_time": 0.003885030746459961,
+      "error_message": null,
+      "data_summary": "Data consistent across endpoints"
+    }
+  ]
+}

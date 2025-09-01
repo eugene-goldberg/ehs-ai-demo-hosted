@@ -1,0 +1,189 @@
+{
+  "timestamp": "2025-08-31T17:53:55.687365",
+  "dashboard_display": {
+    "electricity": {
+      "accessible": false,
+      "components_found": {},
+      "data_structure": null,
+      "errors": [
+        "HTTP 404: {\"detail\":\"Not Found\"}"
+      ]
+    },
+    "water": {
+      "accessible": false,
+      "components_found": {},
+      "data_structure": null,
+      "errors": [
+        "HTTP 404: {\"detail\":\"Not Found\"}"
+      ]
+    },
+    "waste": {
+      "accessible": false,
+      "components_found": {},
+      "data_structure": null,
+      "errors": [
+        "HTTP 404: {\"detail\":\"Not Found\"}"
+      ]
+    }
+  },
+  "data_sources": {
+    "electricity": {
+      "neo4j_data_exists": false,
+      "neo4j_record_count": 0,
+      "generated_data_indicators": [],
+      "data_freshness": null,
+      "neo4j_goals_count": 0,
+      "neo4j_risks_count": 0,
+      "neo4j_recommendations_count": 0
+    },
+    "water": {
+      "neo4j_data_exists": false,
+      "neo4j_record_count": 0,
+      "generated_data_indicators": [],
+      "data_freshness": null,
+      "neo4j_goals_count": 0,
+      "neo4j_risks_count": 0,
+      "neo4j_recommendations_count": 0
+    },
+    "waste": {
+      "neo4j_data_exists": false,
+      "neo4j_record_count": 0,
+      "generated_data_indicators": [],
+      "data_freshness": null,
+      "neo4j_goals_count": 0,
+      "neo4j_risks_count": 0,
+      "neo4j_recommendations_count": 0
+    }
+  },
+  "historical_data": {
+    "sites_checked": [
+      {
+        "site_id": null,
+        "name": "Algonquin Manufacturing Site"
+      },
+      {
+        "site_id": null,
+        "name": "Houston Corporate Campus"
+      }
+    ],
+    "categories_coverage": {
+      "electricity": {
+        "null": {
+          "has_6_months_data": false,
+          "earliest_timestamp": null,
+          "latest_timestamp": null,
+          "record_count": 0,
+          "data_points_per_month": {}
+        }
+      },
+      "water": {
+        "null": {
+          "has_6_months_data": false,
+          "earliest_timestamp": null,
+          "latest_timestamp": null,
+          "record_count": 0,
+          "data_points_per_month": {}
+        }
+      },
+      "waste": {
+        "null": {
+          "has_6_months_data": false,
+          "earliest_timestamp": null,
+          "latest_timestamp": null,
+          "record_count": 0,
+          "data_points_per_month": {}
+        }
+      }
+    },
+    "compliance_summary": {
+      "electricity": {
+        "compliant_sites": 0,
+        "total_sites": 2,
+        "compliance_percentage": 0.0
+      },
+      "water": {
+        "compliant_sites": 0,
+        "total_sites": 2,
+        "compliance_percentage": 0.0
+      },
+      "waste": {
+        "compliant_sites": 0,
+        "total_sites": 2,
+        "compliance_percentage": 0.0
+      }
+    }
+  },
+  "risk_assessment": {
+    "agent_accessible": true,
+    "stores_in_neo4j": false,
+    "recent_assessments": [],
+    "neo4j_risk_records": 0,
+    "agent_response_structure": {
+      "status_code": 404,
+      "response_data": "{\"detail\":\"Not Found\"}"
+    }
+  },
+  "neo4j_integration": {
+    "site_risk_associations": {},
+    "site_recommendation_associations": {},
+    "categories_coverage": {
+      "electricity": {
+        "risks": {},
+        "recommendations": {}
+      },
+      "water": {
+        "risks": {},
+        "recommendations": {}
+      },
+      "waste": {
+        "risks": {},
+        "recommendations": {}
+      }
+    },
+    "relationship_integrity": {
+      "orphaned_risks": 0,
+      "orphaned_recommendations": 0,
+      "sites_without_risks": [],
+      "sites_without_recommendations": []
+    }
+  },
+  "overall_compliance": {
+    "compliant": false,
+    "compliance_percentage": 0.0,
+    "checks": [
+      {
+        "requirement": "Dashboard displays goals, facts, risks, recommendations for all categories",
+        "compliant": false,
+        "weight": 25
+      },
+      {
+        "requirement": "Data comes from Neo4j, not generated",
+        "compliant": false,
+        "weight": 25
+      },
+      {
+        "requirement": "6 months of historical data exists for all sites and categories",
+        "compliant": false,
+        "weight": 25
+      },
+      {
+        "requirement": "Risk Assessment Agent stores results in Neo4j",
+        "compliant": false,
+        "weight": 25
+      }
+    ],
+    "issues": [
+      "Dashboard electricity category not accessible",
+      "Dashboard water category not accessible",
+      "Dashboard waste category not accessible",
+      "electricity data not found in Neo4j",
+      "water data not found in Neo4j",
+      "waste data not found in Neo4j",
+      "electricity historical data incomplete (0.0% of sites)",
+      "water historical data incomplete (0.0% of sites)",
+      "waste historical data incomplete (0.0% of sites)",
+      "Risk Assessment Agent does not store results in Neo4j"
+    ],
+    "summary": "0/4 requirements met"
+  }
+}

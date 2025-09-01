@@ -1,0 +1,51 @@
+{
+  "generation_date": "2025-08-31T18:43:58.755339",
+  "data_period": {
+    "start_date": "2025-03-01",
+    "end_date": "2025-08-31",
+    "duration_days": 183
+  },
+  "record_counts": {
+    "Site": 4,
+    "ElectricityConsumption": 428,
+    "WaterConsumption": 428,
+    "WasteGeneration": 248,
+    "EnvironmentalTarget": 6
+  },
+  "date_range_verification": {
+    "start_date": "2025-03-01",
+    "end_date": "2025-08-31"
+  },
+  "site_data_summary": {
+    "algonquin_il": {
+      "site_name": "Algonquin Manufacturing",
+      "electricity_records": 184,
+      "water_records": 184,
+      "waste_records": 104,
+      "avg_electricity": 1556.1391304349504,
+      "avg_water": 4770.302499999868
+    },
+    "houston_tx": {
+      "site_name": "Houston Processing Center",
+      "electricity_records": 184,
+      "water_records": 184,
+      "waste_records": 104,
+      "avg_electricity": 2243.1928804348163,
+      "avg_water": 6711.208858695289
+    }
+  },
+  "risk_patterns": {
+    "algonquin_il": {
+      "risk_level": "HIGH",
+      "electricity_pattern": "Trending UP 8% (target: DOWN 15%)",
+      "water_pattern": "20% summer spike",
+      "waste_pattern": "25% recycling rate (target: 50%)"
+    },
+    "houston_tx": {
+      "risk_level": "MEDIUM",
+      "electricity_pattern": "Flat trend (target: DOWN 18%)",
+      "water_pattern": "30% summer spike",
+      "waste_pattern": "Improving recycling 30% -> 40%"
+    }
+  }
+}

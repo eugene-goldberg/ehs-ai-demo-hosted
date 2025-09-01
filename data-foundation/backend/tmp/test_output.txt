@@ -1,0 +1,11 @@
+[2025-08-31 16:36:11.514854] Testing dashboard endpoint: http://localhost:8000/api/dashboard/executive
+------------------------------------------------------------
+Making HTTP GET request...
+Status Code: 404
+Headers: {'date': 'Sun, 31 Aug 2025 21:36:10 GMT', 'server': 'uvicorn', 'content-length': '22', 'content-type': 'application/json'}
+------------------------------------------------------------
+✗ Request failed with status 404
+Response content:
+{"detail":"Not Found"}
+
+[2025-08-31 16:36:11.522055] Test completed

@@ -32,106 +32,67 @@ import {
 import { API_ENDPOINTS } from '../config/api';
 
 const AnalyticsExecutive = () => {
-  const [selectedLocation, setSelectedLocation] = useState('algonquin');
+  const [selectedLocation, setSelectedLocation] = useState('algonquin_il');
   const [selectedDateRange, setSelectedDateRange] = useState('30days');
-  const [dashboardData, setDashboardData] = useState(null);
+  const [electricityData, setElectricityData] = useState(null);
+  const [waterData, setWaterData] = useState(null);
+  const [wasteData, setWasteData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // Location hierarchy mapping for display
   const locationHierarchy = {
-    'global': 'Global View',
-    'northamerica': 'Global View → North America',
-    'illinois': 'Global View → North America → Illinois',
-    'algonquin': 'Global View → North America → Illinois → Algonquin Site',
-    'texas': 'Global View → North America → Texas',
-    'houston': 'Global View → North America → Texas → Houston'
+    'algonquin_il': 'Global View → North America → Illinois → Algonquin Site',
+    'houston_tx': 'Global View → North America → Texas → Houston Site'
   };
 
-  // Fetch dashboard data from API
-  const fetchDashboardData = async () => {
+  // Site ID mapping
+  const siteIdMapping = {
+    'algonquin_il': 'algonquin_il',
+    'houston_tx': 'houston_tx'
+  };
+
+  // Fetch data from environmental dashboard APIs
+  const fetchEnvironmentalData = async () => {
     setLoading(true);
     setError(null);
-    setDashboardData(null); // Clear data during fetch to prevent stale data access
+    setElectricityData(null);
+    setWaterData(null);
+    setWasteData(null);
     
     try {
-      const response = await fetch(
-        `${API_ENDPOINTS.executiveDashboard}?location=${selectedLocation}&dateRange=${selectedDateRange}`
-      );
+      const siteId = siteIdMapping[selectedLocation];
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      
-      // Transform v2 API data to component format
-      const transformedData = {
-        globalScorecard: {
-          ehsScore: data.summary?.overall_health_score || 0,
-          costSavings: 0 // No cost savings in v2 API yet
-        },
-        riskAssessment: data.risk_assessment || {},
-        kpis: data.kpis || {},
-        recommendations: data.recommendations || {},
-        // Add mock data for missing sections to prevent errors
-        electricity: {
-          goal: { 
-            actual: data.kpis?.metrics?.overall_risk_score?.value || 0,
-            target: 100, 
-            unit: 'Score' 
-          },
-          facts: {
-            consumption: `Risk Score: ${data.kpis?.metrics?.overall_risk_score?.value || 0}`,
-            cost: `Status: ${data.kpis?.metrics?.overall_risk_score?.status || 'N/A'}`,
-            co2: 'Risk assessment data available'
-          },
-          analysis: `Risk Level: ${data.risk_assessment?.overall_risk_level || 'N/A'}. Total assessments: ${data.risk_assessment?.total_assessments || 0}`,
-          recommendation: data.recommendations?.risk_based_recommendations?.[0]?.description || 'No recommendations available'
-        },
-        water: {
-          goal: { 
-            actual: data.kpis?.metrics?.incident_rate?.value || 0,
-            target: 5, 
-            unit: 'Rate' 
-          },
-          facts: {
-            consumption: `Incident Rate: ${data.kpis?.metrics?.incident_rate?.value || 0}`,
-            cost: `Total Incidents: ${data.summary?.incidents?.total || 0}`,
-            co2: 'Safety metrics monitoring'
-          },
-          analysis: `Incident rate tracking shows ${data.kpis?.metrics?.incident_rate?.status || 'unknown'} status`,
-          recommendation: 'Continue safety monitoring and training programs'
-        },
-        waste: {
-          goal: { 
-            actual: data.kpis?.metrics?.audit_pass_rate?.value || 0,
-            target: 100, 
-            unit: '%' 
-          },
-          facts: {
-            generation: `Audit Pass Rate: ${data.kpis?.metrics?.audit_pass_rate?.value || 0}%`,
-            cost: `Training Completion: ${data.summary?.compliance?.training_completion || 0}%`,
-            co2: 'Compliance monitoring active'
-          },
-          analysis: `Audit performance shows ${data.kpis?.metrics?.audit_pass_rate?.status || 'unknown'} status`,
-          recommendation: 'Maintain compliance standards and improve audit processes'
-        },
-        compliance: {
-          goal: { 
-            actual: data.summary?.compliance?.audit_pass_rate || 0,
-            target: 100, 
-            unit: '%' 
-          },
-          facts: [`Audit Pass Rate: ${data.summary?.compliance?.audit_pass_rate || 0}%`],
-          analysis: 'Compliance metrics available',
-          recommendation: 'Maintain compliance standards'
-        }
-      };
+      // Make three parallel API calls
+      const [electricityResponse, waterResponse, wasteResponse] = await Promise.all([
+        fetch(`${API_ENDPOINTS.dashboardElectricity}?site_id=${siteId}&date_range=${selectedDateRange}`),
+        fetch(`${API_ENDPOINTS.dashboardWater}?site_id=${siteId}&date_range=${selectedDateRange}`),
+        fetch(`${API_ENDPOINTS.dashboardWaste}?site_id=${siteId}&date_range=${selectedDateRange}`)
+      ]);
 
-      setDashboardData(transformedData);
+      // Check if all responses are ok
+      if (!electricityResponse.ok) {
+        throw new Error(`Electricity API error: ${electricityResponse.status}`);
+      }
+      if (!waterResponse.ok) {
+        throw new Error(`Water API error: ${waterResponse.status}`);
+      }
+      if (!wasteResponse.ok) {
+        throw new Error(`Waste API error: ${wasteResponse.status}`);
+      }
+
+      // Parse JSON responses
+      const [electricity, water, waste] = await Promise.all([
+        electricityResponse.json(),
+        waterResponse.json(),
+        wasteResponse.json()
+      ]);
+
+      setElectricityData(electricity);
+      setWaterData(water);
+      setWasteData(waste);
     } catch (err) {
-      console.error('Error fetching dashboard data:', err);
+      console.error('Error fetching environmental data:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -139,7 +100,7 @@ const AnalyticsExecutive = () => {
   };
 
   useEffect(() => {
-    fetchDashboardData();
+    fetchEnvironmentalData();
   }, [selectedLocation, selectedDateRange]);
 
   const getScoreColor = (score, target) => {
@@ -149,7 +110,6 @@ const AnalyticsExecutive = () => {
   };
 
   const getTrendIcon = (trend) => {
-    // Handle string trends
     if (typeof trend === 'string') {
       switch (trend.toLowerCase()) {
         case 'improvement':
@@ -170,7 +130,6 @@ const AnalyticsExecutive = () => {
       }
     }
 
-    // Handle array trends (original logic)
     if (!Array.isArray(trend) || trend.length < 2) return <Info />;
     
     const recent = trend.slice(-3).reduce((a, b) => a + b, 0) / 3;
@@ -181,7 +140,6 @@ const AnalyticsExecutive = () => {
   };
 
   const renderSparkline = (data) => {
-    // Only render sparkline for array data
     if (!Array.isArray(data) || data.length === 0) {
       return null;
     }
@@ -260,13 +218,164 @@ const AnalyticsExecutive = () => {
     );
   };
 
+  const calculateCO2Emissions = (data) => {
+    if (!data || !data.facts) return 0;
+    
+    // Extract consumption values and calculate estimated CO2
+    const consumption = Object.values(data.facts).reduce((sum, value) => {
+      if (typeof value === 'number') return sum + value;
+      const num = parseFloat(value);
+      return !isNaN(num) ? sum + num : sum;
+    }, 0);
+    
+    // Simple CO2 calculation (this would be more sophisticated in real implementation)
+    return Math.round(consumption * 0.0005); // Approximate CO2 factor
+  };
+
+  // Helper function to parse recommendations that might be JSON-like strings
+  const parseRecommendations = (recommendations) => {
+    if (!Array.isArray(recommendations)) return [];
+    
+    return recommendations.map(rec => {
+      if (typeof rec === 'string') {
+        try {
+          // Try to parse if it looks like JSON
+          if (rec.trim().startsWith('{') || rec.trim().startsWith('[')) {
+            const parsed = JSON.parse(rec);
+            return parsed.text || parsed.description || rec;
+          }
+        } catch (e) {
+          // If parsing fails, return original string
+        }
+      }
+      return rec;
+    });
+  };
+
+  const renderEnvironmentalCard = (data, title, icon, color, type) => {
+    if (!data) return null;
+
+    const co2Emissions = calculateCO2Emissions(data);
+    const goals = data.goals || [];
+    const facts = data.facts || {};
+    const risks = data.risks || [];
+    const rawRecommendations = data.recommendations || [];
+    const recommendations = parseRecommendations(rawRecommendations);
+
+    return (
+      <Card sx={{ height: '100%', boxShadow: 3 }}>
+        <CardContent sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+            {icon}
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+              {title}
+            </Typography>
+          </Box>
+          
+          {/* Goals Section */}
+          {goals.length > 0 && (
+            <Box sx={{ mb: 3, p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
+              <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
+                Goals
+              </Typography>
+              {goals.slice(0, 2).map((goal, index) => (
+                <Typography key={index} variant="body2" sx={{ mb: 1 }}>
+                  • {goal}
+                </Typography>
+              ))}
+            </Box>
+          )}
+
+          {/* Facts Section - 6-month historical data */}
+          <Box sx={{ mb: 3, p: 2, backgroundColor: '#e3f2fd', borderRadius: 1 }}>
+            <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
+              6-Month Historical Facts
+            </Typography>
+            {Object.entries(facts).slice(0, 3).map(([key, value]) => (
+              <Typography key={key} variant="body2" sx={{ mb: 1 }}>
+                <strong>{key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</strong> {value}
+              </Typography>
+            ))}
+            {(type === 'electricity' || type === 'water') && (
+              <Typography variant="body2" sx={{ mb: 1 }}>
+                <strong>Est. CO₂ Emissions:</strong> {co2Emissions} tons
+              </Typography>
+            )}
+          </Box>
+
+          {/* Risk Levels Section */}
+          {risks.length > 0 && (
+            <Box sx={{ mb: 3, p: 2, backgroundColor: '#fff3e0', borderRadius: 1 }}>
+              <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
+                Risk Assessment
+              </Typography>
+              {risks.slice(0, 2).map((risk, index) => {
+                // Handle both object and string risk formats
+                let riskSeverity = '';
+                let riskDescription = '';
+                
+                if (typeof risk === 'object' && risk !== null) {
+                  riskSeverity = risk.severity || '';
+                  riskDescription = risk.description || '';
+                } else if (typeof risk === 'string') {
+                  // If it's a string, use it as description and try to extract severity
+                  riskDescription = risk;
+                  riskSeverity = risk.toLowerCase().includes('high') ? 'HIGH' :
+                               risk.toLowerCase().includes('medium') ? 'MEDIUM' :
+                               risk.toLowerCase().includes('low') ? 'LOW' : 'MEDIUM';
+                }
+
+                const chipColor = riskSeverity.toLowerCase() === 'low' ? 'success' :
+                                riskSeverity.toLowerCase() === 'medium' ? 'warning' : 'error';
+
+                return (
+                  <Box key={index} sx={{ mb: 1 }}>
+                    <Chip 
+                      label={`${riskSeverity} Risk`}
+                      color={chipColor}
+                      variant="outlined"
+                      size="small"
+                      sx={{ mr: 1 }}
+                    />
+                    {riskDescription && (
+                      <Typography variant="body2" sx={{ mt: 0.5, color: 'text.secondary' }}>
+                        {riskDescription}
+                      </Typography>
+                    )}
+                  </Box>
+                );
+              })}
+            </Box>
+          )}
+
+          {/* Recommendations Section */}
+          {recommendations.length > 0 && (
+            <Box sx={{ p: 2, backgroundColor: '#e8f5e8', borderRadius: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <LightbulbOutlined sx={{ color: '#4caf50', mr: 1 }} />
+                <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                  Recommendations
+                </Typography>
+              </Box>
+              {recommendations.slice(0, 2).map((recommendation, index) => (
+                <Typography key={index} variant="body2" sx={{ mb: 1 }}>
+                  • {recommendation}
+                </Typography>
+              ))}
+            </Box>
+          )}
+        </CardContent>
+      </Card>
+    );
+  };
+
   // Early returns for loading and error states
   if (loading) {
     return (
       <Box sx={{ p: 3, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
         <LinearProgress />
         <Typography variant="h6" sx={{ mt: 2, textAlign: 'center' }}>
-          Loading dashboard data...
+          Loading environmental dashboard data...
         </Typography>
       </Box>
     );
@@ -276,11 +385,11 @@ const AnalyticsExecutive = () => {
     return (
       <Box sx={{ p: 3, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
         <Alert severity="error" sx={{ mb: 2 }}>
-          Failed to load dashboard data: {error}
+          Failed to load environmental dashboard data: {error}
         </Alert>
         <Button 
           variant="contained" 
-          onClick={fetchDashboardData}
+          onClick={fetchEnvironmentalData}
           sx={{ mt: 2 }}
         >
           Retry
@@ -289,39 +398,10 @@ const AnalyticsExecutive = () => {
     );
   }
 
-  // Early return if dashboardData is null or undefined
-  if (!dashboardData) {
-    return (
-      <Box sx={{ p: 3, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
-        <LinearProgress />
-        <Typography variant="h6" sx={{ mt: 2, textAlign: 'center' }}>
-          Loading dashboard data...
-        </Typography>
-      </Box>
-    );
-  }
-
-  // Additional safety checks for nested data structures
-  const hasGlobalScorecard = dashboardData.globalScorecard && 
-    typeof dashboardData.globalScorecard.ehsScore !== 'undefined';
-  
-  const hasElectricityData = dashboardData.electricity &&
-    dashboardData.electricity.goal &&
-    dashboardData.electricity.facts &&
-    dashboardData.electricity.analysis &&
-    dashboardData.electricity.recommendation;
-    
-  const hasWaterData = dashboardData.water &&
-    dashboardData.water.goal &&
-    dashboardData.water.facts &&
-    dashboardData.water.analysis &&
-    dashboardData.water.recommendation;
-    
-  const hasWasteData = dashboardData.waste &&
-    dashboardData.waste.goal &&
-    dashboardData.waste.facts &&
-    dashboardData.waste.analysis &&
-    dashboardData.waste.recommendation;
+  // Calculate overall metrics for header
+  const overallCO2Reduction = calculateCO2Emissions(electricityData) + calculateCO2Emissions(waterData);
+  const overallRiskLevel = (electricityData?.risks?.length || 0) + (waterData?.risks?.length || 0) + (wasteData?.risks?.length || 0);
+  const averageScore = Math.round(((electricityData?.goals?.length || 0) + (waterData?.goals?.length || 0) + (wasteData?.goals?.length || 0)) * 33.33);
 
   return (
     <Box sx={{ p: 3, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
@@ -331,7 +411,7 @@ const AnalyticsExecutive = () => {
           <Grid item xs={12} md={6}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                EHS Executive Dashboard
+                Environmental Dashboard
               </Typography>
               <Chip 
                 label={locationHierarchy[selectedLocation]}
@@ -349,12 +429,8 @@ const AnalyticsExecutive = () => {
                   label="Location"
                   onChange={(e) => setSelectedLocation(e.target.value)}
                 >
-                  <MenuItem value="global">Global View</MenuItem>
-                  <ListSubheader>North America</ListSubheader>
-                  <ListSubheader sx={{ pl: 4 }}>Illinois</ListSubheader>
-                  <MenuItem value="algonquin" sx={{ pl: 6 }}>Algonquin Site</MenuItem>
-                  <ListSubheader sx={{ pl: 4 }}>Texas</ListSubheader>
-                  <MenuItem value="houston" sx={{ pl: 6 }}>Houston</MenuItem>
+                  <MenuItem value="algonquin_il">Algonquin Site (IL)</MenuItem>
+                  <MenuItem value="houston_tx">Houston Site (TX)</MenuItem>
                 </Select>
               </FormControl>
               <ButtonGroup size="small">
@@ -382,313 +458,107 @@ const AnalyticsExecutive = () => {
         </Grid>
       </Box>
 
-      {/* Overall EHS Scorecard */}
-      {hasGlobalScorecard && (
-        <Card sx={{ mb: 4, boxShadow: 3 }}>
-          <CardContent sx={{ p: 4 }}>
-            <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
-              Overall EHS Scorecard
-            </Typography>
-            <Grid container spacing={4}>
-              <Grid item xs={12} md={3}>
-                <Box sx={{ textAlign: 'center' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
-                    <CheckCircle sx={{ color: '#4caf50', mr: 1 }} />
-                    <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
-                      {dashboardData.globalScorecard.ehsScore}%
-                    </Typography>
-                  </Box>
-                  <Typography variant="body1" color="textSecondary">
-                    Total EHS Score
+      {/* Overall Environmental Scorecard */}
+      <Card sx={{ mb: 4, boxShadow: 3 }}>
+        <CardContent sx={{ p: 4 }}>
+          <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
+            Overall Environmental Scorecard
+          </Typography>
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={3}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
+                  <CheckCircle sx={{ color: '#4caf50', mr: 1 }} />
+                  <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
+                    {averageScore}%
                   </Typography>
                 </Box>
-              </Grid>
-              <Grid item xs={12} md={3}>
-                <Box sx={{ textAlign: 'center' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
-                    <MonetizationOn sx={{ color: '#4caf50', mr: 1 }} />
-                    <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
-                      ${dashboardData.globalScorecard.costSavings ? 
-                        (dashboardData.globalScorecard.costSavings / 1000).toFixed(0) : '0'}K
-                    </Typography>
-                  </Box>
-                  <Typography variant="body1" color="textSecondary">
-                    Total Cost Savings
+                <Typography variant="body1" color="textSecondary">
+                  Environmental Score
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
+                  <MonetizationOn sx={{ color: '#4caf50', mr: 1 }} />
+                  <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
+                    ${Math.round(overallCO2Reduction * 0.5)}K
                   </Typography>
                 </Box>
-              </Grid>
-              <Grid item xs={12} md={3}>
-                <Box sx={{ textAlign: 'center' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
-                    <Park sx={{ color: '#4caf50', mr: 1 }} />
-                    <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
-                      {dashboardData.globalScorecard.carbonFootprint || '0'}
-                    </Typography>
-                  </Box>
-                  <Typography variant="body1" color="textSecondary">
-                    Tons CO₂ Reduced
+                <Typography variant="body1" color="textSecondary">
+                  Estimated Cost Savings
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
+                  <Park sx={{ color: '#4caf50', mr: 1 }} />
+                  <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
+                    {overallCO2Reduction}
                   </Typography>
                 </Box>
-              </Grid>
-              <Grid item xs={12} md={3}>
-                <Box sx={{ textAlign: 'center' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
-                    <Warning sx={{ color: '#ff9800', mr: 1 }} />
-                    <Chip 
-                      label={dashboardData.riskAssessment?.overall_risk_level || "Medium Risk"}
-                      color={dashboardData.riskAssessment?.overall_risk_level === 'LOW' ? 'success' : 'warning'}
-                      variant="filled"
-                      sx={{ fontSize: '1rem', px: 2, py: 1 }}
-                    />
-                  </Box>
-                  <Typography variant="body1" color="textSecondary">
-                    Overall Risk Level
-                  </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  Tons CO₂ Reduced
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
+                  <Warning sx={{ color: overallRiskLevel > 5 ? '#f44336' : '#ff9800', mr: 1 }} />
+                  <Chip 
+                    label={overallRiskLevel > 5 ? "High Risk" : overallRiskLevel > 2 ? "Medium Risk" : "Low Risk"}
+                    color={overallRiskLevel > 5 ? 'error' : overallRiskLevel > 2 ? 'warning' : 'success'}
+                    variant="filled"
+                    sx={{ fontSize: '1rem', px: 2, py: 1 }}
+                  />
                 </Box>
-              </Grid>
+                <Typography variant="body1" color="textSecondary">
+                  Overall Risk Level
+                </Typography>
+              </Box>
             </Grid>
-          </CardContent>
-        </Card>
-      )}
+          </Grid>
+        </CardContent>
+      </Card>
 
-      {/* Three Thematic Detail Cards */}
-      {(hasElectricityData || hasWaterData || hasWasteData) && (
-        <Grid container spacing={3}>
-          {/* Risk Assessment Card (formerly Electricity) */}
-          {hasElectricityData && (
-            <Grid item xs={12} md={4}>
-              <Card sx={{ height: '100%', boxShadow: 3 }}>
-                <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                    <Warning sx={{ color: '#ff9800', mr: 2, fontSize: 30 }} />
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                      Risk Assessment
-                    </Typography>
-                  </Box>
-                  
-                  {/* Goal Section */}
-                  <Box sx={{ mb: 3, p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
-                    <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
-                      Risk Score
-                    </Typography>
-                    {renderGauge(
-                      dashboardData.electricity.goal.actual,
-                      dashboardData.electricity.goal.target,
-                      dashboardData.electricity.goal.unit
-                    )}
-                    <Typography variant="body2" sx={{ textAlign: 'center', mt: 1 }}>
-                      {dashboardData.electricity.goal.unit}
-                    </Typography>
-                  </Box>
-
-                  {/* Facts Section */}
-                  <Box sx={{ mb: 3, p: 2, backgroundColor: '#e3f2fd', borderRadius: 1 }}>
-                    <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
-                      Key Facts
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Risk Score:</strong> {dashboardData.electricity.facts.consumption}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Status:</strong> {dashboardData.electricity.facts.cost}
-                    </Typography>
-                    <Typography variant="body2">
-                      <strong>Assessment:</strong> {dashboardData.electricity.facts.co2}
-                    </Typography>
-                  </Box>
-
-                  {/* Analysis Section */}
-                  <Box sx={{ mb: 3, p: 2, backgroundColor: '#fff3e0', borderRadius: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold', flexGrow: 1 }}>
-                        Risk Analysis
-                      </Typography>
-                      {dashboardData.electricity.trend && getTrendIcon(dashboardData.electricity.trend)}
-                    </Box>
-                    {Array.isArray(dashboardData.electricity.trend) && (
-                      <Box sx={{ mb: 2 }}>
-                        {renderSparkline(dashboardData.electricity.trend)}
-                      </Box>
-                    )}
-                    <Typography variant="body2">
-                      {dashboardData.electricity.analysis}
-                    </Typography>
-                  </Box>
-
-                  {/* Recommendation Section */}
-                  <Box sx={{ p: 2, backgroundColor: '#e8f5e8', borderRadius: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <LightbulbOutlined sx={{ color: '#4caf50', mr: 1 }} />
-                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                        Recommendation
-                      </Typography>
-                    </Box>
-                    <Typography variant="body2">
-                      {dashboardData.electricity.recommendation}
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          )}
-
-          {/* Safety Incidents Card (formerly Water) */}
-          {hasWaterData && (
-            <Grid item xs={12} md={4}>
-              <Card sx={{ height: '100%', boxShadow: 3 }}>
-                <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                    <CheckCircle sx={{ color: '#2196f3', mr: 2, fontSize: 30 }} />
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                      Safety Incidents
-                    </Typography>
-                  </Box>
-                  
-                  {/* Goal Section */}
-                  <Box sx={{ mb: 3, p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
-                    <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
-                      Incident Rate
-                    </Typography>
-                    {renderGauge(
-                      dashboardData.water.goal.actual,
-                      dashboardData.water.goal.target,
-                      dashboardData.water.goal.unit
-                    )}
-                    <Typography variant="body2" sx={{ textAlign: 'center', mt: 1 }}>
-                      {dashboardData.water.goal.unit}
-                    </Typography>
-                  </Box>
-
-                  {/* Facts Section */}
-                  <Box sx={{ mb: 3, p: 2, backgroundColor: '#e3f2fd', borderRadius: 1 }}>
-                    <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
-                      Key Facts
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Rate:</strong> {dashboardData.water.facts.consumption}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Total:</strong> {dashboardData.water.facts.cost}
-                    </Typography>
-                    <Typography variant="body2">
-                      <strong>Status:</strong> {dashboardData.water.facts.co2}
-                    </Typography>
-                  </Box>
-
-                  {/* Analysis Section */}
-                  <Box sx={{ mb: 3, p: 2, backgroundColor: '#fff3e0', borderRadius: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold', flexGrow: 1 }}>
-                        Safety Analysis
-                      </Typography>
-                      {dashboardData.water.trend && getTrendIcon(dashboardData.water.trend)}
-                    </Box>
-                    {Array.isArray(dashboardData.water.trend) && (
-                      <Box sx={{ mb: 2 }}>
-                        {renderSparkline(dashboardData.water.trend)}
-                      </Box>
-                    )}
-                    <Typography variant="body2">
-                      {dashboardData.water.analysis}
-                    </Typography>
-                  </Box>
-
-                  {/* Recommendation Section */}
-                  <Box sx={{ p: 2, backgroundColor: '#e8f5e8', borderRadius: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <LightbulbOutlined sx={{ color: '#4caf50', mr: 1 }} />
-                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                        Recommendation
-                      </Typography>
-                    </Box>
-                    <Typography variant="body2">
-                      {dashboardData.water.recommendation}
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          )}
-
-          {/* Compliance Card (formerly Waste) */}
-          {hasWasteData && (
-            <Grid item xs={12} md={4}>
-              <Card sx={{ height: '100%', boxShadow: 3 }}>
-                <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                    <Info sx={{ color: '#4caf50', mr: 2, fontSize: 30 }} />
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                      Compliance
-                    </Typography>
-                  </Box>
-                  
-                  {/* Goal Section */}
-                  <Box sx={{ mb: 3, p: 2, backgroundColor: '#f8f9fa', borderRadius: 1 }}>
-                    <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
-                      Audit Pass Rate
-                    </Typography>
-                    {renderGauge(
-                      dashboardData.waste.goal.actual,
-                      dashboardData.waste.goal.target,
-                      dashboardData.waste.goal.unit
-                    )}
-                    <Typography variant="body2" sx={{ textAlign: 'center', mt: 1 }}>
-                      {dashboardData.waste.goal.unit}
-                    </Typography>
-                  </Box>
-
-                  {/* Facts Section */}
-                  <Box sx={{ mb: 3, p: 2, backgroundColor: '#e3f2fd', borderRadius: 1 }}>
-                    <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
-                      Key Facts
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Pass Rate:</strong> {dashboardData.waste.facts.generation}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      <strong>Training:</strong> {dashboardData.waste.facts.cost}
-                    </Typography>
-                    <Typography variant="body2">
-                      <strong>Status:</strong> {dashboardData.waste.facts.co2}
-                    </Typography>
-                  </Box>
-
-                  {/* Analysis Section */}
-                  <Box sx={{ mb: 3, p: 2, backgroundColor: '#fff3e0', borderRadius: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold', flexGrow: 1 }}>
-                        Compliance Analysis
-                      </Typography>
-                      {dashboardData.waste.trend && getTrendIcon(dashboardData.waste.trend)}
-                    </Box>
-                    {Array.isArray(dashboardData.waste.trend) && (
-                      <Box sx={{ mb: 2 }}>
-                        {renderSparkline(dashboardData.waste.trend)}
-                      </Box>
-                    )}
-                    <Typography variant="body2">
-                      {dashboardData.waste.analysis}
-                    </Typography>
-                  </Box>
-
-                  {/* Recommendation Section */}
-                  <Box sx={{ p: 2, backgroundColor: '#e8f5e8', borderRadius: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <LightbulbOutlined sx={{ color: '#4caf50', mr: 1 }} />
-                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                        Recommendation
-                      </Typography>
-                    </Box>
-                    <Typography variant="body2">
-                      {dashboardData.waste.recommendation}
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
+      {/* Three Environmental Cards */}
+      <Grid container spacing={3}>
+        {/* CO2 Emissions Card (Electricity) */}
+        <Grid item xs={12} md={4}>
+          {renderEnvironmentalCard(
+            electricityData,
+            'CO2 Emissions',
+            <Bolt sx={{ color: '#ff9800', mr: 2, fontSize: 30 }} />,
+            '#ff9800',
+            'electricity'
           )}
         </Grid>
-      )}
+
+        {/* Water Consumption Card */}
+        <Grid item xs={12} md={4}>
+          {renderEnvironmentalCard(
+            waterData,
+            'Water Consumption',
+            <Water sx={{ color: '#2196f3', mr: 2, fontSize: 30 }} />,
+            '#2196f3',
+            'water'
+          )}
+        </Grid>
+
+        {/* Waste Generation Card */}
+        <Grid item xs={12} md={4}>
+          {renderEnvironmentalCard(
+            wasteData,
+            'Waste Generation',
+            <Delete sx={{ color: '#4caf50', mr: 2, fontSize: 30 }} />,
+            '#4caf50',
+            'waste'
+          )}
+        </Grid>
+      </Grid>
     </Box>
   );
 };

@@ -14,6 +14,11 @@ export const API_ENDPOINTS = {
   executiveDashboard: `${API_BASE_URL}/api/v2/executive-dashboard`,
   ingestion: `${API_BASE_URL}/api/v1/ingest/batch`,
   
+  // Environmental Dashboard endpoints (port 8000)
+  dashboardElectricity: `${API_BASE_URL}/api/dashboard/electricity`,
+  dashboardWater: `${API_BASE_URL}/api/dashboard/water`,
+  dashboardWaste: `${API_BASE_URL}/api/dashboard/waste`,
+  
   // Add other endpoints as needed
 };
 
@@ -28,6 +33,11 @@ export default {
   },
   executive: {
     dashboard: API_ENDPOINTS.executiveDashboard,
+  },
+  environmental: {
+    electricity: API_ENDPOINTS.dashboardElectricity,
+    water: API_ENDPOINTS.dashboardWater,
+    waste: API_ENDPOINTS.dashboardWaste,
   },
   ingestion: API_ENDPOINTS.ingestion,
 };

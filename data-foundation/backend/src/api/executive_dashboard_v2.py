@@ -8,7 +8,8 @@ risk assessment, and dynamic dashboard generation capabilities.
 Features:
 - FastAPI router pattern with comprehensive error handling
 - Integration with the new ExecutiveDashboardService
-- Backward compatibility with existing API parameters (location, dateRange)
+- Hierarchical location filtering support (north-america/illinois/algonquin-site)
+- Enhanced date range filtering (last_30_days, this_quarter, custom)
 - Support for both dynamic data and fallback to static files
 - Enhanced API parameters for advanced features
 - Comprehensive API documentation and validation
@@ -18,7 +19,8 @@ Features:
 - Flexible filtering and aggregation options
 
 Created: 2025-08-28
-Version: 2.0.0
+Updated: 2025-08-30 - Added hierarchical location support and enhanced date filtering
+Version: 2.1.0
 """
 
 import os
@@ -46,7 +48,6 @@ from services.executive_dashboard.dashboard_service import (
     ExecutiveDashboardService, LocationFilter, DateRangeFilter, 
     AggregationPeriod, DashboardStatus, AlertLevel, create_dashboard_service
 )
-from neo4j_enhancements.queries.analytics.aggregation_layer import KPIMetric
 
 # Load environment variables
 load_dotenv()
@@ -75,8 +76,12 @@ _dashboard_service: Optional[ExecutiveDashboardService] = None
 
 class DashboardRequest(BaseModel):
     """Request model for executive dashboard"""
-    location: Optional[str] = Field(None, description="Comma-separated facility IDs or 'all' for all facilities")
-    dateRange: Optional[str] = Field(None, description="Date range in format 'YYYY-MM-DD:YYYY-MM-DD' or preset like '30d', '90d', '1y'")
+    location_path: Optional[str] = Field(None, description="Hierarchical location path (e.g., 'north-america/illinois/algonquin-site') or facility IDs")
+    location: Optional[str] = Field(None, description="Legacy: Comma-separated facility IDs or 'all' for all facilities")
+    date_range: Optional[str] = Field(None, description="Date range: 'last_30_days', 'this_quarter', 'custom' with start_date/end_date")
+    dateRange: Optional[str] = Field(None, description="Legacy: Date range in format 'YYYY-MM-DD:YYYY-MM-DD' or preset like '30d', '90d', '1y'")
+    start_date: Optional[str] = Field(None, description="Start date for custom date range (YYYY-MM-DD)")
+    end_date: Optional[str] = Field(None, description="End date for custom date range (YYYY-MM-DD)")
     aggregationPeriod: Optional[str] = Field("daily", description="Aggregation period: 'daily', 'weekly', 'monthly', 'quarterly'")
     includeTrends: bool = Field(True, description="Include trend analysis in response")
     includeRecommendations: bool = Field(True, description="Include AI-generated recommendations")
@@ -98,6 +103,20 @@ class DashboardRequest(BaseModel):
         if v not in valid_formats:
             raise ValueError(f"format must be one of: {', '.join(valid_formats)}")
         return v
+        
+    @validator('date_range')
+    def validate_date_range(cls, v):
+        if v and v not in ['last_30_days', 'this_quarter', 'custom']:
+            raise ValueError("date_range must be one of: 'last_30_days', 'this_quarter', 'custom'")
+        return v
+
+
+class LocationHierarchyResponse(BaseModel):
+    """Response model for location hierarchy"""
+    hierarchy: Dict[str, Any] = Field(..., description="Hierarchical location structure")
+    paths: List[str] = Field(..., description="Available location paths")
+    total_locations: int = Field(..., description="Total number of locations")
+    generated_at: str = Field(..., description="Response generation timestamp")
 
 
 class LocationsResponse(BaseModel):
@@ -145,30 +164,127 @@ def get_dashboard_service() -> ExecutiveDashboardService:
     return _dashboard_service
 
 
-def parse_location_filter(location: Optional[str]) -> Optional[LocationFilter]:
-    """Parse location parameter into LocationFilter object"""
-    if not location or location.lower() == 'all':
-        return None
+def parse_location_filter(location_path: Optional[str] = None, location: Optional[str] = None) -> Optional[LocationFilter]:
+    """
+    Parse location parameters into LocationFilter object.
+    Supports both new hierarchical location_path and legacy location parameter.
+    """
+    if location_path:
+        # Handle hierarchical location path (e.g., "north-america/illinois/algonquin-site")
+        path_parts = [part.strip() for part in location_path.split('/') if part.strip()]
+        
+        if not path_parts:
+            return None
+            
+        # Create location filter from hierarchical path
+        # The last part is typically the facility, earlier parts are regions/countries
+        if len(path_parts) >= 3:
+            # Full hierarchy: region/country/facility
+            return LocationFilter(
+                regions=[path_parts[0]],
+                countries=[path_parts[1]],
+                facility_ids=[path_parts[2]]
+            )
+        elif len(path_parts) == 2:
+            # Region/facility or country/facility
+            return LocationFilter(
+                regions=[path_parts[0]],
+                facility_ids=[path_parts[1]]
+            )
+        else:
+            # Single facility or region
+            return LocationFilter(facility_ids=path_parts)
     
-    # Parse comma-separated facility IDs
-    facility_ids = [f.strip() for f in location.split(',') if f.strip()]
+    elif location:
+        # Handle legacy location parameter
+        if not location or location.lower() == 'all':
+            return None
+        
+        # Parse comma-separated facility IDs
+        facility_ids = [f.strip() for f in location.split(',') if f.strip()]
+        
+        if not facility_ids:
+            return None
+        
+        return LocationFilter(facility_ids=facility_ids)
     
-    if not facility_ids:
-        return None
-    
-    return LocationFilter(facility_ids=facility_ids)
+    return None
 
 
-def parse_date_range(date_range: Optional[str]) -> DateRangeFilter:
-    """Parse dateRange parameter into DateRangeFilter object"""
-    if not date_range:
-        # Default: last 30 days
-        return DateRangeFilter(
-            end_date=datetime.now(),
-            start_date=datetime.now() - timedelta(days=30),
-            period=AggregationPeriod.DAILY
-        )
+def parse_date_range(date_range: Optional[str] = None, 
+                    dateRange: Optional[str] = None,
+                    start_date: Optional[str] = None,
+                    end_date: Optional[str] = None) -> DateRangeFilter:
+    """
+    Parse date range parameters into DateRangeFilter object.
+    Supports new date_range format and legacy dateRange parameter.
+    """
+    # Handle new date_range format first
+    if date_range:
+        now = datetime.now()
+        
+        if date_range == 'last_30_days':
+            return DateRangeFilter(
+                end_date=now,
+                start_date=now - timedelta(days=30),
+                period=AggregationPeriod.DAILY
+            )
+        elif date_range == 'this_quarter':
+            # Calculate current quarter
+            current_quarter = (now.month - 1) // 3 + 1
+            quarter_start_month = (current_quarter - 1) * 3 + 1
+            quarter_start = now.replace(month=quarter_start_month, day=1, hour=0, minute=0, second=0, microsecond=0)
+            
+            return DateRangeFilter(
+                end_date=now,
+                start_date=quarter_start,
+                period=AggregationPeriod.WEEKLY
+            )
+        elif date_range == 'custom':
+            # Use provided start_date and end_date
+            if start_date and end_date:
+                try:
+                    start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+                    end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+                    
+                    # Determine aggregation period based on range
+                    days_diff = (end_dt - start_dt).days
+                    if days_diff <= 90:
+                        period = AggregationPeriod.DAILY
+                    elif days_diff <= 365:
+                        period = AggregationPeriod.WEEKLY
+                    else:
+                        period = AggregationPeriod.MONTHLY
+                    
+                    return DateRangeFilter(
+                        start_date=start_dt,
+                        end_date=end_dt,
+                        period=period
+                    )
+                except Exception as e:
+                    logger.warning(f"Failed to parse custom date range: {e}")
+            
+            # Fallback to last 30 days for invalid custom range
+            return DateRangeFilter(
+                end_date=now,
+                start_date=now - timedelta(days=30),
+                period=AggregationPeriod.DAILY
+            )
     
+    # Handle legacy dateRange parameter
+    if dateRange:
+        return parse_legacy_date_range(dateRange)
+    
+    # Default: last 30 days
+    return DateRangeFilter(
+        end_date=datetime.now(),
+        start_date=datetime.now() - timedelta(days=30),
+        period=AggregationPeriod.DAILY
+    )
+
+
+def parse_legacy_date_range(date_range: str) -> DateRangeFilter:
+    """Parse legacy dateRange parameter format"""
     try:
         # Handle preset ranges
         if date_range.endswith('d'):
@@ -223,7 +339,7 @@ def parse_date_range(date_range: Optional[str]) -> DateRangeFilter:
             raise ValueError(f"Invalid date range format: {date_range}")
     
     except Exception as e:
-        logger.warning(f"Failed to parse date range '{date_range}': {e}")
+        logger.warning(f"Failed to parse legacy date range '{date_range}': {e}")
         # Fallback to default
         return DateRangeFilter(
             end_date=datetime.now(),
@@ -261,7 +377,7 @@ def get_static_dashboard_fallback(location: Optional[str] = None) -> Dict[str, A
             "generated_at": datetime.now().isoformat(),
             "source": "minimal_fallback",
             "note": "Dashboard service unavailable - minimal response generated",
-            "version": "2.0.0"
+            "version": "2.1.0"
         },
         "summary": {
             "status": "service_unavailable",
@@ -273,12 +389,42 @@ def get_static_dashboard_fallback(location: Optional[str] = None) -> Dict[str, A
 
 # API Endpoints
 
+@router.get("/location-hierarchy", 
+           response_model=LocationHierarchyResponse,
+           summary="Get Location Hierarchy",
+           description="Retrieve hierarchical location structure for filtering")
+async def get_location_hierarchy(
+    dashboard_service: ExecutiveDashboardService = Depends(get_dashboard_service)
+):
+    """
+    Get hierarchical location structure for the location dropdown/filter.
+    Returns a nested structure showing regions > countries > facilities.
+    """
+    try:
+        # Get location hierarchy from the dashboard service
+        hierarchy_data = dashboard_service.get_location_hierarchy()
+        
+        return LocationHierarchyResponse(
+            hierarchy=hierarchy_data.get('hierarchy', {}),
+            paths=hierarchy_data.get('paths', []),
+            total_locations=hierarchy_data.get('total_locations', 0),
+            generated_at=datetime.now().isoformat()
+        )
+    except Exception as e:
+        logger.error(f"Error getting location hierarchy: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/executive-dashboard", 
            summary="Get Executive Dashboard Data",
-           description="Retrieve comprehensive executive dashboard data with flexible filtering and format options")
+           description="Retrieve comprehensive executive dashboard data with hierarchical location filtering and enhanced date range options")
 async def get_executive_dashboard(
-    location: Optional[str] = Query(None, description="Comma-separated facility IDs or 'all' for all facilities"),
-    dateRange: Optional[str] = Query(None, description="Date range: 'YYYY-MM-DD:YYYY-MM-DD' or '30d', '90d', '1y'"),
+    location_path: Optional[str] = Query(None, description="Hierarchical location path (e.g., 'north-america/illinois/algonquin-site')"),
+    location: Optional[str] = Query(None, description="Legacy: Comma-separated facility IDs or 'all' for all facilities"),
+    date_range: Optional[str] = Query(None, description="Date range: 'last_30_days', 'this_quarter', 'custom'"),
+    dateRange: Optional[str] = Query(None, description="Legacy: Date range: 'YYYY-MM-DD:YYYY-MM-DD' or '30d', '90d', '1y'"),
+    start_date: Optional[str] = Query(None, description="Start date for custom date range (YYYY-MM-DD)"),
+    end_date: Optional[str] = Query(None, description="End date for custom date range (YYYY-MM-DD)"),
     aggregationPeriod: Optional[str] = Query("daily", description="Aggregation period: daily, weekly, monthly, quarterly"),
     includeTrends: bool = Query(True, description="Include trend analysis"),
     includeRecommendations: bool = Query(True, description="Include AI recommendations"),
@@ -290,7 +436,7 @@ async def get_executive_dashboard(
     dashboard_service: ExecutiveDashboardService = Depends(get_dashboard_service)
 ):
     """
-    Get comprehensive executive dashboard data with advanced filtering and customization options.
+    Get comprehensive executive dashboard data with hierarchical location filtering and enhanced date range options.
     
     This endpoint provides:
     - Real-time KPI metrics and status indicators
@@ -300,17 +446,23 @@ async def get_executive_dashboard(
     - Dynamic chart data for visualization
     - Alert management and notifications
     - Forecasting capabilities (when enabled)
+    - Hierarchical location filtering support
+    - Enhanced date range options (last 30 days, this quarter, custom ranges)
     
-    The API supports both dynamic data from Neo4j and fallback to static files for reliability.
+    The API supports both new hierarchical location paths and legacy location parameters for backward compatibility.
     """
     try:
-        logger.info(f"Dashboard request: location={location}, dateRange={dateRange}, format={format}")
+        logger.info(f"Dashboard request: location_path={location_path}, location={location}, date_range={date_range}, dateRange={dateRange}, format={format}")
         
         # Validate and parse request parameters
         try:
             request_data = DashboardRequest(
+                location_path=location_path,
                 location=location,
+                date_range=date_range,
                 dateRange=dateRange,
+                start_date=start_date,
+                end_date=end_date,
                 aggregationPeriod=aggregationPeriod,
                 includeTrends=includeTrends,
                 includeRecommendations=includeRecommendations,
@@ -323,8 +475,8 @@ async def get_executive_dashboard(
             raise HTTPException(status_code=422, detail=f"Invalid request parameters: {e}")
         
         # Parse filters
-        location_filter = parse_location_filter(location)
-        date_filter = parse_date_range(dateRange)
+        location_filter = parse_location_filter(location_path, location)
+        date_filter = parse_date_range(date_range, dateRange, start_date, end_date)
         
         # Map aggregation period
         period_map = {
@@ -353,12 +505,12 @@ async def get_executive_dashboard(
             if 'error' in dashboard_data:
                 logger.warning(f"Dashboard service returned error: {dashboard_data['error']}")
                 # Fall back to static data
-                dashboard_data = get_static_dashboard_fallback(location)
+                dashboard_data = get_static_dashboard_fallback(location or location_path)
             
         except Exception as e:
             logger.error(f"Dashboard service failed: {e}")
             # Fall back to static data
-            dashboard_data = get_static_dashboard_fallback(location)
+            dashboard_data = get_static_dashboard_fallback(location or location_path)
         
         # Apply format filtering
         if format == "summary":
@@ -390,10 +542,12 @@ async def get_executive_dashboard(
         
         # Add API metadata
         dashboard_data["api_info"] = {
-            "version": "2.0.0",
+            "version": "2.1.0",
             "endpoint": "/api/v2/executive-dashboard",
             "format": format,
             "cache_used": useCache,
+            "hierarchical_location_support": True,
+            "enhanced_date_filtering": True,
             "backwards_compatible": True
         }
         
@@ -406,9 +560,9 @@ async def get_executive_dashboard(
         logger.error(f"Unexpected error in executive dashboard endpoint: {e}")
         # Return static fallback on any error
         try:
-            fallback_data = get_static_dashboard_fallback(location)
+            fallback_data = get_static_dashboard_fallback(location or location_path)
             fallback_data["api_info"] = {
-                "version": "2.0.0",
+                "version": "2.1.0",
                 "endpoint": "/api/v2/executive-dashboard",
                 "error": str(e),
                 "fallback_used": True
@@ -426,15 +580,17 @@ async def get_executive_dashboard(
            summary="Get Dashboard Summary",
            description="Get high-level dashboard summary for quick overview")
 async def get_dashboard_summary(
-    location: Optional[str] = Query(None, description="Comma-separated facility IDs or 'all'"),
+    location_path: Optional[str] = Query(None, description="Hierarchical location path"),
+    location: Optional[str] = Query(None, description="Legacy: Comma-separated facility IDs or 'all'"),
     dashboard_service: ExecutiveDashboardService = Depends(get_dashboard_service)
 ):
     """
     Get a high-level dashboard summary for quick overview.
     This is a lightweight endpoint that provides key metrics without detailed data.
+    Supports both hierarchical location paths and legacy location parameters.
     """
     try:
-        location_filter = parse_location_filter(location)
+        location_filter = parse_location_filter(location_path, location)
         facility_ids = location_filter.facility_ids if location_filter else None
         
         summary_data = dashboard_service.get_dashboard_summary(facility_ids)
@@ -442,8 +598,9 @@ async def get_dashboard_summary(
         return {
             "data": summary_data,
             "api_info": {
-                "version": "2.0.0",
-                "endpoint": "/api/v2/dashboard-summary"
+                "version": "2.1.0",
+                "endpoint": "/api/v2/dashboard-summary",
+                "hierarchical_location_support": True
             }
         }
     except Exception as e:
@@ -456,15 +613,17 @@ async def get_dashboard_summary(
            summary="Get Real-time Metrics",
            description="Get current real-time metrics and alert status")
 async def get_real_time_metrics(
-    location: Optional[str] = Query(None, description="Comma-separated facility IDs or 'all'"),
+    location_path: Optional[str] = Query(None, description="Hierarchical location path"),
+    location: Optional[str] = Query(None, description="Legacy: Comma-separated facility IDs or 'all'"),
     dashboard_service: ExecutiveDashboardService = Depends(get_dashboard_service)
 ):
     """
     Get real-time metrics including current alert levels and active incidents.
     This endpoint provides the most up-to-date status information.
+    Supports both hierarchical location paths and legacy location parameters.
     """
     try:
-        location_filter = parse_location_filter(location)
+        location_filter = parse_location_filter(location_path, location)
         facility_ids = location_filter.facility_ids if location_filter else None
         
         metrics_data = dashboard_service.get_real_time_metrics(facility_ids)
@@ -483,15 +642,17 @@ async def get_real_time_metrics(
            summary="Get KPI Details",
            description="Get detailed KPI information with historical context")
 async def get_kpi_details(
-    location: Optional[str] = Query(None, description="Comma-separated facility IDs or 'all'"),
+    location_path: Optional[str] = Query(None, description="Hierarchical location path"),
+    location: Optional[str] = Query(None, description="Legacy: Comma-separated facility IDs or 'all'"),
     dateRange: Optional[str] = Query("30d", description="Date range for KPI calculation"),
     dashboard_service: ExecutiveDashboardService = Depends(get_dashboard_service)
 ):
     """
     Get detailed KPI information including historical trends and benchmarks.
+    Supports both hierarchical location paths and legacy location parameters.
     """
     try:
-        location_filter = parse_location_filter(location)
+        location_filter = parse_location_filter(location_path, location)
         facility_ids = location_filter.facility_ids if location_filter else None
         
         # Parse date range for days
@@ -507,9 +668,10 @@ async def get_kpi_details(
         return {
             "data": kpi_data,
             "api_info": {
-                "version": "2.0.0",
+                "version": "2.1.0",
                 "endpoint": "/api/v2/kpis",
-                "date_range_days": date_range_days
+                "date_range_days": date_range_days,
+                "hierarchical_location_support": True
             }
         }
     except Exception as e:
@@ -570,7 +732,7 @@ async def health_check(
         
         return HealthResponse(
             status=overall_status,
-            version="2.0.0",
+            version="2.1.0",
             timestamp=datetime.now().isoformat(),
             components=health_data
         )
@@ -578,7 +740,7 @@ async def health_check(
         logger.error(f"Health check failed: {e}")
         return HealthResponse(
             status="unhealthy",
-            version="2.0.0",
+            version="2.1.0",
             timestamp=datetime.now().isoformat(),
             components={"error": str(e)}
         )
@@ -605,7 +767,7 @@ async def clear_dashboard_cache(
         "message": "Cache clearing initiated",
         "timestamp": datetime.now().isoformat(),
         "api_info": {
-            "version": "2.0.0",
+            "version": "2.1.0",
             "endpoint": "/api/v2/cache/clear"
         }
     }
@@ -658,8 +820,12 @@ async def get_legacy_dashboard(
     """
     # Forward to the main endpoint with appropriate mapping
     return await get_executive_dashboard(
+        location_path=None,
         location=location,
+        date_range=None,
         dateRange=dateRange,
+        start_date=None,
+        end_date=None,
         aggregationPeriod="daily",
         includeTrends=True,
         includeRecommendations=True,
@@ -694,10 +860,10 @@ if __name__ == "__main__":
     import uvicorn
     from fastapi import FastAPI
     
-    app = FastAPI(title="Executive Dashboard API v2", version="2.0.0")
+    app = FastAPI(title="Executive Dashboard API v2", version="2.1.0")
     app.include_router(router)
     
-    print("Starting Executive Dashboard API v2 server...")
+    print("Starting Executive Dashboard API v2.1 server...")
     print("Access API documentation at: http://localhost:8000/docs")
     
     uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")

@@ -1,0 +1,99 @@
+================================================================================
+LOCATION HIERARCHY MIGRATION VALIDATION REPORT
+================================================================================
+Validation ID: validation_20250830_100516
+Started: 2025-08-30 10:05:16
+Completed: 2025-08-30 10:05:17
+Duration: 0.43 seconds
+Overall Status: FAILED
+
+VALIDATION SUMMARY
+----------------------------------------
+Total Checks: 22
+Passed: 16
+Failed: 3
+Warnings: 3
+Success Rate: 72.7%
+
+STRUCTURE VALIDATION RESULTS
+----------------------------------------
+✓ complete_hierarchy_paths: Found 12 complete hierarchy paths
+   Count: 12
+   complete_paths: 12
+   sites_with_complete_paths: 2
+   buildings_with_complete_paths: 3
+   floors_with_complete_paths: 5
+   areas_in_complete_paths: 12
+
+CONSTRAINTS VALIDATION RESULTS
+----------------------------------------
+✓ constraint_site_name_unique: Constraint site_name_unique exists
+✓ constraint_site_code_unique: Constraint site_code_unique exists
+✓ constraint_building_site_name_unique: Constraint building_site_name_unique exists
+✓ constraint_floor_building_name_unique: Constraint floor_building_name_unique exists
+✓ constraint_area_floor_name_unique: Constraint area_floor_name_unique exists
+
+INDEXES VALIDATION RESULTS
+----------------------------------------
+⚠ index_site_code_index: Index site_code_index missing (performance may be affected)
+✓ index_building_site_code_index: Index building_site_code_index exists
+✓ index_floor_building_id_index: Index floor_building_id_index exists
+✓ index_area_floor_id_index: Index area_floor_id_index exists
+
+MAPPINGS VALIDATION RESULTS
+----------------------------------------
+⚠ facilities_mapped_to_areas: No facilities mapped to areas found
+⚠ no_unmapped_facilities: 4 facilities are not mapped to locations
+   Count: 4
+   unmapped_facilities: [
+  "Apex Manufacturing - Plant A",
+  "DEMO_FACILITY_001",
+  "Test Facility TEST_FACILITY_PDF_001",
+  "Demo Facility DEMO_FACILITY_001"
+]
+
+CONSISTENCY VALIDATION RESULTS
+----------------------------------------
+✗ no_orphaned_buildings: Error checking orphaned buildings: {code: Neo.ClientError.Statement.SyntaxError} {message: PatternExpressions are not allowed to introduce new variables: 's'. (line 3, column 27 (offset: 54))
+"        WHERE NOT EXISTS((s:Site)-[:CONTAINS]->(b))"
+                           ^}
+✗ no_orphaned_floors: Error checking orphaned floors: {code: Neo.ClientError.Statement.SyntaxError} {message: PatternExpressions are not allowed to introduce new variables: 'b'. (line 3, column 27 (offset: 51))
+"        WHERE NOT EXISTS((b:Building)-[:CONTAINS]->(f))"
+                           ^}
+✗ no_orphaned_areas: Error checking orphaned areas: {code: Neo.ClientError.Statement.SyntaxError} {message: PatternExpressions are not allowed to introduce new variables: 'f'. (line 3, column 27 (offset: 50))
+"        WHERE NOT EXISTS((f:Floor)-[:CONTAINS]->(a))"
+                           ^}
+
+PERFORMANCE VALIDATION RESULTS
+----------------------------------------
+✓ performance_site_lookup_by_code: Query 'site_lookup_by_code' executed in 0.012s
+   execution_time_seconds: 0.011708
+   result_count: 1
+✓ performance_building_lookup_by_site: Query 'building_lookup_by_site' executed in 0.014s
+   execution_time_seconds: 0.014298
+   result_count: 2
+✓ performance_full_hierarchy_traversal: Query 'full_hierarchy_traversal' executed in 0.029s
+   execution_time_seconds: 0.029351
+   result_count: 10
+
+RECOMMENDATIONS
+----------------------------------------
+CRITICAL ISSUES (must be addressed):
+  - Error checking orphaned buildings: {code: Neo.ClientError.Statement.SyntaxError} {message: PatternExpressions are not allowed to introduce new variables: 's'. (line 3, column 27 (offset: 54))
+"        WHERE NOT EXISTS((s:Site)-[:CONTAINS]->(b))"
+                           ^}
+  - Error checking orphaned floors: {code: Neo.ClientError.Statement.SyntaxError} {message: PatternExpressions are not allowed to introduce new variables: 'b'. (line 3, column 27 (offset: 51))
+"        WHERE NOT EXISTS((b:Building)-[:CONTAINS]->(f))"
+                           ^}
+  - Error checking orphaned areas: {code: Neo.ClientError.Statement.SyntaxError} {message: PatternExpressions are not allowed to introduce new variables: 'f'. (line 3, column 27 (offset: 50))
+"        WHERE NOT EXISTS((f:Floor)-[:CONTAINS]->(a))"
+                           ^}
+
+WARNINGS (should be reviewed):
+  - Index site_code_index missing (performance may be affected)
+  - No facilities mapped to areas found
+  - 4 facilities are not mapped to locations
+
+================================================================================
+END OF VALIDATION REPORT
+================================================================================

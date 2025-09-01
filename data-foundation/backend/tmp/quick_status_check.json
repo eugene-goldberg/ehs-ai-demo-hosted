@@ -1,0 +1,83 @@
+{
+  "timestamp": "2025-08-31T10:38:55.030852",
+  "analysis": {
+    "server_status": {
+      "running": true,
+      "health_status": 200,
+      "response": "{\"service\":\"prorating_api\",\"status\":\"healthy\",\"timestamp\":\"2025-08-31T10:38:55.079655\",\"version\":\"1.0.0\",\"components\":{\"prorating_service\":{\"healthy\":true,\"initialized\":true,\"connected\":true},\"databas"
+    },
+    "api_endpoints": {
+      "/api/environmental/electricity": {
+        "status_code": 404,
+        "working": false
+      },
+      "/api/environmental/water": {
+        "status_code": 404,
+        "working": false
+      },
+      "/api/environmental/waste": {
+        "status_code": 404,
+        "working": false
+      },
+      "/api/environmental/co2": {
+        "status_code": 404,
+        "working": false
+      },
+      "/api/environmental/summary": {
+        "status_code": 404,
+        "working": false
+      },
+      "/dashboard/executive": {
+        "status_code": 404,
+        "working": false
+      },
+      "/goals/annual": {
+        "status_code": 404,
+        "working": false
+      }
+    },
+    "codebase_files": {
+      "src/main.py": {
+        "exists": true,
+        "size_kb": 40,
+        "has_environmental_logic": false,
+        "has_co2_logic": false,
+        "has_api_routes": false
+      },
+      "src/ehs_extraction_api.py": {
+        "exists": true,
+        "size_kb": 35,
+        "has_environmental_logic": true,
+        "has_co2_logic": false,
+        "has_api_routes": true
+      },
+      "src/api/environmental_api.py": {
+        "exists": false
+      },
+      "src/api/dashboard_api.py": {
+        "exists": false
+      },
+      "src/services/environmental_service.py": {
+        "exists": false
+      },
+      "src/database/neo4j_client.py": {
+        "exists": true,
+        "size_kb": 40,
+        "has_environmental_logic": false,
+        "has_co2_logic": false,
+        "has_api_routes": false
+      }
+    },
+    "neo4j_status": {
+      "authentication_errors": true,
+      "error_count": 1
+    },
+    "conclusions": [
+      "\u2713 API server is running successfully",
+      "\u2717 No environmental API endpoints are working",
+      "\u2717 Many key implementation files are missing",
+      "\u2717 Neo4j authentication/connection issues detected",
+      "\u2713 Environmental functionality is actively being processed"
+    ]
+  }
+}

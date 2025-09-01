@@ -1,0 +1,188 @@
+{
+  "validation_id": "validation_20250830_100516",
+  "started_at": "2025-08-30 10:05:16.778371",
+  "completed_at": "2025-08-30 10:05:17.206780",
+  "overall_status": "FAILED",
+  "total_checks": 22,
+  "passed_checks": 16,
+  "failed_checks": 3,
+  "warning_checks": 3,
+  "results": [
+    {
+      "check_name": "Site_nodes_exist",
+      "status": "PASS",
+      "message": "Site nodes found in database",
+      "details": null,
+      "count": 2
+    },
+    {
+      "check_name": "Building_nodes_exist",
+      "status": "PASS",
+      "message": "Building nodes found in database",
+      "details": null,
+      "count": 3
+    },
+    {
+      "check_name": "Floor_nodes_exist",
+      "status": "PASS",
+      "message": "Floor nodes found in database",
+      "details": null,
+      "count": 5
+    },
+    {
+      "check_name": "Area_nodes_exist",
+      "status": "PASS",
+      "message": "Area nodes found in database",
+      "details": null,
+      "count": 12
+    },
+    {
+      "check_name": "complete_hierarchy_paths",
+      "status": "PASS",
+      "message": "Found 12 complete hierarchy paths",
+      "details": {
+        "complete_paths": 12,
+        "sites_with_complete_paths": 2,
+        "buildings_with_complete_paths": 3,
+        "floors_with_complete_paths": 5,
+        "areas_in_complete_paths": 12
+      },
+      "count": 12
+    },
+    {
+      "check_name": "constraint_site_name_unique",
+      "status": "PASS",
+      "message": "Constraint site_name_unique exists",
+      "details": null,
+      "count": 0
+    },
+    {
+      "check_name": "constraint_site_code_unique",
+      "status": "PASS",
+      "message": "Constraint site_code_unique exists",
+      "details": null,
+      "count": 0
+    },
+    {
+      "check_name": "constraint_building_site_name_unique",
+      "status": "PASS",
+      "message": "Constraint building_site_name_unique exists",
+      "details": null,
+      "count": 0
+    },
+    {
+      "check_name": "constraint_floor_building_name_unique",
+      "status": "PASS",
+      "message": "Constraint floor_building_name_unique exists",
+      "details": null,
+      "count": 0
+    },
+    {
+      "check_name": "constraint_area_floor_name_unique",
+      "status": "PASS",
+      "message": "Constraint area_floor_name_unique exists",
+      "details": null,
+      "count": 0
+    },
+    {
+      "check_name": "index_site_code_index",
+      "status": "WARNING",
+      "message": "Index site_code_index missing (performance may be affected)",
+      "details": null,
+      "count": 0
+    },
+    {
+      "check_name": "index_building_site_code_index",
+      "status": "PASS",
+      "message": "Index building_site_code_index exists",
+      "details": null,
+      "count": 0
+    },
+    {
+      "check_name": "index_floor_building_id_index",
+      "status": "PASS",
+      "message": "Index floor_building_id_index exists",
+      "details": null,
+      "count": 0
+    },
+    {
+      "check_name": "index_area_floor_id_index",
+      "status": "PASS",
+      "message": "Index area_floor_id_index exists",
+      "details": null,
+      "count": 0
+    },
+    {
+      "check_name": "facilities_mapped_to_areas",
+      "status": "WARNING",
+      "message": "No facilities mapped to areas found",
+      "details": null,
+      "count": 0
+    },
+    {
+      "check_name": "no_unmapped_facilities",
+      "status": "WARNING",
+      "message": "4 facilities are not mapped to locations",
+      "details": {
+        "unmapped_facilities": [
+          "Apex Manufacturing - Plant A",
+          "DEMO_FACILITY_001",
+          "Test Facility TEST_FACILITY_PDF_001",
+          "Demo Facility DEMO_FACILITY_001"
+        ]
+      },
+      "count": 4
+    },
+    {
+      "check_name": "no_orphaned_buildings",
+      "status": "FAIL",
+      "message": "Error checking orphaned buildings: {code: Neo.ClientError.Statement.SyntaxError} {message: PatternExpressions are not allowed to introduce new variables: 's'. (line 3, column 27 (offset: 54))\n\"        WHERE NOT EXISTS((s:Site)-[:CONTAINS]->(b))\"\n                           ^}",
+      "details": null,
+      "count": 0
+    },
+    {
+      "check_name": "no_orphaned_floors",
+      "status": "FAIL",
+      "message": "Error checking orphaned floors: {code: Neo.ClientError.Statement.SyntaxError} {message: PatternExpressions are not allowed to introduce new variables: 'b'. (line 3, column 27 (offset: 51))\n\"        WHERE NOT EXISTS((b:Building)-[:CONTAINS]->(f))\"\n                           ^}",
+      "details": null,
+      "count": 0
+    },
+    {
+      "check_name": "no_orphaned_areas",
+      "status": "FAIL",
+      "message": "Error checking orphaned areas: {code: Neo.ClientError.Statement.SyntaxError} {message: PatternExpressions are not allowed to introduce new variables: 'f'. (line 3, column 27 (offset: 50))\n\"        WHERE NOT EXISTS((f:Floor)-[:CONTAINS]->(a))\"\n                           ^}",
+      "details": null,
+      "count": 0
+    },
+    {
+      "check_name": "performance_site_lookup_by_code",
+      "status": "PASS",
+      "message": "Query 'site_lookup_by_code' executed in 0.012s",
+      "details": {
+        "execution_time_seconds": 0.011708,
+        "result_count": 1
+      },
+      "count": 0
+    },
+    {
+      "check_name": "performance_building_lookup_by_site",
+      "status": "PASS",
+      "message": "Query 'building_lookup_by_site' executed in 0.014s",
+      "details": {
+        "execution_time_seconds": 0.014298,
+        "result_count": 2
+      },
+      "count": 0
+    },
+    {
+      "check_name": "performance_full_hierarchy_traversal",
+      "status": "PASS",
+      "message": "Query 'full_hierarchy_traversal' executed in 0.029s",
+      "details": {
+        "execution_time_seconds": 0.029351,
+        "result_count": 10
+      },
+      "count": 0
+    }
+  ]
+}

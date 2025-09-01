@@ -1,0 +1,197 @@
+{
+  "report_generated_at": "2025-08-31T20:18:49.288507",
+  "script_version": "1.0.0",
+  "data_source": "EHSGoalsConfig",
+  "target_date": "2025-12-31",
+  "summary": {
+    "total_goals_loaded": 6,
+    "categories_covered": 3,
+    "sites_covered": 2,
+    "category_mapping_used": {
+      "EHSCategory.CO2": "electricity",
+      "EHSCategory.WATER": "water",
+      "EHSCategory.WASTE": "waste"
+    },
+    "site_mapping_used": {
+      "SiteLocation.ALGONQUIN": "algonquin_il",
+      "SiteLocation.HOUSTON": "houston_tx"
+    }
+  },
+  "goals_detail": [
+    {
+      "site": {
+        "id": "algonquin_il",
+        "name": "Algonquin Manufacturing"
+      },
+      "unit": "tonnes CO2e",
+      "category": "electricity",
+      "baseline_year": 2024,
+      "description": "CO2 emissions reduction from electricity consumption",
+      "goal_id": "goal_algonquin_il_electricity_2025",
+      "target_date": "2025-12-31",
+      "created_at": "2025-09-01T01:15:01.699Z",
+      "target_year": 2025,
+      "period": "yearly",
+      "target_value": 15.0
+    },
+    {
+      "site": {
+        "id": "algonquin_il",
+        "name": "Algonquin Manufacturing"
+      },
+      "unit": "pounds",
+      "category": "waste",
+      "baseline_year": 2024,
+      "description": "Waste generation reduction",
+      "goal_id": "goal_algonquin_il_waste_2025",
+      "target_date": "2025-12-31",
+      "created_at": "2025-09-01T01:15:01.771Z",
+      "target_year": 2025,
+      "period": "yearly",
+      "target_value": 10.0
+    },
+    {
+      "site": {
+        "id": "algonquin_il",
+        "name": "Algonquin Manufacturing"
+      },
+      "unit": "gallons",
+      "category": "water",
+      "baseline_year": 2024,
+      "description": "Water consumption reduction",
+      "goal_id": "goal_algonquin_il_water_2025",
+      "target_date": "2025-12-31",
+      "created_at": "2025-09-01T01:15:01.756Z",
+      "target_year": 2025,
+      "period": "yearly",
+      "target_value": 12.0
+    },
+    {
+      "site": {
+        "id": "houston_tx",
+        "name": "Houston Processing Center"
+      },
+      "unit": "tonnes CO2e",
+      "category": "electricity",
+      "baseline_year": 2024,
+      "description": "CO2 emissions reduction from electricity consumption",
+      "goal_id": "goal_houston_tx_electricity_2025",
+      "target_date": "2025-12-31",
+      "created_at": "2025-09-01T01:15:01.773Z",
+      "target_year": 2025,
+      "period": "yearly",
+      "target_value": 18.0
+    },
+    {
+      "site": {
+        "id": "houston_tx",
+        "name": "Houston Processing Center"
+      },
+      "unit": "pounds",
+      "category": "waste",
+      "baseline_year": 2024,
+      "description": "Waste generation reduction",
+      "goal_id": "goal_houston_tx_waste_2025",
+      "target_date": "2025-12-31",
+      "created_at": "2025-09-01T01:15:01.815Z",
+      "target_year": 2025,
+      "period": "yearly",
+      "target_value": 8.0
+    },
+    {
+      "site": {
+        "id": "houston_tx",
+        "name": "Houston Processing Center"
+      },
+      "unit": "gallons",
+      "category": "water",
+      "baseline_year": 2024,
+      "description": "Water consumption reduction",
+      "goal_id": "goal_houston_tx_water_2025",
+      "target_date": "2025-12-31",
+      "created_at": "2025-09-01T01:15:01.799Z",
+      "target_year": 2025,
+      "period": "yearly",
+      "target_value": 10.0
+    }
+  ],
+  "category_breakdown": [
+    {
+      "category": "electricity",
+      "goal_count": 2,
+      "avg_target": 16.5,
+      "min_target": 15.0,
+      "max_target": 18.0,
+      "sites": [
+        "Algonquin Manufacturing",
+        "Houston Processing Center"
+      ]
+    },
+    {
+      "category": "waste",
+      "goal_count": 2,
+      "avg_target": 9.0,
+      "min_target": 8.0,
+      "max_target": 10.0,
+      "sites": [
+        "Algonquin Manufacturing",
+        "Houston Processing Center"
+      ]
+    },
+    {
+      "category": "water",
+      "goal_count": 2,
+      "avg_target": 11.0,
+      "min_target": 10.0,
+      "max_target": 12.0,
+      "sites": [
+        "Algonquin Manufacturing",
+        "Houston Processing Center"
+      ]
+    }
+  ],
+  "site_breakdown": [
+    {
+      "site_id": "algonquin_il",
+      "site_name": "Algonquin Manufacturing",
+      "goal_count": 3,
+      "goals": [
+        {
+          "category": "electricity",
+          "target": 15.0
+        },
+        {
+          "category": "water",
+          "target": 12.0
+        },
+        {
+          "category": "waste",
+          "target": 10.0
+        }
+      ]
+    },
+    {
+      "site_id": "houston_tx",
+      "site_name": "Houston Processing Center",
+      "goal_count": 3,
+      "goals": [
+        {
+          "category": "electricity",
+          "target": 18.0
+        },
+        {
+          "category": "water",
+          "target": 10.0
+        },
+        {
+          "category": "waste",
+          "target": 8.0
+        }
+      ]
+    }
+  ],
+  "neo4j_relationships": {
+    "goal_to_site": "(:Goal)-[:APPLIES_TO]->(:Site)",
+    "relationship_count": 6
+  }
+}

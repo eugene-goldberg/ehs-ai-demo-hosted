@@ -1,0 +1,104 @@
+SYSTEM:
+
+
+You are an expert EHS data analyst specializing in consumption trend analysis. Respond in JSON format with quantified metrics.
+
+HUMAN: 
+Analyze the following 6 months of electricity consumption data for Site algonquin_il:
+
+{
+  "2025-03": {
+    "amount": 41594.62000000001,
+    "cost": 4991.320000000001,
+    "count": 28,
+    "unit": "kWh"
+  },
+  "2025-04": {
+    "amount": 44620.85,
+    "cost": 5354.49,
+    "count": 30,
+    "unit": "kWh"
+  },
+  "2025-05": {
+    "amount": 45701.32999999999,
+    "cost": 5484.189999999999,
+    "count": 31,
+    "unit": "kWh"
+  },
+  "2025-06": {
+    "amount": 48055.490000000005,
+    "cost": 5766.6500000000015,
+    "count": 30,
+    "unit": "kWh"
+  },
+  "2025-07": {
+    "amount": 52188.04000000001,
+    "cost": 6262.54,
+    "count": 31,
+    "unit": "kWh"
+  },
+  "2025-08": {
+    "amount": 50315.240000000005,
+    "cost": 6037.850000000001,
+    "count": 31,
+    "unit": "kWh"
+  }
+}
+
+Provide a structured analysis including:
+1. Overall trend direction (increasing/decreasing/stable)
+2. Monthly rate of change (percentage)
+3. Seasonal patterns or anomalies
+4. Key observations about consumption patterns
+
+Format your response with quantified metrics where possible.
+Focus on trends that could impact annual goal achievement.
+
+AI:
+{
+  "analysis": {
+    "overall_trend_direction": "Increasing",
+    "monthly_rate_of_change": {
+      "2025-04": {
+        "amount_percentage_change": 7.28,
+        "cost_percentage_change": 7.27
+      },
+      "2025-05": {
+        "amount_percentage_change": 2.42,
+        "cost_percentage_change": 2.42
+      },
+      "2025-06": {
+        "amount_percentage_change": 5.14,
+        "cost_percentage_change": 5.16
+      },
+      "2025-07": {
+        "amount_percentage_change": 8.61,
+        "cost_percentage_change": 8.60
+      },
+      "2025-08": {
+        "amount_percentage_change": -3.58,
+        "cost_percentage_change": -3.59
+      }
+    },
+    "seasonal_patterns": {
+      "spring": {
+        "average_amount": 45172.27,
+        "average_cost": 5410.00
+      },
+      "summer": {
+        "average_amount": 50186.26,
+        "average_cost": 6022.35
+      }
+    },
+    "anomalies": {
+      "2025-08": {
+        "amount_percentage_change": -3.58,
+        "cost_percentage_change": -3.59
+      }
+    },
+    "key_observations": {
+      "consumption_patterns": "The electricity consumption has been generally increasing over the 6 months period. The rate of increase is highest in July (8.61%) and there is a slight decrease in August (-3.58%). The consumption is higher in summer months compared to spring, indicating a possible seasonal pattern."
+    },
+    "impact_on_annual_goals": "If the increasing trend continues, the annual electricity consumption and cost might exceed the planned budget. The decrease in August might be a one-time anomaly or a sign of changing trend. Further monitoring is required."
+  }
+}
