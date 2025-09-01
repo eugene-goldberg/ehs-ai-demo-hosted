@@ -9,18 +9,18 @@ const Sidebar = ({ activeView, onViewChange }) => {
       icon: '📁',
       count: 24
     },
-    {
-      id: 'analytics',
-      label: 'Analytics',
-      icon: '📊',
-      count: 8
-    },
-    {
-      id: 'analytics-hierarchical',
-      label: 'Analytics (Hierarchical)',
-      icon: '🏢',
-      count: null
-    },
+    // {
+    //   id: 'analytics',
+    //   label: 'Analytics',
+    //   icon: '📊',
+    //   count: 8
+    // },
+    // {
+    //   id: 'analytics-hierarchical',
+    //   label: 'Analytics (Hierarchical)',
+    //   icon: '🏢',
+    //   count: null
+    // },
     {
       id: 'analytics-executive',
       label: 'Analytics (Executive)',

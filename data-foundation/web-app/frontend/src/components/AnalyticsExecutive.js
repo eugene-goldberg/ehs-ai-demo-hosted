@@ -407,8 +407,9 @@ const AnalyticsExecutive = () => {
     <Box sx={{ p: 3, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
       {/* Global Header */}
       <Box sx={{ mb: 4, backgroundColor: 'white', p: 3, borderRadius: 2, boxShadow: 1 }}>
-        <Grid container spacing={3} alignItems="center">
-          <Grid item xs={12} md={6}>
+        <Grid container spacing={3}>
+          {/* First Row: Title and Location Breadcrumb */}
+          <Grid item xs={12}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                 Environmental Dashboard
@@ -420,8 +421,16 @@ const AnalyticsExecutive = () => {
               />
             </Box>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+          
+          {/* Second Row: Centered Location Dropdown and Date Range Buttons */}
+          <Grid item xs={12}>
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              gap: 2,
+              flexWrap: 'wrap'
+            }}>
               <FormControl size="small" sx={{ minWidth: 200 }}>
                 <InputLabel>Location</InputLabel>
                 <Select
