@@ -33,7 +33,7 @@ import { API_ENDPOINTS } from '../config/api';
 
 const AnalyticsExecutive = () => {
   const [selectedLocation, setSelectedLocation] = useState('algonquin_il');
-  const [selectedDateRange, setSelectedDateRange] = useState('30days');
+  const [selectedDateRange, setSelectedDateRange] = useState('180days');
   const [electricityData, setElectricityData] = useState(null);
   const [waterData, setWaterData] = useState(null);
   const [wasteData, setWasteData] = useState(null);
@@ -422,14 +422,15 @@ const AnalyticsExecutive = () => {
             </Box>
           </Grid>
           
-          {/* Second Row: Centered Location Dropdown and Date Range Buttons */}
+          {/* Second Row: Left-aligned Location Dropdown and Date Range Buttons */}
           <Grid item xs={12}>
             <Box sx={{ 
               display: 'flex', 
               alignItems: 'center', 
-              justifyContent: 'center', 
+              justifyContent: 'flex-start', 
               gap: 2,
-              flexWrap: 'wrap'
+              flexWrap: 'wrap',
+              marginLeft: '350px'
             }}>
               <FormControl size="small" sx={{ minWidth: 200 }}>
                 <InputLabel>Location</InputLabel>
@@ -444,23 +445,23 @@ const AnalyticsExecutive = () => {
               </FormControl>
               <ButtonGroup size="small">
                 <Button 
-                  variant={selectedDateRange === '30days' ? 'contained' : 'outlined'}
-                  onClick={() => setSelectedDateRange('30days')}
+                  variant={selectedDateRange === '180days' ? 'contained' : 'outlined'}
+                  onClick={() => setSelectedDateRange('180days')}
                 >
-                  Last 30 Days
+                  Last 180 days
                 </Button>
-                <Button 
+                {/* <Button 
                   variant={selectedDateRange === 'quarter' ? 'contained' : 'outlined'}
                   onClick={() => setSelectedDateRange('quarter')}
                 >
                   This Quarter
-                </Button>
-                <Button 
+                </Button> */}
+                {/* <Button 
                   variant={selectedDateRange === 'custom' ? 'contained' : 'outlined'}
                   onClick={() => setSelectedDateRange('custom')}
                 >
                   Custom Range
-                </Button>
+                </Button> */}
               </ButtonGroup>
             </Box>
           </Grid>
