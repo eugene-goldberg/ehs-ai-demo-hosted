@@ -252,6 +252,15 @@ const AnalyticsExecutive = () => {
     });
   };
 
+  // Helper function to format numerical values to 2 decimal places
+  const formatValue = (value) => {
+    if (typeof value === 'number') {
+      return value.toFixed(2);
+    }
+    const num = parseFloat(value);
+    return !isNaN(num) ? num.toFixed(2) : value;
+  };
+
   const renderEnvironmentalCard = (data, title, icon, color, type) => {
     if (!data) return null;
 
@@ -293,7 +302,7 @@ const AnalyticsExecutive = () => {
             </Typography>
             {Object.entries(facts).slice(0, 3).map(([key, value]) => (
               <Typography key={key} variant="body2" sx={{ mb: 1 }}>
-                <strong>{key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</strong> {value}
+                <strong>{key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</strong> {formatValue(value)}
               </Typography>
             ))}
             {(type === 'electricity' || type === 'water') && (
