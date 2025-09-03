@@ -183,12 +183,15 @@ const DataManagement = () => {
         clear_database: true
       });
       
-      if (response.data.status === 'success') {
-        console.log(`Ingestion completed successfully! ${response.data.data.successful_ingestions}/3 documents processed.`);
+      if (response.data.status === 'completed') {
+        // Fixed line: Added null checking for response.data.data
+        const ingestionData = response.data.data || {};
+        const successfulIngestions = ingestionData.successful_ingestions || 0;
+        console.log(`Ingestion completed successfully! ${successfulIngestions}/3 documents processed.`);
         
         // Handle LangSmith traces if available
-        if (response.data.data.langsmith_traces && response.data.data.langsmith_traces.traces) {
-          const traces = response.data.data.langsmith_traces.traces;
+        if (ingestionData.langsmith_traces && ingestionData.langsmith_traces.traces) {
+          const traces = ingestionData.langsmith_traces.traces;
           console.log(`Found ${traces.length} LangSmith traces`);
           
           // Transform LangSmith traces into transcript format
