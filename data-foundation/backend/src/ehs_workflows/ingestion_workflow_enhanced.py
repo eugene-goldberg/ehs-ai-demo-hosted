@@ -665,6 +665,17 @@ class EnhancedIngestionWorkflow:
             elif doc_type == "permit":
                 # [Keep the existing permit transformation logic]
                 pass
+            else:
+                # Default handler for unrecognized document types
+                # Just create the document node with extracted data as properties
+                if extracted:
+                    # Add all extracted fields to document properties
+                    for key, value in extracted.items():
+                        if value is not None and key not in doc_node["properties"]:
+                            doc_node["properties"][key] = value
+            
+            # Add the doc_node to the nodes list
+            nodes.append(doc_node)
             
             # NOTE: For brevity, keeping transformation logic from original
             # In a real implementation, we would copy all the transformation logic here
@@ -947,7 +958,9 @@ class EnhancedIngestionWorkflow:
         }
         
         # Run enhanced workflow
-        final_state = self.workflow.invoke(initial_state)
+        # Increase recursion limit to handle complex document processing
+        config = {"recursion_limit": 100}
+        final_state = self.workflow.invoke(initial_state, config=config)
         
         return final_state
     

@@ -18,11 +18,11 @@ from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from pydantic import BaseModel, Field
 
-from ..parsers.llama_parser import EHSDocumentParser
-from ..recognition.document_recognition_service import DocumentRecognitionService
+from parsers.llama_parser import EHSDocumentParser
+from recognition.document_recognition_service import DocumentRecognitionService
 # Temporarily commented out - document_indexer has llama-index dependencies not in requirements.txt
-# from ..indexing.document_indexer import EHSDocumentIndexer
-from ..extractors.ehs_extractors import (
+# from indexing.document_indexer import EHSDocumentIndexer
+from extractors.ehs_extractors import (
     UtilityBillExtractor,
     WaterBillExtractor,
     PermitExtractor,

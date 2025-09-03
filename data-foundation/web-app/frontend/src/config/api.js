@@ -12,7 +12,7 @@ export const API_ENDPOINTS = {
   
   // Main backend endpoints (port 8000)
   executiveDashboard: `${API_BASE_URL}/api/v2/executive-dashboard`,
-  ingestion: `${API_BASE_URL}/api/v1/ingest/batch`,
+  ingestion: `${API_BASE_URL}/api/batch-ingest`,
   
   // Environmental Dashboard endpoints (port 8000)
   dashboardElectricity: `${API_BASE_URL}/api/dashboard/electricity`,

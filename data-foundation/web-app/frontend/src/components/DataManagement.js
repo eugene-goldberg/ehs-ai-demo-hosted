@@ -179,7 +179,7 @@ const DataManagement = () => {
     setHasLangSmithData(false);
     
     try {
-      const response = await axios.post('http://localhost:8000/api/v1/ingest/batch', {
+      const response = await axios.post(API_ENDPOINTS.ingestion, {
         clear_database: true
       });
       

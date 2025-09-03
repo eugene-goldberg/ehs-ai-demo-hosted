@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Batch ingestion runner for EHS AI Demo
-Run this from the backend directory to process documents with risk assessment
+Run this from the backend directory to process documents
 """
 
 import os
@@ -20,7 +20,7 @@ sys.path.insert(0, str(src_dir))
 # Set up environment
 os.environ.setdefault('PYTHONPATH', f"{str(current_dir)}:{str(src_dir)}")
 
-from ehs_workflows.ingestion_workflow_with_risk_assessment import RiskAssessmentIntegratedWorkflow
+from ehs_workflows.ingestion_workflow import IngestionWorkflow
 # from ingestion.database.document_store import DocumentStore
 import logging
 from dotenv import load_dotenv
@@ -38,12 +38,13 @@ async def main():
     # Initialize document store
     # doc_store = DocumentStore()
     
-    # Initialize the integrated workflow
-    workflow = RiskAssessmentIntegratedWorkflow(
+    # Initialize the original workflow (which works properly)
+    workflow = IngestionWorkflow(
         llama_parse_api_key=os.getenv("LLAMA_PARSE_API_KEY"),
         neo4j_uri=os.getenv("NEO4J_URI"),
         neo4j_username=os.getenv("NEO4J_USERNAME"),
-        neo4j_password=os.getenv("NEO4J_PASSWORD")
+        neo4j_password=os.getenv("NEO4J_PASSWORD"),
+        openai_api_key=os.getenv("OPENAI_API_KEY")
     )
     
     # Define input and output directories

@@ -297,7 +297,7 @@ class RiskAssessmentIntegratedWorkflow(EnhancedIngestionWorkflow):
         # Set entry point
         workflow.set_entry_point("store_source_file")
         
-        # Compile
+        # Compile with increased recursion limit
         return workflow.compile()
     
     def initialize_risk_assessment(self, state: DocumentStateWithRisk) -> DocumentStateWithRisk:
@@ -968,7 +968,9 @@ class RiskAssessmentIntegratedWorkflow(EnhancedIngestionWorkflow):
         }
         
         # Run enhanced workflow with risk assessment
-        final_state = self.workflow.invoke(initial_state)
+        # Increase recursion limit to handle complex document processing
+        config = {"recursion_limit": 100}
+        final_state = self.workflow.invoke(initial_state, config=config)
         
         return final_state
     
