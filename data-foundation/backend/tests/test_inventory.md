@@ -2,6 +2,172 @@
 
 This document maintains a complete inventory of all tests related to this project.
 
+## Duplicate Prevention Tests (NEW)
+
+### Comprehensive Duplicate Prevention Test Suite
+- **Location**: `/tests/test_duplicate_prevention.py`
+- **Type**: Comprehensive Unit and Integration Test Suite
+- **Coverage**: Complete duplicate prevention functionality with mocked Neo4j operations
+- **Test Classes**:
+  1. `TestFileHashUtilities` - File hash calculation utility tests
+  2. `TestWorkflowDuplicateDetection` - Workflow duplicate detection tests
+  3. `TestNeo4jMergeOperations` - Neo4j MERGE operations tests
+  4. `TestDuplicateScenarios` - Various duplicate scenarios tests
+  5. `TestIntegrationScenarios` - End-to-end integration tests
+
+### Test Cases:
+1. **File Hash Calculation Testing**:
+   - `test_calculate_file_hash_basic()` - Basic SHA-256 hash calculation
+   - `test_calculate_file_hash_different_algorithms()` - MD5, SHA-1, SHA-256 algorithms
+   - `test_calculate_file_hash_nonexistent_file()` - Error handling for missing files
+   - `test_calculate_file_hash_directory()` - Error handling for directories
+   - `test_calculate_sha256_hash_convenience_function()` - SHA-256 convenience wrapper
+   - `test_generate_document_id()` - Document ID generation from hash
+   - `test_verify_file_integrity()` - File integrity verification
+   - `test_get_file_info_with_hash()` - Comprehensive file information extraction
+   - `test_find_duplicate_files()` - Duplicate file detection across multiple files
+   - `test_hash_consistency_across_calls()` - Hash calculation consistency
+   - `test_hash_different_files_different_hashes()` - Different files produce different hashes
+
+2. **Workflow Duplicate Detection Testing**:
+   - `test_check_duplicate_no_existing_document()` - No duplicate scenario
+   - `test_check_duplicate_existing_document_found()` - Duplicate found scenario  
+   - `test_check_duplicate_status_routing()` - Workflow routing logic
+   - `test_check_duplicate_hash_calculation_failure()` - Hash calculation error handling
+   - `test_check_duplicate_neo4j_connection_failure()` - Neo4j connection error handling
+
+3. **Neo4j MERGE Operations Testing**:
+   - `test_merge_document_node_creation()` - Document node creation with MERGE
+   - `test_merge_document_node_duplicate_match()` - MERGE behavior on duplicate match
+   - `test_create_duplicate_attempt_log()` - Duplicate attempt logging
+
+4. **Duplicate Scenarios Testing**:
+   - `test_processing_same_file_twice()` - Same file processed multiple times
+   - `test_processing_different_files_same_content()` - Different files, identical content
+   - `test_processing_different_content_files()` - Different files, different content
+
+5. **Integration Scenarios Testing**:
+   - `test_end_to_end_duplicate_detection()` - Complete duplicate detection workflow
+   - `test_workflow_state_transitions()` - Document state transitions
+
+### Test Features:
+- **Real PDF Files**: Uses actual PDF test files from `/data/document-*.pdf`
+- **Mocked Neo4j**: Complete Neo4j driver and session mocking for offline testing
+- **Comprehensive Coverage**: Tests all utility functions and workflow methods
+- **Error Scenarios**: Tests all error handling paths and edge cases
+- **Hash Algorithms**: Tests multiple hash algorithms (SHA-256, MD5, SHA-1)
+- **File Operations**: Tests with temporary files, real PDFs, and various content types
+- **State Management**: Tests workflow state transitions and status updates
+- **Performance**: Efficient streaming hash calculation for large files
+
+### Mock Architecture:
+- **GraphDatabase Mocking**: Complete Neo4j GraphDatabase driver mocking
+- **Session Context Managers**: Proper session lifecycle mocking
+- **Query Result Mocking**: Flexible query result simulation
+- **Connection Error Simulation**: Network and authentication error scenarios
+- **Realistic Response Data**: Mock responses match actual Neo4j data structures
+
+### Test Data:
+- **Real PDF Files**: `/data/document-1.pdf`, `/data/document-2.pdf`, etc.
+- **Temporary Files**: Generated with known content for hash validation
+- **Identical Content Files**: Created for duplicate detection testing
+- **Mock Neo4j Data**: Realistic document node and relationship data
+
+### Dependencies:
+- pytest framework
+- unittest.mock for Neo4j mocking
+- pathlib for file operations
+- hashlib for hash verification
+- tempfile for test data creation
+- Real PDF files from project data directory
+
+### Test Environment Requirements:
+- Python 3.8+ with pytest
+- No actual Neo4j database required (fully mocked)
+- Access to project data directory for PDF files
+- Write access to temporary directory for test files
+- All src modules accessible via Python path
+
+### Running the Tests:
+
+#### Using pytest (recommended):
+```bash
+cd /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend
+python3 -m pytest tests/test_duplicate_prevention.py -v
+```
+
+#### Running specific test classes:
+```bash
+# File hash utilities only
+python3 -m pytest tests/test_duplicate_prevention.py::TestFileHashUtilities -v
+
+# Workflow duplicate detection only  
+python3 -m pytest tests/test_duplicate_prevention.py::TestWorkflowDuplicateDetection -v
+
+# Neo4j MERGE operations only
+python3 -m pytest tests/test_duplicate_prevention.py::TestNeo4jMergeOperations -v
+
+# Duplicate scenarios only
+python3 -m pytest tests/test_duplicate_prevention.py::TestDuplicateScenarios -v
+
+# Integration scenarios only
+python3 -m pytest tests/test_duplicate_prevention.py::TestIntegrationScenarios -v
+```
+
+#### Running specific test methods:
+```bash
+python3 -m pytest tests/test_duplicate_prevention.py::TestFileHashUtilities::test_calculate_file_hash_basic -v
+python3 -m pytest tests/test_duplicate_prevention.py::TestWorkflowDuplicateDetection::test_check_duplicate_no_existing_document -v
+python3 -m pytest tests/test_duplicate_prevention.py::TestDuplicateScenarios::test_processing_same_file_twice -v
+```
+
+#### As standalone script:
+```bash
+cd /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend
+python3 tests/test_duplicate_prevention.py
+```
+
+#### With virtual environment:
+```bash
+cd /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend
+source venv/bin/activate
+python3 -m pytest tests/test_duplicate_prevention.py -v
+```
+
+### Test Output:
+- **Console Output**: Detailed test progress and results
+- **Mock Verification**: Validates all mocked Neo4j interactions
+- **Hash Validation**: Verifies hash calculation accuracy
+- **Duplicate Detection**: Confirms correct duplicate identification
+- **Error Handling**: Validates graceful error handling
+- **Performance**: Shows test execution times
+
+### Validation Coverage:
+- ✅ File hash calculation utilities (SHA-256, MD5, SHA-1)
+- ✅ Document ID generation from file hashes  
+- ✅ File integrity verification
+- ✅ Duplicate file detection across multiple files
+- ✅ Workflow duplicate detection with Neo4j queries
+- ✅ Neo4j MERGE operations for document nodes
+- ✅ Duplicate attempt logging and tracking
+- ✅ Same file processed multiple times scenario
+- ✅ Different files with identical content scenario
+- ✅ Error handling for hash calculation failures
+- ✅ Error handling for Neo4j connection failures
+- ✅ Workflow state transitions and status updates
+- ✅ End-to-end duplicate detection workflow
+
+### Success Criteria:
+- All file hash utilities produce consistent, accurate hashes
+- Duplicate detection correctly identifies same content across different files
+- Neo4j MERGE operations handle both create and match scenarios
+- Workflow properly routes duplicate vs. non-duplicate documents
+- Error scenarios are handled gracefully without workflow interruption
+- Real PDF files can be processed and have their hashes calculated
+- Mock Neo4j operations accurately simulate database interactions
+
+**Overall Assessment**: COMPREHENSIVE test coverage for duplicate prevention functionality, providing confidence in the robustness of duplicate detection across file uploads, content analysis, and database operations. Tests run entirely offline with mocked dependencies while using real file data for validation.
+
 ## Environmental Assessment API Tests
 
 ### Comprehensive Environmental Assessment API Test Suite
@@ -401,6 +567,36 @@ python3 /tmp/test_risk_storage_manual.py
 
 ## Test Execution Instructions
 
+### Running Duplicate Prevention Tests
+
+#### Using pytest (recommended):
+```bash
+cd /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend
+python3 -m pytest tests/test_duplicate_prevention.py -v
+```
+
+#### Running specific test classes:
+```bash
+# File hash utilities only
+python3 -m pytest tests/test_duplicate_prevention.py::TestFileHashUtilities -v
+
+# Workflow duplicate detection only  
+python3 -m pytest tests/test_duplicate_prevention.py::TestWorkflowDuplicateDetection -v
+
+# Neo4j MERGE operations only
+python3 -m pytest tests/test_duplicate_prevention.py::TestNeo4jMergeOperations -v
+
+# Duplicate scenarios only
+python3 -m pytest tests/test_duplicate_prevention.py::TestDuplicateScenarios -v
+```
+
+#### With virtual environment:
+```bash
+cd /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend
+source venv/bin/activate
+python3 -m pytest tests/test_duplicate_prevention.py -v
+```
+
 ### Running Environmental Assessment API Tests
 
 #### Using standalone execution (recommended):
@@ -495,6 +691,13 @@ python3 -m pytest tests/agents/risk_assessment/test_workflow_integration.py -v
 
 ### Test Output and Logging
 
+#### Duplicate Prevention Tests:
+- **Console Output**: Detailed test progress and results
+- **Mock Verification**: Validates all mocked Neo4j interactions  
+- **Hash Validation**: Verifies hash calculation accuracy
+- **Duplicate Detection**: Confirms correct duplicate identification
+- **Error Handling**: Validates graceful error handling
+
 #### Environmental Assessment API Tests:
 - **Console Output**: Real-time progress with emoji indicators (✅ pass, ❌ fail)
 - **Timestamped Log File**: Detailed logging in `/tmp/environmental_assessment_api_test_YYYYMMDD_HHMMSS.log`
@@ -515,6 +718,13 @@ python3 -m pytest tests/agents/risk_assessment/test_workflow_integration.py -v
 - Graph verification: Comprehensive Neo4j data validation
 
 ### Prerequisites Checklist
+
+#### For Duplicate Prevention Tests:
+- [ ] Python 3.8+ installed
+- [ ] pytest framework installed
+- [ ] Access to project data directory for PDF files
+- [ ] Write access to temporary directory for test files
+- [ ] No external dependencies required (fully mocked)
 
 #### For Environmental Assessment API Tests:
 - [ ] Python 3.8+ installed
@@ -537,6 +747,14 @@ python3 -m pytest tests/agents/risk_assessment/test_workflow_integration.py -v
 - [ ] Network connectivity to Neo4j database
 
 ## Test Maintenance Notes
+
+### Duplicate Prevention Tests:
+- Tests run entirely offline with mocked Neo4j operations
+- Real PDF files used for hash calculation validation
+- Comprehensive error handling ensures graceful failure scenarios
+- Mock responses match actual Neo4j data structures for accuracy
+- Hash calculation uses efficient streaming for large files
+- Test data automatically cleaned up after test completion
 
 ### Environmental Assessment API Tests:
 - Tests use no mocks per project requirements - all real functionality testing
@@ -562,6 +780,14 @@ python3 -m pytest tests/agents/risk_assessment/test_workflow_integration.py -v
 - Schema validation ensures compatibility with workflow storage methods
 
 ## Future Test Additions
+
+### Duplicate Prevention:
+- **Priority**: Integration tests with actual Neo4j database
+- Performance testing with large files and many duplicates
+- Cross-system duplicate detection (multiple ingestion sources)
+- Hash collision handling (theoretical edge case)
+- Concurrent duplicate detection testing
+- Historical duplicate tracking and reporting
 
 ### Environmental Assessment API:
 - **Priority**: Integration tests with real Neo4j service and sample data
@@ -704,4 +930,3 @@ python3 tests/test_environmental_api_neo4j_integration.py
 ✅ JSON response format compliance  
 
 **Overall Assessment**: SUCCESSFUL integration test demonstrating the Environmental Assessment API is production-ready with minor schema corrections needed for waste endpoints.
-

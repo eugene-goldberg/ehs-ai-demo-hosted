@@ -1,7 +1,7 @@
 """
 LangGraph-based document processing workflow for EHS AI Platform.
 Orchestrates the entire pipeline from upload to knowledge graph storage.
-Now includes document recognition and rejection handling.
+Now includes document recognition and rejection handling with duplicate detection.
 """
 
 import os
@@ -20,6 +20,7 @@ from pydantic import BaseModel, Field
 
 from parsers.llama_parser import EHSDocumentParser
 from recognition.document_recognition_service import DocumentRecognitionService
+from utils.file_hash import calculate_sha256_hash
 # Temporarily commented out - document_indexer has llama-index dependencies not in requirements.txt
 # from indexing.document_indexer import EHSDocumentIndexer
 from extractors.ehs_extractors import (
@@ -46,6 +47,10 @@ class DocumentState(TypedDict):
     is_accepted: bool
     rejection_reason: Optional[str]
     
+    # Duplicate detection
+    file_hash: Optional[str]
+    is_duplicate: bool
+    
     # Processing state
     document_type: Optional[str]
     parsed_content: Optional[List[Dict[str, Any]]]
@@ -61,7 +66,7 @@ class DocumentState(TypedDict):
     neo4j_nodes: Optional[List[Dict[str, Any]]]
     neo4j_relationships: Optional[List[Dict[str, Any]]]
     processing_time: Optional[float]
-    status: str  # pending, processing, completed, failed, rejected
+    status: str  # pending, processing, completed, failed, rejected, duplicate
 
 
 class ProcessingStatus(str, Enum):
@@ -72,12 +77,13 @@ class ProcessingStatus(str, Enum):
     FAILED = "failed"
     RETRY = "retry"
     REJECTED = "rejected"
+    DUPLICATE = "duplicate"
 
 
 class IngestionWorkflow:
     """
     LangGraph workflow for ingesting EHS documents into Neo4j.
-    Now includes document recognition and rejection handling.
+    Now includes document recognition, rejection handling, and duplicate detection.
     """
     
     def __init__(
@@ -153,7 +159,7 @@ class IngestionWorkflow:
         
     def _build_workflow(self) -> StateGraph:
         """
-        Build the LangGraph workflow with document recognition and rejection handling.
+        Build the LangGraph workflow with document recognition, duplicate detection, and rejection handling.
         
         Returns:
             Compiled workflow graph
@@ -163,6 +169,7 @@ class IngestionWorkflow:
         
         # Add nodes - recognition comes first
         workflow.add_node("recognize_document", self.recognize_document)
+        workflow.add_node("check_duplicate", self.check_duplicate)
         workflow.add_node("handle_rejection", self.handle_rejection)
         workflow.add_node("validate", self.validate_document)
         workflow.add_node("parse", self.parse_document)
@@ -182,8 +189,18 @@ class IngestionWorkflow:
             "recognize_document",
             self.check_document_acceptance,
             {
-                "accept": "validate",
+                "accept": "check_duplicate",
                 "reject": "handle_rejection"
+            }
+        )
+        
+        # Add conditional routing after duplicate check
+        workflow.add_conditional_edges(
+            "check_duplicate",
+            self.check_duplicate_status,
+            {
+                "continue": "validate",
+                "skip": END
             }
         )
         
@@ -268,6 +285,80 @@ class IngestionWorkflow:
             logger.error(f"Document recognition failed: {str(e)}")
         
         return state
+
+    def check_duplicate(self, state: DocumentState) -> DocumentState:
+        """
+        Check if document is a duplicate by comparing file hash against Neo4j.
+        
+        Args:
+            state: Current workflow state
+            
+        Returns:
+            Updated state with duplicate status
+        """
+        logger.info(f"Checking for duplicates: {state['file_path']}")
+        
+        try:
+            # Calculate file hash
+            file_hash = calculate_sha256_hash(state["file_path"])
+            if file_hash is None:
+                state["errors"].append("Failed to calculate file hash")
+                state["is_duplicate"] = False
+                return state
+            
+            state["file_hash"] = file_hash
+            
+            # Query Neo4j for existing documents with this hash
+            from neo4j import GraphDatabase
+            
+            driver = GraphDatabase.driver(
+                self.neo4j_uri,
+                auth=(self.neo4j_username, self.neo4j_password)
+            )
+            
+            with driver.session() as session:
+                query = """
+                MATCH (d:Document {file_hash: $file_hash})
+                RETURN d.id AS document_id, d.file_path AS file_path, 
+                       d.uploaded_at AS uploaded_at
+                LIMIT 1
+                """
+                
+                result = session.run(query, file_hash=file_hash)
+                existing_doc = result.single()
+                
+                if existing_doc:
+                    state["is_duplicate"] = True
+                    state["status"] = ProcessingStatus.DUPLICATE
+                    logger.info(f"Duplicate document found: {existing_doc['document_id']} (original: {existing_doc['file_path']})")
+                else:
+                    state["is_duplicate"] = False
+                    logger.info("No duplicate found - proceeding with processing")
+            
+            driver.close()
+            
+        except Exception as e:
+            state["errors"].append(f"Duplicate check error: {str(e)}")
+            logger.error(f"Duplicate check failed: {str(e)}")
+            # On error, assume not duplicate to avoid blocking valid documents
+            state["is_duplicate"] = False
+        
+        return state
+
+    def check_duplicate_status(self, state: DocumentState) -> str:
+        """
+        Check duplicate status and determine next step.
+        
+        Args:
+            state: Current workflow state
+            
+        Returns:
+            Next node to execute
+        """
+        if state.get("is_duplicate", False):
+            return "skip"
+        else:
+            return "continue"
     
     def handle_rejection(self, state: DocumentState) -> DocumentState:
         """
@@ -324,7 +415,7 @@ class IngestionWorkflow:
         upload_metadata: Dict[str, Any]
     ):
         """
-        Store rejected document information in Neo4j as a separate node.
+        Store rejected document information in Neo4j as a separate node using MERGE.
         
         Args:
             document_id: Unique document identifier
@@ -343,7 +434,7 @@ class IngestionWorkflow:
             )
             
             with driver.session() as session:
-                # Create RejectedDocument node (not connected to main data graph)
+                # Create RejectedDocument node using MERGE on 'id' property
                 properties = {
                     "id": document_id,
                     "original_filename": original_filename,
@@ -367,15 +458,15 @@ class IngestionWorkflow:
                         "tables_found": features.get("metadata", {}).get("table_count", 0) > 0
                     })
                 
-                # Build parameter string for properties
-                prop_strings = [f"{k}: ${k}" for k in properties.keys()]
-                props_str = "{" + ", ".join(prop_strings) + "}"
+                # Use MERGE operation with SET to update properties
+                query = """
+                MERGE (r:RejectedDocument {id: $id})
+                SET r = $properties
+                RETURN r
+                """
                 
-                # Create rejected document node
-                query = f"CREATE (r:RejectedDocument {props_str}) RETURN r"
-                
-                result = session.run(query, **properties)
-                logger.info(f"Created RejectedDocument node with id: {document_id}")
+                result = session.run(query, id=document_id, properties=properties)
+                logger.info(f"Merged RejectedDocument node with id: {document_id}")
             
             driver.close()
             
@@ -400,7 +491,7 @@ class IngestionWorkflow:
     
     def validate_document(self, state: DocumentState) -> DocumentState:
         """
-        Validate the input document (unchanged from original).
+        Validate the input document and store file hash.
         
         Args:
             state: Current workflow state
@@ -424,6 +515,13 @@ class IngestionWorkflow:
             # Document type already determined by recognition service
             if not state.get("document_type"):
                 raise ValueError("Document type not determined during recognition")
+            
+            # Ensure file hash is available (should be set in check_duplicate)
+            if not state.get("file_hash"):
+                file_hash = calculate_sha256_hash(state["file_path"])
+                if file_hash is None:
+                    raise ValueError("Failed to calculate file hash")
+                state["file_hash"] = file_hash
             
             logger.info(f"Document validated. Type: {state['document_type']}")
             
@@ -522,7 +620,7 @@ class IngestionWorkflow:
     
     def transform_data(self, state: DocumentState) -> DocumentState:
         """
-        Transform extracted data to Neo4j schema (unchanged from original).
+        Transform extracted data to Neo4j schema with file hash included.
         
         Args:
             state: Current workflow state
@@ -539,12 +637,13 @@ class IngestionWorkflow:
             nodes = []
             relationships = []
             
-            # Create document node with more comprehensive data
+            # Create document node with more comprehensive data including file hash
             doc_node = {
                 "labels": ["Document", doc_type.replace("_", "").title()],
                 "properties": {
                     "id": state["document_id"],
                     "file_path": state["file_path"],
+                    "file_hash": state.get("file_hash"),  # Add file hash
                     "document_type": doc_type,
                     "type": doc_type,  # Add type field like manual approach
                     "uploaded_at": datetime.utcnow().isoformat(),
@@ -1335,7 +1434,7 @@ class IngestionWorkflow:
     
     def load_to_neo4j(self, state: DocumentState) -> DocumentState:
         """
-        Load extracted data to Neo4j (unchanged from original).
+        Load extracted data to Neo4j using MERGE operations to prevent duplicates.
         
         Args:
             state: Current workflow state
@@ -1343,7 +1442,7 @@ class IngestionWorkflow:
         Returns:
             Updated state
         """
-        logger.info("Loading data to Neo4j")
+        logger.info("Loading data to Neo4j using MERGE operations")
         
         try:
             from neo4j import GraphDatabase
@@ -1355,38 +1454,49 @@ class IngestionWorkflow:
             )
             
             with driver.session() as session:
-                # Create nodes
+                # Create nodes using MERGE on 'id' property
                 for node in state["neo4j_nodes"]:
                     labels = ":".join(node["labels"])
                     props = node["properties"]
+                    node_id = props.get("id")
                     
-                    # Build parameter string for properties
-                    prop_strings = [f"{k}: ${k}" for k in props.keys()]
-                    props_str = "{" + ", ".join(prop_strings) + "}"
+                    if not node_id:
+                        logger.warning(f"Node missing id property, skipping: {node}")
+                        continue
                     
-                    # Create node query
-                    query = f"CREATE (n:{labels} {props_str}) RETURN n"
+                    # Use MERGE operation with SET to update properties
+                    query = f"""
+                    MERGE (n:{labels} {{id: $id}})
+                    SET n = $properties
+                    RETURN n
+                    """
                     
-                    result = session.run(query, **props)
-                    logger.info(f"Created node with labels: {node['labels']}, id: {props.get('id')}")
+                    result = session.run(query, id=node_id, properties=props)
+                    logger.info(f"Merged node with labels: {node['labels']}, id: {node_id}")
                 
-                # Create relationships
+                # Create relationships using MERGE
                 for rel in state["neo4j_relationships"]:
-                    query = """
-                    MATCH (a {id: $source_id})
-                    MATCH (b {id: $target_id})
-                    CREATE (a)-[r:%s]->(b)
+                    source_id = rel["source"]
+                    target_id = rel["target"]
+                    rel_type = rel["type"]
+                    rel_props = rel.get("properties", {})
+                    
+                    # Use MERGE for relationships to prevent duplicates
+                    query = f"""
+                    MATCH (a {{id: $source_id}})
+                    MATCH (b {{id: $target_id}})
+                    MERGE (a)-[r:{rel_type}]->(b)
                     SET r = $properties
                     RETURN r
-                    """ % rel["type"]
+                    """
                     
                     result = session.run(
                         query,
-                        source_id=rel["source"],
-                        target_id=rel["target"],
-                        properties=rel.get("properties", {})
+                        source_id=source_id,
+                        target_id=target_id,
+                        properties=rel_props
                     )
-                    logger.info(f"Created relationship: {rel['type']} from {rel['source']} to {rel['target']}")
+                    logger.info(f"Merged relationship: {rel_type} from {source_id} to {target_id}")
             
             driver.close()
             
@@ -1541,6 +1651,8 @@ class IngestionWorkflow:
             "recognition_result": None,
             "is_accepted": False,
             "rejection_reason": None,
+            "file_hash": None,
+            "is_duplicate": False,
             "document_type": None,
             "parsed_content": None,
             "extracted_data": None,

@@ -9176,5 +9176,283 @@
       "timestamp": ""
     },
     "timestamp": "2025-09-03T14:27:42.554734"
+  },
+  {
+    "id": "c1403631-8428-4f30-b17d-068de188d942",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-03T15:20:50.426310"
+  },
+  {
+    "id": "a0630ec4-dae1-4b7b-a6c5-f631a30fc70f",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                            ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-03T15:21:07.755401"
+  },
+  {
+    "id": "97c33a78-7823-4cb8-a41c-fa533a98a1b3",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf\nDocument Type: waste_manifest\nParsing Instructions: \n                Extract the following information from this waste manifest:\n                - Manifest tracking number and type (hazardous/non-hazardous)\n                - Issue date and document status\n                - Generator information (company name, EPA ID, contact person, phone, address)\n                - Transporter information (company name, EPA ID, vehicle ID, driver name, driver license)\n                - Receiving facility information (facility name, EPA ID, contact person, phone,... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "waste_manifest",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-03T15:21:10.555069"
+  },
+  {
+    "id": "2813b4de-ca95-4071-8283-12f9eddfad07",
+    "role": "assistant",
+    "content": "Parsed 1 pages from waste_manifest document\nFirst page preview: Here is the extracted information from the waste manifest:\n\n### Manifest Information\n- **Manifest Tracking Number**: EES-2025-0715-A45\n- **Type**: Non-Hazardous\n- **Issue Date**: 07/15/2025\n- **Docume...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "waste_manifest",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-03T15:21:28.369901"
+  },
+  {
+    "id": "5ea9e658-618a-4345-927d-682dec7e2b0a",
+    "role": "user",
+    "content": "Here is the extracted information from the waste manifest:\n\n### Manifest Information\n- **Manifest Tracking Number**: EES-2025-0715-A45\n- **Type**: Non-Hazardous\n- **Issue Date**: 07/15/2025\n- **Document Status**: Not specified\n\n### Generator Information\n| Field                | Details                          |\n|----------------------|----------------------------------|\n| Company Name         | Apex Manufacturing Inc.          |\n| EPA ID               | CAL000123456                     |\n| Contact Person       | John Doe, EHS Manager            |\n| Phone                | (555) 123-7890                  |\n| Address              | 789 Production Way, Mechanicsburg, CA 93011 |\n\n### Transporter Information\n| Field                | Details                          |\n|----------------------|----------------------------------|\n| Company Name         | Evergreen Environmental           |\n| EPA ID               | Not specified                    |\n| Vehicle ID           | Truck 72                         |\n| Driver Name          | M. Smith                         |\n| Driver License        | Not specified                    |\n| Address              | 333 Disposal Rd, Greenville, CA 91101 |\n| Phone                | (555) 555-1234                  |\n\n### Receiving Facility Information\n| Field                | Details                          |\n|----------------------|----------------------------------|\n| Facility Name        | Green Valley Landfill            |\n| EPA ID               | CAL000654321                     |\n| Contact Person       | Not specified                    |\n| Phone                | Not specified                    |\n| Address              | 100 Landfill Lane, Greenville, CA 91102 |\n\n### Waste Items\n| Line Item | Container Type          | Quantity | Description                                                        | Classification |\n|-----------|-------------------------|----------|--------------------------------------------------------------------|-----------------|\n| 1         | Open Top Roll-off       | 1        | Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric) | Non-Hazardous   |\n\n### Special Handling Instructions\n- No special handling required. Material is non-hazardous solid waste. PO Number: 98765\n\n### Certification Dates and Signatures\n| Role        | Signature     | Date       |\n|-------------|---------------|------------|\n| Generator    | John Doe      | 07/15/2025 |\n| Transporter   | M. Smith      | 07/1       |\n\n### Total Waste Quantity\n- **Total Waste Quantity**: 1\n- **Unit**: Open Top Roll-off\n\nThis information has been organized and preserved in a structured format for clarity.",
+    "context": {
+      "document_type": "waste_manifest",
+      "extractor_name": "WasteManifestExtractor",
+      "timestamp": "2025-09-03T15:21:28.362709",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-2.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-09-03T15:21:28.382566"
+  },
+  {
+    "id": "5031c62a-c7f1-43ac-874e-c080dbc8bd9f",
+    "role": "assistant",
+    "content": "Based on the provided information, the extracted data in JSON format would be:\n\n```json\n{\n  \"manifest_tracking_number\": \"EES-2025-0715-A45\",\n  \"manifest_type\": \"Non-Hazardous\",\n  \"issue_date\": \"2025-07-15\",\n  \"document_status\": \"Not specified\",\n  \"generator_name\": \"Apex Manufacturing Inc.\",\n  \"generator_epa_id\": \"CAL000123456\",\n  \"generator_contact_person\": \"John Doe, EHS Manager\",\n  \"generator_phone\": \"(555) 123-7890\",\n  \"generator_address\": \"789 Production Way, Mechanicsburg, CA 93011\",\n  \"transporter_name\": \"Evergreen Environmental\",\n  \"transporter_epa_id\": null,\n  \"vehicle_id\": \"Truck 72\",\n  \"driver_name\": \"M. Smith\",\n  \"driver_license\": null,\n  \"facility_name\": \"Green Valley Landfill\",\n  \"facility_epa_id\": \"CAL000654321\",\n  \"facility_contact_person\": null,\n  \"facility_phone\": null,\n  \"facility_address\": \"100 Landfill Lane, Greenville, CA 91102\",\n  \"waste_items\": [\n    {\n      \"description\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\",\n      \"container_type\": \"Open Top Roll-off\",\n      \"container_quantity\": 1,\n      \"weight_per_container\": null,\n      \"total_weight\": null,\n      \"classification\": \"Non-Hazardous\",\n      \"estimated_weight_note\": \"Weight estimation needed based on container type and contents\"\n    }\n  ],\n  \"generator_certification_date\": \"2025-07-15\",\n  \"generator_signature\": \"John Doe\",\n  \"transporter_acknowledgment_date\": \"2025-07-01\",\n  \"transporter_signature\": \"M. Smith\",\n  \"facility_certification_date\": null,\n  \"facility_signature\": null,\n  \"special_handling_instructions\": \"No special handling required. Material is non-hazardous solid waste. PO Number: 98765\",\n  \"total_waste_quantity\": null,\n  \"total_waste_unit\": null\n}\n```\n\nPlease note that some fields are set to `null` as they were not specified in the provided information. Also, the `total_waste_quantity` and `total_waste_unit` are set to `null` as the weight of the waste was not provided.",
+    "context": {
+      "document_type": "waste_manifest",
+      "extractor_name": "WasteManifestExtractor",
+      "timestamp": "2025-09-03T15:21:43.255805",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-2.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-09-03T15:21:43.283815"
+  },
+  {
+    "id": "9bd0f447-26b9-4cbe-a43e-065f2f559524",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-03T15:21:49.545996"
+  },
+  {
+    "id": "663e080f-b485-4750-acb9-c44dc0599a24",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage     ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-03T15:22:06.981440"
+  },
+  {
+    "id": "37fac727-e1f6-49b2-8bd3-4d5d0881857a",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf\nDocument Type: water_bill\nParsing Instructions: \n                Extract the following information from this water utility bill:\n                - Account number and service address\n                - Customer name and billing address (billed to)\n                - Facility name and address (service location)\n                - Water utility provider information\n                - Billing period (start and end dates)\n                - Statement date and due date\n                - Water consumption in gallons (and cubic meters if provided)\n       ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "water_bill",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-03T15:22:09.686192"
+  },
+  {
+    "id": "985cfc40-c07c-4f58-9ffe-1c4fb3b628b0",
+    "role": "user",
+    "content": "Here is the extracted information from the water utility bill:\n\n### Account Information\n- **Account Number:** 44-19872-11-9\n- **Service Address:** 789 Production Way, Mechanicsburg, CA 93011\n\n### Customer Information\n- **Customer Name:** Apex Manufacturing Inc.\n- **Billing Address:** 456 Industrial Ave., Mechanicsburg, CA 93011\n\n### Facility Information\n- **Facility Name:** Apex Manufacturing - Plant A\n- **Facility Address:** 789 Production Way, Mechanicsburg, CA 93011\n\n### Water Utility Provider Information\n- **Provider Name:** Aquaflow Municipal Water\n- **Provider Address:** 789 Reservoir Road, Clearwater, CA 90330\n- **Provider Phone:** (800) 555-0211\n- **Provider Website:** www.aquaflow.gov\n\n### Billing Period\n- **Start Date:** June 1, 2025\n- **End Date:** June 30, 2025\n\n### Statement Information\n- **Statement Date:** July 6, 2025\n- **Due Date:** August 5, 2025\n\n### Water Consumption\n- **Water Consumption:** 250,000 gallons\n\n### Meter Readings\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage         |\n|---------------|--------------|------------------|------------------|---------------|\n| WTR-MAIN-01   | Commercial   | 8,765,400 gal    | 9,015,400 gal    | 250,000 gal   |\n\n### Charges Breakdown\n| Description                                          | Rate                | Amount      |\n|------------------------------------------------------|---------------------|-------------|\n| Water Consumption (250,000 Gallons)                  | $0.0150 / Gallon    | $3,750.00   |\n| Sewer Service Charge (Based on water usage)          |                     | $950.00     |\n| Stormwater Management Fee                              |                     | $125.00     |\n| State Water Conservation Tax                           |                     | $61.50      |\n| Infrastructure Improvement Surcharge                   |                     | $5.00       |\n| **Total Current Charges**                              |                     | **$4,891.50** |\n\n### Total Amount Due\n- **Total Amount Due:** $4,891.50",
+    "context": {
+      "document_type": "water_bill",
+      "extractor_name": "WaterBillExtractor",
+      "timestamp": "2025-09-03T15:22:27.390342",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-3.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-09-03T15:22:27.401457"
+  },
+  {
+    "id": "2edfea8e-5661-4658-82b5-63b4a77fdbad",
+    "role": "assistant",
+    "content": "Parsed 1 pages from water_bill document\nFirst page preview: Here is the extracted information from the water utility bill:\n\n### Account Information\n- **Account Number:** 44-19872-11-9\n- **Service Address:** 789 Production Way, Mechanicsburg, CA 93011\n\n### Cust...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "water_bill",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-03T15:22:27.416865"
+  },
+  {
+    "id": "50c54816-1b83-4ade-9839-012c58152b82",
+    "role": "assistant",
+    "content": "{\n  \"billing_period_start\": \"2025-06-01\",\n  \"billing_period_end\": \"2025-06-30\",\n  \"statement_date\": \"2025-07-06\",\n  \"due_date\": \"2025-08-05\",\n  \"account_number\": \"44-19872-11-9\",\n  \"service_address\": \"789 Production Way, Mechanicsburg, CA 93011\",\n  \"facility_name\": \"Apex Manufacturing - Plant A\",\n  \"facility_address\": \"789 Production Way, Mechanicsburg, CA 93011\",\n  \"customer_name\": \"Apex Manufacturing Inc.\",\n  \"customer_address\": \"456 Industrial Ave., Mechanicsburg, CA 93011\",\n  \"customer_attention\": null,\n  \"provider_name\": \"Aquaflow Municipal Water\",\n  \"provider_address\": \"789 Reservoir Road, Clearwater, CA 90330\",\n  \"provider_phone\": \"(800) 555-0211\",\n  \"provider_website\": \"www.aquaflow.gov\",\n  \"provider_payment_address\": null,\n  \"total_gallons\": 250000,\n  \"total_cubic_meters\": null,\n  \"total_cost\": 4891.50,\n  \"water_consumption_cost\": 3750.00,\n  \"sewer_service_charge\": 950.00,\n  \"stormwater_fee\": 125.00,\n  \"conservation_tax\": 61.50,\n  \"infrastructure_surcharge\": 5.00,\n  \"meter_readings\": [\n    {\n      \"meter_id\": \"WTR-MAIN-01\",\n      \"type\": \"water\",\n      \"service_type\": \"Commercial\",\n      \"previous_reading\": 8765400,\n      \"current_reading\": 9015400,\n      \"usage\": 250000,\n      \"unit\": \"gallons\"\n    }\n  ],\n  \"water_rate\": 0.0150,\n  \"rate_unit\": \"per gallon\"\n}",
+    "context": {
+      "document_type": "water_bill",
+      "extractor_name": "WaterBillExtractor",
+      "timestamp": "2025-09-03T15:22:38.853517",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-3.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-09-03T15:22:38.861559"
+  },
+  {
+    "id": "451d520f-1749-4798-b09d-568570bc10cb",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-03T15:22:44.325915"
+  },
+  {
+    "id": "67cb2899-76ab-4402-9d5a-5d6b9c1dc586",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Rea...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-03T15:23:01.269786"
+  },
+  {
+    "id": "ea174d87-344e-47e6-ac7e-55442be18810",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf\nDocument Type: electricity_bill\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "electricity_bill",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-03T15:23:03.959604"
+  },
+  {
+    "id": "b811ca66-871a-4979-a882-d66877edecc5",
+    "role": "assistant",
+    "content": "Parsed 1 pages from electricity_bill document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Rea...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "electricity_bill",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-03T15:23:27.102809"
+  },
+  {
+    "id": "91c3935d-e902-480a-abab-50b4a7a331bd",
+    "role": "user",
+    "content": "Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Reading |\n|--------------|---------------------------|------------------|------------------|\n| MTR-7743-A   | Commercial - Peak         | 543210 kWh       | 613210 kWh       |\n| MTR-7743-B   | Commercial - Off-Peak     | 891234 kWh       | 951234 kWh       |\n| **Total Consumption** |                   |                  | **130,000 kWh**  |\n\n**Current Charges Breakdown**\n| Description                                   | Rate              | Amount      |\n|-----------------------------------------------|-------------------|-------------|\n| Peak Demand Usage (70,000 kWh)               | $0.1255 / kWh     | $8,785.00   |\n| Off-Peak Demand Usage (60,000 kWh)           | $0.0890 / kWh     | $5,340.00   |\n| Base Service Charge                           |                   | $250.00     |\n| State Environmental Surcharge                 |                   | $875.50     |\n| Grid Infrastructure Fee                        |                   | $182.39     |\n| **Total Current Charges**                     |                   | **$15,432.89** |\n\n### Dates and Time Periods\n- Statement Date: July 5, 2025\n- Due Date: August 1, 2025\n- Billing Period: June 1, 2025 to June 30, 2025\n\n### Quantities and Measurements\n- Total Consumption: 130,000 kWh\n- Peak Demand Usage: 70,000 kWh\n- Off-Peak Demand Usage: 60,000 kWh\n\n### Costs and Financial Information\n- Amount Due: $15,432.89\n- Peak Demand Usage Charge: $8,785.00\n- Off-Peak Demand Usage Charge: $5,340.00\n- Base Service Charge: $250.00\n- State Environmental Surcharge: $875.50\n- Grid Infrastructure Fee: $182.39\n\n### Compliance-related Information\n- State Environmental Surcharge: $875.50 (implies compliance with environmental regulations)\n\n### Environmental Metrics\n- State Environmental Surcharge: $875.50 (indicates a charge related to environmental impact)\n\nThis structured data provides a clear overview of the utility statement for Apex Manufacturing Inc.",
+    "context": {
+      "document_type": "utility_bill",
+      "extractor_name": "UtilityBillExtractor",
+      "timestamp": "2025-09-03T15:23:27.091455",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-1.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-09-03T15:23:27.116766"
+  },
+  {
+    "id": "fc3582c8-de57-4e3e-acca-b255313e6afc",
+    "role": "assistant",
+    "content": "Based on the provided information, here is the extracted data in JSON format:\n\n```json\n{\n  \"billing_period_start\": \"2025-06-01\",\n  \"billing_period_end\": \"2025-06-30\",\n  \"statement_date\": \"2025-07-05\",\n  \"due_date\": \"2025-08-01\",\n  \"account_number\": null,\n  \"service_address\": null,\n  \"facility_name\": null,\n  \"facility_address\": null,\n  \"customer_name\": \"Apex Manufacturing Inc.\",\n  \"customer_address\": null,\n  \"customer_attention\": null,\n  \"provider_name\": null,\n  \"provider_address\": null,\n  \"provider_phone\": null,\n  \"provider_website\": null,\n  \"provider_payment_address\": null,\n  \"total_kwh\": 130000,\n  \"peak_kwh\": 70000,\n  \"off_peak_kwh\": 60000,\n  \"peak_demand_kw\": null,\n  \"gas_usage_therms\": null,\n  \"gas_usage_ccf\": null,\n  \"water_usage_gallons\": null,\n  \"water_usage_cubic_meters\": null,\n  \"total_cost\": 15432.89,\n  \"energy_cost\": null,\n  \"demand_charges\": null,\n  \"base_service_charge\": 250.00,\n  \"state_environmental_surcharge\": 875.50,\n  \"grid_infrastructure_fee\": 182.39,\n  \"charge_breakdown\": [\n    {\n      \"description\": \"Peak Demand Usage\",\n      \"rate\": 0.1255,\n      \"amount\": 8785.00\n    },\n    {\n      \"description\": \"Off-Peak Demand Usage\",\n      \"rate\": 0.0890,\n      \"amount\": 5340.00\n    },\n    {\n      \"description\": \"Base Service Charge\",\n      \"rate\": null,\n      \"amount\": 250.00\n    },\n    {\n      \"description\": \"State Environmental Surcharge\",\n      \"rate\": null,\n      \"amount\": 875.50\n    },\n    {\n      \"description\": \"Grid Infrastructure Fee\",\n      \"rate\": null,\n      \"amount\": 182.39\n    }\n  ],\n  \"rate_schedule\": null,\n  \"meter_readings\": [\n    {\n      \"meter_id\": \"MTR-7743-A\",\n      \"type\": \"electricity\",\n      \"service_type\": \"Commercial - Peak\",\n      \"previous_reading\": 543210,\n      \"current_reading\": 613210,\n      \"usage\": 70000\n    },\n    {\n      \"meter_id\": \"MTR-7743-B\",\n      \"type\": \"electricity\",\n      \"service_type\": \"Commercial - Off-Peak\",\n      \"previous_reading\": 891234,\n      \"current_reading\": 951234,\n      \"usage\": 60000\n    }\n  ]\n}\n```",
+    "context": {
+      "document_type": "utility_bill",
+      "extractor_name": "UtilityBillExtractor",
+      "timestamp": "2025-09-03T15:23:47.240024",
+      "metadata": {
+        "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+        "original_filename": "document-1.pdf",
+        "batch_processing": true
+      }
+    },
+    "timestamp": "2025-09-03T15:23:47.265186"
+  },
+  {
+    "id": "7b110975-9b37-4a90-a149-79bda67d23b7",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-03T15:23:53.398105"
+  },
+  {
+    "id": "bcc00d68-4435-41bd-bfc6-c42a56731364",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount   | Quantity | Total Amount |\n|----------...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-03T15:24:16.337604"
   }
 ]
