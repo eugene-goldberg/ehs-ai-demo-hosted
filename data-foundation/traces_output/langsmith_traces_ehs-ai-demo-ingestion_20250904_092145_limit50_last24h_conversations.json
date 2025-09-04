@@ -1,0 +1,517 @@
+{
+  "metadata": {
+    "project_name": "ehs-ai-demo-ingestion",
+    "download_time": "2025-09-04T09:21:45.079672",
+    "filters_applied": {
+      "start_time": "2025-09-03 14:21:42.475865+00:00",
+      "end_time": "2025-09-04 14:21:42.475865+00:00",
+      "hours": 24,
+      "limit": 50
+    },
+    "total_traces_processed": 50,
+    "conversations_extracted": 50,
+    "extraction_mode": "conversations_only"
+  },
+  "conversations": [
+    {
+      "run_id": "d3d9124a-bf2e-4d1d-9065-1091680c4949",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T13:59:51.213514",
+      "end_time": "2025-09-04T13:59:54.372845",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains details about electricity usage, meter readings, and charges related to electricity consumption, which are typical features of an electricity bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "acbb96a9-159f-47cd-a28d-c981dde9cfbe",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T13:59:31.037883",
+      "end_time": "2025-09-04T13:59:33.613373",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains details about water usage, sewer charges, and meter readings, which are typical features of a water bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "dd2e38cd-7671-4809-bd33-26b6cfb5aad2",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T13:58:57.056968",
+      "end_time": "2025-09-04T13:59:00.160013",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste type, generator/transporter details, and EPA IDs, which are characteristic of waste manifests.\"}",
+      "error": null
+    },
+    {
+      "run_id": "99675796-bb4d-4be0-84ba-19f04f979217",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:48:49.089073",
+      "end_time": "2025-09-04T01:48:50.935739",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about electricity usage, meter readings, and charges related to electricity consumption, which are typical features of an electricity bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "77b60d2f-2211-4075-93b7-c00db03adc33",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:48:25.131679",
+      "end_time": "2025-09-04T01:48:27.179138",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about water usage, sewer charges, and meter readings, which are typical contents of a water bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "d8b3e369-cbd3-474b-aa5a-b8ba7dd2a57b",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:48:05.572707",
+      "end_time": "2025-09-04T01:48:07.829986",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste type, generator/transporter details, and EPA IDs which are typical in waste tracking documents.\"}",
+      "error": null
+    },
+    {
+      "run_id": "174c6144-2c79-40e8-905b-072a50259de4",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:40:36.240167",
+      "end_time": "2025-09-04T01:40:38.447124",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains detailed information about electricity usage, meter readings, and charges related to electricity consumption, which are typical features of an electricity bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "1b96ad93-8a88-4de6-88fa-ac91b0e55805",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:40:12.269985",
+      "end_time": "2025-09-04T01:40:14.327681",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains detailed information about water usage, meter readings, and charges related to water and sewer services, which are typical features of a water bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "bd6e9288-eae1-48d1-ba64-7bdf102c83ea",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:39:53.129764",
+      "end_time": "2025-09-04T01:39:55.179276",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste type, generator/transporter details, EPA IDs, and compliance declaration, which are typical features of a waste manifest document.\"}",
+      "error": null
+    },
+    {
+      "run_id": "f21f1284-61fd-4caa-a20b-8a3548b55888",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:25:41.435135",
+      "end_time": "2025-09-04T01:25:43.609225",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains detailed information about electricity usage, meter readings, and charges related to electricity consumption. It also mentions terms like 'kWh', 'peak demand', and 'off-peak demand' which are specific to electricity usage.\"}",
+      "error": null
+    },
+    {
+      "run_id": "87ee6503-aa3e-4bd7-9d1e-595e3e1c0313",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:25:21.248160",
+      "end_time": "2025-09-04T01:25:24.334926",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains detailed information about water usage, meter readings, and charges related to water and sewer services, which are typical features of a water bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "cdab6ff7-4061-4f3c-9e67-268e862901d7",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:25:00.922478",
+      "end_time": "2025-09-04T01:25:03.932732",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste type, quantity, generator and transporter details, and EPA IDs, which are typical features of a waste manifest document.\"}",
+      "error": null
+    },
+    {
+      "run_id": "1b9f3e9d-b9f8-4fe1-b30c-7a81524b79c8",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:23:08.480599",
+      "end_time": "2025-09-04T01:23:11.137259",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains detailed information about electricity usage, meter readings, and charges related to electricity consumption. Key terms such as 'electric', 'kwh', 'electricity', and 'peak demand' also indicate that this is an electricity bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "6823ac7f-6eb9-4380-a08b-ae738838caf7",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:22:49.323404",
+      "end_time": "2025-09-04T01:22:51.586022",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains details about water usage, sewer charges, and meter readings, which are typical characteristics of a water bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "0f49f6b0-8956-4363-82fe-78f3d17692d0",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:22:30.326666",
+      "end_time": "2025-09-04T01:22:32.537080",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste type, generator, transporter, and receiving facility, which are typical features of a waste manifest document.\"}",
+      "error": null
+    },
+    {
+      "run_id": "22e19164-6d84-444f-914f-1a0444a27705",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:20:39.792893",
+      "end_time": "2025-09-04T01:20:42.318754",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about electricity usage, meter readings, and charges related to electricity consumption, which are typical features of an electricity bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "eabcbf0b-c956-41e3-a29c-8ecc4d91c9bc",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:20:20.126818",
+      "end_time": "2025-09-04T01:20:22.459391",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains detailed information about water usage, meter readings, and charges related to water and sewer services, which are typical features of a water bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "f5cbf4d4-6dcc-4464-a5c3-d3baaf6ed07d",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T01:20:00.731027",
+      "end_time": "2025-09-04T01:20:03.027807",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste type, quantity, generator and transporter details, and EPA IDs, which are typical features of a waste manifest document.\"}",
+      "error": null
+    },
+    {
+      "run_id": "ebd48b77-a484-4863-8634-230bf4ddd3a6",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T21:38:55.317971",
+      "end_time": "2025-09-03T21:38:57.983910",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains details about electricity usage, meter readings, and charges related to electricity consumption, which are typical features of an electricity bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "2f3eb3e8-318f-456a-99d8-a0b7aaacfc10",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T21:38:31.149925",
+      "end_time": "2025-09-03T21:38:33.512305",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains detailed information about water usage, sewer charges, and meter readings, which are typical elements of a water bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "4827ba86-0a1d-4a37-b9a6-42ad958aae36",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T21:38:02.893342",
+      "end_time": "2025-09-03T21:38:08.323387",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste type, generator/shipper, transporter, and receiving facility, which are typical features of a waste manifest document. It also includes EPA ID numbers and a description of the waste, further confirming its classification.\"}",
+      "error": null
+    },
+    {
+      "run_id": "987b8121-609c-4394-b0f2-05f960b0f89e",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T21:30:51.582810",
+      "end_time": "2025-09-03T21:30:54.656579",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains details about electricity usage, meter readings, and charges related to electricity consumption. It also mentions terms like 'kWh', 'peak demand', and 'off-peak demand' which are typically found in electricity bills.\"}",
+      "error": null
+    },
+    {
+      "run_id": "5ac25ce9-ea2d-4f66-a03c-1178e024cb51",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T21:30:33.146503",
+      "end_time": "2025-09-03T21:30:35.199295",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains detailed information about water usage, meter readings, and charges related to water and sewer services, which are typical features of a water bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "3366572c-e866-4deb-8b01-b5fe8fc8299c",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T21:30:07.241578",
+      "end_time": "2025-09-03T21:30:10.417126",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste type, generator/shipper, transporter, and receiving facility, which are typical features of a waste manifest document. It also includes EPA IDs and a declaration of compliance, further indicating that it's a waste manifest.\"}",
+      "error": null
+    },
+    {
+      "run_id": "1eb370f3-30c3-41cb-9eda-9da5e5f452fe",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T21:06:14.890715",
+      "end_time": "2025-09-03T21:06:16.731320",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about electricity usage, meter readings, and charges for peak and off-peak usage, which are typical features of an electricity bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "0313107a-1252-4cd7-b0f2-320361b0e875",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T21:05:50.823834",
+      "end_time": "2025-09-03T21:05:53.076974",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about water usage, sewer charges, and meter readings, which are typical features of a water bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "49a33473-64be-4c2e-9bf5-e4a6428d7422",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T21:05:26.862401",
+      "end_time": "2025-09-03T21:05:28.812215",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste type, generator/shipper, transporter, and receiving facility, which are typical elements of a waste manifest document.\"}",
+      "error": null
+    },
+    {
+      "run_id": "2faf5cc6-97ca-4f95-85d7-507c47e9900f",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T20:58:21.908618",
+      "end_time": "2025-09-03T20:58:24.459436",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains details about electricity usage, meter readings, and charges related to electricity consumption, which are typical features of an electricity bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "fd78fbbd-06ee-40d5-a955-53875bef9484",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T20:58:02.241219",
+      "end_time": "2025-09-03T20:58:05.304738",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about water usage, sewer charges, and meter readings, which are typical features of a water bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "6113a8b6-7b55-43da-9b27-7691b8977d20",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T20:57:42.440689",
+      "end_time": "2025-09-03T20:57:44.737917",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste management, including waste type, generator and facility EPA IDs, and transporter acknowledgment. It also mentions quantities and types of waste, which are typical features of a waste manifest document.\"}",
+      "error": null
+    },
+    {
+      "run_id": "10aebdc6-6929-4440-88f5-5ee14e4f19fb",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T20:23:27.092183",
+      "end_time": "2025-09-03T20:23:47.239850",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "Based on the provided information, here is the extracted data in JSON format:\n\n```json\n{\n  \"billing_period_start\": \"2025-06-01\",\n  \"billing_period_end\": \"2025-06-30\",\n  \"statement_date\": \"2025-07-05\",\n  \"due_date\": \"2025-08-01\",\n  \"account_number\": null,\n  \"service_address\": null,\n  \"facility_name\": null,\n  \"facility_address\": null,\n  \"customer_name\": \"Apex Manufacturing Inc.\",\n  \"customer_address\": null,\n  \"customer_attention\": null,\n  \"provider_name\": null,\n  \"provider_address\": null,\n  \"provider_phone\": null,\n  \"provider_website\": null,\n  \"provider_payment_address\": null,\n  \"total_kwh\": 130000,\n  \"peak_kwh\": 70000,\n  \"off_peak_kwh\": 60000,\n  \"peak_demand_kw\": null,\n  \"gas_usage_therms\": null,\n  \"gas_usage_ccf\": null,\n  \"water_usage_gallons\": null,\n  \"water_usage_cubic_meters\": null,\n  \"total_cost\": 15432.89,\n  \"energy_cost\": null,\n  \"demand_charges\": null,\n  \"base_service_charge\": 250.00,\n  \"state_environmental_surcharge\": 875.50,\n  \"grid_infrastructure_fee\": 182.39,\n  \"charge_breakdown\": [\n    {\n      \"description\": \"Peak Demand Usage\",\n      \"rate\": 0.1255,\n      \"amount\": 8785.00\n    },\n    {\n      \"description\": \"Off-Peak Demand Usage\",\n      \"rate\": 0.0890,\n      \"amount\": 5340.00\n    },\n    {\n      \"description\": \"Base Service Charge\",\n      \"rate\": null,\n      \"amount\": 250.00\n    },\n    {\n      \"description\": \"State Environmental Surcharge\",\n      \"rate\": null,\n      \"amount\": 875.50\n    },\n    {\n      \"description\": \"Grid Infrastructure Fee\",\n      \"rate\": null,\n      \"amount\": 182.39\n    }\n  ],\n  \"rate_schedule\": null,\n  \"meter_readings\": [\n    {\n      \"meter_id\": \"MTR-7743-A\",\n      \"type\": \"electricity\",\n      \"service_type\": \"Commercial - Peak\",\n      \"previous_reading\": 543210,\n      \"current_reading\": 613210,\n      \"usage\": 70000\n    },\n    {\n      \"meter_id\": \"MTR-7743-B\",\n      \"type\": \"electricity\",\n      \"service_type\": \"Commercial - Off-Peak\",\n      \"previous_reading\": 891234,\n      \"current_reading\": 951234,\n      \"usage\": 60000\n    }\n  ]\n}\n```",
+      "error": null
+    },
+    {
+      "run_id": "aaec902a-8eeb-404f-a032-8b0c70b4fa26",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T20:23:01.252636",
+      "end_time": "2025-09-03T20:23:03.926090",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains details about electricity usage, meter readings, and charges related to electricity consumption. It also mentions terms like 'kWh', 'electricity', and 'usage' which are typically found in electricity bills.\"}",
+      "error": null
+    },
+    {
+      "run_id": "c7abdb00-d13a-4a0f-9574-3af1d1b1eb81",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T20:22:27.391100",
+      "end_time": "2025-09-03T20:22:38.853375",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\n  \"billing_period_start\": \"2025-06-01\",\n  \"billing_period_end\": \"2025-06-30\",\n  \"statement_date\": \"2025-07-06\",\n  \"due_date\": \"2025-08-05\",\n  \"account_number\": \"44-19872-11-9\",\n  \"service_address\": \"789 Production Way, Mechanicsburg, CA 93011\",\n  \"facility_name\": \"Apex Manufacturing - Plant A\",\n  \"facility_address\": \"789 Production Way, Mechanicsburg, CA 93011\",\n  \"customer_name\": \"Apex Manufacturing Inc.\",\n  \"customer_address\": \"456 Industrial Ave., Mechanicsburg, CA 93011\",\n  \"customer_attention\": null,\n  \"provider_name\": \"Aquaflow Municipal Water\",\n  \"provider_address\": \"789 Reservoir Road, Clearwater, CA 90330\",\n  \"provider_phone\": \"(800) 555-0211\",\n  \"provider_website\": \"www.aquaflow.gov\",\n  \"provider_payment_address\": null,\n  \"total_gallons\": 250000,\n  \"total_cubic_meters\": null,\n  \"total_cost\": 4891.50,\n  \"water_consumption_cost\": 3750.00,\n  \"sewer_service_charge\": 950.00,\n  \"stormwater_fee\": 125.00,\n  \"conservation_tax\": 61.50,\n  \"infrastructure_surcharge\": 5.00,\n  \"meter_readings\": [\n    {\n      \"meter_id\": \"WTR-MAIN-01\",\n      \"type\": \"water\",\n      \"service_type\": \"Commercial\",\n      \"previous_reading\": 8765400,\n      \"current_reading\": 9015400,\n      \"usage\": 250000,\n      \"unit\": \"gallons\"\n    }\n  ],\n  \"water_rate\": 0.0150,\n  \"rate_unit\": \"per gallon\"\n}",
+      "error": null
+    },
+    {
+      "run_id": "9c97895b-d833-4cf5-9781-5181c6ccc4fb",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T20:22:06.973290",
+      "end_time": "2025-09-03T20:22:09.659643",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about water usage, meter readings, and charges related to water and sewer services, which are typical contents of a water bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "a3c0e3d5-83b4-4588-b102-40b55808ad13",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T20:21:28.363137",
+      "end_time": "2025-09-03T20:21:43.255671",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "Based on the provided information, the extracted data in JSON format would be:\n\n```json\n{\n  \"manifest_tracking_number\": \"EES-2025-0715-A45\",\n  \"manifest_type\": \"Non-Hazardous\",\n  \"issue_date\": \"2025-07-15\",\n  \"document_status\": \"Not specified\",\n  \"generator_name\": \"Apex Manufacturing Inc.\",\n  \"generator_epa_id\": \"CAL000123456\",\n  \"generator_contact_person\": \"John Doe, EHS Manager\",\n  \"generator_phone\": \"(555) 123-7890\",\n  \"generator_address\": \"789 Production Way, Mechanicsburg, CA 93011\",\n  \"transporter_name\": \"Evergreen Environmental\",\n  \"transporter_epa_id\": null,\n  \"vehicle_id\": \"Truck 72\",\n  \"driver_name\": \"M. Smith\",\n  \"driver_license\": null,\n  \"facility_name\": \"Green Valley Landfill\",\n  \"facility_epa_id\": \"CAL000654321\",\n  \"facility_contact_person\": null,\n  \"facility_phone\": null,\n  \"facility_address\": \"100 Landfill Lane, Greenville, CA 91102\",\n  \"waste_items\": [\n    {\n      \"description\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\",\n      \"container_type\": \"Open Top Roll-off\",\n      \"container_quantity\": 1,\n      \"weight_per_container\": null,\n      \"total_weight\": null,\n      \"classification\": \"Non-Hazardous\",\n      \"estimated_weight_note\": \"Weight estimation needed based on container type and contents\"\n    }\n  ],\n  \"generator_certification_date\": \"2025-07-15\",\n  \"generator_signature\": \"John Doe\",\n  \"transporter_acknowledgment_date\": \"2025-07-01\",\n  \"transporter_signature\": \"M. Smith\",\n  \"facility_certification_date\": null,\n  \"facility_signature\": null,\n  \"special_handling_instructions\": \"No special handling required. Material is non-hazardous solid waste. PO Number: 98765\",\n  \"total_waste_quantity\": null,\n  \"total_waste_unit\": null\n}\n```\n\nPlease note that some fields are set to `null` as they were not specified in the provided information. Also, the `total_waste_quantity` and `total_waste_unit` are set to `null` as the weight of the waste was not provided.",
+      "error": null
+    },
+    {
+      "run_id": "9cc22443-c4ec-4443-9a16-23325587779d",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T20:21:07.746650",
+      "end_time": "2025-09-03T20:21:10.059802",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste type, generator/transporter details, and EPA IDs, which are typical features of a waste manifest document.\"}",
+      "error": null
+    },
+    {
+      "run_id": "454eb9e7-ac13-4bb7-9530-b40d0fb69441",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T19:26:40.511102",
+      "end_time": "2025-09-03T19:26:59.258375",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\n  \"billing_period_start\": \"2025-06-01\",\n  \"billing_period_end\": \"2025-06-30\",\n  \"statement_date\": \"2025-07-05\",\n  \"due_date\": \"2025-08-01\",\n  \"account_number\": null,\n  \"service_address\": null,\n  \"facility_name\": null,\n  \"facility_address\": null,\n  \"customer_name\": \"Apex Manufacturing Inc.\",\n  \"customer_address\": null,\n  \"customer_attention\": null,\n  \"provider_name\": null,\n  \"provider_address\": null,\n  \"provider_phone\": null,\n  \"provider_website\": null,\n  \"provider_payment_address\": null,\n  \"total_kwh\": 130000,\n  \"peak_kwh\": 70000,\n  \"off_peak_kwh\": 60000,\n  \"peak_demand_kw\": null,\n  \"gas_usage_therms\": null,\n  \"gas_usage_ccf\": null,\n  \"water_usage_gallons\": null,\n  \"water_usage_cubic_meters\": null,\n  \"total_cost\": 15432.89,\n  \"energy_cost\": null,\n  \"demand_charges\": null,\n  \"base_service_charge\": 250.00,\n  \"state_environmental_surcharge\": 875.50,\n  \"grid_infrastructure_fee\": 182.39,\n  \"charge_breakdown\": [\n    {\n      \"description\": \"Peak Demand Usage\",\n      \"rate\": 0.1255,\n      \"amount\": 8785.00\n    },\n    {\n      \"description\": \"Off-Peak Demand Usage\",\n      \"rate\": 0.0890,\n      \"amount\": 5340.00\n    },\n    {\n      \"description\": \"Base Service Charge\",\n      \"rate\": null,\n      \"amount\": 250.00\n    },\n    {\n      \"description\": \"State Environmental Surcharge\",\n      \"rate\": null,\n      \"amount\": 875.50\n    },\n    {\n      \"description\": \"Grid Infrastructure Fee\",\n      \"rate\": null,\n      \"amount\": 182.39\n    }\n  ],\n  \"rate_schedule\": null,\n  \"meter_readings\": [\n    {\n      \"meter_id\": \"MTR-7743-A\",\n      \"type\": \"electricity\",\n      \"service_type\": \"Commercial - Peak\",\n      \"previous_reading\": 543210,\n      \"current_reading\": 613210,\n      \"usage\": 70000\n    },\n    {\n      \"meter_id\": \"MTR-7743-B\",\n      \"type\": \"electricity\",\n      \"service_type\": \"Commercial - Off-Peak\",\n      \"previous_reading\": 891234,\n      \"current_reading\": 951234,\n      \"usage\": 60000\n    }\n  ]\n}",
+      "error": null
+    },
+    {
+      "run_id": "5c841d74-4792-496e-aece-c06eab139536",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T19:26:04.381252",
+      "end_time": "2025-09-03T19:26:06.403836",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about electricity usage, meter readings, and charges related to electricity consumption, which are typical features of an electricity bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "26cdec2a-a08b-4d80-bfde-9a2db4999a2f",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T19:25:19.098658",
+      "end_time": "2025-09-03T19:25:33.476115",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\n  \"billing_period_start\": \"2025-06-01\",\n  \"billing_period_end\": \"2025-06-30\",\n  \"statement_date\": \"2025-07-06\",\n  \"due_date\": \"2025-08-05\",\n  \"account_number\": \"44-19872-11-9\",\n  \"service_address\": \"789 Production Way, Mechanicsburg, CA 93011\",\n  \"facility_name\": \"Apex Manufacturing - Plant A\",\n  \"facility_address\": \"789 Production Way, Mechanicsburg, CA 93011\",\n  \"customer_name\": \"Apex Manufacturing Inc.\",\n  \"customer_address\": \"456 Industrial Ave., Mechanicsburg, CA 93011\",\n  \"customer_attention\": null,\n  \"provider_name\": \"Aquaflow Municipal Water\",\n  \"provider_address\": \"789 Reservoir Road, Clearwater, CA 90330\",\n  \"provider_phone\": \"(800) 555-0211\",\n  \"provider_website\": \"www.aquaflow.gov\",\n  \"provider_payment_address\": null,\n  \"total_gallons\": 250000,\n  \"total_cubic_meters\": null,\n  \"total_cost\": 4891.50,\n  \"water_consumption_cost\": 3750.00,\n  \"sewer_service_charge\": 950.00,\n  \"stormwater_fee\": 125.00,\n  \"conservation_tax\": 61.50,\n  \"infrastructure_surcharge\": 5.00,\n  \"meter_readings\": [\n    {\n      \"meter_id\": \"WTR-MAIN-01\",\n      \"type\": \"water\",\n      \"service_type\": \"Commercial\",\n      \"previous_reading\": 8765400,\n      \"current_reading\": 9015400,\n      \"usage\": 250000,\n      \"unit\": \"gallons\"\n    }\n  ],\n  \"water_rate\": 0.0150,\n  \"rate_unit\": \"per gallon\"\n}",
+      "error": null
+    },
+    {
+      "run_id": "b701d611-fec2-4791-b106-3fd8091981ed",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T19:24:57.324607",
+      "end_time": "2025-09-03T19:25:01.174822",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains detailed information about water usage, meter readings, and charges related to water and sewer services, which are typical features of a water bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "95cc8ca9-86e7-4dbf-b9ea-ac47d1e5828a",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T19:24:02.690757",
+      "end_time": "2025-09-03T19:24:26.474547",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "Based on the provided information, here is the extracted data in JSON format:\n\n```json\n{\n  \"manifest_tracking_number\": \"EES-2025-0715-A45\",\n  \"manifest_type\": \"Non-Hazardous\",\n  \"issue_date\": \"2025-07-15\",\n  \"document_status\": \"Active\",\n  \"generator_name\": \"Apex Manufacturing Inc.\",\n  \"generator_epa_id\": \"CAL000123456\",\n  \"generator_contact_person\": \"John Doe, EHS Manager\",\n  \"generator_phone\": \"(555) 123-7890\",\n  \"generator_address\": \"789 Production Way, Mechanicsburg, CA 93011\",\n  \"transporter_name\": \"Evergreen Environmental\",\n  \"transporter_epa_id\": null,\n  \"vehicle_id\": \"Truck 72\",\n  \"driver_name\": \"M. Smith\",\n  \"driver_license\": null,\n  \"facility_name\": \"Green Valley Landfill\",\n  \"facility_epa_id\": \"CAL000654321\",\n  \"facility_contact_person\": null,\n  \"facility_phone\": null,\n  \"facility_address\": \"100 Landfill Lane, Greenville, CA 91102\",\n  \"waste_items\": [\n    {\n      \"description\": \"Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)\",\n      \"container_type\": \"Open Top Roll-off\",\n      \"container_quantity\": 1,\n      \"weight_per_container\": null,\n      \"total_weight\": null,\n      \"classification\": \"Non-Hazardous\",\n      \"estimated_weight_note\": \"Weight estimation needed based on container type and contents\"\n    }\n  ],\n  \"generator_certification_date\": \"2025-07-15\",\n  \"generator_signature\": \"John Doe\",\n  \"transporter_acknowledgment_date\": \"2025-07-01\",\n  \"transporter_signature\": \"M. Smith\",\n  \"facility_certification_date\": null,\n  \"facility_signature\": null,\n  \"special_handling_instructions\": \"No special handling required. Material is non-hazardous solid waste. PO Number: 98765\",\n  \"total_waste_quantity\": 1,\n  \"total_waste_unit\": \"Container\"\n}\n```\n\nPlease note that some fields are set to `null` as they were not provided in the original document. Also, the `total_waste_quantity` is set to 1, which refers to the number of containers, not the weight. The `total_waste_unit` is set to \"Container\" for the same reason.",
+      "error": null
+    },
+    {
+      "run_id": "344c28d9-1af9-46ff-ae3d-ea3633357ef6",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T19:23:42.504444",
+      "end_time": "2025-09-03T19:23:45.095593",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste type, generator/shipper, transporter, and receiving facility, which are typical features of a waste manifest document.\"}",
+      "error": null
+    },
+    {
+      "run_id": "650b1eda-1062-4ab5-b976-03ca86ad26b2",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T19:12:53.717661",
+      "end_time": "2025-09-03T19:13:04.056524",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2024-03-01\",\n  \"due_date\": null,\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Basic Fee wmView\",\n      \"quantity\": 1,\n      \"unit_price\": 130,\n      \"total\": 130\n    },\n    {\n      \"description\": \"Basis fee for additional user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Basic Fee wmPos\",\n      \"quantity\": 0,\n      \"unit_price\": 50,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Basic Fee wmGuide\",\n      \"quantity\": 0,\n      \"unit_price\": 1000,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Change of user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Transaction Fee T1\",\n      \"quantity\": 14,\n      \"unit_price\": 0.58,\n      \"total\": 8.12\n    },\n    {\n      \"description\": \"Transaction Fee T3\",\n      \"quantity\": 162,\n      \"unit_price\": 1.5,\n      \"total\": 243\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 381.12,\n  \"tax_amount\": 72.41,\n  \"total_amount\": 453.53\n}",
+      "error": null
+    },
+    {
+      "run_id": "bba23395-664e-43fa-af9e-1e966536bb4f",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T19:12:13.736509",
+      "end_time": "2025-09-03T19:12:24.611492",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2024-03-01\",\n  \"due_date\": null,\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Basic Fee wmView\",\n      \"quantity\": 1,\n      \"unit_price\": 130.00,\n      \"total\": 130.00\n    },\n    {\n      \"description\": \"Basis fee for additional user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Basic Fee wmPos\",\n      \"quantity\": 0,\n      \"unit_price\": 50.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Basic Fee wmGuide\",\n      \"quantity\": 0,\n      \"unit_price\": 1000.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Change of user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10.00,\n      \"total\": 0.00\n    },\n    {\n      \"description\": \"Transaction Fee T1\",\n      \"quantity\": 14,\n      \"unit_price\": 0.58,\n      \"total\": 8.12\n    },\n    {\n      \"description\": \"Transaction Fee T3\",\n      \"quantity\": 162,\n      \"unit_price\": 1.50,\n      \"total\": 243.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 381.12,\n  \"tax_amount\": 72.41,\n  \"total_amount\": 453.53\n}",
+      "error": null
+    },
+    {
+      "run_id": "ec9ca542-4a00-444a-8e84-f4bc47792fbe",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T19:11:34.358845",
+      "end_time": "2025-09-03T19:11:49.923093",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2024-03-01\",\n  \"due_date\": null,\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Basic Fee wmView\",\n      \"quantity\": 1,\n      \"unit_price\": 130,\n      \"total\": 130\n    },\n    {\n      \"description\": \"Basis fee for additional user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Basic Fee wmPos\",\n      \"quantity\": 0,\n      \"unit_price\": 50,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Basic Fee wmGuide\",\n      \"quantity\": 0,\n      \"unit_price\": 1000,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Change of user accounts\",\n      \"quantity\": 0,\n      \"unit_price\": 10,\n      \"total\": 0\n    },\n    {\n      \"description\": \"Transaction Fee T1\",\n      \"quantity\": 14,\n      \"unit_price\": 0.58,\n      \"total\": 8.12\n    },\n    {\n      \"description\": \"Transaction Fee T3\",\n      \"quantity\": 162,\n      \"unit_price\": 1.5,\n      \"total\": 243\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 381.12,\n  \"tax_amount\": 72.41,\n  \"total_amount\": 453.53\n}",
+      "error": null
+    },
+    {
+      "run_id": "058801fe-4524-461b-b919-55abb6261d47",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T19:10:52.271387",
+      "end_time": "2025-09-03T19:11:04.351597",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-05\",\n  \"due_date\": \"2025-08-01\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Peak Demand Usage (70,000 kWh)\",\n      \"quantity\": 70000,\n      \"unit_price\": 0.1255,\n      \"total\": 8785.00\n    },\n    {\n      \"description\": \"Off-Peak Demand Usage (60,000 kWh)\",\n      \"quantity\": 60000,\n      \"unit_price\": 0.0890,\n      \"total\": 5340.00\n    },\n    {\n      \"description\": \"Base Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 250.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": 875.50,\n  \"subtotal\": null,\n  \"tax_amount\": null,\n  \"total_amount\": 15432.89\n}",
+      "error": null
+    },
+    {
+      "run_id": "740cc414-f866-4a7e-b7a3-851436e540a7",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T19:10:24.652922",
+      "end_time": "2025-09-03T19:10:33.837816",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-05\",\n  \"due_date\": \"2025-08-01\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Peak Demand Usage (70,000 kWh)\",\n      \"quantity\": 70000,\n      \"unit_price\": 0.1255,\n      \"total\": 8785.00\n    },\n    {\n      \"description\": \"Off-Peak Demand Usage (60,000 kWh)\",\n      \"quantity\": 60000,\n      \"unit_price\": 0.0890,\n      \"total\": 5340.00\n    },\n    {\n      \"description\": \"Base Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 250.00\n    },\n    {\n      \"description\": \"State Environmental Surcharge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 875.50\n    },\n    {\n      \"description\": \"Grid Infrastructure Fee\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 182.39\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": 875.50,\n  \"subtotal\": 15432.89,\n  \"tax_amount\": null,\n  \"total_amount\": 15432.89\n}",
+      "error": null
+    },
+    {
+      "run_id": "2270781a-0b60-4e4d-8330-e77af6a2c629",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T19:09:56.566506",
+      "end_time": "2025-09-03T19:10:06.806242",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-05\",\n  \"due_date\": \"2025-08-01\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Peak Demand Usage (70,000 kWh)\",\n      \"quantity\": 70000,\n      \"unit_price\": 0.1255,\n      \"total\": 8785.00\n    },\n    {\n      \"description\": \"Off-Peak Demand Usage (60,000 kWh)\",\n      \"quantity\": 60000,\n      \"unit_price\": 0.0890,\n      \"total\": 5340.00\n    },\n    {\n      \"description\": \"Base Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 250.00\n    },\n    {\n      \"description\": \"State Environmental Surcharge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 875.50\n    },\n    {\n      \"description\": \"Grid Infrastructure Fee\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 182.39\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": 875.50,\n  \"subtotal\": null,\n  \"tax_amount\": null,\n  \"total_amount\": 15432.89\n}",
+      "error": null
+    },
+    {
+      "run_id": "9db2b8f8-3fbd-47d9-98bd-e9c70fd7ccbd",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T19:09:24.348932",
+      "end_time": "2025-09-03T19:09:38.643672",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-06\",\n  \"due_date\": \"2025-08-05\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Water Consumption\",\n      \"quantity\": 250000,\n      \"unit_price\": 0.015,\n      \"total\": 3750.00\n    },\n    {\n      \"description\": \"Sewer Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 950.00\n    },\n    {\n      \"description\": \"Stormwater Management Fee\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 125.00\n    },\n    {\n      \"description\": \"State Water Conservation Tax\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 61.50\n    },\n    {\n      \"description\": \"Infrastructure Improvement Surcharge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 5.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 4891.50,\n  \"tax_amount\": null,\n  \"total_amount\": 4891.50\n}",
+      "error": null
+    },
+    {
+      "run_id": "1a8b01e3-bf5c-41d0-8a49-8c1f18247726",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-03T19:08:56.555314",
+      "end_time": "2025-09-03T19:09:06.063618",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\n  \"invoice_number\": null,\n  \"invoice_date\": \"2025-07-06\",\n  \"due_date\": \"2025-08-05\",\n  \"vendor_name\": null,\n  \"vendor_address\": null,\n  \"line_items\": [\n    {\n      \"description\": \"Water Consumption\",\n      \"quantity\": 250000,\n      \"unit_price\": 0.015,\n      \"total\": 3750.00\n    },\n    {\n      \"description\": \"Sewer Service Charge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 950.00\n    },\n    {\n      \"description\": \"Stormwater Management Fee\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 125.00\n    },\n    {\n      \"description\": \"State Water Conservation Tax\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 61.50\n    },\n    {\n      \"description\": \"Infrastructure Improvement Surcharge\",\n      \"quantity\": null,\n      \"unit_price\": null,\n      \"total\": 5.00\n    }\n  ],\n  \"waste_disposal_items\": null,\n  \"recycling_items\": null,\n  \"environmental_fees\": null,\n  \"subtotal\": 4891.50,\n  \"tax_amount\": null,\n  \"total_amount\": 4891.50\n}",
+      "error": null
+    }
+  ]
+}

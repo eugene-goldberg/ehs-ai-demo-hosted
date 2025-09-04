@@ -1,0 +1,622 @@
+{
+  "metadata": {
+    "project_name": "ehs-ai-demo-ingestion",
+    "download_time": "2025-09-04T09:22:36.646856",
+    "filters_applied": {
+      "start_time": "2025-09-04 08:22:34.559233+00:00",
+      "end_time": "2025-09-04 14:22:34.559233+00:00",
+      "hours": 6,
+      "run_type": "llm",
+      "limit": 10
+    },
+    "total_traces": 3
+  },
+  "traces": [
+    {
+      "id": "d3d9124a-bf2e-4d1d-9065-1091680c4949",
+      "name": "ChatOpenAI",
+      "run_type": "llm",
+      "start_time": "2025-09-04T13:59:51.213514",
+      "end_time": "2025-09-04T13:59:54.372845",
+      "status": "success",
+      "error": null,
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "parent_run_id": "3e5f351c-99c2-4e91-af65-415f97851216",
+      "child_run_ids": null,
+      "tags": [
+        "seq:step:1"
+      ],
+      "extra": {
+        "invocation_params": {
+          "model": "gpt-4",
+          "model_name": "gpt-4",
+          "stream": false,
+          "temperature": 0.1,
+          "max_completion_tokens": 2000,
+          "_type": "openai-chat",
+          "stop": null
+        },
+        "options": {
+          "stop": null
+        },
+        "batch_size": 1,
+        "metadata": {
+          "langgraph_step": 1,
+          "langgraph_node": "recognize_document",
+          "langgraph_triggers": [
+            "branch:to:recognize_document"
+          ],
+          "langgraph_path": [
+            "__pregel_pull",
+            "recognize_document"
+          ],
+          "langgraph_checkpoint_ns": "recognize_document:e66d2249-b1da-9a86-414b-19a3471f72fb",
+          "checkpoint_ns": "recognize_document:e66d2249-b1da-9a86-414b-19a3471f72fb",
+          "ls_provider": "openai",
+          "ls_model_name": "gpt-4",
+          "ls_model_type": "chat",
+          "ls_temperature": 0.1,
+          "ls_max_tokens": 2000,
+          "revision_id": "23a2903a-dirty",
+          "ls_run_depth": 2
+        },
+        "runtime": {
+          "sdk": "langsmith-py",
+          "sdk_version": "0.3.45",
+          "library": "langchain-core",
+          "platform": "macOS-15.6-arm64-arm-64bit-Mach-O",
+          "runtime": "python",
+          "py_implementation": "CPython",
+          "runtime_version": "3.13.5",
+          "langchain_version": "0.3.25",
+          "langchain_core_version": "0.3.65",
+          "library_version": "0.3.65"
+        }
+      },
+      "inputs": {
+        "messages": [
+          [
+            {
+              "lc": 1,
+              "type": "constructor",
+              "id": [
+                "langchain",
+                "schema",
+                "messages",
+                "SystemMessage"
+              ],
+              "kwargs": {
+                "content": "You are an expert document classifier for Environmental, Health, and Safety (EHS) documents.\n        \nClassify the following document into one of these categories:\n- electricity_bill: Electric utility bills showing energy consumption, costs, meter readings\n- water_bill: Water utility bills showing water usage, sewer charges, meter readings  \n- waste_manifest: Hazardous or non-hazardous waste tracking documents with generator/transporter info\n- unknown: Documents that don't fit the above categories\n\nRespond with only a JSON object containing:\n- \"document_type\": one of the four categories above\n- \"confidence\": a number between 0.0 and 1.0\n- \"reasoning\": brief explanation of classification",
+                "type": "system"
+              }
+            },
+            {
+              "lc": 1,
+              "type": "constructor",
+              "id": [
+                "langchain",
+                "schema",
+                "messages",
+                "HumanMessage"
+              ],
+              "kwargs": {
+                "content": "Please classify this document:\n\nCONTENT:\nHere is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Reading |\n|--------------|---------------------------|------------------|------------------|\n| MTR-7743-A   | Commercial - Peak         | 543210 kWh       | 613210 kWh       |\n| MTR-7743-B   | Commercial - Off-Peak     | 891234 kWh       | 951234 kWh       |\n| **Total Consumption** |                   |                  | **130,000 kWh**  |\n\n**Current Charges Breakdown**\n| Description                                   | Rate              | Amount      |\n|-----------------------------------------------|-------------------|-------------|\n| Peak Demand Usage (70,000 kWh)               | $0.1255 / kWh     | $8,785.00   |\n| Off-Peak Demand Usage (60,000 kWh)           | $0.0890 / kWh     | $5,340.00   |\n| Base Service Charge                           |                   | $250.00     |\n| State Environmental Surcharge                 |                   | $875.50     |\n| Grid Infrastructure Fee                        |                   | $182.39     |\n| **Total Current Charges**                     |                   | **$15,432.89** |\n\n### Dates and Time Periods\n- Statement Date: July 5, 2025\n- Due Date: August 1, 2025\n- Billing Period: June 1, 2025 to June 30, 2025\n\n### Quantities and Measurements\n- Total Consumption: 130,000 kWh\n- Peak Demand Usage: 70,000 kWh\n- Off-Peak Demand Usage: 60,000 kWh\n\n### Costs and Financial Information\n- Amount Due: $15,432.89\n- Peak Demand Usage Charge: $8,785.00\n- Off-Peak Demand Usage Charge: $5,340.00\n- Base Service Charge: $250.00\n- State Environmental Surcharge: $875.50\n- Grid Infrastructure Fee: $182.39\n\n### Compliance-related Information\n- State Environmental Surcharge: $875.50 (implies compliance with environmental regulations)\n\n### Environmental Metrics\n- State Environmental Surcharge: $875.50 (indicates a charge related to environmental impact)\n\nThis structured data provides a clear overview of the utility statement for Apex Manufacturing Inc.\n\nEXTRACTED FEATURES:\n- Tables found: True\n- Key terms: kwh, consumption, meter, usage, electricity, bill, electric, utility, peak demand, statement\n- Page count: 1\n",
+                "type": "human"
+              }
+            }
+          ]
+        ]
+      },
+      "outputs": {
+        "generations": [
+          [
+            {
+              "text": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains details about electricity usage, meter readings, and charges related to electricity consumption, which are typical features of an electricity bill.\"}",
+              "generation_info": {
+                "finish_reason": "stop",
+                "logprobs": null
+              },
+              "type": "ChatGeneration",
+              "message": {
+                "lc": 1,
+                "type": "constructor",
+                "id": [
+                  "langchain",
+                  "schema",
+                  "messages",
+                  "AIMessage"
+                ],
+                "kwargs": {
+                  "content": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains details about electricity usage, meter readings, and charges related to electricity consumption, which are typical features of an electricity bill.\"}",
+                  "additional_kwargs": {
+                    "refusal": null
+                  },
+                  "response_metadata": {
+                    "token_usage": {
+                      "completion_tokens": 50,
+                      "prompt_tokens": 709,
+                      "total_tokens": 759,
+                      "completion_tokens_details": {
+                        "accepted_prediction_tokens": 0,
+                        "audio_tokens": 0,
+                        "reasoning_tokens": 0,
+                        "rejected_prediction_tokens": 0
+                      },
+                      "prompt_tokens_details": {
+                        "audio_tokens": 0,
+                        "cached_tokens": 0
+                      }
+                    },
+                    "model_name": "gpt-4-0613",
+                    "system_fingerprint": null,
+                    "id": "chatcmpl-CC4nAEHL3D3pVjy1fz53BxQOlnlAJ",
+                    "service_tier": "default",
+                    "finish_reason": "stop",
+                    "logprobs": null
+                  },
+                  "type": "ai",
+                  "id": "run--d3d9124a-bf2e-4d1d-9065-1091680c4949-0",
+                  "usage_metadata": {
+                    "input_tokens": 709,
+                    "output_tokens": 50,
+                    "total_tokens": 759,
+                    "input_token_details": {
+                      "audio": 0,
+                      "cache_read": 0
+                    },
+                    "output_token_details": {
+                      "audio": 0,
+                      "reasoning": 0
+                    }
+                  },
+                  "tool_calls": [],
+                  "invalid_tool_calls": []
+                }
+              }
+            }
+          ]
+        ],
+        "llm_output": {
+          "token_usage": {
+            "completion_tokens": 50,
+            "prompt_tokens": 709,
+            "total_tokens": 759,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-CC4nAEHL3D3pVjy1fz53BxQOlnlAJ",
+          "service_tier": "default"
+        },
+        "run": null,
+        "type": "LLMResult"
+      },
+      "events": [
+        {
+          "name": "{'name': 'start', 'time': '2025-09-04T13:59:51.213514+00:00'}",
+          "time": null,
+          "data": null
+        },
+        {
+          "name": "{'name': 'end', 'time': '2025-09-04T13:59:54.372845+00:00'}",
+          "time": null,
+          "data": null
+        }
+      ],
+      "feedback_stats": null
+    },
+    {
+      "id": "acbb96a9-159f-47cd-a28d-c981dde9cfbe",
+      "name": "ChatOpenAI",
+      "run_type": "llm",
+      "start_time": "2025-09-04T13:59:31.037883",
+      "end_time": "2025-09-04T13:59:33.613373",
+      "status": "success",
+      "error": null,
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "parent_run_id": "3a6df872-2e26-417e-9d3a-68b789c5a7e9",
+      "child_run_ids": null,
+      "tags": [
+        "seq:step:1"
+      ],
+      "extra": {
+        "invocation_params": {
+          "model": "gpt-4",
+          "model_name": "gpt-4",
+          "stream": false,
+          "temperature": 0.1,
+          "max_completion_tokens": 2000,
+          "_type": "openai-chat",
+          "stop": null
+        },
+        "options": {
+          "stop": null
+        },
+        "batch_size": 1,
+        "metadata": {
+          "langgraph_step": 1,
+          "langgraph_node": "recognize_document",
+          "langgraph_triggers": [
+            "branch:to:recognize_document"
+          ],
+          "langgraph_path": [
+            "__pregel_pull",
+            "recognize_document"
+          ],
+          "langgraph_checkpoint_ns": "recognize_document:af488399-c80a-8e81-aa1e-7ac5fce3fd77",
+          "checkpoint_ns": "recognize_document:af488399-c80a-8e81-aa1e-7ac5fce3fd77",
+          "ls_provider": "openai",
+          "ls_model_name": "gpt-4",
+          "ls_model_type": "chat",
+          "ls_temperature": 0.1,
+          "ls_max_tokens": 2000,
+          "revision_id": "23a2903a-dirty",
+          "ls_run_depth": 2
+        },
+        "runtime": {
+          "sdk": "langsmith-py",
+          "sdk_version": "0.3.45",
+          "library": "langchain-core",
+          "platform": "macOS-15.6-arm64-arm-64bit-Mach-O",
+          "runtime": "python",
+          "py_implementation": "CPython",
+          "runtime_version": "3.13.5",
+          "langchain_version": "0.3.25",
+          "langchain_core_version": "0.3.65",
+          "library_version": "0.3.65"
+        }
+      },
+      "inputs": {
+        "messages": [
+          [
+            {
+              "lc": 1,
+              "type": "constructor",
+              "id": [
+                "langchain",
+                "schema",
+                "messages",
+                "SystemMessage"
+              ],
+              "kwargs": {
+                "content": "You are an expert document classifier for Environmental, Health, and Safety (EHS) documents.\n        \nClassify the following document into one of these categories:\n- electricity_bill: Electric utility bills showing energy consumption, costs, meter readings\n- water_bill: Water utility bills showing water usage, sewer charges, meter readings  \n- waste_manifest: Hazardous or non-hazardous waste tracking documents with generator/transporter info\n- unknown: Documents that don't fit the above categories\n\nRespond with only a JSON object containing:\n- \"document_type\": one of the four categories above\n- \"confidence\": a number between 0.0 and 1.0\n- \"reasoning\": brief explanation of classification",
+                "type": "system"
+              }
+            },
+            {
+              "lc": 1,
+              "type": "constructor",
+              "id": [
+                "langchain",
+                "schema",
+                "messages",
+                "HumanMessage"
+              ],
+              "kwargs": {
+                "content": "Please classify this document:\n\nCONTENT:\nHere is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage        |\n|---------------|--------------|------------------|------------------|--------------|\n| WTR-MAIN-01   | Commercial    | 8,765,400 gal    | 9,015,400 gal    | 250,000 gal  |\n\n2. **Current Charges Breakdown**\n| Description                                                       | Rate                | Amount      |\n|-------------------------------------------------------------------|---------------------|-------------|\n| Water Consumption (250,000 Gallons)                               | $0.0150 / Gallon    | $3,750.00   |\n| Sewer Service Charge (Based on water usage)                       |                     | $950.00     |\n| Stormwater Management Fee                                          |                     | $125.00     |\n| State Water Conservation Tax                                       |                     | $61.50      |\n| Infrastructure Improvement Surcharge                                |                     | $5.00       |\n| **Total Current Charges**                                          |                     | **$4,891.50** |\n\n### Dates and Time Periods\n- Statement Date: **July 6, 2025**\n- Due Date: **August 5, 2025**\n- Billing Period: **June 1, 2025 to June 30, 2025**\n\n### Quantities and Measurements\n- Water Usage: **250,000 gallons**\n- Previous Meter Read: **8,765,400 gallons**\n- Current Meter Read: **9,015,400 gallons**\n\n### Costs and Financial Information\n- Amount Due: **$4,891.50**\n- Water Consumption Charge: **$3,750.00**\n- Sewer Service Charge: **$950.00**\n- Stormwater Management Fee: **$125.00**\n- State Water Conservation Tax: **$61.50**\n- Infrastructure Improvement Surcharge: **$5.00**\n\n### Compliance-related Information\n- State Water Conservation Tax indicates compliance with state regulations regarding water usage.\n\n### Environmental Metrics\n- Water Consumption: **250,000 gallons** (indicates the amount of water used, relevant for environmental impact assessments).\n\nThis structured data provides a clear overview of the water utility statement for Apex Manufacturing Inc.\n\nEXTRACTED FEATURES:\n- Tables found: True\n- Key terms: sewer, gallons, water, meter, water utility, usage, bill, statement, utility, consumption\n- Page count: 1\n",
+                "type": "human"
+              }
+            }
+          ]
+        ]
+      },
+      "outputs": {
+        "generations": [
+          [
+            {
+              "text": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains details about water usage, sewer charges, and meter readings, which are typical features of a water bill.\"}",
+              "generation_info": {
+                "finish_reason": "stop",
+                "logprobs": null
+              },
+              "type": "ChatGeneration",
+              "message": {
+                "lc": 1,
+                "type": "constructor",
+                "id": [
+                  "langchain",
+                  "schema",
+                  "messages",
+                  "AIMessage"
+                ],
+                "kwargs": {
+                  "content": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains details about water usage, sewer charges, and meter readings, which are typical features of a water bill.\"}",
+                  "additional_kwargs": {
+                    "refusal": null
+                  },
+                  "response_metadata": {
+                    "token_usage": {
+                      "completion_tokens": 46,
+                      "prompt_tokens": 680,
+                      "total_tokens": 726,
+                      "completion_tokens_details": {
+                        "accepted_prediction_tokens": 0,
+                        "audio_tokens": 0,
+                        "reasoning_tokens": 0,
+                        "rejected_prediction_tokens": 0
+                      },
+                      "prompt_tokens_details": {
+                        "audio_tokens": 0,
+                        "cached_tokens": 0
+                      }
+                    },
+                    "model_name": "gpt-4-0613",
+                    "system_fingerprint": null,
+                    "id": "chatcmpl-CC4mpDNOvaSOi8dABVSUHHa15LsW1",
+                    "service_tier": "default",
+                    "finish_reason": "stop",
+                    "logprobs": null
+                  },
+                  "type": "ai",
+                  "id": "run--acbb96a9-159f-47cd-a28d-c981dde9cfbe-0",
+                  "usage_metadata": {
+                    "input_tokens": 680,
+                    "output_tokens": 46,
+                    "total_tokens": 726,
+                    "input_token_details": {
+                      "audio": 0,
+                      "cache_read": 0
+                    },
+                    "output_token_details": {
+                      "audio": 0,
+                      "reasoning": 0
+                    }
+                  },
+                  "tool_calls": [],
+                  "invalid_tool_calls": []
+                }
+              }
+            }
+          ]
+        ],
+        "llm_output": {
+          "token_usage": {
+            "completion_tokens": 46,
+            "prompt_tokens": 680,
+            "total_tokens": 726,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-CC4mpDNOvaSOi8dABVSUHHa15LsW1",
+          "service_tier": "default"
+        },
+        "run": null,
+        "type": "LLMResult"
+      },
+      "events": [
+        {
+          "name": "{'name': 'start', 'time': '2025-09-04T13:59:31.037883+00:00'}",
+          "time": null,
+          "data": null
+        },
+        {
+          "name": "{'name': 'end', 'time': '2025-09-04T13:59:33.613373+00:00'}",
+          "time": null,
+          "data": null
+        }
+      ],
+      "feedback_stats": null
+    },
+    {
+      "id": "dd2e38cd-7671-4809-bd33-26b6cfb5aad2",
+      "name": "ChatOpenAI",
+      "run_type": "llm",
+      "start_time": "2025-09-04T13:58:57.056968",
+      "end_time": "2025-09-04T13:59:00.160013",
+      "status": "success",
+      "error": null,
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "parent_run_id": "306b13cb-0762-4a2d-b304-aaaf30cc6fc3",
+      "child_run_ids": null,
+      "tags": [
+        "seq:step:1"
+      ],
+      "extra": {
+        "invocation_params": {
+          "model": "gpt-4",
+          "model_name": "gpt-4",
+          "stream": false,
+          "temperature": 0.1,
+          "max_completion_tokens": 2000,
+          "_type": "openai-chat",
+          "stop": null
+        },
+        "options": {
+          "stop": null
+        },
+        "batch_size": 1,
+        "metadata": {
+          "langgraph_step": 1,
+          "langgraph_node": "recognize_document",
+          "langgraph_triggers": [
+            "branch:to:recognize_document"
+          ],
+          "langgraph_path": [
+            "__pregel_pull",
+            "recognize_document"
+          ],
+          "langgraph_checkpoint_ns": "recognize_document:ed1c426c-54c5-9bff-2355-ed0436093497",
+          "checkpoint_ns": "recognize_document:ed1c426c-54c5-9bff-2355-ed0436093497",
+          "ls_provider": "openai",
+          "ls_model_name": "gpt-4",
+          "ls_model_type": "chat",
+          "ls_temperature": 0.1,
+          "ls_max_tokens": 2000,
+          "revision_id": "23a2903a-dirty",
+          "ls_run_depth": 2
+        },
+        "runtime": {
+          "sdk": "langsmith-py",
+          "sdk_version": "0.3.45",
+          "library": "langchain-core",
+          "platform": "macOS-15.6-arm64-arm-64bit-Mach-O",
+          "runtime": "python",
+          "py_implementation": "CPython",
+          "runtime_version": "3.13.5",
+          "langchain_version": "0.3.25",
+          "langchain_core_version": "0.3.65",
+          "library_version": "0.3.65"
+        }
+      },
+      "inputs": {
+        "messages": [
+          [
+            {
+              "lc": 1,
+              "type": "constructor",
+              "id": [
+                "langchain",
+                "schema",
+                "messages",
+                "SystemMessage"
+              ],
+              "kwargs": {
+                "content": "You are an expert document classifier for Environmental, Health, and Safety (EHS) documents.\n        \nClassify the following document into one of these categories:\n- electricity_bill: Electric utility bills showing energy consumption, costs, meter readings\n- water_bill: Water utility bills showing water usage, sewer charges, meter readings  \n- waste_manifest: Hazardous or non-hazardous waste tracking documents with generator/transporter info\n- unknown: Documents that don't fit the above categories\n\nRespond with only a JSON object containing:\n- \"document_type\": one of the four categories above\n- \"confidence\": a number between 0.0 and 1.0\n- \"reasoning\": brief explanation of classification",
+                "type": "system"
+              }
+            },
+            {
+              "lc": 1,
+              "type": "constructor",
+              "id": [
+                "langchain",
+                "schema",
+                "messages",
+                "HumanMessage"
+              ],
+              "kwargs": {
+                "content": "Please classify this document:\n\nCONTENT:\nHere is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                           |\n|-----------|-------------------------|----------|-------------------------------------------------------|\n| 1         | Open Top Roll-off       | 1        | Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric) |\n\n### Dates and Time Periods\n- Generator’s Certification Date: **07/15/2025**\n- Transporter Acknowledgment of Receipt Date: **07/1** (incomplete, likely intended to be **07/15/2025**)\n\n### Quantities and Measurements\n- Quantity of waste: **1** (Open Top Roll-off)\n\n### Costs and Financial Information\n- Purchase Order Number: **98765**\n\n### Compliance-related Information\n- Generator EPA ID: **CAL000123456**\n- Facility EPA ID: **CAL000654321**\n- Declaration of compliance with international and national governmental regulations.\n\n### Environmental Metrics\n- Waste Type: **Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)**\n- Waste Classification: **Non-hazardous solid waste**\n\n### Contact Information\n- **Generator/Shipper:**\n- Name: Apex Manufacturing Inc.\n- Address: 789 Production Way, Mechanicsburg, CA 93011\n- Contact: John Doe, EHS Manager\n- Phone: (555) 123-7890\n\n- **Transporter:**\n- Carrier Name: Evergreen Environmental\n- Address: 333 Disposal Rd, Greenville, CA 91101\n- Phone: (555) 555-1234\n- Vehicle ID: Truck 72\n- Driver: M. Smith\n\n- **Receiving Facility:**\n- Name: Green Valley Landfill\n- Address: 100 Landfill Lane, Greenville, CA 91102\n\nThis structured data provides a clear overview of the waste manifest and related information.\n\nEXTRACTED FEATURES:\n- Tables found: True\n- Key terms: epa id, disposal, transporter, waste, facility, certification, manifest, hazardous, generator\n- Page count: 1\n",
+                "type": "human"
+              }
+            }
+          ]
+        ]
+      },
+      "outputs": {
+        "generations": [
+          [
+            {
+              "text": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste type, generator/transporter details, and EPA IDs, which are characteristic of waste manifests.\"}",
+              "generation_info": {
+                "finish_reason": "stop",
+                "logprobs": null
+              },
+              "type": "ChatGeneration",
+              "message": {
+                "lc": 1,
+                "type": "constructor",
+                "id": [
+                  "langchain",
+                  "schema",
+                  "messages",
+                  "AIMessage"
+                ],
+                "kwargs": {
+                  "content": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste type, generator/transporter details, and EPA IDs, which are characteristic of waste manifests.\"}",
+                  "additional_kwargs": {
+                    "refusal": null
+                  },
+                  "response_metadata": {
+                    "token_usage": {
+                      "completion_tokens": 48,
+                      "prompt_tokens": 607,
+                      "total_tokens": 655,
+                      "completion_tokens_details": {
+                        "accepted_prediction_tokens": 0,
+                        "audio_tokens": 0,
+                        "reasoning_tokens": 0,
+                        "rejected_prediction_tokens": 0
+                      },
+                      "prompt_tokens_details": {
+                        "audio_tokens": 0,
+                        "cached_tokens": 0
+                      }
+                    },
+                    "model_name": "gpt-4-0613",
+                    "system_fingerprint": null,
+                    "id": "chatcmpl-CC4mHb2Y3Wawi6C0518frhdDWTx2F",
+                    "service_tier": "default",
+                    "finish_reason": "stop",
+                    "logprobs": null
+                  },
+                  "type": "ai",
+                  "id": "run--dd2e38cd-7671-4809-bd33-26b6cfb5aad2-0",
+                  "usage_metadata": {
+                    "input_tokens": 607,
+                    "output_tokens": 48,
+                    "total_tokens": 655,
+                    "input_token_details": {
+                      "audio": 0,
+                      "cache_read": 0
+                    },
+                    "output_token_details": {
+                      "audio": 0,
+                      "reasoning": 0
+                    }
+                  },
+                  "tool_calls": [],
+                  "invalid_tool_calls": []
+                }
+              }
+            }
+          ]
+        ],
+        "llm_output": {
+          "token_usage": {
+            "completion_tokens": 48,
+            "prompt_tokens": 607,
+            "total_tokens": 655,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-CC4mHb2Y3Wawi6C0518frhdDWTx2F",
+          "service_tier": "default"
+        },
+        "run": null,
+        "type": "LLMResult"
+      },
+      "events": [
+        {
+          "name": "{'name': 'start', 'time': '2025-09-04T13:58:57.056968+00:00'}",
+          "time": null,
+          "data": null
+        },
+        {
+          "name": "{'name': 'end', 'time': '2025-09-04T13:59:00.160013+00:00'}",
+          "time": null,
+          "data": null
+        }
+      ],
+      "feedback_stats": null
+    }
+  ]
+}

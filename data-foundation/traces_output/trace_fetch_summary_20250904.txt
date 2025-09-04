@@ -1,0 +1,78 @@
+LangSmith Trace Fetch Summary - September 4, 2025
+==================================================
+
+SCRIPT EXECUTED: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/scripts/download_langsmith_traces.py
+
+The LangSmith trace fetching script was successfully found and executed multiple times to gather different types of trace data from the ehs-ai-demo-ingestion project.
+
+FILES CREATED:
+==============
+
+1. langsmith_traces_ehs-ai-demo-ingestion_20250904_090307_limit500_last24h.json
+   - Size: 5.6 MB
+   - Downloaded: 494 traces from last 24 hours
+   - Run types: 440 chain traces, 54 llm traces
+   - Sessions: 1
+   - Errors: 0
+   - Time range: 2025-09-03 19:07:05 to 2025-09-04 14:00:26
+
+2. langsmith_traces_ehs-ai-demo-ingestion_20250904_090320_limit1000_type_llm_last72h.json
+   - Size: 644K
+   - Downloaded: 54 LLM traces from last 72 hours
+   - Run types: 54 llm traces only
+   - Sessions: 1
+   - Errors: 0
+   - Time range: 2025-09-03 19:07:21 to 2025-09-04 13:59:51
+
+3. langsmith_traces_ehs-ai-demo-ingestion_20250904_090401_limit200_type_chain_last24h.json
+   - Size: 1.0 MB
+   - Downloaded: 200 chain traces from last 24 hours
+   - Run types: 200 chain traces only
+   - Sessions: 1
+   - Errors: 0
+   - Time range: 2025-09-03 20:23:47 to 2025-09-04 14:00:26
+
+EXECUTION DETAILS:
+==================
+
+API Configuration:
+- LangSmith API Key: Used from environment variable (from .env file)
+- Project: ehs-ai-demo-ingestion
+- API URL: https://api.smith.langchain.com
+
+Script Location:
+- /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/scripts/download_langsmith_traces.py
+
+Output Directory:
+- /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/traces_output/
+
+TRACE DATA STRUCTURE:
+=====================
+
+Each JSON file contains:
+- metadata: Project info, download time, filters applied, total trace count
+- traces: Array of trace objects with the following fields:
+  - id: Unique run identifier
+  - name: Run name/step name (e.g., "handle_rejection")
+  - run_type: Type of run (chain, llm, tool, etc.)
+  - start_time/end_time: Execution timestamps
+  - status: Run status (success, error, etc.)
+  - session_id: Session identifier
+  - parent_run_id/child_run_ids: Hierarchical relationships
+  - tags: Associated tags (e.g., "graph:step:2")
+  - extra: Metadata including langgraph info, runtime details
+  - inputs/outputs: Input and output data for the run
+  - events: Streaming events (if applicable)
+
+SUMMARY:
+========
+
+Successfully fetched 748 total traces (494 + 54 + 200) with comprehensive data including:
+- Chain execution traces showing graph workflows
+- LLM interaction traces
+- Hierarchical parent-child relationships
+- Runtime metadata and performance information
+- Input/output data for analysis
+- No errors encountered in any traces
+
+All files are saved as JSON format for easy parsing and analysis.

@@ -13,11 +13,11 @@ const DataManagement = () => {
   const [downloadingFiles, setDownloadingFiles] = useState(new Set());
   const [isAiEngineRoomExpanded, setIsAiEngineRoomExpanded] = useState(false);
   
-  // Transcript state
-  const [transcriptData, setTranscriptData] = useState([]);
+  // Transcript state - updated to handle markdown content
+  const [transcriptMarkdown, setTranscriptMarkdown] = useState('');
   const [transcriptLoading, setTranscriptLoading] = useState(false);
   const [transcriptError, setTranscriptError] = useState(null);
-  const [hasLangSmithData, setHasLangSmithData] = useState(false);
+  const [hasTranscriptData, setHasTranscriptData] = useState(false);
   
   // Popup state
   const [hoveredRow, setHoveredRow] = useState(null);
@@ -31,10 +31,10 @@ const DataManagement = () => {
 
   // Fetch transcript data when AI Engine Room is expanded
   useEffect(() => {
-    if (isAiEngineRoomExpanded && !hasLangSmithData) {
+    if (isAiEngineRoomExpanded && !hasTranscriptData) {
       fetchTranscriptData();
     }
-  }, [isAiEngineRoomExpanded, hasLangSmithData]);
+  }, [isAiEngineRoomExpanded, hasTranscriptData]);
 
   const fetchData = async () => {
     try {
@@ -58,7 +58,7 @@ const DataManagement = () => {
       setError(null);
       
       // Fetch transcript data after documents are loaded if AI Engine Room is expanded
-      if (isAiEngineRoomExpanded && !hasLangSmithData) {
+      if (isAiEngineRoomExpanded && !hasTranscriptData) {
         await fetchTranscriptData();
       }
     } catch (err) {
@@ -73,8 +73,8 @@ const DataManagement = () => {
   };
 
   const fetchTranscriptData = async () => {
-    // Don't fetch if we already have LangSmith data
-    if (hasLangSmithData) {
+    // Don't fetch if we already have transcript data
+    if (hasTranscriptData) {
       return;
     }
 
@@ -82,179 +82,57 @@ const DataManagement = () => {
       setTranscriptLoading(true);
       setTranscriptError(null);
       
-      // First, get the list of projects
-      const projectsResponse = await axios.get(apiConfig.langsmith.projects);
+      console.log('Fetching transcript markdown from new backend endpoint...');
       
-      if (!projectsResponse.data.projects || projectsResponse.data.projects.length === 0) {
-        setTranscriptError('No LangSmith projects found');
-        setTranscriptData([]);
+      // Call the conversations endpoint which now returns markdown content
+      const conversationsResponse = await axios.get(apiConfig.langsmith.conversations);
+      
+      // Check if the response has the expected markdown_content format
+      if (!conversationsResponse.data) {
+        setTranscriptError('No response data received from server');
+        setTranscriptMarkdown('');
         return;
       }
       
-      // Use the first project (or you could implement project selection logic)
-      const projectName = projectsResponse.data.projects[0].name;
-      console.log(`Fetching traces from project: ${projectName}`);
-      
-      // Fetch traces from the first project
-      const tracesResponse = await axios.get(apiConfig.langsmith.traces(projectName));
-      
-      if (!tracesResponse.data.traces) {
-        console.log('No traces found in response');
-        setTranscriptData([]);
-        return;
+      // Handle the new format: { "markdown_content": "..." }
+      if (conversationsResponse.data.markdown_content) {
+        const markdownContent = conversationsResponse.data.markdown_content;
+        console.log(`Received markdown content (${markdownContent.length} characters)`);
+        
+        // Set the markdown content directly
+        setTranscriptMarkdown(markdownContent);
+        setHasTranscriptData(true);
+        
+      } else if (conversationsResponse.data.error) {
+        // Handle error response from backend
+        setTranscriptError(`Backend error: ${conversationsResponse.data.error}`);
+        setTranscriptMarkdown('');
+        
+      } else {
+        // Handle unexpected response format
+        setTranscriptError('Unexpected response format from server. Expected markdown_content field.');
+        setTranscriptMarkdown('');
+        console.warn('Unexpected response format:', conversationsResponse.data);
       }
-      
-      const traces = tracesResponse.data.traces;
-      console.log(`Found ${traces.length} traces`);
-      
-      // Transform traces into transcript format (reuse existing logic)
-      const formattedTranscript = traces
-        .filter(trace => trace.run_type === 'llm' && trace.inputs && trace.outputs)
-        .map((trace, index) => {
-          // Extract user message from inputs
-          let userMessage = '';
-          let assistantMessage = '';
-          
-          try {
-            // Handle LangSmith trace input format: inputs.messages array
-            if (trace.inputs.messages && Array.isArray(trace.inputs.messages)) {
-              // Extract the last user message from the messages array
-              const userMessages = trace.inputs.messages.filter(msg => 
-                msg.role === 'user' || msg.type === 'user' || 
-                (msg.content && typeof msg.content === 'string')
-              );
-              
-              if (userMessages.length > 0) {
-                const lastUserMessage = userMessages[userMessages.length - 1];
-                // Handle different message content structures
-                if (typeof lastUserMessage.content === 'string') {
-                  userMessage = lastUserMessage.content;
-                } else if (lastUserMessage.content && Array.isArray(lastUserMessage.content)) {
-                  // Handle content arrays (for multimodal messages)
-                  const textContent = lastUserMessage.content
-                    .filter(item => item.type === 'text')
-                    .map(item => item.text)
-                    .join(' ');
-                  userMessage = textContent;
-                } else if (typeof lastUserMessage === 'string') {
-                  userMessage = lastUserMessage;
-                }
-              }
-            } else if (trace.inputs.input) {
-              // Fallback to direct input field
-              userMessage = trace.inputs.input;
-            } else if (trace.inputs.prompt) {
-              // Another fallback for prompt field
-              userMessage = trace.inputs.prompt;
-            }
-            
-            // Handle LangSmith trace output format: outputs.generations array
-            if (trace.outputs && trace.outputs.generations && Array.isArray(trace.outputs.generations)) {
-              // Extract the assistant response from generations
-              if (trace.outputs.generations.length > 0) {
-                const generation = trace.outputs.generations[0];
-                if (Array.isArray(generation) && generation.length > 0) {
-                  // Handle nested array structure: generations[0][0].text
-                  const firstGeneration = generation[0];
-                  if (firstGeneration && firstGeneration.text) {
-                    assistantMessage = firstGeneration.text;
-                  } else if (firstGeneration && firstGeneration.message && firstGeneration.message.content) {
-                    assistantMessage = firstGeneration.message.content;
-                  } else if (typeof firstGeneration === 'string') {
-                    assistantMessage = firstGeneration;
-                  }
-                } else if (generation.text) {
-                  // Handle direct generation object with text
-                  assistantMessage = generation.text;
-                } else if (generation.message && generation.message.content) {
-                  // Handle generation with message object
-                  assistantMessage = generation.message.content;
-                } else if (typeof generation === 'string') {
-                  assistantMessage = generation;
-                }
-              }
-            } else if (trace.outputs && trace.outputs.output) {
-              // Fallback to direct output field
-              assistantMessage = trace.outputs.output;
-            } else if (trace.outputs && trace.outputs.content) {
-              // Another fallback for content field
-              assistantMessage = trace.outputs.content;
-            }
-            
-          } catch (e) {
-            console.error('Error parsing trace:', e, trace);
-          }
-          
-          // Return both user and assistant messages
-          const messages = [];
-          if (userMessage && userMessage.trim()) {
-            messages.push({
-              id: `${trace.id}_user`,
-              role: 'user',
-              content: userMessage.trim(),
-              timestamp: trace.start_time,
-              context: {
-                trace_id: trace.id,
-                model: trace.extra?.invocation_params?.model || trace.extra?.metadata?.model || 'unknown',
-                operation: trace.name || 'LLM Call'
-              }
-            });
-          }
-          if (assistantMessage && assistantMessage.trim()) {
-            messages.push({
-              id: `${trace.id}_assistant`,
-              role: 'assistant',
-              content: assistantMessage.trim(),
-              timestamp: trace.end_time,
-              context: {
-                trace_id: trace.id,
-                model: trace.extra?.invocation_params?.model || trace.extra?.metadata?.model || 'unknown',
-                latency: trace.end_time && trace.start_time ? 
-                  ((new Date(trace.end_time) - new Date(trace.start_time)) / 1000).toFixed(2) + 's' : 
-                  'unknown'
-              }
-            });
-          }
-          return messages;
-        })
-        .flat()
-        .filter(msg => msg.content && msg.content.trim()); // Filter out empty messages
-      
-      console.log(`Formatted ${formattedTranscript.length} transcript messages from ${traces.length} traces`);
-      
-      // Fetch ingestion instructions and prepend to transcript
-      try {
-        const instructionsResponse = await axios.get('http://localhost:8001/api/ingestion-instructions');
-        if (instructionsResponse.data && instructionsResponse.data.content) {
-          // Create system message with instructions
-          const systemMessage = {
-            id: 'system_instructions',
-            role: 'system',
-            content: instructionsResponse.data.content,
-            timestamp: new Date().toISOString(),
-            context: {
-              operation: 'Ingestion Instructions',
-              source: 'System'
-            }
-          };
-          
-          // Prepend system message to transcript
-          formattedTranscript.unshift(systemMessage);
-          console.log('Prepended ingestion instructions to transcript');
-        }
-      } catch (instructionsError) {
-        console.warn('Failed to fetch ingestion instructions:', instructionsError);
-        // Continue without instructions - graceful error handling
-      }
-      
-      // Update transcript data and set LangSmith flag
-      setTranscriptData(formattedTranscript);
-      setHasLangSmithData(true);
       
     } catch (err) {
       console.error('Error fetching transcript data:', err);
-      setTranscriptError('Failed to load transcript data from LangSmith API. Please try again.');
-      setTranscriptData([]);
+      let errorMessage = 'Failed to load transcript data from conversations API. ';
+      
+      if (err.response?.status === 404) {
+        errorMessage += 'Conversations endpoint not found. Please ensure the backend is running.';
+      } else if (err.response?.status >= 500) {
+        errorMessage += 'Server error occurred. Please try again later.';
+      } else if (err.response?.data?.error) {
+        errorMessage += `Server responded: ${err.response.data.error}`;
+      } else if (err.code === 'ECONNREFUSED') {
+        errorMessage += 'Cannot connect to backend server.';
+      } else {
+        errorMessage += 'Please try again.';
+      }
+      
+      setTranscriptError(errorMessage);
+      setTranscriptMarkdown('');
     } finally {
       setTranscriptLoading(false);
     }
@@ -349,8 +227,8 @@ const DataManagement = () => {
 
   const handleBulkIngestion = async () => {
     setIsIngesting(true);
-    // Clear LangSmith flag when starting new ingestion
-    setHasLangSmithData(false);
+    // Clear transcript flag when starting new ingestion
+    setHasTranscriptData(false);
     
     try {
       const response = await axios.post(API_ENDPOINTS.ingestion, {
@@ -510,9 +388,18 @@ const DataManagement = () => {
             // Continue without instructions - graceful error handling
           }
           
-          // Update transcript data and set LangSmith flag
-          setTranscriptData(formattedTranscript);
-          setHasLangSmithData(true);
+          // Convert formatted transcript to markdown-like format for legacy compatibility
+          const markdownLikeContent = formattedTranscript.map((msg, idx) => {
+            const timestamp = msg.timestamp ? new Date(msg.timestamp).toLocaleString() : 'Unknown time';
+            const model = msg.context?.model || 'unknown';
+            const role = msg.role?.charAt(0).toUpperCase() + msg.role?.slice(1) || 'Unknown';
+            
+            return `## ${role} Message ${idx + 1}\n**Time:** ${timestamp}\n**Model:** ${model}\n\n${msg.content}\n\n---\n`;
+          }).join('\n');
+          
+          // Update transcript data and set flag
+          setTranscriptMarkdown(markdownLikeContent);
+          setHasTranscriptData(true);
           
           // Commented out: Automatic expansion of AI Engine Room when transcript data arrives
           // if (formattedTranscript.length > 0) {
@@ -539,9 +426,9 @@ const DataManagement = () => {
   };
 
   const handleRefreshTranscript = async () => {
-    // Clear the LangSmith flag to allow fetching fresh data
-    setHasLangSmithData(false);
-    setTranscriptData([]);
+    // Clear the transcript flag to allow fetching fresh data
+    setHasTranscriptData(false);
+    setTranscriptMarkdown('');
     await fetchTranscriptData();
   };
 
@@ -681,6 +568,78 @@ const DataManagement = () => {
 
   const handleRowMouseLeave = () => {
     setHoveredRow(null);
+  };
+
+  // Simple function to render markdown-like content as basic HTML
+  const renderMarkdownContent = (markdown) => {
+    if (!markdown || typeof markdown !== 'string') {
+      return <div>No content available</div>;
+    }
+
+    // Split content into lines and process basic markdown-like formatting
+    const lines = markdown.split('\n');
+    const elements = [];
+    let currentIdx = 0;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      
+      // Handle headers
+      if (line.startsWith('## ')) {
+        elements.push(
+          <h3 key={currentIdx++} style={{ 
+            fontSize: '16px', 
+            fontWeight: 'bold', 
+            marginTop: '20px', 
+            marginBottom: '10px',
+            color: '#1f2937'
+          }}>
+            {line.substring(3)}
+          </h3>
+        );
+      }
+      // Handle bold text (simple **text** format)
+      else if (line.startsWith('**') && line.endsWith('**')) {
+        elements.push(
+          <div key={currentIdx++} style={{ 
+            fontWeight: 'bold', 
+            marginBottom: '5px',
+            color: '#374151'
+          }}>
+            {line.substring(2, line.length - 2)}
+          </div>
+        );
+      }
+      // Handle horizontal rules
+      else if (line.trim() === '---') {
+        elements.push(
+          <hr key={currentIdx++} style={{ 
+            border: 'none', 
+            borderTop: '1px solid #e5e7eb', 
+            margin: '15px 0' 
+          }} />
+        );
+      }
+      // Handle regular content
+      else if (line.trim() !== '') {
+        elements.push(
+          <div key={currentIdx++} style={{ 
+            marginBottom: '8px',
+            lineHeight: '1.6',
+            color: '#1f2937',
+            whiteSpace: 'pre-wrap'
+          }}>
+            {line}
+          </div>
+        );
+      }
+      // Handle empty lines (add spacing)
+      else {
+        elements.push(<div key={currentIdx++} style={{ height: '10px' }} />);
+      }
+    }
+
+    return <div>{elements}</div>;
   };
 
   // Popup Component
@@ -1065,7 +1024,7 @@ const DataManagement = () => {
         >
           {isAiEngineRoomExpanded ? '▼' : '▶'}
         </button>
-        {hasLangSmithData && (
+        {hasTranscriptData && (
           <div style={{
             fontSize: '12px',
             color: '#059669',
@@ -1074,7 +1033,7 @@ const DataManagement = () => {
             borderRadius: '4px',
             fontWeight: '500'
           }}>
-            LangSmith Data
+            Transcript Data
           </div>
         )}
       </div>
@@ -1153,7 +1112,7 @@ const DataManagement = () => {
                 }}>
                   {transcriptError}
                 </div>
-              ) : transcriptData.length === 0 ? (
+              ) : !transcriptMarkdown ? (
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -1170,59 +1129,9 @@ const DataManagement = () => {
                 <div style={{
                   flex: 1,
                   overflowY: 'auto',
-                  padding: '16px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '8px'
+                  padding: '16px'
                 }}>
-                  {transcriptData.map((message, index) => (
-                    <div key={index} style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: message.role?.toLowerCase() === 'user' ? 'flex-end' : 'flex-start'
-                    }}>
-                      {/* Message header with role and timestamp */}
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        marginBottom: '4px',
-                        gap: '8px',
-                        fontSize: '12px',
-                        color: '#6b7280'
-                      }}>
-                        <span style={{
-                          fontWeight: 600,
-                          color: message.role?.toLowerCase() === 'system' ? '#f59e0b' :
-                                message.role?.toLowerCase() === 'user' ? '#3b82f6' : '#10b981'
-                        }}>
-                          {message.role?.toLowerCase() === 'system' ? 'System' :
-                           message.role?.toLowerCase() === 'user' ? 'User' : 'Assistant'}
-                        </span>
-                        {message.context?.model && (
-                          <span style={{ opacity: 0.7 }}>
-                            • {message.context.model}
-                          </span>
-                        )}
-                        {message.context?.latency && (
-                          <span style={{ opacity: 0.7 }}>
-                            • {message.context.latency}
-                          </span>
-                        )}
-                        {message.timestamp && (
-                          <span style={{ opacity: 0.7 }}>
-                            • {new Date(message.timestamp).toLocaleTimeString()}
-                          </span>
-                        )}
-                      </div>
-                      
-                      {/* Message content */}
-                      <div style={getMessageBubbleStyle(message.role)}>
-                        <div style={{ whiteSpace: 'pre-wrap' }}>
-                          {message.content || message.message || 'No content'}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                  {renderMarkdownContent(transcriptMarkdown)}
                 </div>
               )}
             </div>
@@ -1365,8 +1274,8 @@ const DataManagement = () => {
             setProcessedDocuments([]);
             setRejectedDocuments([]);
             setDocumentDetails({});
-            setHasLangSmithData(false);
-            setTranscriptData([]);
+            setHasTranscriptData(false);
+            setTranscriptMarkdown('');
           }}
         >
           Reset

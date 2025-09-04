@@ -1,0 +1,218 @@
+{
+  "metadata": {
+    "project_name": "ehs-ai-demo-ingestion",
+    "download_time": "2025-09-04T10:03:58.298076",
+    "filters_applied": {
+      "start_time": "2025-09-04 13:03:50.612715+00:00",
+      "end_time": "2025-09-04 15:03:50.612715+00:00",
+      "hours": 2,
+      "run_type": "llm",
+      "limit": 1
+    },
+    "total_traces": 1
+  },
+  "traces": [
+    {
+      "id": "ccd96b1d-31bc-430c-b7fa-890a0044bead",
+      "name": "ChatOpenAI",
+      "run_type": "llm",
+      "start_time": "2025-09-04T15:03:24.254609",
+      "end_time": "2025-09-04T15:03:27.529654",
+      "status": "success",
+      "error": null,
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "parent_run_id": "6d822e8a-ba5f-4e31-a601-5fc2f8255875",
+      "child_run_ids": null,
+      "tags": [
+        "seq:step:1"
+      ],
+      "extra": {
+        "invocation_params": {
+          "model": "gpt-4",
+          "model_name": "gpt-4",
+          "stream": false,
+          "temperature": 0.1,
+          "max_completion_tokens": 2000,
+          "_type": "openai-chat",
+          "stop": null
+        },
+        "options": {
+          "stop": null
+        },
+        "batch_size": 1,
+        "metadata": {
+          "langgraph_step": 1,
+          "langgraph_node": "recognize_document",
+          "langgraph_triggers": [
+            "branch:to:recognize_document"
+          ],
+          "langgraph_path": [
+            "__pregel_pull",
+            "recognize_document"
+          ],
+          "langgraph_checkpoint_ns": "recognize_document:0a9c0bf4-9e51-ae7f-8425-d3df53a87b06",
+          "checkpoint_ns": "recognize_document:0a9c0bf4-9e51-ae7f-8425-d3df53a87b06",
+          "ls_provider": "openai",
+          "ls_model_name": "gpt-4",
+          "ls_model_type": "chat",
+          "ls_temperature": 0.1,
+          "ls_max_tokens": 2000,
+          "revision_id": "23a2903a-dirty",
+          "ls_run_depth": 2
+        },
+        "runtime": {
+          "sdk": "langsmith-py",
+          "sdk_version": "0.3.45",
+          "library": "langchain-core",
+          "platform": "macOS-15.6-arm64-arm-64bit-Mach-O",
+          "runtime": "python",
+          "py_implementation": "CPython",
+          "runtime_version": "3.13.5",
+          "langchain_version": "0.3.25",
+          "langchain_core_version": "0.3.65",
+          "library_version": "0.3.65"
+        }
+      },
+      "inputs": {
+        "messages": [
+          [
+            {
+              "lc": 1,
+              "type": "constructor",
+              "id": [
+                "langchain",
+                "schema",
+                "messages",
+                "SystemMessage"
+              ],
+              "kwargs": {
+                "content": "You are an expert document classifier for Environmental, Health, and Safety (EHS) documents.\n        \nClassify the following document into one of these categories:\n- electricity_bill: Electric utility bills showing energy consumption, costs, meter readings\n- water_bill: Water utility bills showing water usage, sewer charges, meter readings  \n- waste_manifest: Hazardous or non-hazardous waste tracking documents with generator/transporter info\n- unknown: Documents that don't fit the above categories\n\nRespond with only a JSON object containing:\n- \"document_type\": one of the four categories above\n- \"confidence\": a number between 0.0 and 1.0\n- \"reasoning\": brief explanation of classification",
+                "type": "system"
+              }
+            },
+            {
+              "lc": 1,
+              "type": "constructor",
+              "id": [
+                "langchain",
+                "schema",
+                "messages",
+                "HumanMessage"
+              ],
+              "kwargs": {
+                "content": "Please classify this document:\n\nCONTENT:\nHere is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage        |\n|---------------|--------------|------------------|------------------|--------------|\n| WTR-MAIN-01   | Commercial    | 8,765,400 gal    | 9,015,400 gal    | 250,000 gal  |\n\n2. **Current Charges Breakdown**\n| Description                                                       | Rate                | Amount      |\n|-------------------------------------------------------------------|---------------------|-------------|\n| Water Consumption (250,000 Gallons)                               | $0.0150 / Gallon    | $3,750.00   |\n| Sewer Service Charge (Based on water usage)                       |                     | $950.00     |\n| Stormwater Management Fee                                          |                     | $125.00     |\n| State Water Conservation Tax                                        |                     | $61.50      |\n| Infrastructure Improvement Surcharge                               |                     | $5.00       |\n| **Total Current Charges**                                          |                     | **$4,891.50** |\n\n### Dates and Time Periods\n- Statement Date: **July 6, 2025**\n- Due Date: **August 5, 2025**\n- Billing Period: **June 1, 2025 to June 30, 2025**\n\n### Quantities and Measurements\n- Water Usage: **250,000 gallons**\n- Previous Meter Read: **8,765,400 gallons**\n- Current Meter Read: **9,015,400 gallons**\n\n### Costs and Financial Information\n- Amount Due: **$4,891.50**\n- Water Consumption Charge: **$3,750.00**\n- Sewer Service Charge: **$950.00**\n- Stormwater Management Fee: **$125.00**\n- State Water Conservation Tax: **$61.50**\n- Infrastructure Improvement Surcharge: **$5.00**\n\n### Compliance-related Information\n- State Water Conservation Tax indicates compliance with state regulations regarding water usage.\n\n### Environmental Metrics\n- Water Consumption: **250,000 gallons** (indicates the amount of water used, relevant for environmental impact assessments).\n\nThis structured data provides a clear overview of the water utility statement for Apex Manufacturing Inc.\n\nEXTRACTED FEATURES:\n- Tables found: True\n- Key terms: stormwater, utility, gallons, sewer, usage, water utility, water, meter, statement, consumption\n- Page count: 1\n",
+                "type": "human"
+              }
+            }
+          ]
+        ]
+      },
+      "outputs": {
+        "generations": [
+          [
+            {
+              "text": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about water usage, sewer charges, and meter readings, which are typical features of a water bill.\"}",
+              "generation_info": {
+                "finish_reason": "stop",
+                "logprobs": null
+              },
+              "type": "ChatGeneration",
+              "message": {
+                "lc": 1,
+                "type": "constructor",
+                "id": [
+                  "langchain",
+                  "schema",
+                  "messages",
+                  "AIMessage"
+                ],
+                "kwargs": {
+                  "content": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about water usage, sewer charges, and meter readings, which are typical features of a water bill.\"}",
+                  "additional_kwargs": {
+                    "refusal": null
+                  },
+                  "response_metadata": {
+                    "token_usage": {
+                      "completion_tokens": 46,
+                      "prompt_tokens": 681,
+                      "total_tokens": 727,
+                      "completion_tokens_details": {
+                        "accepted_prediction_tokens": 0,
+                        "audio_tokens": 0,
+                        "reasoning_tokens": 0,
+                        "rejected_prediction_tokens": 0
+                      },
+                      "prompt_tokens_details": {
+                        "audio_tokens": 0,
+                        "cached_tokens": 0
+                      }
+                    },
+                    "model_name": "gpt-4-0613",
+                    "system_fingerprint": null,
+                    "id": "chatcmpl-CC5med9mkfIvGSuiibLnVi5UZiIcC",
+                    "service_tier": "default",
+                    "finish_reason": "stop",
+                    "logprobs": null
+                  },
+                  "type": "ai",
+                  "id": "run--ccd96b1d-31bc-430c-b7fa-890a0044bead-0",
+                  "usage_metadata": {
+                    "input_tokens": 681,
+                    "output_tokens": 46,
+                    "total_tokens": 727,
+                    "input_token_details": {
+                      "audio": 0,
+                      "cache_read": 0
+                    },
+                    "output_token_details": {
+                      "audio": 0,
+                      "reasoning": 0
+                    }
+                  },
+                  "tool_calls": [],
+                  "invalid_tool_calls": []
+                }
+              }
+            }
+          ]
+        ],
+        "llm_output": {
+          "token_usage": {
+            "completion_tokens": 46,
+            "prompt_tokens": 681,
+            "total_tokens": 727,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          },
+          "model_name": "gpt-4-0613",
+          "system_fingerprint": null,
+          "id": "chatcmpl-CC5med9mkfIvGSuiibLnVi5UZiIcC",
+          "service_tier": "default"
+        },
+        "run": null,
+        "type": "LLMResult"
+      },
+      "events": [
+        {
+          "name": "{'name': 'start', 'time': '2025-09-04T15:03:24.254609+00:00'}",
+          "time": null,
+          "data": null
+        },
+        {
+          "name": "{'name': 'end', 'time': '2025-09-04T15:03:27.529654+00:00'}",
+          "time": null,
+          "data": null
+        }
+      ],
+      "feedback_stats": null
+    }
+  ]
+}

@@ -14,6 +14,9 @@ export const API_ENDPOINTS = {
   executiveDashboard: `${API_BASE_URL}/api/v2/executive-dashboard`,
   ingestion: `${API_BASE_URL}/api/batch-ingest`,
   
+  // LangSmith/Conversations endpoints (port 8001)
+  conversations: `${DATA_API_BASE_URL}/api/langsmith/`,
+  
   // Environmental Dashboard endpoints (port 8000)
   dashboardElectricity: `${API_BASE_URL}/api/dashboard/electricity`,
   dashboardWater: `${API_BASE_URL}/api/dashboard/water`,
@@ -38,6 +41,9 @@ export default {
     electricity: API_ENDPOINTS.dashboardElectricity,
     water: API_ENDPOINTS.dashboardWater,
     waste: API_ENDPOINTS.dashboardWaste,
+  },
+  langsmith: {
+    conversations: API_ENDPOINTS.conversations,
   },
   ingestion: API_ENDPOINTS.ingestion,
 };

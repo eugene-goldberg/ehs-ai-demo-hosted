@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "project_name": "ehs-ai-demo-ingestion",
+    "download_time": "2025-09-04T09:21:23.838768",
+    "filters_applied": {
+      "start_time": "2025-09-04 12:21:21.951209+00:00",
+      "end_time": "2025-09-04 14:21:21.951209+00:00",
+      "hours": 2,
+      "limit": 20
+    },
+    "total_traces_processed": 3,
+    "conversations_extracted": 3,
+    "extraction_mode": "conversations_only"
+  },
+  "conversations": [
+    {
+      "run_id": "d3d9124a-bf2e-4d1d-9065-1091680c4949",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T13:59:51.213514",
+      "end_time": "2025-09-04T13:59:54.372845",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"electricity_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains details about electricity usage, meter readings, and charges related to electricity consumption, which are typical features of an electricity bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "acbb96a9-159f-47cd-a28d-c981dde9cfbe",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T13:59:31.037883",
+      "end_time": "2025-09-04T13:59:33.613373",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"water_bill\", \"confidence\": 1.0, \"reasoning\": \"The document contains details about water usage, sewer charges, and meter readings, which are typical features of a water bill.\"}",
+      "error": null
+    },
+    {
+      "run_id": "dd2e38cd-7671-4809-bd33-26b6cfb5aad2",
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "start_time": "2025-09-04T13:58:57.056968",
+      "end_time": "2025-09-04T13:59:00.160013",
+      "status": "success",
+      "human_input": null,
+      "ai_response": "{\"document_type\": \"waste_manifest\", \"confidence\": 1.0, \"reasoning\": \"The document contains information about waste type, generator/transporter details, and EPA IDs, which are characteristic of waste manifests.\"}",
+      "error": null
+    }
+  ]
+}

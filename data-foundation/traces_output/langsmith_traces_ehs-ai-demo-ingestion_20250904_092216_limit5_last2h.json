@@ -1,0 +1,674 @@
+{
+  "metadata": {
+    "project_name": "ehs-ai-demo-ingestion",
+    "download_time": "2025-09-04T09:22:16.064787",
+    "filters_applied": {
+      "start_time": "2025-09-04 12:22:13.527765+00:00",
+      "end_time": "2025-09-04 14:22:13.527765+00:00",
+      "hours": 2,
+      "limit": 5
+    },
+    "total_traces": 5
+  },
+  "traces": [
+    {
+      "id": "8b532435-582c-447f-8eb2-55711a2dabb4",
+      "name": "handle_rejection",
+      "run_type": "chain",
+      "start_time": "2025-09-04T14:00:26.045240",
+      "end_time": "2025-09-04T14:00:26.085755",
+      "status": "success",
+      "error": null,
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "parent_run_id": "a53d7d00-86f7-4682-9249-65c33336f55d",
+      "child_run_ids": null,
+      "tags": [
+        "graph:step:2"
+      ],
+      "extra": {
+        "metadata": {
+          "langgraph_step": 2,
+          "langgraph_node": "handle_rejection",
+          "langgraph_triggers": [
+            "branch:to:handle_rejection"
+          ],
+          "langgraph_path": [
+            "__pregel_pull",
+            "handle_rejection"
+          ],
+          "langgraph_checkpoint_ns": "handle_rejection:3922b31a-8fa9-7f8f-f606-4c73ad89b1ce",
+          "revision_id": "23a2903a-dirty",
+          "ls_run_depth": 1
+        },
+        "runtime": {
+          "sdk": "langsmith-py",
+          "sdk_version": "0.3.45",
+          "library": "langchain-core",
+          "platform": "macOS-15.6-arm64-arm-64bit-Mach-O",
+          "runtime": "python",
+          "py_implementation": "CPython",
+          "runtime_version": "3.13.5",
+          "langchain_version": "0.3.25",
+          "langchain_core_version": "0.3.65",
+          "library_version": "0.3.65"
+        }
+      },
+      "inputs": {
+        "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+        "document_id": "document-4",
+        "upload_metadata": {
+          "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+          "original_filename": "document-4.pdf",
+          "batch_processing": true
+        },
+        "recognition_result": {
+          "document_type": "unknown",
+          "confidence": 0.8625,
+          "features": {
+            "key_terms": [
+              "account"
+            ],
+            "structure_indicators": {
+              "has_tables": true,
+              "has_dates": false,
+              "has_numbers": false,
+              "has_addresses": false,
+              "paragraph_count": 23,
+              "line_count": 149,
+              "avg_line_length": 50.66442953020134
+            },
+            "metadata": {
+              "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+              "file_name": "document-4.pdf",
+              "content_length": 7697,
+              "page_count": 1,
+              "table_count": 5
+            }
+          },
+          "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf"
+        },
+        "is_accepted": false,
+        "rejection_reason": "Document type could not be determined (confidence: 0.863)",
+        "file_hash": null,
+        "is_duplicate": false,
+        "document_type": null,
+        "parsed_content": null,
+        "extracted_data": null,
+        "validation_results": null,
+        "indexed": false,
+        "errors": [],
+        "retry_count": 0,
+        "neo4j_nodes": null,
+        "neo4j_relationships": null,
+        "processing_time": 1757012426.085662,
+        "status": "rejected"
+      },
+      "outputs": {
+        "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+        "document_id": "document-4",
+        "upload_metadata": {
+          "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+          "original_filename": "document-4.pdf",
+          "batch_processing": true
+        },
+        "recognition_result": {
+          "document_type": "unknown",
+          "confidence": 0.8625,
+          "features": {
+            "key_terms": [
+              "account"
+            ],
+            "structure_indicators": {
+              "has_tables": true,
+              "has_dates": false,
+              "has_numbers": false,
+              "has_addresses": false,
+              "paragraph_count": 23,
+              "line_count": 149,
+              "avg_line_length": 50.66442953020134
+            },
+            "metadata": {
+              "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+              "file_name": "document-4.pdf",
+              "content_length": 7697,
+              "page_count": 1,
+              "table_count": 5
+            }
+          },
+          "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf"
+        },
+        "is_accepted": false,
+        "rejection_reason": "Document type could not be determined (confidence: 0.863)",
+        "file_hash": null,
+        "is_duplicate": false,
+        "document_type": null,
+        "parsed_content": null,
+        "extracted_data": null,
+        "validation_results": null,
+        "indexed": false,
+        "errors": [],
+        "retry_count": 0,
+        "neo4j_nodes": null,
+        "neo4j_relationships": null,
+        "processing_time": 1757012426.085662,
+        "status": "rejected"
+      },
+      "events": [
+        {
+          "name": "{'name': 'start', 'time': '2025-09-04T14:00:26.045240+00:00'}",
+          "time": null,
+          "data": null
+        },
+        {
+          "name": "{'name': 'end', 'time': '2025-09-04T14:00:26.085755+00:00'}",
+          "time": null,
+          "data": null
+        }
+      ],
+      "feedback_stats": null
+    },
+    {
+      "id": "c878d526-abbf-454f-9eea-1ba64b65b8e4",
+      "name": "check_document_acceptance",
+      "run_type": "chain",
+      "start_time": "2025-09-04T14:00:26.044346",
+      "end_time": "2025-09-04T14:00:26.044777",
+      "status": "success",
+      "error": null,
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "parent_run_id": "214e3610-f7a2-4d02-abf4-c5b4695458ed",
+      "child_run_ids": null,
+      "tags": [
+        "seq:step:3"
+      ],
+      "extra": {
+        "metadata": {
+          "langgraph_step": 1,
+          "langgraph_node": "recognize_document",
+          "langgraph_triggers": [
+            "branch:to:recognize_document"
+          ],
+          "langgraph_path": [
+            "__pregel_pull",
+            "recognize_document"
+          ],
+          "langgraph_checkpoint_ns": "recognize_document:d31bad39-e97c-963f-2635-49399187ae56",
+          "revision_id": "23a2903a-dirty",
+          "ls_run_depth": 2
+        },
+        "runtime": {
+          "sdk": "langsmith-py",
+          "sdk_version": "0.3.45",
+          "library": "langchain-core",
+          "platform": "macOS-15.6-arm64-arm-64bit-Mach-O",
+          "runtime": "python",
+          "py_implementation": "CPython",
+          "runtime_version": "3.13.5",
+          "langchain_version": "0.3.25",
+          "langchain_core_version": "0.3.65",
+          "library_version": "0.3.65"
+        }
+      },
+      "inputs": {
+        "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+        "document_id": "document-4",
+        "upload_metadata": {
+          "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+          "original_filename": "document-4.pdf",
+          "batch_processing": true
+        },
+        "recognition_result": {
+          "document_type": "unknown",
+          "confidence": 0.8625,
+          "features": {
+            "key_terms": [
+              "account"
+            ],
+            "structure_indicators": {
+              "has_tables": true,
+              "has_dates": false,
+              "has_numbers": false,
+              "has_addresses": false,
+              "paragraph_count": 23,
+              "line_count": 149,
+              "avg_line_length": 50.66442953020134
+            },
+            "metadata": {
+              "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+              "file_name": "document-4.pdf",
+              "content_length": 7697,
+              "page_count": 1,
+              "table_count": 5
+            }
+          },
+          "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf"
+        },
+        "is_accepted": false,
+        "rejection_reason": "Document type could not be determined (confidence: 0.863)",
+        "file_hash": null,
+        "is_duplicate": false,
+        "document_type": null,
+        "parsed_content": null,
+        "extracted_data": null,
+        "validation_results": null,
+        "indexed": false,
+        "errors": [],
+        "retry_count": 0,
+        "neo4j_nodes": null,
+        "neo4j_relationships": null,
+        "processing_time": null,
+        "status": "processing"
+      },
+      "outputs": {
+        "output": "reject"
+      },
+      "events": [
+        {
+          "name": "{'name': 'start', 'time': '2025-09-04T14:00:26.044346+00:00'}",
+          "time": null,
+          "data": null
+        },
+        {
+          "name": "{'name': 'end', 'time': '2025-09-04T14:00:26.044777+00:00'}",
+          "time": null,
+          "data": null
+        }
+      ],
+      "feedback_stats": null
+    },
+    {
+      "id": "214e3610-f7a2-4d02-abf4-c5b4695458ed",
+      "name": "recognize_document",
+      "run_type": "chain",
+      "start_time": "2025-09-04T13:59:54.493990",
+      "end_time": "2025-09-04T14:00:26.044865",
+      "status": "success",
+      "error": null,
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "parent_run_id": "a53d7d00-86f7-4682-9249-65c33336f55d",
+      "child_run_ids": null,
+      "tags": [
+        "graph:step:1"
+      ],
+      "extra": {
+        "metadata": {
+          "langgraph_step": 1,
+          "langgraph_node": "recognize_document",
+          "langgraph_triggers": [
+            "branch:to:recognize_document"
+          ],
+          "langgraph_path": [
+            "__pregel_pull",
+            "recognize_document"
+          ],
+          "langgraph_checkpoint_ns": "recognize_document:d31bad39-e97c-963f-2635-49399187ae56",
+          "revision_id": "23a2903a-dirty",
+          "ls_run_depth": 1
+        },
+        "runtime": {
+          "sdk": "langsmith-py",
+          "sdk_version": "0.3.45",
+          "library": "langchain-core",
+          "platform": "macOS-15.6-arm64-arm-64bit-Mach-O",
+          "runtime": "python",
+          "py_implementation": "CPython",
+          "runtime_version": "3.13.5",
+          "langchain_version": "0.3.25",
+          "langchain_core_version": "0.3.65",
+          "library_version": "0.3.65"
+        }
+      },
+      "inputs": {
+        "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+        "document_id": "document-4",
+        "upload_metadata": {
+          "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+          "original_filename": "document-4.pdf",
+          "batch_processing": true
+        },
+        "recognition_result": {
+          "document_type": "unknown",
+          "confidence": 0.8625,
+          "features": {
+            "key_terms": [
+              "account"
+            ],
+            "structure_indicators": {
+              "has_tables": true,
+              "has_dates": false,
+              "has_numbers": false,
+              "has_addresses": false,
+              "paragraph_count": 23,
+              "line_count": 149,
+              "avg_line_length": 50.66442953020134
+            },
+            "metadata": {
+              "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+              "file_name": "document-4.pdf",
+              "content_length": 7697,
+              "page_count": 1,
+              "table_count": 5
+            }
+          },
+          "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf"
+        },
+        "is_accepted": false,
+        "rejection_reason": "Document type could not be determined (confidence: 0.863)",
+        "file_hash": null,
+        "is_duplicate": false,
+        "document_type": null,
+        "parsed_content": null,
+        "extracted_data": null,
+        "validation_results": null,
+        "indexed": false,
+        "errors": [],
+        "retry_count": 0,
+        "neo4j_nodes": null,
+        "neo4j_relationships": null,
+        "processing_time": null,
+        "status": "processing"
+      },
+      "outputs": {
+        "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+        "document_id": "document-4",
+        "upload_metadata": {
+          "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+          "original_filename": "document-4.pdf",
+          "batch_processing": true
+        },
+        "recognition_result": {
+          "document_type": "unknown",
+          "confidence": 0.8625,
+          "features": {
+            "key_terms": [
+              "account"
+            ],
+            "structure_indicators": {
+              "has_tables": true,
+              "has_dates": false,
+              "has_numbers": false,
+              "has_addresses": false,
+              "paragraph_count": 23,
+              "line_count": 149,
+              "avg_line_length": 50.66442953020134
+            },
+            "metadata": {
+              "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+              "file_name": "document-4.pdf",
+              "content_length": 7697,
+              "page_count": 1,
+              "table_count": 5
+            }
+          },
+          "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf"
+        },
+        "is_accepted": false,
+        "rejection_reason": "Document type could not be determined (confidence: 0.863)",
+        "file_hash": null,
+        "is_duplicate": false,
+        "document_type": null,
+        "parsed_content": null,
+        "extracted_data": null,
+        "validation_results": null,
+        "indexed": false,
+        "errors": [],
+        "retry_count": 0,
+        "neo4j_nodes": null,
+        "neo4j_relationships": null,
+        "processing_time": null,
+        "status": "processing"
+      },
+      "events": [
+        {
+          "name": "{'name': 'start', 'time': '2025-09-04T13:59:54.493990+00:00'}",
+          "time": null,
+          "data": null
+        },
+        {
+          "name": "{'name': 'end', 'time': '2025-09-04T14:00:26.044865+00:00'}",
+          "time": null,
+          "data": null
+        }
+      ],
+      "feedback_stats": null
+    },
+    {
+      "id": "a53d7d00-86f7-4682-9249-65c33336f55d",
+      "name": "LangGraph",
+      "run_type": "chain",
+      "start_time": "2025-09-04T13:59:54.490816",
+      "end_time": "2025-09-04T14:00:26.086037",
+      "status": "success",
+      "error": null,
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "parent_run_id": null,
+      "child_run_ids": null,
+      "tags": [],
+      "extra": {
+        "runtime": {
+          "sdk": "langsmith-py",
+          "sdk_version": "0.3.45",
+          "library": "langchain-core",
+          "platform": "macOS-15.6-arm64-arm-64bit-Mach-O",
+          "runtime": "python",
+          "py_implementation": "CPython",
+          "runtime_version": "3.13.5",
+          "langchain_version": "0.3.25",
+          "langchain_core_version": "0.3.65",
+          "library_version": "0.3.65"
+        },
+        "metadata": {
+          "revision_id": "23a2903a-dirty",
+          "ls_run_depth": 0
+        }
+      },
+      "inputs": {
+        "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+        "document_id": "document-4",
+        "upload_metadata": {
+          "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+          "original_filename": "document-4.pdf",
+          "batch_processing": true
+        },
+        "recognition_result": null,
+        "is_accepted": false,
+        "rejection_reason": null,
+        "file_hash": null,
+        "is_duplicate": false,
+        "document_type": null,
+        "parsed_content": null,
+        "extracted_data": null,
+        "validation_results": null,
+        "indexed": false,
+        "errors": [],
+        "retry_count": 0,
+        "neo4j_nodes": null,
+        "neo4j_relationships": null,
+        "processing_time": null,
+        "status": "pending",
+        "start_time": 1757012394.457197
+      },
+      "outputs": {
+        "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+        "document_id": "document-4",
+        "upload_metadata": {
+          "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+          "original_filename": "document-4.pdf",
+          "batch_processing": true
+        },
+        "recognition_result": {
+          "document_type": "unknown",
+          "confidence": 0.8625,
+          "features": {
+            "key_terms": [
+              "account"
+            ],
+            "structure_indicators": {
+              "has_tables": true,
+              "has_dates": false,
+              "has_numbers": false,
+              "has_addresses": false,
+              "paragraph_count": 23,
+              "line_count": 149,
+              "avg_line_length": 50.66442953020134
+            },
+            "metadata": {
+              "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+              "file_name": "document-4.pdf",
+              "content_length": 7697,
+              "page_count": 1,
+              "table_count": 5
+            }
+          },
+          "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf"
+        },
+        "is_accepted": false,
+        "rejection_reason": "Document type could not be determined (confidence: 0.863)",
+        "file_hash": null,
+        "is_duplicate": false,
+        "document_type": null,
+        "parsed_content": null,
+        "extracted_data": null,
+        "validation_results": null,
+        "indexed": false,
+        "errors": [],
+        "retry_count": 0,
+        "neo4j_nodes": null,
+        "neo4j_relationships": null,
+        "processing_time": 1757012426.085662,
+        "status": "rejected"
+      },
+      "events": [
+        {
+          "name": "{'name': 'start', 'time': '2025-09-04T13:59:54.490816+00:00'}",
+          "time": null,
+          "data": null
+        },
+        {
+          "name": "{'name': 'end', 'time': '2025-09-04T14:00:26.086037+00:00'}",
+          "time": null,
+          "data": null
+        }
+      ],
+      "feedback_stats": null
+    },
+    {
+      "id": "d804c01d-95d7-46c3-9c70-3472a720e0cd",
+      "name": "check_duplicate_status",
+      "run_type": "chain",
+      "start_time": "2025-09-04T13:59:54.455613",
+      "end_time": "2025-09-04T13:59:54.455905",
+      "status": "success",
+      "error": null,
+      "session_id": "133b8879-3c32-4d23-882d-b35bbab722eb",
+      "parent_run_id": "f3bd7ef7-b4ac-4b11-af78-6b553ef16f7e",
+      "child_run_ids": null,
+      "tags": [
+        "seq:step:3"
+      ],
+      "extra": {
+        "metadata": {
+          "langgraph_step": 2,
+          "langgraph_node": "check_duplicate",
+          "langgraph_triggers": [
+            "branch:to:check_duplicate"
+          ],
+          "langgraph_path": [
+            "__pregel_pull",
+            "check_duplicate"
+          ],
+          "langgraph_checkpoint_ns": "check_duplicate:551b1c18-73d9-f718-fad7-e6f95b2dd050",
+          "revision_id": "23a2903a-dirty",
+          "ls_run_depth": 2
+        },
+        "runtime": {
+          "sdk": "langsmith-py",
+          "sdk_version": "0.3.45",
+          "library": "langchain-core",
+          "platform": "macOS-15.6-arm64-arm-64bit-Mach-O",
+          "runtime": "python",
+          "py_implementation": "CPython",
+          "runtime_version": "3.13.5",
+          "langchain_version": "0.3.25",
+          "langchain_core_version": "0.3.65",
+          "library_version": "0.3.65"
+        }
+      },
+      "inputs": {
+        "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf",
+        "document_id": "document-1",
+        "upload_metadata": {
+          "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+          "original_filename": "document-1.pdf",
+          "batch_processing": true
+        },
+        "recognition_result": {
+          "document_type": "electricity_bill",
+          "confidence": 1.0,
+          "features": {
+            "key_terms": [
+              "kwh",
+              "consumption",
+              "meter",
+              "usage",
+              "electricity",
+              "bill",
+              "electric",
+              "utility",
+              "peak demand",
+              "statement"
+            ],
+            "structure_indicators": {
+              "has_tables": true,
+              "has_dates": true,
+              "has_numbers": true,
+              "has_addresses": false,
+              "paragraph_count": 10,
+              "line_count": 46,
+              "avg_line_length": 44.93478260869565
+            },
+            "metadata": {
+              "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf",
+              "file_name": "document-1.pdf",
+              "content_length": 2112,
+              "page_count": 1,
+              "table_count": 2
+            }
+          },
+          "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf"
+        },
+        "is_accepted": true,
+        "rejection_reason": null,
+        "file_hash": "fb388804f18eba89e7f11ab9062a50e7787be0fe87dab43e9780a6912e21850d",
+        "is_duplicate": true,
+        "document_type": "electricity_bill",
+        "parsed_content": null,
+        "extracted_data": null,
+        "validation_results": null,
+        "indexed": false,
+        "errors": [],
+        "retry_count": 0,
+        "neo4j_nodes": null,
+        "neo4j_relationships": null,
+        "processing_time": null,
+        "status": "duplicate"
+      },
+      "outputs": {
+        "output": "skip"
+      },
+      "events": [
+        {
+          "name": "{'name': 'start', 'time': '2025-09-04T13:59:54.455613+00:00'}",
+          "time": null,
+          "data": null
+        },
+        {
+          "name": "{'name': 'end', 'time': '2025-09-04T13:59:54.455905+00:00'}",
+          "time": null,
+          "data": null
+        }
+      ],
+      "feedback_stats": null
+    }
+  ]
+}
