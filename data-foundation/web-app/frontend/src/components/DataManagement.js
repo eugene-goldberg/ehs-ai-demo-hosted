@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import IngestionProgress from './IngestionProgress';
 import { API_ENDPOINTS } from '../config/api';
+import apiConfig from '../config/api';
 
 const DataManagement = () => {
   const [processedDocuments, setProcessedDocuments] = useState([]);
@@ -31,7 +32,7 @@ const DataManagement = () => {
   // Fetch transcript data when AI Engine Room is expanded
   useEffect(() => {
     if (isAiEngineRoomExpanded && !hasLangSmithData) {
-      // fetchTranscriptData(); // Commented out since fetchTranscriptData function is commented out
+      fetchTranscriptData();
     }
   }, [isAiEngineRoomExpanded, hasLangSmithData]);
 
@@ -55,6 +56,11 @@ const DataManagement = () => {
       setProcessedDocuments(processedDocs);
       setRejectedDocuments(rejectedDocs);
       setError(null);
+      
+      // Fetch transcript data after documents are loaded if AI Engine Room is expanded
+      if (isAiEngineRoomExpanded && !hasLangSmithData) {
+        await fetchTranscriptData();
+      }
     } catch (err) {
       setError('Failed to fetch data. Please try again.');
       console.error('Error fetching data:', err);
@@ -66,25 +72,193 @@ const DataManagement = () => {
     }
   };
 
-  // const fetchTranscriptData = async () => {
-  //   // Don't fetch from port 8001 if we already have LangSmith data
-  //   if (hasLangSmithData) {
-  //     return;
-  //   }
+  const fetchTranscriptData = async () => {
+    // Don't fetch if we already have LangSmith data
+    if (hasLangSmithData) {
+      return;
+    }
 
-  //   try {
-  //     setTranscriptLoading(true);
-  //     setTranscriptError(null);
-  //     const response = await axios.get('http://localhost:8001/api/data/transcript');
-  //     setTranscriptData(response.data.transcript || []);
-  //   } catch (err) {
-  //     console.error('Error fetching transcript data:', err);
-  //     setTranscriptError('Failed to load transcript data. Please try again.');
-  //     setTranscriptData([]);
-  //   } finally {
-  //     setTranscriptLoading(false);
-  //   }
-  // };
+    try {
+      setTranscriptLoading(true);
+      setTranscriptError(null);
+      
+      // First, get the list of projects
+      const projectsResponse = await axios.get(apiConfig.langsmith.projects);
+      
+      if (!projectsResponse.data.projects || projectsResponse.data.projects.length === 0) {
+        setTranscriptError('No LangSmith projects found');
+        setTranscriptData([]);
+        return;
+      }
+      
+      // Use the first project (or you could implement project selection logic)
+      const projectName = projectsResponse.data.projects[0].name;
+      console.log(`Fetching traces from project: ${projectName}`);
+      
+      // Fetch traces from the first project
+      const tracesResponse = await axios.get(apiConfig.langsmith.traces(projectName));
+      
+      if (!tracesResponse.data.traces) {
+        console.log('No traces found in response');
+        setTranscriptData([]);
+        return;
+      }
+      
+      const traces = tracesResponse.data.traces;
+      console.log(`Found ${traces.length} traces`);
+      
+      // Transform traces into transcript format (reuse existing logic)
+      const formattedTranscript = traces
+        .filter(trace => trace.run_type === 'llm' && trace.inputs && trace.outputs)
+        .map((trace, index) => {
+          // Extract user message from inputs
+          let userMessage = '';
+          let assistantMessage = '';
+          
+          try {
+            // Handle LangSmith trace input format: inputs.messages array
+            if (trace.inputs.messages && Array.isArray(trace.inputs.messages)) {
+              // Extract the last user message from the messages array
+              const userMessages = trace.inputs.messages.filter(msg => 
+                msg.role === 'user' || msg.type === 'user' || 
+                (msg.content && typeof msg.content === 'string')
+              );
+              
+              if (userMessages.length > 0) {
+                const lastUserMessage = userMessages[userMessages.length - 1];
+                // Handle different message content structures
+                if (typeof lastUserMessage.content === 'string') {
+                  userMessage = lastUserMessage.content;
+                } else if (lastUserMessage.content && Array.isArray(lastUserMessage.content)) {
+                  // Handle content arrays (for multimodal messages)
+                  const textContent = lastUserMessage.content
+                    .filter(item => item.type === 'text')
+                    .map(item => item.text)
+                    .join(' ');
+                  userMessage = textContent;
+                } else if (typeof lastUserMessage === 'string') {
+                  userMessage = lastUserMessage;
+                }
+              }
+            } else if (trace.inputs.input) {
+              // Fallback to direct input field
+              userMessage = trace.inputs.input;
+            } else if (trace.inputs.prompt) {
+              // Another fallback for prompt field
+              userMessage = trace.inputs.prompt;
+            }
+            
+            // Handle LangSmith trace output format: outputs.generations array
+            if (trace.outputs && trace.outputs.generations && Array.isArray(trace.outputs.generations)) {
+              // Extract the assistant response from generations
+              if (trace.outputs.generations.length > 0) {
+                const generation = trace.outputs.generations[0];
+                if (Array.isArray(generation) && generation.length > 0) {
+                  // Handle nested array structure: generations[0][0].text
+                  const firstGeneration = generation[0];
+                  if (firstGeneration && firstGeneration.text) {
+                    assistantMessage = firstGeneration.text;
+                  } else if (firstGeneration && firstGeneration.message && firstGeneration.message.content) {
+                    assistantMessage = firstGeneration.message.content;
+                  } else if (typeof firstGeneration === 'string') {
+                    assistantMessage = firstGeneration;
+                  }
+                } else if (generation.text) {
+                  // Handle direct generation object with text
+                  assistantMessage = generation.text;
+                } else if (generation.message && generation.message.content) {
+                  // Handle generation with message object
+                  assistantMessage = generation.message.content;
+                } else if (typeof generation === 'string') {
+                  assistantMessage = generation;
+                }
+              }
+            } else if (trace.outputs && trace.outputs.output) {
+              // Fallback to direct output field
+              assistantMessage = trace.outputs.output;
+            } else if (trace.outputs && trace.outputs.content) {
+              // Another fallback for content field
+              assistantMessage = trace.outputs.content;
+            }
+            
+          } catch (e) {
+            console.error('Error parsing trace:', e, trace);
+          }
+          
+          // Return both user and assistant messages
+          const messages = [];
+          if (userMessage && userMessage.trim()) {
+            messages.push({
+              id: `${trace.id}_user`,
+              role: 'user',
+              content: userMessage.trim(),
+              timestamp: trace.start_time,
+              context: {
+                trace_id: trace.id,
+                model: trace.extra?.invocation_params?.model || trace.extra?.metadata?.model || 'unknown',
+                operation: trace.name || 'LLM Call'
+              }
+            });
+          }
+          if (assistantMessage && assistantMessage.trim()) {
+            messages.push({
+              id: `${trace.id}_assistant`,
+              role: 'assistant',
+              content: assistantMessage.trim(),
+              timestamp: trace.end_time,
+              context: {
+                trace_id: trace.id,
+                model: trace.extra?.invocation_params?.model || trace.extra?.metadata?.model || 'unknown',
+                latency: trace.end_time && trace.start_time ? 
+                  ((new Date(trace.end_time) - new Date(trace.start_time)) / 1000).toFixed(2) + 's' : 
+                  'unknown'
+              }
+            });
+          }
+          return messages;
+        })
+        .flat()
+        .filter(msg => msg.content && msg.content.trim()); // Filter out empty messages
+      
+      console.log(`Formatted ${formattedTranscript.length} transcript messages from ${traces.length} traces`);
+      
+      // Fetch ingestion instructions and prepend to transcript
+      try {
+        const instructionsResponse = await axios.get('http://localhost:8001/api/ingestion-instructions');
+        if (instructionsResponse.data && instructionsResponse.data.content) {
+          // Create system message with instructions
+          const systemMessage = {
+            id: 'system_instructions',
+            role: 'system',
+            content: instructionsResponse.data.content,
+            timestamp: new Date().toISOString(),
+            context: {
+              operation: 'Ingestion Instructions',
+              source: 'System'
+            }
+          };
+          
+          // Prepend system message to transcript
+          formattedTranscript.unshift(systemMessage);
+          console.log('Prepended ingestion instructions to transcript');
+        }
+      } catch (instructionsError) {
+        console.warn('Failed to fetch ingestion instructions:', instructionsError);
+        // Continue without instructions - graceful error handling
+      }
+      
+      // Update transcript data and set LangSmith flag
+      setTranscriptData(formattedTranscript);
+      setHasLangSmithData(true);
+      
+    } catch (err) {
+      console.error('Error fetching transcript data:', err);
+      setTranscriptError('Failed to load transcript data from LangSmith API. Please try again.');
+      setTranscriptData([]);
+    } finally {
+      setTranscriptLoading(false);
+    }
+  };
 
   const fetchDocumentDetails = async (documentId) => {
     if (documentDetails[documentId] || loadingDetails[documentId]) {
@@ -364,11 +538,11 @@ const DataManagement = () => {
     setIsAiEngineRoomExpanded(!isAiEngineRoomExpanded);
   };
 
-  const handleRefreshTranscript = () => {
+  const handleRefreshTranscript = async () => {
     // Clear the LangSmith flag to allow fetching fresh data
     setHasLangSmithData(false);
     setTranscriptData([]);
-    // fetchTranscriptData(); // Commented out since fetchTranscriptData function is commented out
+    await fetchTranscriptData();
   };
 
   const getSeverityBadgeClass = (severity) => {

@@ -183,13 +183,13 @@ class LangSmithClient:
             List of dictionaries with project information
         """
         try:
-            projects = list(self.client.list_datasets())
+            projects = list(self.client.list_projects())
             return [
                 {
                     "id": str(project.id),
                     "name": project.name,
                     "description": project.description or "",
-                    "created_at": self._format_timestamp(project.created_at)
+                    "created_at": self._format_timestamp(project.start_time)
                 }
                 for project in projects
             ]
