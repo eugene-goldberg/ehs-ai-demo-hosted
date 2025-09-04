@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import data_management, analytics, instructions, langsmith_conversations
+from routers import data_management, analytics, instructions, langsmith_conversations, risk_assessment_transcript
 from src.api.langsmith_traces_api import router as langsmith_router
 import uvicorn
 
@@ -21,6 +21,7 @@ app.include_router(analytics.router, prefix="/api/analytics", tags=["analytics"]
 app.include_router(instructions.router, prefix="/api", tags=["instructions"])
 app.include_router(langsmith_router, tags=["langsmith"])
 app.include_router(langsmith_conversations.router, prefix="/api/langsmith", tags=["langsmith-conversations"])
+app.include_router(risk_assessment_transcript.router, prefix="/api/risk-assessment-transcript", tags=["risk-assessment"])
 
 @app.get("/")
 def read_root():

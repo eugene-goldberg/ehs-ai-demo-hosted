@@ -30,6 +30,8 @@ import {
   LightbulbOutlined
 } from '@mui/icons-material';
 import { API_ENDPOINTS } from '../config/api';
+import apiConfig from '../config/api';
+import axios from 'axios';
 
 const AnalyticsExecutive = () => {
   const [selectedLocation, setSelectedLocation] = useState('algonquin_il');
@@ -39,6 +41,15 @@ const AnalyticsExecutive = () => {
   const [wasteData, setWasteData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  // Executive Dashboard state
+  const [isExecutiveDashboardExpanded, setIsExecutiveDashboardExpanded] = useState(false);
+  
+  // Risk Assessment Agent Transcript state
+  const [riskAssessmentMarkdown, setRiskAssessmentMarkdown] = useState('');
+  const [riskAssessmentLoading, setRiskAssessmentLoading] = useState(false);
+  const [riskAssessmentError, setRiskAssessmentError] = useState(null);
+  const [hasRiskAssessmentData, setHasRiskAssessmentData] = useState(false);
 
   // Location hierarchy mapping for display
   const locationHierarchy = {
@@ -99,9 +110,96 @@ const AnalyticsExecutive = () => {
     }
   };
 
+  // Fetch Risk Assessment Agent Transcript data
+  const fetchRiskAssessmentData = async () => {
+    // Don't fetch if we already have data
+    if (hasRiskAssessmentData) {
+      return;
+    }
+
+    try {
+      setRiskAssessmentLoading(true);
+      setRiskAssessmentError(null);
+      
+      console.log('Fetching Risk Assessment Agent Transcript...');
+      
+      // Create a new endpoint for the risk assessment transcript
+      const DATA_API_BASE_URL = process.env.REACT_APP_DATA_API_URL || 'http://localhost:8001';
+      const riskAssessmentResponse = await axios.get(apiConfig.riskAssessment.transcript);
+      
+      // Check if the response has the expected markdown_content format
+      if (!riskAssessmentResponse.data) {
+        setRiskAssessmentError('No response data received from server');
+        setRiskAssessmentMarkdown('');
+        return;
+      }
+      
+      // Handle the response format: { "markdown_content": "..." }
+      if (riskAssessmentResponse.data.markdown_content) {
+        const markdownContent = riskAssessmentResponse.data.markdown_content;
+        console.log(`Received risk assessment markdown content (${markdownContent.length} characters)`);
+        
+        // Set the markdown content directly
+        setRiskAssessmentMarkdown(markdownContent);
+        setHasRiskAssessmentData(true);
+        
+      } else if (riskAssessmentResponse.data.error) {
+        // Handle error response from backend
+        setRiskAssessmentError(`Backend error: ${riskAssessmentResponse.data.error}`);
+        setRiskAssessmentMarkdown('');
+        
+      } else {
+        // Handle unexpected response format
+        setRiskAssessmentError('Unexpected response format from server. Expected markdown_content field.');
+        setRiskAssessmentMarkdown('');
+        console.warn('Unexpected response format:', riskAssessmentResponse.data);
+      }
+      
+    } catch (err) {
+      console.error('Error fetching risk assessment data:', err);
+      let errorMessage = 'Failed to load Risk Assessment Agent Transcript. ';
+      
+      if (err.response?.status === 404) {
+        errorMessage += 'Risk assessment endpoint not found. Please ensure the backend is running.';
+      } else if (err.response?.status >= 500) {
+        errorMessage += 'Server error occurred. Please try again later.';
+      } else if (err.response?.data?.error) {
+        errorMessage += `Server responded: ${err.response.data.error}`;
+      } else if (err.code === 'ECONNREFUSED') {
+        errorMessage += 'Cannot connect to backend server.';
+      } else {
+        errorMessage += 'Please try again.';
+      }
+      
+      setRiskAssessmentError(errorMessage);
+      setRiskAssessmentMarkdown('');
+    } finally {
+      setRiskAssessmentLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchEnvironmentalData();
   }, [selectedLocation, selectedDateRange]);
+
+  // Fetch risk assessment data when section is expanded
+  useEffect(() => {
+    if (isExecutiveDashboardExpanded && !hasRiskAssessmentData) {
+      fetchRiskAssessmentData();
+    }
+  }, [isExecutiveDashboardExpanded, hasRiskAssessmentData]);
+
+  // Executive Dashboard toggle handler
+  const toggleExecutiveDashboard = () => {
+    setIsExecutiveDashboardExpanded(!isExecutiveDashboardExpanded);
+  };
+
+  const handleRefreshRiskAssessment = async () => {
+    // Clear the data flag to allow fetching fresh data
+    setHasRiskAssessmentData(false);
+    setRiskAssessmentMarkdown('');
+    await fetchRiskAssessmentData();
+  };
 
   const getScoreColor = (score, target) => {
     if (score >= target) return '#4caf50';
@@ -259,6 +357,180 @@ const AnalyticsExecutive = () => {
     }
     const num = parseFloat(value);
     return !isNaN(num) ? num.toFixed(2) : value;
+  };
+
+  // Simple function to render markdown-like content as basic HTML
+  const renderMarkdownContent = (markdown) => {
+    if (!markdown || typeof markdown !== 'string') {
+      return <div>No content available</div>;
+    }
+
+    // Split content into lines and process basic markdown-like formatting
+    const lines = markdown.split('\n');
+    const elements = [];
+    let currentIdx = 0;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      
+      // Handle main headers (# )
+      if (line.startsWith('# ')) {
+        elements.push(
+          <h2 key={currentIdx++} style={{ 
+            fontSize: '20px', 
+            fontWeight: 'bold', 
+            marginTop: '30px', 
+            marginBottom: '15px',
+            color: '#1f2937',
+            borderBottom: '2px solid #e5e7eb',
+            paddingBottom: '8px'
+          }}>
+            {line.substring(2)}
+          </h2>
+        );
+      }
+      // Handle subheaders (## )
+      else if (line.startsWith('## ')) {
+        elements.push(
+          <h3 key={currentIdx++} style={{ 
+            fontSize: '18px', 
+            fontWeight: 'bold', 
+            marginTop: '25px', 
+            marginBottom: '12px',
+            color: '#1f2937'
+          }}>
+            {line.substring(3)}
+          </h3>
+        );
+      }
+      // Handle sub-subheaders (### )
+      else if (line.startsWith('### ')) {
+        elements.push(
+          <h4 key={currentIdx++} style={{ 
+            fontSize: '16px', 
+            fontWeight: 'bold', 
+            marginTop: '20px', 
+            marginBottom: '10px',
+            color: '#374151'
+          }}>
+            {line.substring(4)}
+          </h4>
+        );
+      }
+      // Handle bold text (simple **text** format)
+      else if (line.startsWith('**') && line.endsWith('**')) {
+        elements.push(
+          <div key={currentIdx++} style={{ 
+            fontWeight: 'bold', 
+            marginBottom: '8px',
+            color: '#374151'
+          }}>
+            {line.substring(2, line.length - 2)}
+          </div>
+        );
+      }
+      // Handle horizontal rules
+      else if (line.trim() === '---') {
+        elements.push(
+          <hr key={currentIdx++} style={{ 
+            border: 'none', 
+            borderTop: '1px solid #e5e7eb', 
+            margin: '20px 0' 
+          }} />
+        );
+      }
+      // Handle code blocks (```json)
+      else if (line.startsWith('```')) {
+        let codeContent = [];
+        let j = i + 1;
+        
+        // Collect lines until closing ```
+        while (j < lines.length && !lines[j].startsWith('```')) {
+          codeContent.push(lines[j]);
+          j++;
+        }
+        
+        if (codeContent.length > 0) {
+          elements.push(
+            <pre key={currentIdx++} style={{
+              backgroundColor: '#f8f9fa',
+              border: '1px solid #e5e7eb',
+              borderRadius: '6px',
+              padding: '16px',
+              marginBottom: '16px',
+              overflowX: 'auto',
+              fontSize: '14px',
+              lineHeight: '1.5',
+              color: '#1f2937'
+            }}>
+              <code>{codeContent.join('\n')}</code>
+            </pre>
+          );
+        }
+        
+        i = j; // Skip past the closing ```
+      }
+      // Handle bullet points
+      else if (line.trim().startsWith('- ')) {
+        elements.push(
+          <div key={currentIdx++} style={{ 
+            marginBottom: '6px',
+            marginLeft: '20px',
+            lineHeight: '1.6',
+            color: '#1f2937'
+          }}>
+            • {line.trim().substring(2)}
+          </div>
+        );
+      }
+      // Handle numbered lists
+      else if (/^\d+\.\s/.test(line.trim())) {
+        elements.push(
+          <div key={currentIdx++} style={{ 
+            marginBottom: '6px',
+            marginLeft: '20px',
+            lineHeight: '1.6',
+            color: '#1f2937'
+          }}>
+            {line.trim()}
+          </div>
+        );
+      }
+      // Handle blockquotes (> )
+      else if (line.startsWith('> ')) {
+        elements.push(
+          <div key={currentIdx++} style={{
+            borderLeft: '4px solid #3b82f6',
+            paddingLeft: '16px',
+            marginBottom: '12px',
+            fontStyle: 'italic',
+            color: '#4b5563',
+            backgroundColor: '#f8fafc'
+          }}>
+            {line.substring(2)}
+          </div>
+        );
+      }
+      // Handle regular content
+      else if (line.trim() !== '') {
+        elements.push(
+          <div key={currentIdx++} style={{ 
+            marginBottom: '8px',
+            lineHeight: '1.6',
+            color: '#1f2937',
+            whiteSpace: 'pre-wrap'
+          }}>
+            {line}
+          </div>
+        );
+      }
+      // Handle empty lines (add spacing)
+      else {
+        elements.push(<div key={currentIdx++} style={{ height: '10px' }} />);
+      }
+    }
+
+    return <div>{elements}</div>;
   };
 
   const renderEnvironmentalCard = (data, title, icon, color, type) => {
@@ -542,6 +814,151 @@ const AnalyticsExecutive = () => {
           </Grid>
         </CardContent>
       </Card>
+
+      {/* Risk Assessment Agent Transcript Section */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', mb: 2 }}>
+        <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+          Risk Assessment Agent Transcript
+        </Typography>
+        <button
+          onClick={toggleExecutiveDashboard}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '18px',
+            padding: '4px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '4px',
+            transition: 'background-color 0.2s ease',
+            color: '#6b7280'
+          }}
+          title={isExecutiveDashboardExpanded ? 'Collapse Risk Assessment Agent Transcript' : 'Expand Risk Assessment Agent Transcript'}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = '#f3f4f6';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = 'transparent';
+          }}
+        >
+          {isExecutiveDashboardExpanded ? '▼' : '▶'}
+        </button>
+        {hasRiskAssessmentData && (
+          <div style={{
+            fontSize: '12px',
+            color: '#059669',
+            backgroundColor: '#d1fae5',
+            padding: '2px 8px',
+            borderRadius: '4px',
+            fontWeight: '500'
+          }}>
+            Risk Assessment Data
+          </div>
+        )}
+      </Box>
+      
+      {isExecutiveDashboardExpanded && (
+        <Card sx={{ mb: 4, boxShadow: 3 }}>
+          <CardContent sx={{ p: 3 }}>
+            {/* Refresh Button */}
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'flex-end',
+              marginBottom: '16px'
+            }}>
+              <button
+                onClick={handleRefreshRiskAssessment}
+                disabled={riskAssessmentLoading}
+                style={{
+                  backgroundColor: '#f3f4f6',
+                  color: '#374151',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  padding: '8px 16px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: riskAssessmentLoading ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.2s ease',
+                  opacity: riskAssessmentLoading ? 0.6 : 1
+                }}
+                onMouseEnter={(e) => {
+                  if (!riskAssessmentLoading) {
+                    e.target.style.backgroundColor = '#e5e7eb';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!riskAssessmentLoading) {
+                    e.target.style.backgroundColor = '#f3f4f6';
+                  }
+                }}
+              >
+                {riskAssessmentLoading ? '🔄 Refreshing...' : '🔄 Refresh'}
+              </button>
+            </div>
+
+            {/* Risk Assessment Display */}
+            <Box sx={{
+              border: '1px solid #e5e7eb',
+              borderRadius: '8px',
+              backgroundColor: '#fafafa',
+              minHeight: '300px',
+              maxHeight: '500px',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              {riskAssessmentLoading ? (
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '300px',
+                  color: '#6b7280',
+                  fontSize: '16px'
+                }}>
+                  Loading Risk Assessment Agent Transcript...
+                </Box>
+              ) : riskAssessmentError ? (
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '300px',
+                  color: '#dc2626',
+                  fontSize: '16px',
+                  textAlign: 'center',
+                  padding: '20px'
+                }}>
+                  {riskAssessmentError}
+                </Box>
+              ) : !riskAssessmentMarkdown ? (
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '300px',
+                  color: '#6b7280',
+                  fontSize: '16px',
+                  textAlign: 'center'
+                }}>
+                  No Risk Assessment Agent Transcript data available yet.<br />
+                  Please ensure the backend is serving the transcript file.
+                </Box>
+              ) : (
+                <Box sx={{
+                  flex: 1,
+                  overflowY: 'auto',
+                  padding: '16px'
+                }}>
+                  {renderMarkdownContent(riskAssessmentMarkdown)}
+                </Box>
+              )}
+            </Box>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Three Environmental Cards */}
       <Grid container spacing={3}>

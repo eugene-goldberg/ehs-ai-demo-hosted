@@ -22,6 +22,9 @@ export const API_ENDPOINTS = {
   dashboardWater: `${API_BASE_URL}/api/dashboard/water`,
   dashboardWaste: `${API_BASE_URL}/api/dashboard/waste`,
   
+  // Risk Assessment endpoints (port 8001)
+  riskAssessmentTranscript: `${DATA_API_BASE_URL}/api/risk-assessment-transcript/`,
+  
   // Add other endpoints as needed
 };
 
@@ -44,6 +47,9 @@ export default {
   },
   langsmith: {
     conversations: API_ENDPOINTS.conversations,
+  },
+  riskAssessment: {
+    transcript: API_ENDPOINTS.riskAssessmentTranscript,
   },
   ingestion: API_ENDPOINTS.ingestion,
 };
