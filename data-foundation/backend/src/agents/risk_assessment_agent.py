@@ -15,6 +15,7 @@ The agent follows the exact method structure defined in the plan:
 
 Author: AI Assistant
 Date: 2025-09-01
+Updated: 2025-09-05 - Fixed gap calculation parsing issue
 """
 
 import os
@@ -65,6 +66,9 @@ class RiskAssessmentAgent:
     4. Risk Assessment: LLM determines likelihood of meeting targets
     5. Recommendations: LLM generates specific actions based on risk
     """
+    
+    # Standard emission factors for conversions
+    ELECTRICITY_CO2E_FACTOR = 0.000395  # tonnes CO2e per kWh (US grid average)
     
     def __init__(self, neo4j_client: Neo4jClient = None, openai_api_key: str = None):
         """Initialize the Risk Assessment Agent"""
@@ -123,7 +127,7 @@ class RiskAssessmentAgent:
             trend_analysis = self.llm_analyze_trends(historical_data)
             
             # Step 3: LLM compares trends to goals
-            goal_comparison = self.llm_compare_to_goals(trend_analysis, annual_goal)
+            goal_comparison = self.llm_compare_to_goals(trend_analysis, annual_goal, historical_data)
             
             # Step 4: LLM assesses risk of missing annual target
             risk_assessment = self.llm_assess_goal_risk(goal_comparison)
@@ -204,7 +208,7 @@ class RiskAssessmentAgent:
             logger.error(f"Error in llm_analyze_trends: {e}")
             return {"error": str(e), "overall_trend": "unknown"}
     
-    def llm_compare_to_goals(self, trends: Dict[str, Any], annual_goal: Dict[str, Any]) -> Dict[str, Any]:
+    def llm_compare_to_goals(self, trends: Dict[str, Any], annual_goal: Dict[str, Any], historical_data: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         LLM projects current trends against annual reduction targets (lines 317-323):
         - Calculate projected annual performance based on 6-month trend
@@ -214,6 +218,7 @@ class RiskAssessmentAgent:
         Args:
             trends: Results from llm_analyze_trends
             annual_goal: Annual reduction goal data
+            historical_data: Raw consumption data with CO2e conversions
             
         Returns:
             Dictionary with goal comparison analysis
@@ -228,12 +233,48 @@ class RiskAssessmentAgent:
             # Create goal comparison prompt
             trend_summary = trends.get('analysis_text', json.dumps(trends))
             
+            # Calculate actual consumption values from historical data
+            actual_consumption = 0
+            baseline_consumption = 0
+            consumption_unit = annual_goal.get('unit', '%')
+            
+            if historical_data and historical_data.get('monthly_data'):
+                monthly_data = historical_data['monthly_data']
+                category = historical_data.get('category', 'electricity')
+                
+                # Calculate actual consumption based on goal unit
+                if consumption_unit == "tonnes CO2e" and category == "electricity":
+                    # Use CO2e values for electricity when goal is in CO2e
+                    for month_data in monthly_data.values():
+                        if 'co2e_emissions' in month_data:
+                            actual_consumption += month_data['co2e_emissions']
+                        elif 'amount' in month_data:
+                            # Convert kWh to CO2e if not already converted
+                            kwh_amount = month_data['amount']
+                            actual_consumption += kwh_amount * self.ELECTRICITY_CO2E_FACTOR
+                else:
+                    # Use raw consumption values for other units
+                    for month_data in monthly_data.values():
+                        actual_consumption += month_data.get('amount', 0)
+                
+                # Calculate baseline (assume first month as baseline)
+                first_month = min(monthly_data.keys())
+                if consumption_unit == "tonnes CO2e" and category == "electricity":
+                    if 'co2e_emissions' in monthly_data[first_month]:
+                        baseline_consumption = monthly_data[first_month]['co2e_emissions']
+                    else:
+                        baseline_kwh = monthly_data[first_month].get('amount', 0)
+                        baseline_consumption = baseline_kwh * self.ELECTRICITY_CO2E_FACTOR
+                else:
+                    baseline_consumption = monthly_data[first_month].get('amount', 0)
+            
             goal_details = {
                 'category': annual_goal.get('category', 'unknown'),
                 'annual_goal': annual_goal.get('target_value', 0),
-                'current_performance': trends.get('monthly_change_rate', 0),
+                'current_performance': actual_consumption,
+                'baseline_consumption': baseline_consumption,
                 'months_elapsed': current_month,
-                'units': annual_goal.get('unit', '%')
+                'units': consumption_unit
             }
             
             prompt = format_risk_assessment_prompt(trend_summary, goal_details, months_remaining)
@@ -246,15 +287,9 @@ class RiskAssessmentAgent:
             response = self.llm(messages)
             
             try:
-                goal_comparison = json.loads(response.content)
-                # Ensure required fields
-                if 'goal_achievable' not in goal_comparison:
-                    goal_comparison['goal_achievable'] = False
-                if 'projected_annual_consumption' not in goal_comparison:
-                    goal_comparison['projected_annual_consumption'] = 0
-                if 'gap_percentage' not in goal_comparison:
-                    goal_comparison['gap_percentage'] = 0
-                    
+                # FIXED: Use improved parsing that handles nested JSON structure
+                goal_comparison = self._parse_llm_response(response.content)
+                                
             except json.JSONDecodeError:
                 logger.warning("LLM response not in JSON format")
                 goal_comparison = {
@@ -265,12 +300,93 @@ class RiskAssessmentAgent:
                     'confidence': 0.5
                 }
             
-            logger.info(f"Goal comparison completed: achievable={goal_comparison.get('goal_achievable', False)}")
+            logger.info(f"Goal comparison completed: achievable={goal_comparison.get('goal_achievable', False)}, gap={goal_comparison.get('gap_percentage', 0):.1f}%")
             return goal_comparison
             
         except Exception as e:
             logger.error(f"Error in llm_compare_to_goals: {e}")
             return {"error": str(e), "goal_achievable": False}
+    
+    def _parse_llm_response(self, response_content: str) -> Dict[str, Any]:
+        """
+        Parse LLM response handling both flat and nested JSON structures
+        
+        FIXED: This method resolves the gap calculation issue by properly extracting
+        values from nested JSON structures that the LLM returns.
+        
+        Args:
+            response_content: Raw JSON response from LLM
+            
+        Returns:
+            Dictionary with extracted gap_percentage, projected_annual_consumption, etc.
+        """
+        
+        try:
+            data = json.loads(response_content)
+            
+            # Initialize with defaults
+            result = {
+                'gap_percentage': 0,
+                'projected_annual_consumption': 0,
+                'goal_achievable': False,
+                'confidence': 0.5,
+                'analysis_text': response_content
+            }
+            
+            if isinstance(data, dict):
+                # First check for direct fields (preferred format)
+                if 'gap_percentage' in data and data['gap_percentage'] != 0:
+                    result['gap_percentage'] = float(data['gap_percentage'])
+                if 'projected_annual_consumption' in data and data['projected_annual_consumption'] != 0:
+                    result['projected_annual_consumption'] = float(data['projected_annual_consumption'])
+                if 'goal_achievable' in data:
+                    result['goal_achievable'] = bool(data['goal_achievable'])
+                
+                # If direct fields are missing or zero, look in nested structure
+                if result['gap_percentage'] == 0 or result['projected_annual_consumption'] == 0:
+                    # Look for gap analysis and projected consumption sections
+                    for key, value in data.items():
+                        if isinstance(value, dict):
+                            # Look for gap analysis section
+                            if 'gap' in key.lower():
+                                for subkey, subvalue in value.items():
+                                    if 'percentage' in subkey.lower():
+                                        try:
+                                            result['gap_percentage'] = float(subvalue)
+                                            logger.debug(f"Extracted gap percentage from nested: {result['gap_percentage']}")
+                                        except (ValueError, TypeError):
+                                            pass
+                            
+                            # Look for projected consumption section  
+                            elif 'projected' in key.lower():
+                                for subkey, subvalue in value.items():
+                                    if 'consumption' in subkey.lower():
+                                        try:
+                                            result['projected_annual_consumption'] = float(subvalue)
+                                            logger.debug(f"Extracted projected consumption from nested: {result['projected_annual_consumption']}")
+                                        except (ValueError, TypeError):
+                                            pass
+                            
+                            # Look for goal achievability
+                            elif 'goal' in key.lower():
+                                for subkey, subvalue in value.items():
+                                    if 'achievable' in subkey.lower():
+                                        if isinstance(subvalue, str):
+                                            result['goal_achievable'] = subvalue.lower() in ['yes', 'true', 'achievable']
+            
+            logger.info(f"Parsed LLM response: gap={result['gap_percentage']:.1f}%, projected={result['projected_annual_consumption']:.1f}")
+            return result
+            
+        except (json.JSONDecodeError, ValueError, TypeError) as e:
+            logger.warning(f"Failed to parse LLM response: {e}")
+            return {
+                'gap_percentage': 0,
+                'projected_annual_consumption': 0,
+                'goal_achievable': False,
+                'confidence': 0.5,
+                'analysis_text': response_content,
+                'parsing_error': str(e)
+            }
     
     def llm_assess_goal_risk(self, comparison: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -453,6 +569,7 @@ class RiskAssessmentAgent:
                 monthly_data = {}
                 total_amount = 0
                 total_cost = 0
+                total_co2e = 0
                 
                 for record in records:
                     # Handle Neo4j date objects properly as specified
@@ -466,6 +583,11 @@ class RiskAssessmentAgent:
                     amount = float(record["amount"]) if record["amount"] else 0
                     cost = float(record["cost"]) if record["cost"] else 0
                     
+                    # Calculate CO2e emissions for electricity
+                    co2e_emissions = 0
+                    if category == "electricity" and amount > 0:
+                        co2e_emissions = amount * self.ELECTRICITY_CO2E_FACTOR
+                    
                     if month_key not in monthly_data:
                         monthly_data[month_key] = {
                             "amount": 0,
@@ -473,15 +595,23 @@ class RiskAssessmentAgent:
                             "count": 0,
                             "unit": record["unit"]
                         }
+                        # Add CO2e emissions for electricity
+                        if category == "electricity":
+                            monthly_data[month_key]["co2e_emissions"] = 0
+                            monthly_data[month_key]["co2e_unit"] = "tonnes CO2e"
                     
                     monthly_data[month_key]["amount"] += amount
                     monthly_data[month_key]["cost"] += cost
                     monthly_data[month_key]["count"] += 1
                     
+                    if category == "electricity":
+                        monthly_data[month_key]["co2e_emissions"] += co2e_emissions
+                    
                     total_amount += amount
                     total_cost += cost
+                    total_co2e += co2e_emissions
 
-                return {
+                result_data = {
                     "site_id": site_id,
                     "category": category,
                     "period": "6_months",
@@ -495,6 +625,13 @@ class RiskAssessmentAgent:
                     },
                     "data_quality": "good" if len(records) >= 24 else "fair"
                 }
+                
+                # Add total CO2e for electricity
+                if category == "electricity":
+                    result_data["totals"]["co2e_emissions"] = total_co2e
+                    result_data["totals"]["co2e_unit"] = "tonnes CO2e"
+                
+                return result_data
                 
         except Exception as e:
             logger.error(f"Error retrieving consumption data: {e}")
@@ -525,7 +662,8 @@ class RiskAssessmentAgent:
                     'target_value': record['target_value'],
                     'unit': record['unit'],
                     'period': record['period'],
-                    'target_date': str(record['target_date']) if record['target_date'] else None
+                    'target_date': str(record['target_date']) if record['target_date'] else None,
+                    'category': category
                 }
                 
         except Exception as e:

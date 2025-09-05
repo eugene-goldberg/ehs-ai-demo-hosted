@@ -21,13 +21,14 @@ Format your response with quantified metrics where possible.
 Focus on trends that could impact annual goal achievement.
 """
 
-# Risk Assessment Prompt (lines 449-466)
+# Risk Assessment Prompt (lines 449-466) - Updated to include CO2e and baseline data
 RISK_ASSESSMENT_PROMPT = """
 Based on the trend analysis below, assess the risk of missing the annual {category} goal:
 
 Trend Summary: {trend_summary}
 Annual Goal: {annual_goal} {units}
 Current Performance: {current_performance} {units} ({months_elapsed} months)
+Baseline Consumption: {baseline_consumption} {units}
 Months Remaining: {months_remaining}
 
 Calculate the projected annual performance and assign a risk level:
@@ -39,10 +40,14 @@ Risk Levels:
 - CRITICAL: <10% chance of meeting goal (projected performance >50% from goal)
 
 Provide:
-1. Projected annual consumption
-2. Gap analysis (difference from goal)
+1. Projected annual consumption based on current trend
+2. Gap analysis (difference from goal in absolute terms and percentage)
 3. Risk level assignment with justification
-4. Key risk factors
+4. Key risk factors considering baseline vs current performance
+5. Assessment of whether goal is achievable given current trend
+
+Note: For CO2e targets, consider that the goal is typically a reduction target (e.g., -10% from baseline).
+For percentage-based goals like "-10%", calculate the target as: baseline * (1 + goal_percentage/100).
 """
 
 # Recommendation Generation Prompt (lines 469-493)
@@ -104,6 +109,7 @@ def format_risk_assessment_prompt(trend_summary, goal_details, months_remaining)
             - category: consumption category
             - annual_goal: target value for the year
             - current_performance: actual consumption so far
+            - baseline_consumption: baseline consumption for comparison
             - months_elapsed: months completed
             - units: measurement units
         months_remaining (int): Months left in the assessment period
@@ -116,6 +122,7 @@ def format_risk_assessment_prompt(trend_summary, goal_details, months_remaining)
         trend_summary=trend_summary,
         annual_goal=goal_details['annual_goal'],
         current_performance=goal_details['current_performance'],
+        baseline_consumption=goal_details.get('baseline_consumption', 0),
         months_elapsed=goal_details['months_elapsed'],
         months_remaining=months_remaining,
         units=goal_details['units']
