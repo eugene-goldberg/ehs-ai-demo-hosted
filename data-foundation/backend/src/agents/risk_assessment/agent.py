@@ -1,464 +1,454 @@
 """
-LangGraph-based Risk Assessment Agent for EHS AI Platform.
+Risk Assessment Agent for Environmental, Health & Safety (EHS) evaluation.
 
-This module implements a comprehensive risk assessment workflow using LangGraph that:
-1. Analyzes environmental, health, and safety data from Neo4j
-2. Performs risk assessment using structured methodologies
+This agent performs comprehensive risk assessments using a workflow-based approach.
+It integrates multiple data sources, employs AI-powered analysis, and generates
+actionable recommendations for risk mitigation.
+
+Key Features:
+1. Multi-source data integration (environmental, health, safety, compliance)
+2. AI-powered risk analysis using LangChain and OpenAI
 3. Generates actionable recommendations and mitigation strategies
-4. Integrates with LangSmith for tracing and monitoring
-5. Provides comprehensive error handling and retry logic
+4. Configurable assessment methodologies and risk scoring
+5. Comprehensive reporting and audit trail capabilities
+6. Error handling and retry mechanisms for reliability
 """
 
-import os
 import logging
-import json
-from typing import Dict, List, Any, Optional, TypedDict, Union
-from datetime import datetime, timedelta, date
-from enum import Enum
-import asyncio
+import os
+import sys
+from datetime import datetime
+from typing import Any, Dict, List, Optional, TypedDict
 
-from langgraph.graph import StateGraph, END
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+# Add the parent directory to sys.path to import from src
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(os.path.dirname(current_dir))
+sys.path.insert(0, parent_dir)
+
+from langchain_core.output_parsers import StrOutputParser, PydanticOutputParser
+from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_openai import ChatOpenAI
-from langchain_anthropic import ChatAnthropic
-from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
-from langchain_core.runnables import RunnablePassthrough, RunnableLambda
-from langchain_core.output_parsers import JsonOutputParser, PydanticOutputParser
+from langgraph.graph import StateGraph, END
 from pydantic import BaseModel, Field, validator
-from neo4j import GraphDatabase, Transaction
-from neo4j.time import Date as Neo4jDate, DateTime as Neo4jDateTime, Time as Neo4jTime
+from sqlalchemy.orm import Session
 
-# Local imports
-from langsmith_config import config as langsmith_config, tracing_context, tag_ingestion_trace
-from shared.common_fn import create_graph_database_connection
+from config.database import get_db
+from models.facility import Facility
+from models.risk_assessment import RiskAssessmentResult
+from services.data_collector import DataCollector
+from utils.json_utils import safe_json_dumps
 
+# Set up logging
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def neo4j_json_serializer(obj):
-    """
-    Custom JSON serializer that handles Neo4j Date and DateTime objects.
-    
-    Args:
-        obj: Object to serialize
-        
-    Returns:
-        JSON-serializable representation
-    """
-    if isinstance(obj, (Neo4jDate, date)):
-        return obj.isoformat()
-    elif isinstance(obj, (Neo4jDateTime, datetime)):
-        return obj.isoformat()
-    elif isinstance(obj, Neo4jTime):
-        return str(obj)
-    elif hasattr(obj, 'isoformat'):  # Catch any other datetime-like objects
-        return obj.isoformat()
-    elif hasattr(obj, '__dict__'):
-        return obj.__dict__
-    else:
-        return str(obj)
-
-
-def safe_json_dumps(data, **kwargs):
-    """
-    Safe JSON dumps function that handles Neo4j types and other edge cases.
-    
-    Args:
-        data: Data to serialize
-        **kwargs: Additional arguments for json.dumps
-        
-    Returns:
-        JSON string
-    """
-    kwargs.setdefault('default', neo4j_json_serializer)
-    try:
-        return json.dumps(data, **kwargs)
-    except TypeError as e:
-        logger.warning(f"JSON serialization failed, falling back to string representation: {str(e)}")
-        # Fallback: convert all problematic objects to strings
-        return json.dumps(data, default=str, **kwargs)
-
-
-# Risk Assessment Enums
-class RiskLevel(str, Enum):
-    """Risk level classification."""
-    CRITICAL = "critical"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-    NEGLIGIBLE = "negligible"
-
-
-class RiskCategory(str, Enum):
-    """Risk category classification."""
-    ENVIRONMENTAL = "environmental"
-    HEALTH = "health"
-    SAFETY = "safety"
-    COMPLIANCE = "compliance"
-    OPERATIONAL = "operational"
-
-
-class AssessmentStatus(str, Enum):
-    """Risk assessment processing status."""
-    PENDING = "pending"
-    ANALYZING = "analyzing"
-    ASSESSING = "assessing"
-    RECOMMENDING = "recommending"
-    COMPLETED = "completed"
-    FAILED = "failed"
-    RETRY = "retry"
-
-
-# Pydantic Models
 class RiskFactor(BaseModel):
-    """Individual risk factor identified in the analysis."""
-    id: str = Field(description="Unique identifier for the risk factor")
-    name: str = Field(description="Human-readable name of the risk factor")
-    category: RiskCategory = Field(description="Category of risk")
-    description: str = Field(description="Detailed description of the risk factor")
-    source_data: List[str] = Field(description="Source data points that contribute to this risk")
-    severity: float = Field(ge=0.0, le=10.0, description="Severity score (0-10)")
-    probability: float = Field(ge=0.0, le=1.0, description="Probability of occurrence (0-1)")
-    confidence: float = Field(ge=0.0, le=1.0, description="Confidence in assessment (0-1)")
+    """Individual risk factor identified in the assessment."""
+    
+    factor_id: str = Field(description="Unique identifier for the risk factor")
+    category: str = Field(description="Category (environmental, health, safety, compliance)")
+    name: str = Field(description="Name/title of the risk factor")
+    description: str = Field(description="Detailed description of the risk")
+    likelihood: float = Field(description="Likelihood score (0-10)")
+    impact: float = Field(description="Impact score (0-10)")
+    risk_score: float = Field(description="Calculated risk score (likelihood * impact)")
+    severity_level: str = Field(description="Risk severity level (Low, Medium, High, Critical)")
+    data_sources: List[str] = Field(description="List of data sources that identified this risk")
+    location: Optional[str] = Field(description="Specific location or area affected")
+    affected_populations: List[str] = Field(default=[], description="Groups/populations affected")
+    regulatory_concerns: List[str] = Field(default=[], description="Relevant regulations or compliance issues")
+    
+    @validator('likelihood', 'impact')
+    def validate_scores(cls, v):
+        if not 0 <= v <= 10:
+            raise ValueError('Score must be between 0 and 10')
+        return v
+    
+    @validator('severity_level')
+    def validate_severity(cls, v):
+        if v not in ['Low', 'Medium', 'High', 'Critical']:
+            raise ValueError('Severity level must be Low, Medium, High, or Critical')
+        return v
 
 
 class RiskAssessment(BaseModel):
-    """Complete risk assessment for a facility or operation."""
-    facility_id: str = Field(description="Facility identifier")
-    assessment_date: datetime = Field(description="Date of assessment")
-    overall_risk_level: RiskLevel = Field(description="Overall risk classification")
-    risk_score: float = Field(ge=0.0, le=100.0, description="Composite risk score (0-100)")
-    risk_factors: List[RiskFactor] = Field(description="Individual risk factors identified")
+    """Overall risk assessment results."""
+    
+    assessment_id: str = Field(description="Unique assessment identifier")
+    overall_risk_level: str = Field(description="Overall risk level (Low, Medium, High, Critical)")
+    risk_score: float = Field(description="Overall risk score (0-100)")
+    confidence_level: float = Field(description="Confidence in assessment (0-1)")
     methodology: str = Field(description="Assessment methodology used")
-    confidence_level: float = Field(ge=0.0, le=1.0, description="Overall confidence in assessment")
+    assessment_date: str = Field(description="ISO format date of assessment")
+    key_findings: List[str] = Field(description="Key findings summary")
+    data_quality_score: float = Field(description="Quality score of input data (0-1)")
+    limitations: List[str] = Field(default=[], description="Assessment limitations")
+    
+    @validator('overall_risk_level')
+    def validate_risk_level(cls, v):
+        if v not in ['Low', 'Medium', 'High', 'Critical']:
+            raise ValueError('Risk level must be Low, Medium, High, or Critical')
+        return v
+    
+    @validator('risk_score')
+    def validate_risk_score(cls, v):
+        if not 0 <= v <= 100:
+            raise ValueError('Risk score must be between 0 and 100')
+        return v
+    
+    @validator('confidence_level', 'data_quality_score')
+    def validate_scores_0_to_1(cls, v):
+        if not 0 <= v <= 1:
+            raise ValueError('Score must be between 0 and 1')
+        return v
 
 
 class RiskRecommendation(BaseModel):
-    """Risk mitigation recommendation."""
-    id: str = Field(description="Unique identifier for the recommendation")
+    """Individual recommendation for risk mitigation."""
+    
+    recommendation_id: str = Field(description="Unique recommendation identifier")
+    category: str = Field(description="Category (preventive, corrective, monitoring)")
     title: str = Field(description="Brief title of the recommendation")
-    description: str = Field(description="Detailed description of recommended action")
-    priority: str = Field(description="Priority level (critical, high, medium, low)")
-    target_risk_factors: List[str] = Field(description="Risk factor IDs this recommendation addresses")
-    estimated_impact: float = Field(ge=0.0, le=10.0, description="Expected impact on risk reduction (0-10)")
-    implementation_timeline: str = Field(description="Recommended implementation timeframe")
-    cost_estimate: Optional[str] = Field(description="Cost estimate category")
-    responsible_party: str = Field(description="Recommended responsible party")
+    description: str = Field(description="Detailed description of the recommendation")
+    priority: str = Field(description="Priority level (Low, Medium, High, Critical)")
+    estimated_cost: Optional[str] = Field(description="Estimated implementation cost range")
+    timeline: str = Field(description="Recommended implementation timeline")
+    responsible_party: str = Field(description="Who should implement this recommendation")
+    success_metrics: List[str] = Field(description="How to measure success")
+    related_risks: List[str] = Field(description="Risk factor IDs this addresses")
+    implementation_steps: List[str] = Field(description="Step-by-step implementation guide")
+    regulatory_compliance: List[str] = Field(default=[], description="Regulatory requirements addressed")
+    
+    @validator('priority')
+    def validate_priority(cls, v):
+        if v not in ['Low', 'Medium', 'High', 'Critical']:
+            raise ValueError('Priority must be Low, Medium, High, or Critical')
+        return v
 
 
 class RecommendationSet(BaseModel):
     """Complete set of recommendations for risk mitigation."""
-    facility_id: str = Field(description="Facility identifier")
-    assessment_id: str = Field(description="Associated risk assessment ID")
+    
+    assessment_id: str = Field(description="Related assessment identifier")
     recommendations: List[RiskRecommendation] = Field(description="List of recommendations")
-    implementation_plan: str = Field(description="High-level implementation plan")
-    estimated_risk_reduction: float = Field(ge=0.0, le=100.0, description="Expected overall risk reduction percentage")
+    total_estimated_cost: Optional[str] = Field(description="Total estimated cost for all recommendations")
+    implementation_phases: List[str] = Field(default=[], description="Suggested implementation phases")
+    quick_wins: List[str] = Field(default=[], description="Quick win recommendation IDs")
+    long_term_goals: List[str] = Field(default=[], description="Long-term recommendation IDs")
 
 
-# State Definition
-class RiskAssessmentState(TypedDict):
-    """State for risk assessment workflow."""
-    # Input parameters
+class FacilityInfo(BaseModel):
+    """Facility information for context."""
+    
     facility_id: str
+    name: str
+    location: str
+    industry_type: str
+    size: str
+    operations: List[str]
+
+
+class RiskAssessmentState(TypedDict):
+    """State maintained throughout the risk assessment workflow."""
+    
+    # Assessment metadata
     assessment_id: str
-    assessment_scope: Dict[str, Any]  # Date ranges, specific areas, etc.
-    request_metadata: Dict[str, Any]
+    facility_id: str
+    assessment_scope: Dict[str, Any]
+    methodology: str
     
-    # Data collection phase
-    environmental_data: Optional[List[Dict[str, Any]]]
-    health_data: Optional[List[Dict[str, Any]]]
-    safety_data: Optional[List[Dict[str, Any]]]
-    compliance_data: Optional[List[Dict[str, Any]]]
-    facility_info: Optional[Dict[str, Any]]
+    # Data collection
+    environmental_data: List[Dict[str, Any]]
+    health_data: List[Dict[str, Any]]
+    safety_data: List[Dict[str, Any]]
+    compliance_data: List[Dict[str, Any]]
+    facility_info: Dict[str, Any]
     
-    # Analysis phase
-    risk_factors: Optional[List[RiskFactor]]
+    # Analysis results
     analysis_results: Optional[Dict[str, Any]]
-    
-    # Assessment phase
+    risk_factors: List[RiskFactor]
     risk_assessment: Optional[RiskAssessment]
-    assessment_methodology: str
-    
-    # Recommendation phase  
     recommendations: Optional[RecommendationSet]
     
-    # Execution tracking
-    status: str
+    # Workflow control
     current_step: str
+    step_retry_counts: Dict[str, int]
     errors: List[str]
-    retry_count: int
-    step_retry_count: int  # Track retries per step
-    processing_time: Optional[float]
+    warnings: List[str]
     
-    # LangSmith tracing
-    langsmith_session: Optional[str]
-    trace_metadata: Dict[str, Any]
-    
-    # Neo4j data
-    neo4j_results: Optional[Dict[str, Any]]
-    
-    # Output
-    final_report: Optional[Dict[str, Any]]
+    # Status tracking
+    status: str
+    progress: float
+    start_time: str
+    end_time: Optional[str]
 
 
 class RiskAssessmentAgent:
     """
-    LangGraph-based risk assessment agent that performs comprehensive EHS risk analysis.
+    AI-powered Risk Assessment Agent for Environmental, Health & Safety evaluation.
     
-    This agent orchestrates a multi-step workflow:
-    1. Data Collection: Retrieve relevant EHS data from Neo4j
-    2. Risk Analysis: Identify and analyze individual risk factors
-    3. Risk Assessment: Calculate overall risk levels and scores
-    4. Recommendation Generation: Create actionable mitigation strategies
+    This agent uses a workflow-based approach to conduct comprehensive risk assessments
+    by integrating multiple data sources, performing AI-powered analysis, and generating
+    actionable recommendations.
     """
     
     def __init__(
         self,
-        neo4j_uri: str,
-        neo4j_username: str,
-        neo4j_password: str,
-        neo4j_database: str = "neo4j",
-        llm_model: str = "gpt-4o",
+        methodology: str = "comprehensive_ehs",
         max_retries: int = 3,
-        max_step_retries: int = 2,  # Maximum retries per individual step
-        enable_langsmith: bool = True,
-        risk_assessment_methodology: str = "comprehensive"
+        max_step_retries: int = 2,
+        openai_api_key: Optional[str] = None,
+        model_name: str = "gpt-4-turbo-preview"
     ):
         """
         Initialize the Risk Assessment Agent.
         
         Args:
-            neo4j_uri: Neo4j connection URI
-            neo4j_username: Neo4j username
-            neo4j_password: Neo4j password
-            neo4j_database: Neo4j database name
-            llm_model: LLM model to use for analysis
-            max_retries: Maximum retry attempts for failed operations
-            max_step_retries: Maximum retries per individual step
-            enable_langsmith: Enable LangSmith tracing
-            risk_assessment_methodology: Risk assessment methodology to use
+            methodology: Assessment methodology to use
+            max_retries: Maximum number of workflow retries
+            max_step_retries: Maximum retries for individual steps
+            openai_api_key: OpenAI API key (uses env var if not provided)
+            model_name: OpenAI model to use for analysis
         """
+        self.methodology = methodology
         self.max_retries = max_retries
         self.max_step_retries = max_step_retries
-        self.enable_langsmith = enable_langsmith and langsmith_config.is_available
-        self.methodology = risk_assessment_methodology
         
-        # Initialize Neo4j connection
-        try:
-            self.graph = create_graph_database_connection(
-                neo4j_uri, neo4j_username, neo4j_password, neo4j_database
-            )
-            logger.info("Neo4j connection established successfully")
-        except Exception as e:
-            logger.error(f"Failed to connect to Neo4j: {str(e)}")
-            raise
+        # Initialize OpenAI client
+        api_key = openai_api_key or os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise ValueError("OpenAI API key is required")
+            
+        self.llm = ChatOpenAI(
+            api_key=api_key,
+            model=model_name,
+            temperature=0.1,
+            max_tokens=4000
+        )
         
-        # Initialize LLM
-        try:
-            if "claude" in llm_model.lower():
-                self.llm = ChatAnthropic(model=llm_model, temperature=0)
-            else:
-                self.llm = ChatOpenAI(model=llm_model, temperature=0)
-            logger.info(f"LLM initialized: {llm_model}")
-        except Exception as e:
-            logger.error(f"Failed to initialize LLM: {str(e)}")
-            raise
+        # Initialize data collector
+        self.data_collector = DataCollector()
         
-        # Initialize output parsers
-        self.risk_factor_parser = PydanticOutputParser(pydantic_object=RiskFactor)
-        self.risk_assessment_parser = PydanticOutputParser(pydantic_object=RiskAssessment)
-        self.recommendation_parser = PydanticOutputParser(pydantic_object=RiskRecommendation)
+        # Initialize analysis chains
+        self._setup_analysis_chains()
         
-        # Initialize LLM chains
-        self._initialize_llm_chains()
-        
-        # Build workflow graph
+        # Build workflow
         self.workflow = self._build_workflow()
         
-        if self.enable_langsmith:
-            logger.info("LangSmith tracing enabled for risk assessment agent")
+        logger.info(f"RiskAssessmentAgent initialized with methodology: {methodology}")
+    
+    def _setup_analysis_chains(self):
+        """Set up LangChain chains for different analysis tasks."""
         
-    def _initialize_llm_chains(self):
-        """Initialize LLM chains for different assessment phases."""
-        
-        # Data Analysis Chain
-        self.data_analysis_prompt = ChatPromptTemplate.from_messages([
-            SystemMessagePromptTemplate.from_template(
-                """You are an expert EHS (Environmental, Health, Safety) data analyst. 
-                Your task is to analyze facility data and identify potential risk factors.
-                Focus on:
-                1. Environmental risks (emissions, waste, water usage, compliance violations)
-                2. Health risks (exposure levels, safety incidents, occupational hazards)
-                3. Safety risks (equipment failures, process deviations, near misses)
-                4. Compliance risks (permit violations, regulatory non-compliance)
-                For each risk factor identified, provide:
-                - Clear description and context
-                - Potential severity and probability
-                - Supporting data points
-                - Category classification
-                
-                IMPORTANT: If no significant risk factors are found in the data, still provide:
-                - A summary of data reviewed
-                - Indication of data completeness
-                - Any baseline risk factors typical for this facility type
-                - Recommendations for additional data collection if needed
-                
-                Output your analysis as a structured list of risk factors."""
-            ),
-            HumanMessagePromptTemplate.from_template(
-                """Analyze the following EHS data for facility {facility_id}:
-                Environmental Data: {environmental_data}
-                Health Data: {health_data}  
-                Safety Data: {safety_data}
-                Compliance Data: {compliance_data}
-                Facility Information: {facility_info}
-                Assessment Scope: {assessment_scope}
-                Identify and analyze all significant risk factors present in this data.
-                """
-            )
-        ])
-        
-        self.data_analysis_chain = (
-            self.data_analysis_prompt 
-            | self.llm 
-            | RunnableLambda(lambda x: x.content)
+        # Data analysis chain
+        data_analysis_prompt = ChatPromptTemplate.from_template(
+            """You are an expert Environmental, Health & Safety (EHS) risk analyst.
+            
+            Analyze the following facility data and identify potential risk factors:
+            
+            Facility ID: {facility_id}
+            Facility Information: {facility_info}
+            Assessment Scope: {assessment_scope}
+            
+            Environmental Data: {environmental_data}
+            Health Data: {health_data}
+            Safety Data: {safety_data}
+            Compliance Data: {compliance_data}
+            
+            Provide a comprehensive analysis identifying:
+            1. Key risk patterns and trends
+            2. Data quality issues or gaps
+            3. Potential correlations between different data sources
+            4. Areas requiring immediate attention
+            5. Regulatory compliance concerns
+            
+            Focus on actionable insights that will inform risk factor identification."""
         )
         
-        # Risk Assessment Chain
-        self.risk_assessment_prompt = ChatPromptTemplate.from_messages([
-            SystemMessagePromptTemplate.from_template(
-                """You are an expert risk assessor specializing in EHS risk evaluation.
-                Your task is to perform a comprehensive risk assessment based on identified risk factors.
-                Use the following methodology: {methodology}
-                For risk assessment:
-                1. Evaluate each risk factor for severity (0-10) and probability (0-1)
-                2. Calculate composite risk scores
-                3. Determine overall risk level (critical/high/medium/low/negligible)
-                4. Assess confidence levels based on data quality and completeness
-                5. Consider interdependencies between risk factors
-                
-                If no risk factors were identified, create a baseline assessment with:
-                - Overall risk level: NEGLIGIBLE or LOW (appropriate for facility type)
-                - Risk score: 0-20 (baseline score for facility with no significant findings)
-                - At least one baseline risk factor representing general operational risks
-                - Clear indication that assessment is based on limited data
-                
-                Output format must be valid JSON matching the RiskAssessment schema.
-                {format_instructions}"""
-            ),
-            HumanMessagePromptTemplate.from_template(
-                """Assess the following risk factors for facility {facility_id}:
-                Risk Factors: {risk_factors}
-                Assessment Context:
-                - Facility Type: {facility_type}
-                - Assessment Scope: {assessment_scope}
-                - Data Quality: {data_quality}
-                Perform comprehensive risk assessment and provide structured output.
-                """
-            )
-        ])
+        self.data_analysis_chain = data_analysis_prompt | self.llm | StrOutputParser()
         
+        # Risk assessment chain
+        risk_assessment_prompt = ChatPromptTemplate.from_template(
+            """You are an expert EHS risk assessor. Based on the following analysis results
+            and risk factors, provide a comprehensive risk assessment.
+            
+            Analysis Results: {analysis_results}
+            Risk Factors: {risk_factors}
+            Facility Context: {facility_context}
+            
+            {format_instructions}
+            
+            Provide a thorough risk assessment following the RiskAssessment schema.
+            Consider:
+            1. Overall risk level based on individual risk factors
+            2. Cumulative and interactive effects of multiple risks
+            3. Confidence level based on data quality and completeness
+            4. Key findings that decision-makers need to know
+            5. Limitations of the assessment
+            
+            Be precise with scoring and provide clear justification."""
+        )
+        
+        risk_assessment_parser = PydanticOutputParser(pydantic_object=RiskAssessment)
         self.risk_assessment_chain = (
-            self.risk_assessment_prompt 
-            | self.llm 
-            | self.risk_assessment_parser
+            risk_assessment_prompt.partial(
+                format_instructions=risk_assessment_parser.get_format_instructions()
+            ) | self.llm | risk_assessment_parser
         )
         
-        # Recommendation Generation Chain
-        self.recommendation_prompt = ChatPromptTemplate.from_messages([
-            SystemMessagePromptTemplate.from_template(
-                """You are an expert EHS consultant specializing in risk mitigation strategies.
-                Your task is to generate actionable recommendations to address identified risks.
-                For each recommendation:
-                1. Provide specific, actionable steps
-                2. Prioritize based on risk severity and implementation feasibility
-                3. Estimate impact on risk reduction
-                4. Suggest realistic implementation timelines
-                5. Identify responsible parties
-                6. Consider cost-benefit analysis
-                Focus on:
-                - Immediate actions for critical risks
-                - Long-term strategic improvements
-                - Compliance and regulatory requirements
-                - Best practices and industry standards
-                
-                If assessment shows low/negligible risks, provide:
-                - Recommendations for maintaining current status
-                - Preventive measures to avoid future risks
-                - Data collection improvements
-                - Periodic review schedules
-                
-                Output format must be valid JSON matching the RecommendationSet schema.
-                {format_instructions}"""
-            ),
-            HumanMessagePromptTemplate.from_template(
-                """Generate recommendations for the following risk assessment:
-                Facility ID: {facility_id}
-                Risk Assessment: {risk_assessment}
-                Risk Factors Summary:
-                {risk_factors_summary}
-                Facility Context: {facility_context}
-                Generate comprehensive, prioritized recommendations for risk mitigation.
-                """
-            )
-        ])
+        # Recommendation generation chain  
+        recommendation_prompt = ChatPromptTemplate.from_template(
+            """You are an expert EHS risk management consultant.
+            
+            Based on the risk assessment results, generate comprehensive, actionable
+            recommendations for risk mitigation and management.
+            
+            Facility ID: {facility_id}
+            Risk Assessment: {risk_assessment}
+            Risk Factors Summary: {risk_factors_summary}
+            Facility Context: {facility_context}
+            
+            {format_instructions}
+            
+            Generate recommendations that are:
+            1. Specific and actionable
+            2. Prioritized by risk level and feasibility
+            3. Cost-effective and practical to implement
+            4. Compliant with relevant regulations
+            5. Measurable with clear success metrics
+            
+            Include both immediate actions and long-term strategies.
+            Consider resource constraints and implementation challenges."""
+        )
         
+        # Use a simpler approach for recommendations to handle parsing issues
+        if hasattr(self, '_get_recommendation_format_instructions'):
+            format_instructions = self._get_recommendation_format_instructions()
+        else:
+            format_instructions = """Return valid JSON matching RecommendationSet schema"""
+            
         self.recommendation_chain = (
-            self.recommendation_prompt 
+            recommendation_prompt.partial(format_instructions=format_instructions) 
             | self.llm 
-            | JsonOutputParser()
+            | StrOutputParser()
         )
     
-    def _build_workflow(self) -> StateGraph:
-        """
-        Build the LangGraph workflow for risk assessment.
+    def _get_recommendation_format_instructions(self):
+        """Get format instructions for recommendation generation."""
+        try:
+            recommendation_parser = PydanticOutputParser(pydantic_object=RecommendationSet)
+            return recommendation_parser.get_format_instructions()
+        except Exception as e:
+            logger.warning(f"Could not create recommendation parser: {e}")
+            return """Generate recommendations for the following risk assessment:
+            
+            Return a JSON object with:
+            - assessment_id: string
+            - recommendations: array of recommendation objects
+            - Each recommendation should have: recommendation_id, category, title, description, priority, timeline, responsible_party, success_metrics, related_risks, implementation_steps
+            
+            Generate comprehensive, prioritized recommendations for risk mitigation."""
+    
+    def _build_workflow(self):
+        """Build the LangGraph workflow for risk assessment."""
         
-        Returns:
-            Compiled workflow graph
-        """
-        # Create workflow
+        # Create workflow graph
         workflow = StateGraph(RiskAssessmentState)
         
-        # Add nodes
-        workflow.add_node("initialize", self.initialize_assessment)
+        # Add nodes for each step
+        workflow.add_node("initialize_assessment", self.initialize_assessment)
+        workflow.add_node("collect_facility_data", self.collect_facility_data)
         workflow.add_node("collect_environmental_data", self.collect_environmental_data)
         workflow.add_node("collect_health_data", self.collect_health_data)
         workflow.add_node("collect_safety_data", self.collect_safety_data)
         workflow.add_node("collect_compliance_data", self.collect_compliance_data)
-        workflow.add_node("collect_facility_info", self.collect_facility_info)
-        workflow.add_node("analyze_risks", self.analyze_risks)
+        workflow.add_node("analyze_data", self.analyze_data)
         workflow.add_node("assess_risks", self.assess_risks)
         workflow.add_node("generate_recommendations", self.generate_recommendations)
         workflow.add_node("compile_report", self.compile_report)
         workflow.add_node("handle_error", self.handle_error)
-        workflow.add_node("complete_assessment", self.complete_assessment)
         
-        # Add edges
-        workflow.add_edge("initialize", "collect_environmental_data")
-        workflow.add_edge("collect_environmental_data", "collect_health_data")
-        workflow.add_edge("collect_health_data", "collect_safety_data")
-        workflow.add_edge("collect_safety_data", "collect_compliance_data")
-        workflow.add_edge("collect_compliance_data", "collect_facility_info")
-        workflow.add_edge("collect_facility_info", "analyze_risks")
+        # Set entry point
+        workflow.set_entry_point("initialize_assessment")
         
-        # Conditional edges for analysis
+        # Add conditional edges for data collection flow
         workflow.add_conditional_edges(
-            "analyze_risks",
-            self.check_analysis_results,
+            "initialize_assessment",
+            self.should_continue_or_error,
             {
-                "continue": "assess_risks",
-                "retry": "analyze_risks",
+                "continue": "collect_facility_data",
                 "error": "handle_error"
             }
         )
         
-        # Conditional edges for assessment
+        workflow.add_conditional_edges(
+            "collect_facility_data",
+            self.should_continue_or_retry,
+            {
+                "continue": "collect_environmental_data",
+                "retry": "collect_facility_data",
+                "error": "handle_error"
+            }
+        )
+        
+        workflow.add_conditional_edges(
+            "collect_environmental_data", 
+            self.should_continue_or_retry,
+            {
+                "continue": "collect_health_data",
+                "retry": "collect_environmental_data",
+                "error": "handle_error"
+            }
+        )
+        
+        workflow.add_conditional_edges(
+            "collect_health_data",
+            self.should_continue_or_retry,
+            {
+                "continue": "collect_safety_data", 
+                "retry": "collect_health_data",
+                "error": "handle_error"
+            }
+        )
+        
+        workflow.add_conditional_edges(
+            "collect_safety_data",
+            self.should_continue_or_retry,
+            {
+                "continue": "collect_compliance_data",
+                "retry": "collect_safety_data", 
+                "error": "handle_error"
+            }
+        )
+        
+        workflow.add_conditional_edges(
+            "collect_compliance_data",
+            self.should_continue_or_retry,
+            {
+                "continue": "analyze_data",
+                "retry": "collect_compliance_data",
+                "error": "handle_error"
+            }
+        )
+        
+        # Analysis and assessment flow
+        workflow.add_conditional_edges(
+            "analyze_data",
+            self.should_continue_or_retry,
+            {
+                "continue": "assess_risks",
+                "retry": "analyze_data",
+                "error": "handle_error"
+            }
+        )
+        
         workflow.add_conditional_edges(
             "assess_risks",
-            self.check_assessment_results,
+            self.should_continue_or_retry,
             {
                 "continue": "generate_recommendations",
-                "retry": "assess_risks", 
+                "retry": "assess_risks",
                 "error": "handle_error"
             }
         )
@@ -466,33 +456,21 @@ class RiskAssessmentAgent:
         # Conditional edges for recommendations
         workflow.add_conditional_edges(
             "generate_recommendations",
-            self.check_recommendation_results,
+            self.should_continue_or_retry,
             {
                 "continue": "compile_report",
-                "retry": "generate_recommendations",
+                "retry": "generate_recommendations", 
                 "error": "handle_error"
             }
         )
         
-        workflow.add_edge("compile_report", "complete_assessment")
+        # Final steps
+        workflow.add_edge("compile_report", END)
+        workflow.add_edge("handle_error", END)
         
-        # Error handling
-        workflow.add_conditional_edges(
-            "handle_error",
-            self.check_retry_needed,
-            {
-                "retry": "initialize",
-                "fail": END
-            }
-        )
-        
-        workflow.add_edge("complete_assessment", END)
-        
-        # Set entry point
-        workflow.set_entry_point("initialize")
-        
-        # Compile and return
         return workflow.compile()
+    
+    # Workflow node implementations
     
     def initialize_assessment(self, state: RiskAssessmentState) -> RiskAssessmentState:
         """
@@ -502,94 +480,76 @@ class RiskAssessmentAgent:
             state: Current workflow state
             
         Returns:
-            Updated state
+            Updated state with initialization data
         """
-        logger.info(f"Initializing risk assessment for facility: {state['facility_id']}")
+        logger.info(f"Initializing risk assessment for facility {state['facility_id']}")
         
-        # Set initial status
-        state["status"] = AssessmentStatus.ANALYZING
         state["current_step"] = "initialization"
-        state["errors"] = state.get("errors", [])
-        state["retry_count"] = state.get("retry_count", 0)
-        state["step_retry_count"] = 0  # Reset step retry counter
-        state["assessment_methodology"] = self.methodology
+        state["start_time"] = datetime.utcnow().isoformat()
+        state["status"] = "running"
+        state["progress"] = 0.0
+        state["errors"] = []
+        state["warnings"] = []
+        state["step_retry_counts"] = {}
         
-        # Initialize trace metadata
-        state["trace_metadata"] = {
-            "facility_id": state["facility_id"],
-            "assessment_id": state["assessment_id"],
-            "methodology": self.methodology,
-            "start_time": datetime.utcnow().isoformat()
-        }
-        
-        # Set up LangSmith session if enabled
-        if self.enable_langsmith:
-            try:
-                session_name = f"risk_assessment_{state['facility_id']}_{state['assessment_id']}"
-                langsmith_config.enable_tracing(f"ehs-risk-assessment-{session_name}")
-                state["langsmith_session"] = session_name
-                logger.info(f"LangSmith session initialized: {session_name}")
-            except Exception as e:
-                logger.warning(f"Failed to initialize LangSmith session: {str(e)}")
-                state["langsmith_session"] = None
-        
-        logger.info("Risk assessment initialization completed")
+        # Validate required inputs
+        if not state.get("facility_id"):
+            state["errors"].append("facility_id is required")
+        if not state.get("assessment_id"):
+            state["errors"].append("assessment_id is required")
+            
+        logger.info("Risk assessment initialized")
         return state
     
-    def collect_environmental_data(self, state: RiskAssessmentState) -> RiskAssessmentState:
+    def collect_facility_data(self, state: RiskAssessmentState) -> RiskAssessmentState:
         """
-        Collect environmental data from Neo4j using actual schema.
+        Collect basic facility information and context.
         
         Args:
             state: Current workflow state
             
         Returns:
-            Updated state
+            Updated state with facility data
+        """
+        logger.info("Collecting facility data")
+        state["current_step"] = "facility_data_collection"
+        
+        try:
+            # Get facility information from database
+            facility_info = self.data_collector.get_facility_info(state["facility_id"])
+            state["facility_info"] = facility_info
+            state["progress"] = 10.0
+            logger.info(f"Collected facility data for {facility_info.get('name', 'Unknown')}")
+            
+        except Exception as e:
+            error_msg = f"Facility data collection failed: {str(e)}"
+            state["errors"].append(error_msg)
+            logger.error(error_msg)
+            
+        return state
+    
+    def collect_environmental_data(self, state: RiskAssessmentState) -> RiskAssessmentState:
+        """
+        Collect environmental monitoring and compliance data.
+        
+        Args:
+            state: Current workflow state
+            
+        Returns:
+            Updated state with environmental data
         """
         logger.info("Collecting environmental data")
         state["current_step"] = "environmental_data_collection"
         
         try:
-            # Neo4j query using actual schema - collect documents and incidents related to environmental data
-            query = """
-            MATCH (f:Facility {name: $facility_id})
-            OPTIONAL MATCH (f)-[:BELONGS_TO*]-(d:Document)
-            WHERE d.type IN ['utility_bill', 'water_bill', 'waste_manifest', 'environmental_permit', 'emission_report']
-            OPTIONAL MATCH (f)-[:HAS_INCIDENT]->(i:Incident)
-            WHERE i.type IN ['environmental', 'spill', 'emission_exceedance', 'waste_violation']
-            WITH f, collect(DISTINCT d) as environmental_docs, collect(DISTINCT i) as environmental_incidents
+            env_data = self.data_collector.get_environmental_data(
+                state["facility_id"],
+                state.get("assessment_scope", {})
+            )
+            state["environmental_data"] = env_data
+            state["progress"] = 25.0
+            logger.info(f"Collected {len(env_data)} environmental data records")
             
-            RETURN {
-                facility_id: f.name,
-                environmental_documents: [doc IN environmental_docs | {
-                    id: doc.id,
-                    type: doc.type,
-                    title: doc.title,
-                    date: doc.date,
-                    content: doc.content,
-                    source: doc.source
-                }],
-                environmental_incidents: [inc IN environmental_incidents | {
-                    id: inc.id,
-                    type: inc.type,
-                    date: inc.date,
-                    severity: inc.severity,
-                    description: inc.description,
-                    status: inc.status
-                }]
-            } as environmental_data
-            """
-            
-            result = self.graph.query(query, {"facility_id": state["facility_id"]})
-            record = result[0] if result else None
-            if record:
-                env_data = record["environmental_data"]
-                state["environmental_data"] = [env_data] if env_data else []
-                logger.info(f"Collected environmental data with {len(env_data.get('environmental_documents', []))} documents and {len(env_data.get('environmental_incidents', []))} incidents")
-            else:
-                state["environmental_data"] = []
-                logger.warning("No environmental data found")
-                    
         except Exception as e:
             error_msg = f"Environmental data collection failed: {str(e)}"
             state["errors"].append(error_msg)
@@ -599,59 +559,26 @@ class RiskAssessmentAgent:
     
     def collect_health_data(self, state: RiskAssessmentState) -> RiskAssessmentState:
         """
-        Collect health and safety data from Neo4j using actual schema.
+        Collect occupational health and safety data.
         
         Args:
             state: Current workflow state
             
         Returns:
-            Updated state
+            Updated state with health data
         """
-        logger.info("Collecting health and safety data")
+        logger.info("Collecting health data")
         state["current_step"] = "health_data_collection"
         
         try:
-            # Neo4j query using actual schema - collect health-related documents and incidents
-            query = """
-            MATCH (f:Facility {name: $facility_id})
-            OPTIONAL MATCH (f)-[:BELONGS_TO*]-(d:Document)
-            WHERE d.type IN ['health_report', 'medical_surveillance', 'exposure_assessment', 'health_inspection']
-            OPTIONAL MATCH (f)-[:HAS_INCIDENT]->(i:Incident)
-            WHERE i.type IN ['health', 'occupational_injury', 'occupational_illness', 'exposure_incident']
-            WITH f, collect(DISTINCT d) as health_docs, collect(DISTINCT i) as health_incidents
+            health_data = self.data_collector.get_health_data(
+                state["facility_id"],
+                state.get("assessment_scope", {})
+            )
+            state["health_data"] = health_data
+            state["progress"] = 40.0
+            logger.info(f"Collected {len(health_data)} health data records")
             
-            RETURN {
-                facility_id: f.name,
-                health_documents: [doc IN health_docs | {
-                    id: doc.id,
-                    type: doc.type,
-                    title: doc.title,
-                    date: doc.date,
-                    content: doc.content,
-                    source: doc.source
-                }],
-                health_incidents: [inc IN health_incidents | {
-                    id: inc.id,
-                    type: inc.type,
-                    date: inc.date,
-                    severity: inc.severity,
-                    description: inc.description,
-                    status: inc.status,
-                    affected_personnel: inc.affected_personnel
-                }]
-            } as health_data
-            """
-            
-            result = self.graph.query(query, {"facility_id": state["facility_id"]})
-            record = result[0] if result else None
-            if record:
-                health_data = record["health_data"]
-                state["health_data"] = [health_data] if health_data else []
-                logger.info(f"Collected health data with {len(health_data.get('health_documents', []))} documents and {len(health_data.get('health_incidents', []))} incidents")
-            else:
-                state["health_data"] = []
-                logger.warning("No health data found")
-                    
         except Exception as e:
             error_msg = f"Health data collection failed: {str(e)}"
             state["errors"].append(error_msg)
@@ -661,61 +588,26 @@ class RiskAssessmentAgent:
     
     def collect_safety_data(self, state: RiskAssessmentState) -> RiskAssessmentState:
         """
-        Collect safety-specific data from Neo4j using actual schema.
+        Collect safety incident and compliance data.
         
         Args:
             state: Current workflow state
             
         Returns:
-            Updated state
+            Updated state with safety data
         """
         logger.info("Collecting safety data")
         state["current_step"] = "safety_data_collection"
         
         try:
-            # Neo4j query using actual schema - collect safety-related documents and incidents
-            query = """
-            MATCH (f:Facility {name: $facility_id})
-            OPTIONAL MATCH (f)-[:BELONGS_TO*]-(d:Document)
-            WHERE d.type IN ['safety_report', 'equipment_inspection', 'maintenance_log', 'safety_training', 'hazard_assessment']
-            OPTIONAL MATCH (f)-[:HAS_INCIDENT]->(i:Incident)
-            WHERE i.type IN ['safety', 'equipment_failure', 'near_miss', 'process_deviation', 'fire', 'explosion']
-            WITH f, collect(DISTINCT d) as safety_docs, collect(DISTINCT i) as safety_incidents
+            safety_data = self.data_collector.get_safety_data(
+                state["facility_id"],
+                state.get("assessment_scope", {})
+            )
+            state["safety_data"] = safety_data
+            state["progress"] = 55.0
+            logger.info(f"Collected {len(safety_data)} safety data records")
             
-            RETURN {
-                facility_id: f.name,
-                safety_documents: [doc IN safety_docs | {
-                    id: doc.id,
-                    type: doc.type,
-                    title: doc.title,
-                    date: doc.date,
-                    content: doc.content,
-                    source: doc.source,
-                    equipment_id: doc.equipment_id
-                }],
-                safety_incidents: [inc IN safety_incidents | {
-                    id: inc.id,
-                    type: inc.type,
-                    date: inc.date,
-                    severity: inc.severity,
-                    description: inc.description,
-                    status: inc.status,
-                    equipment_involved: inc.equipment_involved,
-                    root_cause: inc.root_cause
-                }]
-            } as safety_data
-            """
-            
-            result = self.graph.query(query, {"facility_id": state["facility_id"]})
-            record = result[0] if result else None
-            if record:
-                safety_data = record["safety_data"]
-                state["safety_data"] = [safety_data] if safety_data else []
-                logger.info(f"Collected safety data with {len(safety_data.get('safety_documents', []))} documents and {len(safety_data.get('safety_incidents', []))} incidents")
-            else:
-                state["safety_data"] = []
-                logger.warning("No safety data found")
-                    
         except Exception as e:
             error_msg = f"Safety data collection failed: {str(e)}"
             state["errors"].append(error_msg)
@@ -725,63 +617,26 @@ class RiskAssessmentAgent:
     
     def collect_compliance_data(self, state: RiskAssessmentState) -> RiskAssessmentState:
         """
-        Collect compliance and regulatory data from Neo4j using actual schema.
+        Collect regulatory compliance and audit data.
         
         Args:
             state: Current workflow state
             
         Returns:
-            Updated state
+            Updated state with compliance data
         """
         logger.info("Collecting compliance data")
         state["current_step"] = "compliance_data_collection"
         
         try:
-            # Neo4j query using actual schema - collect compliance-related documents and incidents
-            query = """
-            MATCH (f:Facility {name: $facility_id})
-            OPTIONAL MATCH (f)-[:BELONGS_TO*]-(d:Document)
-            WHERE d.type IN ['compliance_report', 'audit_report', 'permit', 'regulation_update', 'violation_notice', 'corrective_action_plan']
-            OPTIONAL MATCH (f)-[:HAS_INCIDENT]->(i:Incident)
-            WHERE i.type IN ['compliance_violation', 'regulatory_breach', 'permit_exceedance', 'audit_finding']
-            WITH f, collect(DISTINCT d) as compliance_docs, collect(DISTINCT i) as compliance_incidents
+            compliance_data = self.data_collector.get_compliance_data(
+                state["facility_id"],
+                state.get("assessment_scope", {})
+            )
+            state["compliance_data"] = compliance_data
+            state["progress"] = 70.0
+            logger.info(f"Collected {len(compliance_data)} compliance data records")
             
-            RETURN {
-                facility_id: f.name,
-                compliance_documents: [doc IN compliance_docs | {
-                    id: doc.id,
-                    type: doc.type,
-                    title: doc.title,
-                    date: doc.date,
-                    content: doc.content,
-                    source: doc.source,
-                    regulation_reference: doc.regulation_reference,
-                    compliance_status: doc.compliance_status
-                }],
-                compliance_incidents: [inc IN compliance_incidents | {
-                    id: inc.id,
-                    type: inc.type,
-                    date: inc.date,
-                    severity: inc.severity,
-                    description: inc.description,
-                    status: inc.status,
-                    regulatory_reference: inc.regulatory_reference,
-                    fine_amount: inc.fine_amount,
-                    corrective_actions: inc.corrective_actions
-                }]
-            } as compliance_data
-            """
-            
-            result = self.graph.query(query, {"facility_id": state["facility_id"]})
-            record = result[0] if result else None
-            if record:
-                compliance_data = record["compliance_data"]
-                state["compliance_data"] = [compliance_data] if compliance_data else []
-                logger.info(f"Collected compliance data with {len(compliance_data.get('compliance_documents', []))} documents and {len(compliance_data.get('compliance_incidents', []))} incidents")
-            else:
-                state["compliance_data"] = []
-                logger.warning("No compliance data found")
-                    
         except Exception as e:
             error_msg = f"Compliance data collection failed: {str(e)}"
             state["errors"].append(error_msg)
@@ -789,69 +644,9 @@ class RiskAssessmentAgent:
             
         return state
     
-    def collect_facility_info(self, state: RiskAssessmentState) -> RiskAssessmentState:
+    def analyze_data(self, state: RiskAssessmentState) -> RiskAssessmentState:
         """
-        Collect facility information and context from Neo4j using actual schema.
-        
-        Args:
-            state: Current workflow state
-            
-        Returns:
-            Updated state
-        """
-        logger.info("Collecting facility information")
-        state["current_step"] = "facility_info_collection"
-        
-        try:
-            # Neo4j query using actual schema - get facility properties and relationships
-            query = """
-            MATCH (f:Facility {name: $facility_id})
-            OPTIONAL MATCH (f)-[:BELONGS_TO*]-(d:Document)
-            WHERE d.type IN ['facility_profile', 'operations_manual', 'process_description']
-            WITH f, collect(DISTINCT d) as facility_docs
-            
-            RETURN {
-                facility: {
-                    name: f.name,
-                    id: f.id,
-                    type: f.type,
-                    address: f.address,
-                    coordinates: f.coordinates,
-                    industry_sector: f.industry_sector,
-                    operational_status: f.operational_status,
-                    established_date: f.established_date,
-                    employee_count: f.employee_count,
-                    annual_revenue: f.annual_revenue
-                },
-                facility_documents: [doc IN facility_docs | {
-                    id: doc.id,
-                    type: doc.type,
-                    title: doc.title,
-                    date: doc.date,
-                    content: doc.content
-                }]
-            } as facility_info
-            """
-            
-            result = self.graph.query(query, {"facility_id": state["facility_id"]})
-            record = result[0] if result else None
-            if record:
-                state["facility_info"] = record["facility_info"]
-                logger.info(f"Collected facility information with {len(state['facility_info'].get('facility_documents', []))} supporting documents")
-            else:
-                state["facility_info"] = {}
-                logger.warning("No facility information found")
-                    
-        except Exception as e:
-            error_msg = f"Facility info collection failed: {str(e)}"
-            state["errors"].append(error_msg)
-            logger.error(error_msg)
-            
-        return state
-    
-    def analyze_risks(self, state: RiskAssessmentState) -> RiskAssessmentState:
-        """
-        Analyze collected data to identify risk factors.
+        Analyze collected data to identify risk patterns and factors.
         
         Args:
             state: Current workflow state
@@ -905,28 +700,28 @@ class RiskAssessmentAgent:
             state: Current workflow state
             
         Returns:
-            Updated state
+            Updated state with risk assessment
         """
-        logger.info("Performing risk assessment")
+        logger.info("Performing formal risk assessment")
         state["current_step"] = "risk_assessment"
         
         try:
-            # Prepare assessment input
+            # Prepare risk assessment input
+            analysis_results = state.get("analysis_results", {})
+            risk_factors = state.get("risk_factors", [])
+            
             assessment_input = {
-                "facility_id": state["facility_id"],
-                "risk_factors": safe_json_dumps([rf.dict() if hasattr(rf, 'dict') else rf for rf in state.get("risk_factors", [])]),
-                "methodology": self.methodology,
-                "facility_type": state.get("facility_info", {}).get("facility", {}).get("type", "unknown"),
-                "assessment_scope": safe_json_dumps(state.get("assessment_scope", {})),
-                "data_quality": "high",  # This would be calculated based on data completeness
-                "format_instructions": self.risk_assessment_parser.get_format_instructions()
+                "analysis_results": safe_json_dumps(analysis_results),
+                "risk_factors": safe_json_dumps([rf.dict() if hasattr(rf, 'dict') else rf for rf in risk_factors]),
+                "facility_context": safe_json_dumps(state.get("facility_info", {}))
             }
             
-            # Run assessment chain
-            assessment_result = self.risk_assessment_chain.invoke(assessment_input)
+            # Run risk assessment chain
+            risk_assessment = self.risk_assessment_chain.invoke(assessment_input)
             
-            state["risk_assessment"] = assessment_result
-            logger.info(f"Risk assessment completed. Overall risk level: {assessment_result.overall_risk_level}")
+            state["risk_assessment"] = risk_assessment
+            state["progress"] = 85.0
+            logger.info(f"Risk assessment completed with overall level: {risk_assessment.overall_risk_level}")
             
         except Exception as e:
             error_msg = f"Risk assessment failed: {str(e)}"
@@ -986,12 +781,28 @@ class RiskAssessmentAgent:
             state: Current workflow state
             
         Returns:
-            Updated state
+            Updated state with final report
         """
         logger.info("Compiling final risk assessment report")
         state["current_step"] = "report_compilation"
         
         try:
+            # Get the recommendations and safely extract the count
+            recommendations = state.get("recommendations")
+            total_recommendations = 0
+            
+            if recommendations:
+                if isinstance(recommendations, dict):
+                    # Handle case where recommendations is a dict with a "recommendations" key
+                    recommendation_list = recommendations.get("recommendations", [])
+                    total_recommendations = len(recommendation_list)
+                elif hasattr(recommendations, 'recommendations'):
+                    # Handle case where recommendations is a Pydantic object
+                    total_recommendations = len(recommendations.recommendations)
+                elif isinstance(recommendations, list):
+                    # Handle case where recommendations is directly a list
+                    total_recommendations = len(recommendations)
+            
             # Compile comprehensive report
             report = {
                 "assessment_id": state["assessment_id"],
@@ -1000,10 +811,10 @@ class RiskAssessmentAgent:
                 "methodology": self.methodology,
                 "status": "completed",
                 "executive_summary": {
-                    "overall_risk_level": state.get("risk_assessment", {}).get("overall_risk_level"),
-                    "risk_score": state.get("risk_assessment", {}).get("risk_score"),
+                    "overall_risk_level": state.get("risk_assessment", {}).get("overall_risk_level") if state.get("risk_assessment") else None,
+                    "risk_score": state.get("risk_assessment", {}).get("risk_score") if state.get("risk_assessment") else None,
                     "total_risk_factors": len(state.get("risk_factors", [])),
-                    "total_recommendations": len(state.get("recommendations", {}).get("recommendations", []))
+                    "total_recommendations": total_recommendations
                 },
                 "risk_assessment": state.get("risk_assessment"),
                 "risk_factors": state.get("risk_factors"),
@@ -1014,17 +825,21 @@ class RiskAssessmentAgent:
                     "safety_records": len(state.get("safety_data", [])),
                     "compliance_records": len(state.get("compliance_data", []))
                 },
-                "metadata": {
-                    "processing_time": state.get("processing_time"),
-                    "langsmith_session": state.get("langsmith_session"),
-                    "methodology": self.methodology,
-                    "generated_by": "EHS AI Risk Assessment Agent",
-                    "version": "1.0.0"
+                "workflow_metadata": {
+                    "start_time": state["start_time"],
+                    "end_time": datetime.utcnow().isoformat(),
+                    "total_steps": len([k for k in state["step_retry_counts"].keys()]),
+                    "errors": state["errors"],
+                    "warnings": state["warnings"]
                 }
             }
             
             state["final_report"] = report
-            logger.info("Risk assessment report compiled successfully")
+            state["status"] = "completed"
+            state["progress"] = 100.0
+            state["end_time"] = datetime.utcnow().isoformat()
+            
+            logger.info("Risk assessment report compilation completed successfully")
             
         except Exception as e:
             error_msg = f"Report compilation failed: {str(e)}"
@@ -1033,430 +848,294 @@ class RiskAssessmentAgent:
             
         return state
     
-    def complete_assessment(self, state: RiskAssessmentState) -> RiskAssessmentState:
-        """
-        Complete the risk assessment workflow.
-        
-        Args:
-            state: Current workflow state
-            
-        Returns:
-            Updated state
-        """
-        logger.info("Completing risk assessment")
-        
-        state["status"] = AssessmentStatus.COMPLETED
-        state["current_step"] = "completed"
-        state["processing_time"] = datetime.utcnow().timestamp() - state.get("start_time", datetime.utcnow().timestamp())
-        
-        # Update trace metadata
-        if state.get("trace_metadata"):
-            state["trace_metadata"]["completion_time"] = datetime.utcnow().isoformat()
-            state["trace_metadata"]["total_processing_time"] = state["processing_time"]
-            state["trace_metadata"]["final_status"] = state["status"]
-        
-        logger.info(f"Risk assessment completed in {state['processing_time']:.2f} seconds")
-        return state
-    
     def handle_error(self, state: RiskAssessmentState) -> RiskAssessmentState:
         """
-        Handle errors during risk assessment with improved retry logic.
+        Handle workflow errors and cleanup.
         
         Args:
             state: Current workflow state
             
         Returns:
-            Updated state
+            Updated state with error handling
         """
-        state["retry_count"] += 1
+        logger.error(f"Handling workflow error in step: {state.get('current_step', 'unknown')}")
         
-        logger.error(f"Error in risk assessment. Step: {state.get('current_step')}. Total retries: {state['retry_count']}")
-        logger.error(f"Errors: {state['errors']}")
+        state["status"] = "failed"
+        state["end_time"] = datetime.utcnow().isoformat()
         
-        if state["retry_count"] >= self.max_retries:
-            state["status"] = AssessmentStatus.FAILED
-            logger.error("Maximum retries exceeded. Risk assessment failed.")
-        else:
-            state["status"] = AssessmentStatus.RETRY
-            # Clear step-specific errors for retry but keep history
-            state["errors"] = state.get("errors", [])
+        # Log all errors
+        for error in state.get("errors", []):
+            logger.error(f"Workflow error: {error}")
+        
+        # Create error report
+        error_report = {
+            "assessment_id": state.get("assessment_id", "unknown"),
+            "facility_id": state.get("facility_id", "unknown"),
+            "status": "failed",
+            "errors": state.get("errors", []),
+            "warnings": state.get("warnings", []),
+            "failed_step": state.get("current_step", "unknown"),
+            "completion_time": datetime.utcnow().isoformat()
+        }
+        
+        state["error_report"] = error_report
         
         return state
     
-    # Conditional edge check methods with improved retry logic
-    def check_analysis_results(self, state: RiskAssessmentState) -> str:
+    # Workflow control methods
+    
+    def should_continue_or_error(self, state: RiskAssessmentState) -> str:
         """
-        Check if risk analysis completed successfully.
+        Determine if workflow should continue or handle error.
         
-        Improved logic:
-        - Allows completion even if no risk factors found (normal case)
-        - Limits retries per step
-        - Better error handling for missing data vs actual failures
+        Args:
+            state: Current workflow state
+            
+        Returns:
+            Next action: "continue" or "error"
         """
-        current_step = "analyze_risks"
-        step_retry_count = state.get("step_retry_count", 0)
-        
-        # Check for actual errors first
         if state.get("errors"):
+            return "error"
+        return "continue"
+    
+    def should_continue_or_retry(self, state: RiskAssessmentState) -> str:
+        """
+        Determine if workflow should continue, retry, or handle error.
+        
+        Args:
+            state: Current workflow state
+            
+        Returns:
+            Next action: "continue", "retry", or "error"
+        """
+        current_step = state.get("current_step", "unknown")
+        
+        # Check for errors
+        if state.get("errors"):
+            # Check if we should retry this step
+            step_retry_count = state["step_retry_counts"].get(current_step, 0)
             if step_retry_count < self.max_step_retries:
-                state["step_retry_count"] = step_retry_count + 1
+                state["step_retry_counts"][current_step] = step_retry_count + 1
                 logger.warning(f"Retrying {current_step}, attempt {step_retry_count + 1}/{self.max_step_retries}")
+                # Clear the last error for retry
+                state["errors"] = state["errors"][:-1] if state["errors"] else []
                 return "retry"
             else:
                 logger.error(f"Max step retries exceeded for {current_step}")
                 return "error"
         
-        # Check if we have analysis results (even if empty)
-        analysis_results = state.get("analysis_results")
-        if not analysis_results:
-            if step_retry_count < self.max_step_retries:
-                state["step_retry_count"] = step_retry_count + 1
-                logger.warning(f"No analysis results, retrying {current_step}, attempt {step_retry_count + 1}/{self.max_step_retries}")
-                return "retry"
-            else:
-                logger.error(f"Max step retries exceeded for {current_step} - no analysis results")
+        # Step-specific validation
+        if current_step == "facility_data_collection":
+            if not state.get("facility_info"):
                 return "error"
+                
+        elif current_step == "risk_assessment":
+            if not state.get("risk_assessment"):
+                return "error"
+                
+        elif current_step == "recommendation_generation":
+            # Check if we have recommendations
+            recommendations = state.get("recommendations")
+            if not recommendations:
+                step_retry_count = state["step_retry_counts"].get(current_step, 0)
+                if step_retry_count < self.max_step_retries:
+                    state["step_retry_counts"][current_step] = step_retry_count + 1
+                    logger.warning(f"No recommendations generated, retrying {current_step}, attempt {step_retry_count + 1}/{self.max_step_retries}")
+                    return "retry"
+                else:
+                    logger.error(f"Max step retries exceeded for {current_step} - no recommendations generated")
+                    return "error"
         
-        # Reset step retry counter for next step
-        state["step_retry_count"] = 0
-        logger.info(f"{current_step} completed successfully")
         return "continue"
     
-    def check_assessment_results(self, state: RiskAssessmentState) -> str:
-        """
-        Check if risk assessment completed successfully.
-        
-        Improved logic with step-specific retry limits.
-        """
-        current_step = "assess_risks"
-        step_retry_count = state.get("step_retry_count", 0)
-        
-        # Check for actual errors first
-        if state.get("errors"):
-            if step_retry_count < self.max_step_retries:
-                state["step_retry_count"] = step_retry_count + 1
-                logger.warning(f"Retrying {current_step}, attempt {step_retry_count + 1}/{self.max_step_retries}")
-                return "retry"
-            else:
-                logger.error(f"Max step retries exceeded for {current_step}")
-                return "error"
-        
-        # Check if we have risk assessment results
-        risk_assessment = state.get("risk_assessment")
-        if not risk_assessment:
-            if step_retry_count < self.max_step_retries:
-                state["step_retry_count"] = step_retry_count + 1
-                logger.warning(f"No risk assessment results, retrying {current_step}, attempt {step_retry_count + 1}/{self.max_step_retries}")
-                return "retry"
-            else:
-                logger.error(f"Max step retries exceeded for {current_step} - no risk assessment results")
-                return "error"
-        
-        # Reset step retry counter for next step
-        state["step_retry_count"] = 0
-        logger.info(f"{current_step} completed successfully")
-        return "continue"
+    # Public API methods
     
-    def check_recommendation_results(self, state: RiskAssessmentState) -> str:
-        """
-        Check if recommendation generation completed successfully.
-        
-        Improved logic with step-specific retry limits.
-        """
-        current_step = "generate_recommendations"
-        step_retry_count = state.get("step_retry_count", 0)
-        
-        # Check for actual errors first
-        if state.get("errors"):
-            if step_retry_count < self.max_step_retries:
-                state["step_retry_count"] = step_retry_count + 1
-                logger.warning(f"Retrying {current_step}, attempt {step_retry_count + 1}/{self.max_step_retries}")
-                return "retry"
-            else:
-                logger.error(f"Max step retries exceeded for {current_step}")
-                return "error"
-        
-        # Check if we have recommendations
-        recommendations = state.get("recommendations")
-        if not recommendations:
-            if step_retry_count < self.max_step_retries:
-                state["step_retry_count"] = step_retry_count + 1
-                logger.warning(f"No recommendations generated, retrying {current_step}, attempt {step_retry_count + 1}/{self.max_step_retries}")
-                return "retry"
-            else:
-                logger.error(f"Max step retries exceeded for {current_step} - no recommendations generated")
-                return "error"
-        
-        # Reset step retry counter for next step
-        state["step_retry_count"] = 0
-        logger.info(f"{current_step} completed successfully")
-        return "continue"
-    
-    def check_retry_needed(self, state: RiskAssessmentState) -> str:
-        """Check if retry is needed or assessment should fail."""
-        if state["status"] == AssessmentStatus.RETRY and state["retry_count"] < self.max_retries:
-            logger.info(f"Retrying assessment, attempt {state['retry_count']}/{self.max_retries}")
-            return "retry"
-        else:
-            logger.error("Assessment failed - maximum retries exceeded")
-            return "fail"
-    
-    def assess_facility_risk(
+    def run_assessment(
         self,
         facility_id: str,
         assessment_scope: Optional[Dict[str, Any]] = None,
-        metadata: Optional[Dict[str, Any]] = None,
-        max_recursion_depth: int = 5  # Add recursion depth limit
-    ) -> RiskAssessmentState:
+        assessment_id: Optional[str] = None
+    ) -> Dict[str, Any]:
         """
-        Perform comprehensive risk assessment for a facility with improved retry handling.
+        Run a complete risk assessment for a facility.
         
         Args:
             facility_id: Unique facility identifier
-            assessment_scope: Scope parameters (date ranges, areas, etc.)
-            metadata: Additional metadata for the assessment
-            max_recursion_depth: Maximum recursion depth to prevent infinite loops
+            assessment_scope: Scope and parameters for the assessment
+            assessment_id: Unique assessment identifier (generated if not provided)
             
         Returns:
-            Final assessment state with results
+            Complete assessment results or error report
         """
-        # Check recursion depth
-        recursion_depth = metadata.get("recursion_depth", 0) if metadata else 0
-        if recursion_depth >= max_recursion_depth:
-            logger.error(f"Maximum recursion depth ({max_recursion_depth}) exceeded for facility {facility_id}")
-            error_state = self._create_error_state(facility_id, "Maximum recursion depth exceeded")
-            return error_state
-        
-        # Generate unique assessment ID
-        assessment_id = f"risk_assessment_{facility_id}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
-        
-        # Update metadata with recursion tracking
-        if not metadata:
-            metadata = {}
-        metadata["recursion_depth"] = recursion_depth + 1
+        # Generate assessment ID if not provided
+        if not assessment_id:
+            assessment_id = f"ASSESS_{facility_id}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
         
         # Initialize state
         initial_state: RiskAssessmentState = {
-            "facility_id": facility_id,
             "assessment_id": assessment_id,
+            "facility_id": facility_id,
             "assessment_scope": assessment_scope or {},
-            "request_metadata": metadata,
-            "environmental_data": None,
-            "health_data": None,
-            "safety_data": None,
-            "compliance_data": None,
-            "facility_info": None,
-            "risk_factors": None,
+            "methodology": self.methodology,
+            
+            # Data placeholders
+            "environmental_data": [],
+            "health_data": [],
+            "safety_data": [], 
+            "compliance_data": [],
+            "facility_info": {},
+            
+            # Analysis placeholders
             "analysis_results": None,
+            "risk_factors": [],
             "risk_assessment": None,
-            "assessment_methodology": self.methodology,
             "recommendations": None,
-            "status": AssessmentStatus.PENDING,
-            "current_step": "initialization",
+            
+            # Workflow control
+            "current_step": "",
+            "step_retry_counts": {},
             "errors": [],
-            "retry_count": 0,
-            "step_retry_count": 0,  # Initialize step retry counter
-            "processing_time": None,
-            "langsmith_session": None,
-            "trace_metadata": {},
-            "neo4j_results": None,
-            "final_report": None,
-            "start_time": datetime.utcnow().timestamp()
+            "warnings": [],
+            
+            # Status
+            "status": "initialized",
+            "progress": 0.0,
+            "start_time": "",
+            "end_time": None
         }
         
-        # Execute workflow with error handling
+        logger.info(f"Starting risk assessment {assessment_id} for facility {facility_id}")
+        
         try:
-            logger.info(f"Starting risk assessment for facility {facility_id} (depth: {recursion_depth})")
+            # Run the workflow
+            final_state = self.workflow.invoke(initial_state)
             
-            if self.enable_langsmith:
-                with tracing_context(ingestion_id=assessment_id):
-                    final_state = self.workflow.invoke(initial_state)
+            # Return appropriate result
+            if final_state.get("status") == "completed":
+                logger.info(f"Risk assessment {assessment_id} completed successfully")
+                return final_state.get("final_report", final_state)
             else:
-                final_state = self.workflow.invoke(initial_state)
-            
-            # Log final status
-            status = final_state.get("status", "unknown")
-            logger.info(f"Risk assessment completed for {facility_id}: {status}")
-            
-            return final_state
-            
+                logger.error(f"Risk assessment {assessment_id} failed")
+                return final_state.get("error_report", final_state)
+                
         except Exception as e:
-            logger.error(f"Risk assessment workflow failed for {facility_id}: {str(e)}")
-            error_state = self._create_error_state(facility_id, f"Workflow execution failed: {str(e)}")
-            return error_state
+            error_msg = f"Workflow execution failed: {str(e)}"
+            logger.error(error_msg)
+            return {
+                "assessment_id": assessment_id,
+                "facility_id": facility_id,
+                "status": "failed",
+                "error": error_msg,
+                "completion_time": datetime.utcnow().isoformat()
+            }
     
-    def _create_error_state(self, facility_id: str, error_message: str) -> RiskAssessmentState:
+    def get_assessment_status(self, assessment_id: str) -> Dict[str, Any]:
         """
-        Create an error state for failed assessments.
+        Get the current status of an ongoing assessment.
         
         Args:
-            facility_id: Facility identifier
-            error_message: Error description
+            assessment_id: Assessment identifier
             
         Returns:
-            Error state
+            Assessment status information
         """
-        assessment_id = f"error_assessment_{facility_id}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
-        
-        error_state: RiskAssessmentState = {
-            "facility_id": facility_id,
+        # In a production system, this would query a database or cache
+        # For now, return a placeholder
+        return {
             "assessment_id": assessment_id,
-            "assessment_scope": {},
-            "request_metadata": {},
-            "environmental_data": None,
-            "health_data": None,
-            "safety_data": None,
-            "compliance_data": None,
-            "facility_info": None,
-            "risk_factors": None,
-            "analysis_results": None,
-            "risk_assessment": None,
-            "assessment_methodology": self.methodology,
-            "recommendations": None,
-            "status": AssessmentStatus.FAILED,
-            "current_step": "error",
-            "errors": [error_message],
-            "retry_count": self.max_retries,  # Mark as max retries reached
-            "step_retry_count": self.max_step_retries,
-            "processing_time": 0.0,
-            "langsmith_session": None,
-            "trace_metadata": {
-                "error_time": datetime.utcnow().isoformat(),
-                "error_message": error_message
-            },
-            "neo4j_results": None,
-            "final_report": None,
-            "start_time": datetime.utcnow().timestamp()
+            "status": "not_implemented",
+            "message": "Status tracking not yet implemented"
         }
-        
-        return error_state
     
-    def assess_multiple_facilities(
-        self,
-        facility_ids: List[str],
-        assessment_scope: Optional[Dict[str, Any]] = None,
-        metadata: Optional[Dict[str, Any]] = None
-    ) -> List[RiskAssessmentState]:
+    def save_assessment_results(self, results: Dict[str, Any], db_session: Session) -> bool:
         """
-        Perform risk assessments for multiple facilities.
+        Save assessment results to the database.
         
         Args:
-            facility_ids: List of facility identifiers
-            assessment_scope: Scope parameters for all assessments
-            metadata: Additional metadata
+            results: Assessment results to save
+            db_session: Database session
             
         Returns:
-            List of assessment results
+            True if saved successfully, False otherwise
         """
-        results = []
-        
-        logger.info(f"Starting risk assessment for {len(facility_ids)} facilities")
-        
-        for facility_id in facility_ids:
-            logger.info(f"Starting risk assessment for facility: {facility_id}")
-            
-            result = self.assess_facility_risk(
-                facility_id=facility_id,
-                assessment_scope=assessment_scope,
-                metadata=metadata
+        try:
+            # Create database record
+            assessment_record = RiskAssessmentResult(
+                assessment_id=results["assessment_id"],
+                facility_id=results["facility_id"],
+                methodology=results.get("methodology", self.methodology),
+                status=results["status"],
+                results_data=results,  # Store full results as JSON
+                created_at=datetime.utcnow()
             )
             
-            results.append(result)
+            db_session.add(assessment_record)
+            db_session.commit()
             
-            # Log completion status
-            status = result.get("status", "unknown")
-            logger.info(f"Risk assessment completed for {facility_id}: {status}")
+            logger.info(f"Assessment results saved to database: {results['assessment_id']}")
+            return True
             
-        logger.info(f"Completed risk assessments for {len(facility_ids)} facilities")
-        return results
-    
-    def close(self):
-        """Close the risk assessment agent and cleanup resources."""
-        try:
-            if self.graph:
-                self.graph.close()
-                logger.info("Neo4j connection closed")
-            
-            if self.enable_langsmith:
-                langsmith_config.disable_tracing()
-                logger.info("LangSmith tracing disabled")
         except Exception as e:
-            logger.error(f"Error during cleanup: {str(e)}")
+            logger.error(f"Failed to save assessment results: {str(e)}")
+            db_session.rollback()
+            return False
 
 
-# Utility functions for integration
-def create_risk_assessment_agent(
-    neo4j_uri: str = None,
-    neo4j_username: str = None,
-    neo4j_password: str = None,
-    neo4j_database: str = "neo4j",
-    llm_model: str = "gpt-4o",
-    **kwargs
-) -> RiskAssessmentAgent:
-    """
-    Factory function to create a risk assessment agent with environment-based configuration.
-    
-    Args:
-        neo4j_uri: Neo4j URI (falls back to NEO4J_URI env var)
-        neo4j_username: Neo4j username (falls back to NEO4J_USERNAME env var)
-        neo4j_password: Neo4j password (falls back to NEO4J_PASSWORD env var)
-        neo4j_database: Neo4j database name
-        llm_model: LLM model to use
-        **kwargs: Additional arguments for RiskAssessmentAgent
-        
-    Returns:
-        Configured RiskAssessmentAgent instance
-    """
-    # Use environment variables as fallback
-    neo4j_uri = neo4j_uri or os.getenv('NEO4J_URI')
-    neo4j_username = neo4j_username or os.getenv('NEO4J_USERNAME')
-    neo4j_password = neo4j_password or os.getenv('NEO4J_PASSWORD')
-    
-    if not all([neo4j_uri, neo4j_username, neo4j_password]):
-        raise ValueError("Neo4j connection parameters must be provided either as arguments or environment variables")
-    
+# Example usage and testing functions
+def create_test_assessment_agent() -> RiskAssessmentAgent:
+    """Create a test instance of the Risk Assessment Agent."""
     return RiskAssessmentAgent(
-        neo4j_uri=neo4j_uri,
-        neo4j_username=neo4j_username,
-        neo4j_password=neo4j_password,
-        neo4j_database=neo4j_database,
-        llm_model=llm_model,
-        **kwargs
+        methodology="test_comprehensive_ehs",
+        max_retries=2,
+        max_step_retries=1
     )
+
+
+def run_sample_assessment():
+    """Run a sample risk assessment for testing."""
+    try:
+        agent = create_test_assessment_agent()
+        
+        # Sample assessment parameters
+        facility_id = "FACILITY_001"
+        assessment_scope = {
+            "include_environmental": True,
+            "include_health": True,
+            "include_safety": True,
+            "include_compliance": True,
+            "time_range_days": 365
+        }
+        
+        # Run assessment
+        results = agent.run_assessment(
+            facility_id=facility_id,
+            assessment_scope=assessment_scope
+        )
+        
+        print(f"Assessment completed with status: {results.get('status', 'unknown')}")
+        print(f"Assessment ID: {results.get('assessment_id', 'unknown')}")
+        
+        if results.get("status") == "completed":
+            summary = results.get("executive_summary", {})
+            print(f"Overall Risk Level: {summary.get('overall_risk_level', 'unknown')}")
+            print(f"Risk Score: {summary.get('risk_score', 'unknown')}")
+            print(f"Total Recommendations: {summary.get('total_recommendations', 0)}")
+        else:
+            print(f"Errors: {results.get('errors', [])}")
+            
+        return results
+        
+    except Exception as e:
+        print(f"Sample assessment failed: {str(e)}")
+        return None
 
 
 if __name__ == "__main__":
-    # Example usage and testing
-    import sys
+    # Run sample assessment if called directly
+    print("Running sample risk assessment...")
+    results = run_sample_assessment()
     
-    # Setup logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
-    
-    try:
-        # Create agent
-        agent = create_risk_assessment_agent()
-        
-        # Example assessment
-        if len(sys.argv) > 1:
-            facility_id = sys.argv[1]
-            result = agent.assess_facility_risk(facility_id)
-            
-            print(f"Assessment Status: {result['status']}")
-            print(f"Risk Level: {result.get('risk_assessment', {}).get('overall_risk_level', 'N/A')}")
-            print(f"Processing Time: {result.get('processing_time', 0):.2f} seconds")
-            
-            if result.get('final_report'):
-                print("\nExecutive Summary:")
-                summary = result['final_report'].get('executive_summary', {})
-                for key, value in summary.items():
-                    print(f"  {key}: {value}")
-        else:
-            print("Risk Assessment Agent initialized successfully")
-            print("Usage: python agent.py <facility_id>")
-            
-    except Exception as e:
-        print(f"Error: {str(e)}")
-        sys.exit(1)
+    if results:
+        print("\nAssessment completed. Full results available in the returned dictionary.")
+    else:
+        print("\nAssessment failed. Check logs for details.")

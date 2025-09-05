@@ -330,24 +330,119 @@ const AnalyticsExecutive = () => {
     return Math.round(consumption * 0.0005); // Approximate CO2 factor
   };
 
-  // Helper function to parse recommendations that might be JSON-like strings
+  // Helper function to parse and format recommendations properly
   const parseRecommendations = (recommendations) => {
     if (!Array.isArray(recommendations)) return [];
     
-    return recommendations.map(rec => {
+    return recommendations.map((rec, index) => {
+      // Handle string recommendations that might be JSON-like or structured text
       if (typeof rec === 'string') {
         try {
           // Try to parse if it looks like JSON
           if (rec.trim().startsWith('{') || rec.trim().startsWith('[')) {
             const parsed = JSON.parse(rec);
-            return parsed.text || parsed.description || rec;
+            return {
+              id: index + 1,
+              priority: parsed.priority || 'Medium',
+              description: parsed.text || parsed.description || parsed.title || rec,
+              impact: parsed.impact || 'Moderate',
+              effort: parsed.effort || 'Medium',
+              category: parsed.category || 'General'
+            };
+          }
+          
+          // Handle structured text format (e.g., "Priority: High | Description: ...")
+          if (rec.includes('|') || rec.includes(':')) {
+            const parts = rec.split('|').map(p => p.trim());
+            let priority = 'Medium';
+            let description = rec;
+            let impact = 'Moderate';
+            let effort = 'Medium';
+            let category = 'General';
+            
+            parts.forEach(part => {
+              if (part.toLowerCase().includes('priority:')) {
+                priority = part.split(':')[1]?.trim() || priority;
+              } else if (part.toLowerCase().includes('impact:')) {
+                impact = part.split(':')[1]?.trim() || impact;
+              } else if (part.toLowerCase().includes('effort:')) {
+                effort = part.split(':')[1]?.trim() || effort;
+              } else if (part.toLowerCase().includes('category:')) {
+                category = part.split(':')[1]?.trim() || category;
+              } else if (part.toLowerCase().includes('description:')) {
+                description = part.split(':')[1]?.trim() || description;
+              }
+            });
+            
+            return {
+              id: index + 1,
+              priority,
+              description,
+              impact,
+              effort,
+              category
+            };
           }
         } catch (e) {
-          // If parsing fails, return original string
+          // If parsing fails, treat as plain text
         }
+        
+        // Handle plain text recommendations
+        return {
+          id: index + 1,
+          priority: 'Medium',
+          description: rec,
+          impact: 'Moderate',
+          effort: 'Medium',
+          category: 'General'
+        };
       }
-      return rec;
+      
+      // Handle object recommendations
+      if (typeof rec === 'object' && rec !== null) {
+        return {
+          id: index + 1,
+          priority: rec.priority || 'Medium',
+          description: rec.text || rec.description || rec.title || 'No description',
+          impact: rec.impact || 'Moderate',
+          effort: rec.effort || 'Medium',
+          category: rec.category || 'General'
+        };
+      }
+      
+      return {
+        id: index + 1,
+        priority: 'Medium',
+        description: String(rec),
+        impact: 'Moderate',
+        effort: 'Medium',
+        category: 'General'
+      };
     });
+  };
+
+  // Helper function to sort recommendations by priority
+  const sortRecommendationsByPriority = (recommendations) => {
+    const priorityOrder = { 'High': 1, 'Medium': 2, 'Low': 3 };
+    return [...recommendations].sort((a, b) => {
+      const aPriority = priorityOrder[a.priority] || 2;
+      const bPriority = priorityOrder[b.priority] || 2;
+      return aPriority - bPriority || a.id - b.id; // Secondary sort by ID for stable ordering
+    });
+  };
+
+  // Helper function to get priority chip color
+  const getPriorityColor = (priority) => {
+    switch (priority.toLowerCase()) {
+      case 'high':
+        return 'error';
+      case 'medium':
+        return 'warning';
+      case 'low':
+        return 'success';
+      default:
+        return 'default';
+    }
   };
 
   // Helper function to format numerical values to 2 decimal places
@@ -541,7 +636,8 @@ const AnalyticsExecutive = () => {
     const facts = data.facts || {};
     const risks = data.risks || [];
     const rawRecommendations = data.recommendations || [];
-    const recommendations = parseRecommendations(rawRecommendations);
+    const parsedRecommendations = parseRecommendations(rawRecommendations);
+    const sortedRecommendations = sortRecommendationsByPriority(parsedRecommendations);
 
     return (
       <Card sx={{ height: '100%', boxShadow: 3 }}>
@@ -629,19 +725,58 @@ const AnalyticsExecutive = () => {
             </Box>
           )}
 
-          {/* Recommendations Section */}
-          {recommendations.length > 0 && (
+          {/* Recommendations Section - FIXED to show all 3 with proper formatting */}
+          {sortedRecommendations.length > 0 && (
             <Box sx={{ p: 2, backgroundColor: '#e8f5e8', borderRadius: 1 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <LightbulbOutlined sx={{ color: '#4caf50', mr: 1 }} />
                 <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                  Recommendations
+                  Recommendations ({sortedRecommendations.length})
                 </Typography>
               </Box>
-              {recommendations.slice(0, 2).map((recommendation, index) => (
-                <Typography key={index} variant="body2" sx={{ mb: 1 }}>
-                  • {recommendation}
-                </Typography>
+              
+              {/* Display ALL recommendations, not just 2 */}
+              {sortedRecommendations.map((recommendation, index) => (
+                <Box key={recommendation.id} sx={{ 
+                  mb: 2, 
+                  p: 2, 
+                  backgroundColor: 'rgba(255, 255, 255, 0.7)', 
+                  borderRadius: 1,
+                  border: '1px solid #c8e6c9'
+                }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#2e7d32' }}>
+                      Recommendation {recommendation.id}
+                    </Typography>
+                    <Chip 
+                      label={recommendation.priority}
+                      color={getPriorityColor(recommendation.priority)}
+                      size="small"
+                      variant="outlined"
+                    />
+                    {recommendation.category !== 'General' && (
+                      <Chip 
+                        label={recommendation.category}
+                        size="small"
+                        variant="outlined"
+                        sx={{ backgroundColor: '#f5f5f5' }}
+                      />
+                    )}
+                  </Box>
+                  
+                  <Typography variant="body2" sx={{ mb: 1, lineHeight: 1.6 }}>
+                    <strong>Description:</strong> {recommendation.description}
+                  </Typography>
+                  
+                  <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                      <strong>Impact:</strong> {recommendation.impact}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                      <strong>Effort:</strong> {recommendation.effort}
+                    </Typography>
+                  </Box>
+                </Box>
               ))}
             </Box>
           )}
