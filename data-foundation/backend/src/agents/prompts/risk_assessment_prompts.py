@@ -50,7 +50,7 @@ Note: For CO2e targets, consider that the goal is typically a reduction target (
 For percentage-based goals like "-10%", calculate the target as: baseline * (1 + goal_percentage/100).
 """
 
-# Recommendation Generation Prompt (lines 469-493)
+# Recommendation Generation Prompt (lines 469-493) - Enhanced with industrial best practices
 RECOMMENDATION_GENERATION_PROMPT = """
 Generate 3-5 specific, actionable recommendations for {site_name} ({site_type}) to address {category} consumption concerns.
 
@@ -60,25 +60,72 @@ Context:
 - Key Risk Factors: {risk_factors}
 - Months Remaining: {months_remaining}
 
+INDUSTRIAL BEST PRACTICES TO CONSIDER:
+
+1. **Energy Efficiency Measures**
+   - Advanced lighting systems (LED upgrades, smart controls)
+   - Building envelope optimization (insulation, windows, HVAC systems)
+   - Equipment modernization and right-sizing
+   - Real-time energy monitoring and management systems
+   - Example: General Motors achieved 35% energy reduction across facilities through comprehensive efficiency programs
+
+2. **Process Electrification**
+   - Converting combustion-based processes to electric alternatives
+   - Electric heating systems, induction heating, electric ovens
+   - Electric vehicle fleet conversion
+   - Heat pump installations for heating and cooling
+   - Example: Cleveland-Cliffs implemented electric arc furnace technology, reducing CO2 emissions by 75% compared to traditional blast furnaces
+
+3. **Renewable Energy Procurement**
+   - On-site solar and wind installations
+   - Power Purchase Agreements (PPAs) with renewable energy providers
+   - Virtual power purchase agreements (VPPAs)
+   - Battery energy storage systems integration
+   - Example: RMS Company achieved 100% renewable electricity through a combination of on-site solar and renewable energy contracts
+
+4. **Fuel Switching**
+   - Natural gas to renewable natural gas conversion
+   - Hydrogen adoption for high-temperature processes
+   - Biofuels for transportation and heating
+   - Electric alternatives to fossil fuel equipment
+   - Example: ArcelorMittal is piloting hydrogen-based steelmaking to replace coal-fired processes
+
+5. **Carbon Capture, Utilization, and Storage (CCUS)**
+   - Direct air capture systems
+   - Point-source carbon capture on industrial processes
+   - Carbon utilization in manufacturing processes
+   - Partnerships with carbon storage providers
+   - Example: Microsoft has committed to removing all historical CO2 emissions through CCUS technologies and nature-based solutions
+
+CITATION REQUIREMENTS:
+When generating recommendations, you MUST:
+- Reference specific best practices from the list above when applicable
+- Include citations to real company examples when making recommendations
+- Specify which industrial best practice category each recommendation falls under
+- Provide evidence-based justification for proposed solutions
+
 For each recommendation, provide:
 1. Priority Level (High/Medium/Low)
 2. Specific Action Description
-3. Estimated Monthly Impact ({units} reduction/improvement)
-4. Implementation Effort (Low/Medium/High)
-5. Timeline (Immediate/Short-term/Long-term)
-6. Resource Requirements
+3. Best Practice Category (from the 5 categories above)
+4. Estimated Monthly Impact ({units} reduction/improvement)
+5. Implementation Effort (Low/Medium/High)
+6. Timeline (Immediate/Short-term/Long-term)
+7. Resource Requirements
+8. Supporting Evidence/Citation (reference to best practice or company example)
 
 Focus Areas by Risk Level:
-- LOW: Optimization and efficiency improvements
-- MEDIUM: Targeted interventions and monitoring
-- HIGH: Aggressive conservation measures and system changes
-- CRITICAL: Emergency protocols and immediate action plans
+- LOW: Optimization and efficiency improvements (focus on Energy Efficiency Measures)
+- MEDIUM: Targeted interventions and monitoring (combine Energy Efficiency with Process Electrification)
+- HIGH: Aggressive conservation measures and system changes (incorporate Renewable Energy Procurement and Fuel Switching)
+- CRITICAL: Emergency protocols and immediate action plans (consider all best practices including CCUS for long-term strategy)
 
 Ensure recommendations are:
 - Specific to the site type and consumption category
 - Quantifiable where possible
 - Realistic and implementable
-- Aligned with industry best practices
+- Aligned with industry best practices and supported by real-world examples
+- Include specific citations to best practices or company examples
 """
 
 def format_trend_analysis_prompt(category, site_name, consumption_data):
