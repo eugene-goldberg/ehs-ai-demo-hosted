@@ -15,7 +15,7 @@ The agent follows the exact method structure defined in the plan:
 
 Author: AI Assistant
 Date: 2025-09-01
-Updated: 2025-09-05 - Fixed gap calculation parsing issue
+Updated: 2025-09-06 - Enhanced LLM response parsing for robustness and nested objects
 """
 
 import os
@@ -23,6 +23,7 @@ import sys
 import logging
 import json
 import traceback
+import re
 from typing import Dict, List, Any, Optional
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -287,7 +288,7 @@ class RiskAssessmentAgent:
             response = self.llm(messages)
             
             try:
-                # FIXED: Use improved parsing that handles nested JSON structure
+                # ENHANCED: Use improved parsing that handles nested JSON structure and multiple key formats
                 goal_comparison = self._parse_llm_response(response.content)
                                 
             except json.JSONDecodeError:
@@ -309,10 +310,16 @@ class RiskAssessmentAgent:
     
     def _parse_llm_response(self, response_content: str) -> Dict[str, Any]:
         """
-        Parse LLM response handling both flat and nested JSON structures
+        Parse LLM response handling both flat and nested JSON structures with robust value extraction
         
-        FIXED: This method resolves the gap calculation issue by properly extracting
-        values from nested JSON structures that the LLM returns.
+        ENHANCED: This method handles multiple key formats, string percentage parsing, and nested objects 
+        to resolve LLM response format variations including:
+        - Both "percentage_gap" and "percentage_difference" keys
+        - String values with % signs (e.g., "-28.36%")
+        - Numeric values (e.g., 1011.35)
+        - Nested objects like {"value": 28.36, "units": "%"}
+        - Proper negative value extraction
+        - FIXED: Prioritizes percentage_difference over absolute_difference
         
         Args:
             response_content: Raw JSON response from LLM
@@ -320,6 +327,85 @@ class RiskAssessmentAgent:
         Returns:
             Dictionary with extracted gap_percentage, projected_annual_consumption, etc.
         """
+        
+        def _extract_value_from_nested_object(value: Any) -> Any:
+            """
+            Extract the actual value from nested objects that have a "value" field.
+            If the value is a dict/object and has a "value" field, return that.
+            Otherwise, return the original value.
+            
+            Args:
+                value: The value to potentially extract from
+                
+            Returns:
+                The extracted value or the original value
+            """
+            if isinstance(value, dict) and "value" in value:
+                logger.debug(f"Extracting value from nested object: {value} -> {value['value']}")
+                return value["value"]
+            return value
+        
+        def _parse_percentage_value(value: Any) -> float:
+            """
+            Parse percentage values from various formats:
+            - "-28.36%" -> -28.36
+            - "28.36%" -> 28.36
+            - 28.36 -> 28.36
+            - "-28.36" -> -28.36
+            - {"value": 28.36, "units": "%"} -> 28.36
+            """
+            # First, extract from nested object if needed
+            extracted_value = _extract_value_from_nested_object(value)
+            
+            if extracted_value is None:
+                return 0.0
+            
+            try:
+                if isinstance(extracted_value, (int, float)):
+                    return float(extracted_value)
+                
+                if isinstance(extracted_value, str):
+                    # Remove % sign and whitespace
+                    clean_value = extracted_value.strip().replace('%', '')
+                    # Handle empty strings
+                    if not clean_value:
+                        return 0.0
+                    return float(clean_value)
+                
+                return 0.0
+            except (ValueError, TypeError):
+                logger.warning(f"Could not parse percentage value: {value} (extracted: {extracted_value})")
+                return 0.0
+        
+        def _parse_numeric_value(value: Any) -> float:
+            """
+            Parse numeric values from various formats:
+            - 1011.35 -> 1011.35
+            - "1011.35" -> 1011.35
+            - "1,011.35" -> 1011.35
+            - {"value": 1011.35, "units": "kWh"} -> 1011.35
+            """
+            # First, extract from nested object if needed
+            extracted_value = _extract_value_from_nested_object(value)
+            
+            if extracted_value is None:
+                return 0.0
+                
+            try:
+                if isinstance(extracted_value, (int, float)):
+                    return float(extracted_value)
+                
+                if isinstance(extracted_value, str):
+                    # Remove commas and whitespace
+                    clean_value = extracted_value.strip().replace(',', '')
+                    if not clean_value:
+                        return 0.0
+                    return float(clean_value)
+                
+                return 0.0
+            except (ValueError, TypeError):
+                logger.warning(f"Could not parse numeric value: {value} (extracted: {extracted_value})")
+                return 0.0
         
         try:
             data = json.loads(response_content)
@@ -334,59 +420,174 @@ class RiskAssessmentAgent:
             }
             
             if isinstance(data, dict):
-                # First check for direct fields (preferred format)
-                if 'gap_percentage' in data and data['gap_percentage'] != 0:
-                    result['gap_percentage'] = float(data['gap_percentage'])
-                if 'projected_annual_consumption' in data and data['projected_annual_consumption'] != 0:
-                    result['projected_annual_consumption'] = float(data['projected_annual_consumption'])
-                if 'goal_achievable' in data:
-                    result['goal_achievable'] = bool(data['goal_achievable'])
+                # ENHANCED: Reordered percentage_keys to prioritize "percentage_difference" and similar keys
+                # This ensures we prefer percentage keys over absolute difference keys
+                percentage_keys = [
+                    'percentage_difference', 'percentage_gap', 'gap_percentage', 
+                    'percent_difference', 'percent_gap', 'gap_percent', 'gap'
+                ]
                 
-                # If direct fields are missing or zero, look in nested structure
+                consumption_keys = [
+                    'projected_annual_consumption', 'projected_consumption', 
+                    'annual_projection', 'projected_annual', 'projection'
+                ]
+                
+                achievability_keys = [
+                    'goal_achievable', 'achievable', 'is_achievable',
+                    'goal_attainable', 'can_achieve_goal'
+                ]
+                
+                # First check for direct fields (preferred format)
+                for key in percentage_keys:
+                    if key in data and data[key] is not None:
+                        parsed_value = _parse_percentage_value(data[key])
+                        if parsed_value != 0:  # Only use non-zero values
+                            result['gap_percentage'] = parsed_value
+                            logger.debug(f"Found gap percentage in {key}: {parsed_value}")
+                            break
+                
+                for key in consumption_keys:
+                    if key in data and data[key] is not None:
+                        parsed_value = _parse_numeric_value(data[key])
+                        if parsed_value != 0:  # Only use non-zero values
+                            result['projected_annual_consumption'] = parsed_value
+                            logger.debug(f"Found projected consumption in {key}: {parsed_value}")
+                            break
+                
+                for key in achievability_keys:
+                    if key in data:
+                        # Also handle nested objects for achievability
+                        extracted_value = _extract_value_from_nested_object(data[key])
+                        if isinstance(extracted_value, bool):
+                            result['goal_achievable'] = extracted_value
+                        elif isinstance(extracted_value, str):
+                            result['goal_achievable'] = extracted_value.lower() in ['yes', 'true', 'achievable', 'attainable']
+                        logger.debug(f"Found goal achievability in {key}: {result['goal_achievable']}")
+                        break
+                
+                # ENHANCED: If direct fields are missing or zero, look in nested structure with broader search
+                # BUT exclude keys containing "absolute" to avoid absolute_difference confusion
                 if result['gap_percentage'] == 0 or result['projected_annual_consumption'] == 0:
-                    # Look for gap analysis and projected consumption sections
-                    for key, value in data.items():
-                        if isinstance(value, dict):
-                            # Look for gap analysis section
-                            if 'gap' in key.lower():
-                                for subkey, subvalue in value.items():
-                                    if 'percentage' in subkey.lower():
-                                        try:
-                                            result['gap_percentage'] = float(subvalue)
-                                            logger.debug(f"Extracted gap percentage from nested: {result['gap_percentage']}")
-                                        except (ValueError, TypeError):
-                                            pass
-                            
-                            # Look for projected consumption section  
-                            elif 'projected' in key.lower():
-                                for subkey, subvalue in value.items():
-                                    if 'consumption' in subkey.lower():
-                                        try:
-                                            result['projected_annual_consumption'] = float(subvalue)
-                                            logger.debug(f"Extracted projected consumption from nested: {result['projected_annual_consumption']}")
-                                        except (ValueError, TypeError):
-                                            pass
-                            
-                            # Look for goal achievability
-                            elif 'goal' in key.lower():
-                                for subkey, subvalue in value.items():
-                                    if 'achievable' in subkey.lower():
-                                        if isinstance(subvalue, str):
-                                            result['goal_achievable'] = subvalue.lower() in ['yes', 'true', 'achievable']
+                    # Look through all nested dictionaries for relevant values
+                    for main_key, main_value in data.items():
+                        if isinstance(main_value, dict):
+                            # Search for gap/percentage values in nested structures
+                            for sub_key, sub_value in main_value.items():
+                                # FIXED: Check for percentage-related keys but exclude keys containing "absolute"
+                                if any(term in sub_key.lower() for term in ['gap', 'percentage', 'percent', 'difference']):
+                                    # EXCLUDE keys that contain "absolute" to avoid matching "absolute_difference"
+                                    if 'absolute' not in sub_key.lower():
+                                        if result['gap_percentage'] == 0:
+                                            parsed_value = _parse_percentage_value(sub_value)
+                                            if parsed_value != 0:
+                                                result['gap_percentage'] = parsed_value
+                                                logger.debug(f"Extracted gap percentage from nested {main_key}.{sub_key}: {parsed_value}")
+                                
+                                # Check for consumption/projection keys
+                                if any(term in sub_key.lower() for term in ['consumption', 'projected', 'projection', 'annual']):
+                                    if result['projected_annual_consumption'] == 0:
+                                        parsed_value = _parse_numeric_value(sub_value)
+                                        if parsed_value != 0:
+                                            result['projected_annual_consumption'] = parsed_value
+                                            logger.debug(f"Extracted projected consumption from nested {main_key}.{sub_key}: {parsed_value}")
+                                
+                                # Check for achievability
+                                if any(term in sub_key.lower() for term in ['achievable', 'attainable', 'goal']):
+                                    extracted_value = _extract_value_from_nested_object(sub_value)
+                                    if isinstance(extracted_value, str):
+                                        achievable = extracted_value.lower() in ['yes', 'true', 'achievable', 'attainable']
+                                        if achievable != result['goal_achievable']:  # Only update if different
+                                            result['goal_achievable'] = achievable
+                                            logger.debug(f"Extracted goal achievability from nested {main_key}.{sub_key}: {achievable}")
+                
+                # Handle confidence field (also check for nested objects)
+                if 'confidence' in data:
+                    result['confidence'] = _parse_numeric_value(data['confidence'])
+                elif 'confidence_score' in data:
+                    result['confidence'] = _parse_numeric_value(data['confidence_score'])
             
-            logger.info(f"Parsed LLM response: gap={result['gap_percentage']:.1f}%, projected={result['projected_annual_consumption']:.1f}")
+            logger.info(f"Parsed LLM response: gap={result['gap_percentage']:.1f}%, projected={result['projected_annual_consumption']:.1f}, achievable={result['goal_achievable']}")
             return result
             
         except (json.JSONDecodeError, ValueError, TypeError) as e:
             logger.warning(f"Failed to parse LLM response: {e}")
-            return {
-                'gap_percentage': 0,
-                'projected_annual_consumption': 0,
-                'goal_achievable': False,
-                'confidence': 0.5,
-                'analysis_text': response_content,
-                'parsing_error': str(e)
-            }
+            # Try to extract values using regex as fallback
+            fallback_result = self._fallback_parse_response(response_content)
+            fallback_result['parsing_error'] = str(e)
+            return fallback_result
+    
+    def _fallback_parse_response(self, response_content: str) -> Dict[str, Any]:
+        """
+        Fallback parsing using regex when JSON parsing fails
+        
+        Args:
+            response_content: Raw response text
+            
+        Returns:
+            Dictionary with extracted values
+        """
+        result = {
+            'gap_percentage': 0,
+            'projected_annual_consumption': 0,
+            'goal_achievable': False,
+            'confidence': 0.5,
+            'analysis_text': response_content
+        }
+        
+        try:
+            # Look for percentage values (with or without % sign)
+            percentage_patterns = [
+                r'gap[_\s]*(?:percentage|percent|difference)[_\s]*:?\s*["\']?(-?\d+\.?\d*)%?["\']?',
+                r'percentage[_\s]*(?:gap|difference)[_\s]*:?\s*["\']?(-?\d+\.?\d*)%?["\']?',
+                r'(-?\d+\.?\d*)%?\s*gap',
+                r'gap.*?(-?\d+\.?\d*)%'
+            ]
+            
+            for pattern in percentage_patterns:
+                match = re.search(pattern, response_content, re.IGNORECASE)
+                if match:
+                    try:
+                        result['gap_percentage'] = float(match.group(1))
+                        logger.debug(f"Regex extracted gap percentage: {result['gap_percentage']}")
+                        break
+                    except (ValueError, IndexError):
+                        continue
+            
+            # Look for consumption/projection values
+            consumption_patterns = [
+                r'projected[_\s]*(?:annual[_\s]*)?consumption[_\s]*:?\s*["\']?(\d+\.?\d*)["\']?',
+                r'annual[_\s]*projection[_\s]*:?\s*["\']?(\d+\.?\d*)["\']?',
+                r'consumption.*?(\d+\.?\d*)'
+            ]
+            
+            for pattern in consumption_patterns:
+                match = re.search(pattern, response_content, re.IGNORECASE)
+                if match:
+                    try:
+                        result['projected_annual_consumption'] = float(match.group(1))
+                        logger.debug(f"Regex extracted projected consumption: {result['projected_annual_consumption']}")
+                        break
+                    except (ValueError, IndexError):
+                        continue
+            
+            # Look for goal achievability
+            achievability_patterns = [
+                r'goal[_\s]*achievable[_\s]*:?\s*["\']?(yes|no|true|false|achievable|not.achievable)["\']?',
+                r'achievable[_\s]*:?\s*["\']?(yes|no|true|false)["\']?'
+            ]
+            
+            for pattern in achievability_patterns:
+                match = re.search(pattern, response_content, re.IGNORECASE)
+                if match:
+                    achievable_text = match.group(1).lower()
+                    result['goal_achievable'] = achievable_text in ['yes', 'true', 'achievable']
+                    logger.debug(f"Regex extracted goal achievability: {result['goal_achievable']}")
+                    break
+            
+        except Exception as e:
+            logger.warning(f"Error in fallback parsing: {e}")
+        
+        return result
     
     def llm_assess_goal_risk(self, comparison: Dict[str, Any]) -> Dict[str, Any]:
         """

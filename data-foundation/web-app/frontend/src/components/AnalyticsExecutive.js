@@ -346,7 +346,7 @@ const AnalyticsExecutive = () => {
 
   // Helper function to calculate current CO2 trends using risk assessment data
   const calculateCO2Trend = () => {
-    // Try to get percentage_gap from electricity risk assessment data
+    // Try to get percentage_difference from electricity risk assessment data
     if (electricityData && electricityData.risks && Array.isArray(electricityData.risks) && electricityData.risks.length > 0) {
       try {
         const firstRisk = electricityData.risks[0];
@@ -354,14 +354,31 @@ const AnalyticsExecutive = () => {
           // Parse the JSON description
           const riskData = JSON.parse(firstRisk.description);
           
-          // Look for gap analysis data
-          if (riskData && riskData["2. Gap analysis"] && typeof riskData["2. Gap analysis"].percentage_gap === 'number') {
-            const percentageGap = riskData["2. Gap analysis"].percentage_gap;
+          // Look for gap analysis data with percentage_difference
+          if (riskData && riskData["2. Gap analysis"]) {
+            const gapAnalysis = riskData["2. Gap analysis"];
+            let percentageGap = null;
             
-            return {
-              trend: percentageGap > 0 ? 'increasing' : 'decreasing',
-              percentage: Math.abs(percentageGap).toFixed(1)
-            };
+            // Check for percentage_difference (the actual field name)
+            if (gapAnalysis.percentage_difference !== undefined) {
+              // Handle both string (e.g., "-28.36%") and number formats
+              if (typeof gapAnalysis.percentage_difference === 'string') {
+                percentageGap = parseFloat(gapAnalysis.percentage_difference.replace('%', ''));
+              } else if (typeof gapAnalysis.percentage_difference === 'number') {
+                percentageGap = gapAnalysis.percentage_difference;
+              }
+            }
+            // Fallback to percentage_gap if it exists
+            else if (typeof gapAnalysis.percentage_gap === 'number') {
+              percentageGap = gapAnalysis.percentage_gap;
+            }
+            
+            if (percentageGap !== null && !isNaN(percentageGap)) {
+              return {
+                trend: percentageGap > 0 ? 'increasing' : 'decreasing',
+                percentage: Math.abs(percentageGap).toFixed(1)
+              };
+            }
           }
         }
       } catch (error) {

@@ -1,0 +1,201 @@
+{
+  "site_id": "algonquin_il",
+  "generated_date": "2025-09-05T21:41:14.423225",
+  "electricity_consumption": [
+    {
+      "month": "August",
+      "year": 2025,
+      "date": "2025-08-01",
+      "consumption_kwh": 93527.34,
+      "cost_usd": 6745.83,
+      "data_source": "Updated from screenshot"
+    },
+    {
+      "month": "July",
+      "year": 2025,
+      "date": "2025-07-01",
+      "consumption_kwh": 68236.49,
+      "cost_usd": 6164.4,
+      "data_source": "Updated from screenshot"
+    },
+    {
+      "month": "June",
+      "year": 2025,
+      "date": "2025-06-01",
+      "consumption_kwh": 58339.62,
+      "cost_usd": 5676.33,
+      "data_source": "Updated from screenshot"
+    },
+    {
+      "month": "May",
+      "year": 2025,
+      "date": "2025-05-01",
+      "consumption_kwh": 51215.48,
+      "cost_usd": 5397.89,
+      "data_source": "Updated from screenshot"
+    },
+    {
+      "month": "April",
+      "year": 2025,
+      "date": "2025-04-01",
+      "consumption_kwh": 45838.74,
+      "cost_usd": 5270.45,
+      "data_source": "Updated from screenshot"
+    },
+    {
+      "month": "March",
+      "year": 2025,
+      "date": "2025-03-01",
+      "consumption_kwh": 31468.29,
+      "cost_usd": 3980.57,
+      "data_source": "Updated from screenshot"
+    }
+  ],
+  "water_consumption_summary": {
+    "total_days": 184,
+    "date_range": "2025-03-01 to 2025-08-31",
+    "total_gallons": 877735.6600000005,
+    "total_cost_usd": 3510.8799999999987,
+    "average_daily_gallons": 4770.302499999999,
+    "usage_breakdown": {
+      "process_usage_gallons": 571496.5600000002,
+      "cooling_usage_gallons": 219783.2499999999,
+      "domestic_usage_gallons": 86455.78999999998
+    }
+  },
+  "water_consumption_daily": [],
+  "waste_generation": [
+    {
+      "date": "2025-08-25",
+      "quantity": null,
+      "unit": null,
+      "waste_type": "Recyclable",
+      "disposal_method": "Recycling Center",
+      "cost": null
+    },
+    {
+      "date": "2025-08-25",
+      "quantity": null,
+      "unit": null,
+      "waste_type": "Hazardous",
+      "disposal_method": "Incineration",
+      "cost": null
+    },
+    {
+      "date": "2025-08-25",
+      "quantity": null,
+      "unit": null,
+      "waste_type": "Organic",
+      "disposal_method": "Composting",
+      "cost": null
+    },
+    {
+      "date": "2025-08-25",
+      "quantity": null,
+      "unit": null,
+      "waste_type": "Non_Hazardous",
+      "disposal_method": "Landfill",
+      "cost": null
+    },
+    {
+      "date": "2025-08-18",
+      "quantity": null,
+      "unit": null,
+      "waste_type": "Recyclable",
+      "disposal_method": "Recycling Center",
+      "cost": null
+    },
+    {
+      "date": "2025-08-18",
+      "quantity": null,
+      "unit": null,
+      "waste_type": "Hazardous",
+      "disposal_method": "Incineration",
+      "cost": null
+    },
+    {
+      "date": "2025-08-18",
+      "quantity": null,
+      "unit": null,
+      "waste_type": "Organic",
+      "disposal_method": "Composting",
+      "cost": null
+    },
+    {
+      "date": "2025-08-18",
+      "quantity": null,
+      "unit": null,
+      "waste_type": "Non_Hazardous",
+      "disposal_method": "Landfill",
+      "cost": null
+    },
+    {
+      "date": "2025-08-11",
+      "quantity": null,
+      "unit": null,
+      "waste_type": "Recyclable",
+      "disposal_method": "Recycling Center",
+      "cost": null
+    },
+    {
+      "date": "2025-08-11",
+      "quantity": null,
+      "unit": null,
+      "waste_type": "Hazardous",
+      "disposal_method": "Incineration",
+      "cost": null
+    }
+  ],
+  "trends_analysis": {
+    "monthly_water_trends": [
+      {
+        "year": 2025,
+        "month": 8,
+        "month_name": "August",
+        "total_gallons": 159129.01999999996,
+        "average_daily_gallons": 5133.194193548387,
+        "days_recorded": 31
+      },
+      {
+        "year": 2025,
+        "month": 7,
+        "month_name": "July",
+        "total_gallons": 163817.11,
+        "average_daily_gallons": 5284.422903225806,
+        "days_recorded": 31
+      },
+      {
+        "year": 2025,
+        "month": 6,
+        "month_name": "June",
+        "total_gallons": 156364.82,
+        "average_daily_gallons": 5212.160666666667,
+        "days_recorded": 30
+      },
+      {
+        "year": 2025,
+        "month": 5,
+        "month_name": "May",
+        "total_gallons": 133180.22999999998,
+        "average_daily_gallons": 4296.136451612903,
+        "days_recorded": 31
+      },
+      {
+        "year": 2025,
+        "month": 4,
+        "month_name": "April",
+        "total_gallons": 131912.08,
+        "average_daily_gallons": 4397.069333333333,
+        "days_recorded": 30
+      },
+      {
+        "year": 2025,
+        "month": 3,
+        "month_name": "March",
+        "total_gallons": 133332.4,
+        "average_daily_gallons": 4301.0451612903225,
+        "days_recorded": 31
+      }
+    ]
+  }
+}
