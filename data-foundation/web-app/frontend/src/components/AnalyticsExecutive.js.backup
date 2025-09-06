@@ -332,44 +332,31 @@ const AnalyticsExecutive = () => {
     return Math.round(consumption * 0.0005); // Approximate CO2 factor
   };
 
-  // Helper function to calculate CO2 reduction goals from electricity data only
+  // Helper function to calculate CO2 reduction goals from all data sources
   const calculateCO2ReductionGoals = () => {
-    // Only use electricity data reduction percentage since only electricity relates to CO2 emissions
-    if (electricityData && electricityData.goals && typeof electricityData.goals === 'object' && electricityData.goals !== null) {
-      if (typeof electricityData.goals.reduction_percentage === 'number') {
-        return electricityData.goals.reduction_percentage;
-      }
-    }
+    let totalGoals = 0;
     
-    return 150; // Default goal if no specific targets found
+    // Extract goals from all data sources and sum up CO2-related targets
+    [electricityData, waterData, wasteData].forEach(data => {
+      // Check if data exists and has goals property
+      if (data && data.goals && Array.isArray(data.goals)) {
+        data.goals.forEach(goal => {
+          if (typeof goal === 'string') {
+            // Extract numerical values from goal strings (e.g., "Reduce by 20%", "Save 500 tons CO2")
+            const match = goal.match(/(\d+(?:\.\d+)?)\s*(?:%|percent|tons?|kg)/i);
+            if (match) {
+              totalGoals += parseFloat(match[1]);
+            }
+          }
+        });
+      }
+    });
+    
+    return totalGoals || 150; // Default goal if no specific targets found
   };
 
-  // Helper function to calculate current CO2 trends using risk assessment data
+  // Helper function to calculate current CO2 trends
   const calculateCO2Trend = () => {
-    // Try to get percentage_gap from electricity risk assessment data
-    if (electricityData && electricityData.risks && Array.isArray(electricityData.risks) && electricityData.risks.length > 0) {
-      try {
-        const firstRisk = electricityData.risks[0];
-        if (firstRisk && firstRisk.description) {
-          // Parse the JSON description
-          const riskData = JSON.parse(firstRisk.description);
-          
-          // Look for gap analysis data
-          if (riskData && riskData["2. Gap analysis"] && typeof riskData["2. Gap analysis"].percentage_gap === 'number') {
-            const percentageGap = riskData["2. Gap analysis"].percentage_gap;
-            
-            return {
-              trend: percentageGap > 0 ? 'increasing' : 'decreasing',
-              percentage: Math.abs(percentageGap).toFixed(1)
-            };
-          }
-        }
-      } catch (error) {
-        console.warn('Error parsing risk assessment data for CO2 trend:', error);
-      }
-    }
-    
-    // Fallback to hardcoded calculation if risk data is not available
     const electricityEmissions = calculateCO2Emissions(electricityData);
     const waterEmissions = calculateCO2Emissions(waterData);
     const currentEmissions = electricityEmissions + waterEmissions;
@@ -1057,7 +1044,7 @@ const AnalyticsExecutive = () => {
                   </Typography>
                 </Box>
                 <Typography variant="body1" color="textSecondary">
-                  CO₂ Reduction Goals (%)
+                  CO₂ Reduction Goals (tons)
                 </Typography>
               </Box>
             </Grid>

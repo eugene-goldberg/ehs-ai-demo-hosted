@@ -11105,5 +11105,109 @@
       "timestamp": ""
     },
     "timestamp": "2025-09-05T13:30:15.642512"
+  },
+  {
+    "id": "d91a05e3-7464-4891-bff4-665ec1da6629",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-05T18:32:15.800864"
+  },
+  {
+    "id": "0a3cba42-c92c-4c71-8e21-320416d5fc2e",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                           |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-05T18:32:27.259459"
+  },
+  {
+    "id": "a0407620-d6ed-4da5-9c35-34577f849eb8",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-05T18:32:35.904820"
+  },
+  {
+    "id": "defeec2f-6680-4961-9eea-bb42fcd41eb5",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage     ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-05T18:32:52.885253"
+  },
+  {
+    "id": "28bf21f8-d54f-4be2-ac72-c95dbf0230b6",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-05T18:33:02.886592"
+  },
+  {
+    "id": "56a297c9-a5d6-45dc-9840-1029f8a8d94e",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n#### Electricity Usage Details\n| Meter ID     | Service Type              | Previous Reading | Current Re...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-05T18:33:14.724730"
+  },
+  {
+    "id": "846c8b9e-2171-4438-908d-0cea300c1b46",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-4.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-05T18:33:22.246624"
+  },
+  {
+    "id": "6451a3c5-e625-4249-8bb3-3969692dee3e",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount (without VAT) | Quantity | Total Amount |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-05T18:33:49.992034"
   }
 ]
