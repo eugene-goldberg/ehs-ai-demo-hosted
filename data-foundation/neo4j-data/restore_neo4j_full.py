@@ -251,33 +251,52 @@ class Neo4jRestoreManager:
                         rel_type = rel_data.get('type')
                         properties = rel_data.get('properties', {})
                         
-                        # Find nodes by their backup IDs
-                        query = """
-                        MATCH (start_node {__backup_id__: $start_id}), (end_node {__backup_id__: $end_id})
-                        CREATE (start_node)-[r:%s]->(end_node)
-                        """ % rel_type
-                        
-                        params = {
-                            'start_id': start_id,
-                            'end_id': end_id
-                        }
-                        
-                        if properties:
-                            query += " SET r = $props"
-                            params['props'] = properties
-                        
-                        result = session.run(query, params)
-                        
-                        # Check if relationship was created
-                        if result.consume().counters.relationships_created > 0:
-                            self.stats['relationships_restored'] += 1
-                        else:
-                            error_msg = f"Failed to create relationship: {start_id} -[:{rel_type}]-> {end_id}"
+                        # Find nodes by their backup IDs with better error handling
+                        try:
+                            query = """
+                            MATCH (start_node {__backup_id__: $start_id}), (end_node {__backup_id__: $end_id})
+                            CREATE (start_node)-[r:%s]->(end_node)
+                            """ % rel_type
+                            
+                            params = {
+                                'start_id': start_id,
+                                'end_id': end_id
+                            }
+                            
+                            if properties:
+                                query += " SET r = $props"
+                                params['props'] = properties
+                            
+                            result = session.run(query, params)
+                            
+                            # Check if relationship was created
+                            counters = result.consume().counters
+                            if counters.relationships_created > 0:
+                                self.stats['relationships_restored'] += 1
+                            else:
+                                # Check if nodes exist to provide better error message
+                                start_exists = session.run("MATCH (n {__backup_id__: $start_id}) RETURN count(n) as count", 
+                                                          {'start_id': start_id}).single()["count"] > 0
+                                end_exists = session.run("MATCH (n {__backup_id__: $end_id}) RETURN count(n) as count", 
+                                                        {'end_id': end_id}).single()["count"] > 0
+                                
+                                if not start_exists:
+                                    error_msg = f"Missing start node for relationship: {start_id} -[:{rel_type}]-> {end_id}"
+                                elif not end_exists:
+                                    error_msg = f"Missing end node for relationship: {start_id} -[:{rel_type}]-> {end_id}"
+                                else:
+                                    error_msg = f"Failed to create relationship: {start_id} -[:{rel_type}]-> {end_id}"
+                                
+                                self.logger.warning(error_msg)
+                                self.stats['errors'].append(error_msg)
+                                
+                        except Exception as rel_error:
+                            error_msg = f"Error creating relationship {start_id} -[:{rel_type}]-> {end_id}: {str(rel_error)}"
                             self.logger.warning(error_msg)
                             self.stats['errors'].append(error_msg)
                     
                     if (i + len(batch)) % 1000 == 0:
-                        self.logger.info(f"Restored {i + len(batch)}/{len(relationships_data)} relationships...")
+                        self.logger.info(f"Processed {i + len(batch)}/{len(relationships_data)} relationships...")
                 
                 self.logger.info(f"Successfully restored {self.stats['relationships_restored']} relationships")
                 return True
@@ -301,7 +320,7 @@ class Neo4jRestoreManager:
             self.logger.error(f"Failed to cleanup backup metadata: {str(e)}")
             return False
     
-    def restore_constraints(self, constraints_data: List[Dict]) -> bool:
+    def restore_constraints_data(self, constraints_data: List[Dict]) -> bool:
         """Restore constraints from backup metadata."""
         if not self.restore_constraints or not constraints_data:
             return True
@@ -327,7 +346,7 @@ class Neo4jRestoreManager:
             self.logger.error(f"Failed to restore constraints: {str(e)}")
             return False
     
-    def restore_indexes(self, indexes_data: List[Dict]) -> bool:
+    def restore_indexes_data(self, indexes_data: List[Dict]) -> bool:
         """Restore indexes from backup metadata."""
         if not self.restore_indexes or not indexes_data:
             return True
@@ -422,11 +441,11 @@ class Neo4jRestoreManager:
             
             if self.restore_constraints:
                 self.logger.info("Restoring constraints...")
-                self.restore_constraints(schema_info.get('constraints', []))
+                self.restore_constraints_data(schema_info.get('constraints', []))
             
             if self.restore_indexes:
                 self.logger.info("Restoring indexes...")
-                self.restore_indexes(schema_info.get('indexes', []))
+                self.restore_indexes_data(schema_info.get('indexes', []))
             
             # Clean up temporary backup metadata
             self.logger.info("Cleaning up temporary data...")
