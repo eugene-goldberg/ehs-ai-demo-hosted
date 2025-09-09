@@ -1,0 +1,5197 @@
+{
+  "metadata": {
+    "generated_at": "2025-09-08T21:52:56.259620",
+    "neo4j_uri": "bolt://localhost:7687",
+    "database": "neo4j",
+    "total_node_labels": 53,
+    "total_relationship_types": 33
+  },
+  "database_info": {
+    "components": [
+      {
+        "name": "Neo4j Kernel",
+        "versions": [
+          "5.23.0"
+        ],
+        "edition": "community"
+      }
+    ],
+    "store_info": {}
+  },
+  "node_labels": {
+    "counts": {
+      "Anomaly": 0,
+      "ApprovalWorkflow": 0,
+      "Area": 39,
+      "AssessmentReport": 1,
+      "Building": 6,
+      "ChangePoint": 0,
+      "ComplianceRecord": 10,
+      "Customer": 4,
+      "DataPoint": 0,
+      "DisposalFacility": 2,
+      "Document": 3,
+      "DocumentChunk": 0,
+      "EHSMetric": 5031,
+      "EffectivenessMeasurement": 0,
+      "ElectricityConsumption": 309,
+      "Electricitybill": 1,
+      "Emission": 65,
+      "EmissionFactor": 1,
+      "EnvironmentalKPI": 20,
+      "EnvironmentalRecommendation": 8,
+      "EnvironmentalRisk": 12,
+      "EnvironmentalTarget": 6,
+      "Equipment": 0,
+      "Facility": 15,
+      "Floor": 12,
+      "Goal": 6,
+      "Incident": 116,
+      "Meter": 6,
+      "Migration": 0,
+      "MonthlyUsageAllocation": 0,
+      "Permit": 0,
+      "Recommendation": 19,
+      "RejectedDocument": 1,
+      "RejectionRecord": 0,
+      "RiskAssessment": 2,
+      "SeasonalDecomposition": 0,
+      "Site": 4,
+      "Transporter": 2,
+      "TrendAnalysis": 0,
+      "User": 0,
+      "UtilityBill": 2,
+      "UtilityProvider": 2,
+      "WasteGeneration": 248,
+      "WasteGenerator": 2,
+      "WasteItem": 2,
+      "WasteManifest": 2,
+      "WasteShipment": 2,
+      "Wastemanifest": 1,
+      "WaterBill": 2,
+      "WaterConsumption": 428,
+      "Waterbill": 1,
+      "__Entity__": 0,
+      "__Node__": 0
+    },
+    "properties": {
+      "Anomaly": [],
+      "ApprovalWorkflow": [],
+      "Area": [
+        "air_pressure_psi",
+        "area_sqft",
+        "backup_generator",
+        "capacity",
+        "capacity_units_per_hour",
+        "certification",
+        "charging_ports",
+        "created_at",
+        "dock_doors",
+        "equipment_count",
+        "floor_id",
+        "hazmat_certified",
+        "monitoring_stations",
+        "name",
+        "parking_spaces",
+        "primary_process",
+        "private_offices",
+        "reception_desks",
+        "rooms",
+        "server_racks",
+        "source",
+        "storage_capacity_tons",
+        "temperature_controlled",
+        "testing_capacity",
+        "treatment_capacity_gpd",
+        "trucks_per_day",
+        "type",
+        "updated_at",
+        "ventilation_type",
+        "video_conferencing",
+        "visitor_capacity",
+        "voltage_primary",
+        "workstations"
+      ],
+      "AssessmentReport": [
+        "assessment_id",
+        "data_sources",
+        "executive_summary",
+        "facility_id",
+        "id",
+        "metadata",
+        "report_date"
+      ],
+      "Building": [
+        "area_sqft",
+        "built_year",
+        "code",
+        "created_at",
+        "name",
+        "site_code",
+        "source",
+        "type",
+        "updated_at"
+      ],
+      "ChangePoint": [],
+      "ComplianceRecord": [
+        "compliance_date",
+        "corrective_actions",
+        "created_at",
+        "expiry_date",
+        "facility_id",
+        "findings",
+        "fine_amount_usd",
+        "id",
+        "inspection_date",
+        "inspector_name",
+        "regulation_code",
+        "regulation_name",
+        "status",
+        "updated_at"
+      ],
+      "Customer": [
+        "id",
+        "name"
+      ],
+      "DataPoint": [],
+      "DisposalFacility": [
+        "address",
+        "disposal_methods",
+        "epa_id",
+        "id",
+        "name",
+        "permit_number"
+      ],
+      "Document": [
+        "batch_processing",
+        "document_type",
+        "file_hash",
+        "file_path",
+        "id",
+        "original_filename",
+        "output_dir",
+        "recognition_confidence",
+        "statement_date",
+        "type",
+        "uploaded_at"
+      ],
+      "DocumentChunk": [],
+      "EHSMetric": [
+        "area_name",
+        "building_name",
+        "calculation",
+        "category",
+        "created_at",
+        "floor_name",
+        "frequency",
+        "metric_code",
+        "metric_name",
+        "recorded_date",
+        "site_code",
+        "source",
+        "target_value",
+        "unit",
+        "value"
+      ],
+      "EffectivenessMeasurement": [],
+      "ElectricityConsumption": [
+        "co2_emissions",
+        "consumption_kwh",
+        "cost_per_kwh",
+        "cost_usd",
+        "created_at",
+        "data_source",
+        "date",
+        "equipment_notes",
+        "facility_id",
+        "id",
+        "meter_reading",
+        "month",
+        "off_peak_consumption_kwh",
+        "peak_demand_kw",
+        "site_id",
+        "unit",
+        "updated_at",
+        "weather_factor",
+        "year"
+      ],
+      "Electricitybill": [
+        "batch_processing",
+        "document_type",
+        "file_hash",
+        "file_path",
+        "id",
+        "original_filename",
+        "output_dir",
+        "recognition_confidence",
+        "statement_date",
+        "type",
+        "uploaded_at"
+      ],
+      "Emission": [
+        "amount",
+        "calculation_method",
+        "consumption_id",
+        "created_at",
+        "date",
+        "disposal_method",
+        "emission_factor",
+        "facility_id",
+        "id",
+        "pollutant",
+        "source_type",
+        "unit"
+      ],
+      "EmissionFactor": [
+        "created_at",
+        "grid_subregion",
+        "id",
+        "methodology",
+        "region",
+        "source",
+        "unit",
+        "updated_at",
+        "value",
+        "year"
+      ],
+      "EnvironmentalKPI": [
+        "created_at",
+        "date",
+        "facility_id",
+        "id",
+        "performance_status",
+        "target_value",
+        "type",
+        "unit",
+        "updated_at",
+        "value",
+        "variance_percentage"
+      ],
+      "EnvironmentalRecommendation": [
+        "created_at",
+        "created_date",
+        "description",
+        "estimated_cost_usd",
+        "estimated_savings_usd",
+        "facility_id",
+        "id",
+        "implementation_timeline_days",
+        "priority",
+        "status",
+        "target_completion_date",
+        "title",
+        "type",
+        "updated_at"
+      ],
+      "EnvironmentalRisk": [
+        "created_at",
+        "description",
+        "facility_id",
+        "id",
+        "identified_date",
+        "impact_score",
+        "last_assessment_date",
+        "mitigation_status",
+        "probability",
+        "risk_type",
+        "severity",
+        "updated_at"
+      ],
+      "EnvironmentalTarget": [
+        "created_at",
+        "deadline",
+        "description",
+        "id",
+        "site_id",
+        "status",
+        "target_type",
+        "target_unit",
+        "target_value",
+        "updated_at"
+      ],
+      "Equipment": [],
+      "Facility": [
+        "address",
+        "capacity",
+        "created_at",
+        "created_date",
+        "employee_count",
+        "established_date",
+        "facility_id",
+        "id",
+        "industry_sector",
+        "location",
+        "name",
+        "operational_status",
+        "source",
+        "test_facility",
+        "type",
+        "updated_at"
+      ],
+      "Floor": [
+        "area_sqft",
+        "building_id",
+        "ceiling_height",
+        "created_at",
+        "level",
+        "name",
+        "source",
+        "updated_at"
+      ],
+      "Goal": [
+        "baseline_year",
+        "category",
+        "created_at",
+        "description",
+        "id",
+        "period",
+        "site_id",
+        "target_date",
+        "target_value",
+        "target_year",
+        "unit",
+        "updated_at"
+      ],
+      "Incident": [
+        "area_name",
+        "area_type",
+        "building_name",
+        "corrective_action",
+        "cost_estimate",
+        "created_at",
+        "date",
+        "days_lost",
+        "description",
+        "facility_id",
+        "floor_name",
+        "id",
+        "incident_date",
+        "incident_id",
+        "incident_type",
+        "injured_person_count",
+        "reported_date",
+        "root_cause",
+        "severity",
+        "site_code",
+        "source",
+        "status",
+        "type",
+        "updated_at"
+      ],
+      "Meter": [
+        "current_reading",
+        "id",
+        "previous_reading",
+        "service_type",
+        "type",
+        "unit",
+        "usage"
+      ],
+      "Migration": [],
+      "MonthlyUsageAllocation": [],
+      "Permit": [],
+      "Recommendation": [
+        "category",
+        "created_date",
+        "description",
+        "estimated_impact",
+        "id",
+        "priority",
+        "site_id",
+        "title"
+      ],
+      "RejectedDocument": [
+        "attempted_type",
+        "confidence",
+        "content_length",
+        "file_path",
+        "file_size",
+        "id",
+        "key_terms",
+        "original_filename",
+        "page_count",
+        "rejected_at",
+        "rejection_reason",
+        "tables_found",
+        "upload_source",
+        "upload_timestamp"
+      ],
+      "RejectionRecord": [],
+      "RiskAssessment": [
+        "assessment_date",
+        "category",
+        "confidence_score",
+        "description",
+        "factors",
+        "id",
+        "risk_level",
+        "site_id"
+      ],
+      "SeasonalDecomposition": [],
+      "Site": [
+        "address",
+        "certifications",
+        "code",
+        "country",
+        "created_at",
+        "electricity_baseline_kwh",
+        "electricity_target_change",
+        "employee_count",
+        "employees",
+        "established",
+        "facility_type",
+        "id",
+        "location",
+        "name",
+        "operating_hours",
+        "operating_hours_per_day",
+        "recycling_target_rate",
+        "risk_profile",
+        "source",
+        "state",
+        "type",
+        "updated_at",
+        "waste_baseline_lbs",
+        "water_baseline_gallons",
+        "zip_code"
+      ],
+      "Transporter": [
+        "address",
+        "id",
+        "license_number",
+        "name",
+        "phone"
+      ],
+      "TrendAnalysis": [],
+      "User": [],
+      "UtilityBill": [
+        "base_service_charge",
+        "billing_period_end",
+        "billing_period_start",
+        "due_date",
+        "grid_infrastructure_fee",
+        "id",
+        "off_peak_kwh",
+        "peak_kwh",
+        "state_environmental_surcharge",
+        "total_cost",
+        "total_kwh"
+      ],
+      "UtilityProvider": [
+        "address",
+        "id",
+        "name",
+        "phone",
+        "website"
+      ],
+      "WasteGeneration": [
+        "amount_pounds",
+        "contractor",
+        "created_at",
+        "date",
+        "disposal_cost_usd",
+        "disposal_method",
+        "facility_id",
+        "id",
+        "performance_notes",
+        "recycling_rate_achieved",
+        "recycling_target",
+        "site_id",
+        "updated_at",
+        "waste_type"
+      ],
+      "WasteGenerator": [
+        "address",
+        "contact",
+        "epa_id",
+        "id",
+        "name",
+        "phone"
+      ],
+      "WasteItem": [
+        "container_count",
+        "container_quantity",
+        "container_type",
+        "description",
+        "hazard_class",
+        "id",
+        "proper_shipping_name",
+        "quantity",
+        "waste_type",
+        "weight_unit"
+      ],
+      "WasteManifest": [
+        "id",
+        "issue_date",
+        "manifest_tracking_number",
+        "status",
+        "total_quantity",
+        "total_weight",
+        "weight_unit"
+      ],
+      "WasteShipment": [
+        "id",
+        "shipment_date",
+        "status",
+        "total_weight",
+        "transport_method",
+        "weight_unit"
+      ],
+      "Wastemanifest": [
+        "batch_processing",
+        "document_type",
+        "file_hash",
+        "file_path",
+        "id",
+        "original_filename",
+        "output_dir",
+        "recognition_confidence",
+        "type",
+        "uploaded_at"
+      ],
+      "WaterBill": [
+        "billing_period_end",
+        "billing_period_start",
+        "conservation_tax",
+        "due_date",
+        "id",
+        "infrastructure_surcharge",
+        "sewer_service_charge",
+        "stormwater_fee",
+        "total_cost",
+        "total_gallons",
+        "water_consumption_cost"
+      ],
+      "WaterConsumption": [
+        "consumption_gallons",
+        "cooling_usage_gallons",
+        "cost_per_gallon",
+        "cost_usd",
+        "created_at",
+        "date",
+        "domestic_usage_gallons",
+        "facility_id",
+        "id",
+        "process_usage_gallons",
+        "quality_rating",
+        "seasonal_notes",
+        "site_id",
+        "source_type",
+        "updated_at"
+      ],
+      "Waterbill": [
+        "batch_processing",
+        "document_type",
+        "file_hash",
+        "file_path",
+        "id",
+        "original_filename",
+        "output_dir",
+        "recognition_confidence",
+        "type",
+        "uploaded_at"
+      ],
+      "__Entity__": [],
+      "__Node__": []
+    },
+    "samples": {
+      "Anomaly": [],
+      "ApprovalWorkflow": [],
+      "Area": [
+        {
+          "parking_spaces": 100,
+          "updated_at": "2025-08-30T15:07:36.173000000+00:00",
+          "name": "Visitor Parking",
+          "created_at": "2025-08-30T15:07:36.173000000+00:00",
+          "floor_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:0",
+          "source": "test_data",
+          "type": "Parking",
+          "area_sqft": 15000
+        },
+        {
+          "updated_at": "2025-08-30T15:07:36.220000000+00:00",
+          "charging_ports": 20,
+          "name": "EV Charging Station",
+          "created_at": "2025-08-30T15:07:36.220000000+00:00",
+          "floor_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:0",
+          "source": "test_data",
+          "type": "Utility",
+          "area_sqft": 2000
+        },
+        {
+          "updated_at": "2025-08-30T15:02:56.988000000+00:00",
+          "name": "Production Line A",
+          "created_at": "2025-08-30T15:02:56.988000000+00:00",
+          "floor_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:93",
+          "type": "Production"
+        }
+      ],
+      "AssessmentReport": [
+        {
+          "metadata": "{\"processing_time\": 15.5, \"methodology\": \"comprehensive\", \"generated_by\": \"Mock Risk Assessment Demo\", \"version\": \"1.0.0\"}",
+          "executive_summary": "{\"overall_risk_level\": \"medium\", \"risk_score\": 35.7, \"total_risk_factors\": 3, \"total_recommendations\": 3}",
+          "facility_id": "DEMO_FACILITY_001",
+          "assessment_id": "mock_assessment_DEMO_FACILITY_001_20250829_175412",
+          "id": "mock_assessment_DEMO_FACILITY_001_20250829_175412_report",
+          "data_sources": "{\"environmental_records\": 1, \"health_records\": 0, \"safety_records\": 1, \"compliance_records\": 0}",
+          "report_date": "2025-08-29T17:54:12.534702000+00:00"
+        }
+      ],
+      "Building": [
+        {
+          "code": "ALG001-MFG",
+          "updated_at": "2025-08-30T15:02:56.847000000+00:00",
+          "name": "Main Manufacturing",
+          "created_at": "2025-08-30T15:02:56.847000000+00:00",
+          "site_code": "ALG001",
+          "type": "Manufacturing"
+        },
+        {
+          "code": "ALG001-WH",
+          "updated_at": "2025-08-30T15:07:35.532000000+00:00",
+          "name": "Warehouse",
+          "created_at": "2025-08-30T15:07:35.532000000+00:00",
+          "source": "test_data",
+          "site_code": "ALG001",
+          "built_year": 2019,
+          "type": "Warehouse",
+          "area_sqft": 95000
+        },
+        {
+          "code": "HOU001-CT",
+          "updated_at": "2025-08-30T15:07:35.870000000+00:00",
+          "name": "Corporate Tower",
+          "created_at": "2025-08-30T15:07:35.870000000+00:00",
+          "site_code": "HOU001",
+          "source": "test_data",
+          "built_year": 2020,
+          "type": "Office",
+          "area_sqft": 180000
+        }
+      ],
+      "ChangePoint": [],
+      "ComplianceRecord": [
+        {
+          "regulation_name": "Clean Air Act",
+          "findings": "Routine inspection findings for Clean Air Act",
+          "expiry_date": "2026-08-30",
+          "inspection_date": "2025-08-15",
+          "created_at": "2025-08-30T18:13:30.349000000+00:00",
+          "compliance_date": "2025-07-31",
+          "inspector_name": "Inspector A. Smith",
+          "corrective_actions": "None required",
+          "updated_at": "2025-08-30T18:13:30.349000000+00:00",
+          "fine_amount_usd": 0,
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "id": "comp_facility_apex_manufacturing___plant_a_0",
+          "status": "Compliant",
+          "regulation_code": "CLEAN-2024-001"
+        },
+        {
+          "regulation_name": "Clean Water Act",
+          "findings": "Violation found in Clean Water Act compliance",
+          "expiry_date": "2026-07-31",
+          "inspection_date": "2025-08-10",
+          "created_at": "2025-08-30T18:13:30.373000000+00:00",
+          "compliance_date": "2025-07-21",
+          "inspector_name": "Inspector B. Smith",
+          "corrective_actions": "Must address clean violations within 30 days",
+          "updated_at": "2025-08-30T18:13:30.373000000+00:00",
+          "fine_amount_usd": 5000,
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "id": "comp_facility_apex_manufacturing___plant_a_1",
+          "regulation_code": "CLEAN-2024-002",
+          "status": "Non-Compliant"
+        },
+        {
+          "regulation_name": "Resource Conservation and Recovery Act",
+          "findings": "Violation found in Resource Conservation and Recovery Act compliance",
+          "expiry_date": "2026-07-01",
+          "inspection_date": "2025-08-05",
+          "created_at": "2025-08-30T18:13:30.390000000+00:00",
+          "compliance_date": "2025-07-11",
+          "inspector_name": "Inspector C. Smith",
+          "corrective_actions": "Must address resource violations within 30 days",
+          "updated_at": "2025-08-30T18:13:30.390000000+00:00",
+          "fine_amount_usd": 0,
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "id": "comp_facility_apex_manufacturing___plant_a_2",
+          "status": "Under Review",
+          "regulation_code": "RESOURCE-2024-003"
+        }
+      ],
+      "Customer": [
+        {
+          "name": "Apex Manufacturing Inc.",
+          "id": "customer_apex_manufacturing_inc"
+        },
+        {
+          "name": "Apex Manufacturing Inc.",
+          "id": "customer_apex_manufacturing_inc"
+        },
+        {
+          "name": "Apex Manufacturing Inc.",
+          "id": "customer_apex_manufacturing_inc"
+        }
+      ],
+      "DataPoint": [],
+      "DisposalFacility": [
+        {
+          "disposal_methods": "[]",
+          "address": "100 Landfill Lane, Greenville, CA 91102",
+          "epa_id": "CAL000654321",
+          "permit_number": "",
+          "name": "Green Valley Landfill",
+          "id": "disposal_facility_green_valley_landfill"
+        },
+        {
+          "disposal_methods": "[]",
+          "address": "100 Landfill Lane, Greenville, CA 91102",
+          "epa_id": "CAL000654321",
+          "permit_number": "",
+          "name": "Green Valley Landfill",
+          "id": "disposal_facility_green_valley_landfill"
+        }
+      ],
+      "Document": [
+        {
+          "batch_processing": true,
+          "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf",
+          "original_filename": "document-3.pdf",
+          "file_hash": "503dbc341f96dcb27aa73c9390992d4095b322a3af85d458c145937a38504d69",
+          "uploaded_at": "2025-09-03T20:22:38.854464",
+          "recognition_confidence": 1.0,
+          "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+          "id": "document-3",
+          "type": "water_bill",
+          "document_type": "water_bill"
+        },
+        {
+          "batch_processing": true,
+          "statement_date": "2025-07-05",
+          "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf",
+          "original_filename": "document-1.pdf",
+          "file_hash": "fb388804f18eba89e7f11ab9062a50e7787be0fe87dab43e9780a6912e21850d",
+          "uploaded_at": "2025-09-03T20:23:47.257184",
+          "recognition_confidence": 1.0,
+          "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+          "id": "document-1",
+          "type": "electricity_bill",
+          "document_type": "electricity_bill"
+        },
+        {
+          "batch_processing": true,
+          "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf",
+          "original_filename": "document-2.pdf",
+          "file_hash": "1d5e08e6486995c0f0accd57613c4af5b1941f269f2f3dc80f674456087e23ce",
+          "uploaded_at": "2025-09-03T20:21:43.276265",
+          "recognition_confidence": 1.0,
+          "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+          "id": "document-2",
+          "type": "waste_manifest",
+          "document_type": "waste_manifest"
+        }
+      ],
+      "DocumentChunk": [],
+      "EHSMetric": [
+        {
+          "area_name": "Water Treatment",
+          "calculation": "total water consumed / units produced",
+          "building_name": "Utility Building",
+          "created_at": "2025-08-30T15:07:36.494000000+00:00",
+          "site_code": "ALG001",
+          "source": "test_data",
+          "frequency": "monthly",
+          "floor_name": "Utility Floor",
+          "unit": "gallons per unit produced",
+          "metric_name": "Water Usage",
+          "target_value": 50.0,
+          "metric_code": "WU",
+          "recorded_date": "2025-08-30",
+          "category": "Environmental",
+          "value": 50.98
+        },
+        {
+          "area_name": "Water Treatment",
+          "calculation": "total energy used / units produced",
+          "building_name": "Utility Building",
+          "created_at": "2025-08-30T15:07:36.496000000+00:00",
+          "source": "test_data",
+          "site_code": "ALG001",
+          "frequency": "monthly",
+          "floor_name": "Utility Floor",
+          "unit": "kWh per unit produced",
+          "metric_name": "Energy Consumption",
+          "target_value": 2.5,
+          "metric_code": "EC",
+          "recorded_date": "2025-06-01",
+          "category": "Environmental",
+          "value": 2.78
+        },
+        {
+          "area_name": "Water Treatment",
+          "calculation": "total energy used / units produced",
+          "building_name": "Utility Building",
+          "created_at": "2025-08-30T15:07:36.498000000+00:00",
+          "source": "test_data",
+          "site_code": "ALG001",
+          "frequency": "monthly",
+          "floor_name": "Utility Floor",
+          "unit": "kWh per unit produced",
+          "metric_name": "Energy Consumption",
+          "target_value": 2.5,
+          "metric_code": "EC",
+          "recorded_date": "2025-07-01",
+          "category": "Environmental",
+          "value": 2.65
+        }
+      ],
+      "EffectivenessMeasurement": [],
+      "ElectricityConsumption": [
+        {
+          "date": "2025-01-01",
+          "cost_usd": 174.7264,
+          "updated_at": "2025-09-04T19:25:19.754000000+00:00",
+          "created_at": "2025-09-04T19:25:19.754000000+00:00",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "id": "elec_facility_apex_manufacturing___plant_a_20250101",
+          "co2_emissions": 325.14304000000004,
+          "consumption_kwh": 1519.3600000000001,
+          "peak_demand_kw": 341,
+          "meter_reading": 2374
+        },
+        {
+          "date": "2025-01-02",
+          "cost_usd": 208.50560000000002,
+          "updated_at": "2025-09-04T19:25:19.770000000+00:00",
+          "created_at": "2025-09-04T19:25:19.770000000+00:00",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "id": "elec_facility_apex_manufacturing___plant_a_20250102",
+          "co2_emissions": 388.00768,
+          "consumption_kwh": 1813.1200000000001,
+          "peak_demand_kw": 363,
+          "meter_reading": 5666
+        },
+        {
+          "date": "2025-07-31",
+          "cost_usd": 329.28,
+          "updated_at": "2025-08-30T18:13:29.819000000+00:00",
+          "created_at": "2025-08-30T18:13:29.819000000+00:00",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "id": "elec_facility_apex_manufacturing___plant_a_20250731",
+          "co2_emissions": 587.2159999999999,
+          "consumption_kwh": 2743.9999999999995,
+          "peak_demand_kw": 800.0,
+          "meter_reading": 1000
+        }
+      ],
+      "Electricitybill": [
+        {
+          "batch_processing": true,
+          "statement_date": "2025-07-05",
+          "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-1.pdf",
+          "original_filename": "document-1.pdf",
+          "file_hash": "fb388804f18eba89e7f11ab9062a50e7787be0fe87dab43e9780a6912e21850d",
+          "uploaded_at": "2025-09-03T20:23:47.257184",
+          "recognition_confidence": 1.0,
+          "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+          "id": "document-1",
+          "type": "electricity_bill",
+          "document_type": "electricity_bill"
+        }
+      ],
+      "Emission": [
+        {
+          "emission_factor": 0.5,
+          "unit": "metric_tons_CO2e",
+          "amount": 7.5,
+          "disposal_method": "landfill",
+          "calculation_method": "waste_disposal_landfill",
+          "source_type": "waste_disposal",
+          "id": "emission_unknown_document_20250828_173206_629"
+        },
+        {
+          "emission_factor": 0.0002,
+          "amount": 50.0,
+          "unit": "kg_CO2",
+          "calculation_method": "water_treatment_distribution_factor",
+          "source_type": "water",
+          "id": "emission_unknown_document_20250828_173247_463"
+        },
+        {
+          "emission_factor": 0.4,
+          "amount": 52000.0,
+          "unit": "kg_CO2",
+          "calculation_method": "grid_average_factor",
+          "id": "emission_unknown_document_20250828_173333_450"
+        }
+      ],
+      "EmissionFactor": [
+        {
+          "grid_subregion": "SRCE (SERC Central)",
+          "unit": "kg_CO2_per_kWh",
+          "updated_at": "2025-09-04T19:25:19.613000000+00:00",
+          "year": 2023,
+          "created_at": "2025-09-04T19:25:19.613000000+00:00",
+          "source": "EPA eGRID 2023",
+          "id": "emission_factor_None_electricity_2023",
+          "region": "Illinois",
+          "value": 0.214,
+          "methodology": "Grid average emission factor"
+        }
+      ],
+      "EnvironmentalKPI": [
+        {
+          "date": "2025-06-01",
+          "performance_status": "Below Target",
+          "unit": "percentage",
+          "updated_at": "2025-08-30T18:13:30.264000000+00:00",
+          "target_value": 90,
+          "created_at": "2025-08-30T18:13:30.264000000+00:00",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "id": "kpi_facility_apex_manufacturing___plant_a_Energy_Efficiency_202506_1756577610",
+          "type": "Energy Efficiency",
+          "value": 85,
+          "variance_percentage": -5.56
+        },
+        {
+          "performance_status": "Below Target",
+          "date": "2025-07-31",
+          "unit": "percentage",
+          "updated_at": "2025-08-30T18:13:30.289000000+00:00",
+          "target_value": 90,
+          "created_at": "2025-08-30T18:13:30.289000000+00:00",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "id": "kpi_facility_apex_manufacturing___plant_a_Energy_Efficiency_202507_1756577610",
+          "type": "Energy Efficiency",
+          "value": 87,
+          "variance_percentage": -3.33
+        },
+        {
+          "performance_status": "Above Target",
+          "date": "2025-06-01",
+          "unit": "gallons_per_day",
+          "updated_at": "2025-08-30T18:13:30.291000000+00:00",
+          "target_value": 800,
+          "created_at": "2025-08-30T18:13:30.291000000+00:00",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "id": "kpi_facility_apex_manufacturing___plant_a_Water_Usage_202506_1756577610",
+          "type": "Water Usage",
+          "value": 1000,
+          "variance_percentage": 25.0
+        }
+      ],
+      "EnvironmentalRecommendation": [
+        {
+          "estimated_savings_usd": 1500.0,
+          "target_completion_date": "2025-10-29",
+          "implementation_timeline_days": 30,
+          "created_at": "2025-08-30T18:13:30.130000000+00:00",
+          "description": "Replace fluorescent lights with LED fixtures to reduce energy consumption by 30%",
+          "type": "Energy Efficiency",
+          "title": "Install LED Lighting",
+          "priority": "Low",
+          "updated_at": "2025-08-30T18:13:30.130000000+00:00",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "estimated_cost_usd": 5000,
+          "created_date": "2025-08-15",
+          "id": "rec_facility_apex_manufacturing___plant_a_0",
+          "status": "Proposed"
+        },
+        {
+          "estimated_savings_usd": 4200.0,
+          "target_completion_date": "2025-11-13",
+          "implementation_timeline_days": 45,
+          "created_at": "2025-08-30T18:13:30.150000000+00:00",
+          "description": "Upgrade to low-flow faucets and toilets to reduce water consumption",
+          "type": "Water Conservation",
+          "title": "Install Low-Flow Fixtures",
+          "priority": "Medium",
+          "updated_at": "2025-08-30T18:13:30.150000000+00:00",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "created_date": "2025-08-14",
+          "estimated_cost_usd": 7000,
+          "id": "rec_facility_apex_manufacturing___plant_a_1",
+          "status": "Proposed"
+        },
+        {
+          "estimated_savings_usd": 8100.0,
+          "target_completion_date": "2025-11-28",
+          "implementation_timeline_days": 60,
+          "created_at": "2025-08-30T18:13:30.152000000+00:00",
+          "description": "Establish comprehensive recycling program to divert 50% of waste from landfills",
+          "type": "Waste Reduction",
+          "title": "Implement Recycling Program",
+          "priority": "High",
+          "updated_at": "2025-08-30T18:13:30.152000000+00:00",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "created_date": "2025-08-13",
+          "estimated_cost_usd": 9000,
+          "id": "rec_facility_apex_manufacturing___plant_a_2",
+          "status": "Proposed"
+        }
+      ],
+      "EnvironmentalRisk": [
+        {
+          "severity": "Low",
+          "risk_type": "Air Quality Violation",
+          "updated_at": "2025-08-30T18:13:30.076000000+00:00",
+          "probability": "Low",
+          "created_at": "2025-08-30T18:13:30.076000000+00:00",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "description": "Potential air quality violation at facility facility_apex_manufacturing___plant_a",
+          "identified_date": "2025-07-31",
+          "impact_score": 2,
+          "id": "risk_facility_apex_manufacturing___plant_a_0",
+          "mitigation_status": "Planned",
+          "last_assessment_date": "2025-08-30"
+        },
+        {
+          "severity": "Medium",
+          "risk_type": "Water Contamination",
+          "updated_at": "2025-08-30T18:13:30.100000000+00:00",
+          "probability": "Low",
+          "created_at": "2025-08-30T18:13:30.100000000+00:00",
+          "identified_date": "2025-07-30",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "description": "Potential water contamination at facility facility_apex_manufacturing___plant_a",
+          "impact_score": 5,
+          "id": "risk_facility_apex_manufacturing___plant_a_1",
+          "mitigation_status": "Planned",
+          "last_assessment_date": "2025-08-29"
+        },
+        {
+          "severity": "High",
+          "risk_type": "Soil Contamination",
+          "updated_at": "2025-08-30T18:13:30.101000000+00:00",
+          "probability": "Low",
+          "created_at": "2025-08-30T18:13:30.101000000+00:00",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "description": "Potential soil contamination at facility facility_apex_manufacturing___plant_a",
+          "identified_date": "2025-07-29",
+          "impact_score": 8,
+          "id": "risk_facility_apex_manufacturing___plant_a_2",
+          "mitigation_status": "Planned",
+          "last_assessment_date": "2025-08-28"
+        }
+      ],
+      "EnvironmentalTarget": [
+        {
+          "target_unit": "percent_reduction",
+          "updated_at": "2025-08-31T23:43:54.691000000+00:00",
+          "target_value": 0.15,
+          "target_type": "electricity_reduction",
+          "site_id": "algonquin_il",
+          "created_at": "2025-08-31T23:43:54.691000000+00:00",
+          "description": "Reduce electricity consumption by 15% through efficiency improvements",
+          "id": "target_algonquin_il_0",
+          "deadline": "2025-12-31",
+          "status": "in_progress"
+        },
+        {
+          "target_unit": "percentage",
+          "updated_at": "2025-08-31T23:43:54.751000000+00:00",
+          "target_value": 0.5,
+          "target_type": "recycling_rate",
+          "site_id": "algonquin_il",
+          "created_at": "2025-08-31T23:43:54.751000000+00:00",
+          "description": "Achieve 50% recycling rate for all waste streams",
+          "id": "target_algonquin_il_1",
+          "deadline": "2025-12-31",
+          "status": "in_progress"
+        },
+        {
+          "target_unit": "percent_reduction",
+          "updated_at": "2025-08-31T23:43:54.800000000+00:00",
+          "target_value": 0.1,
+          "target_type": "water_efficiency",
+          "site_id": "algonquin_il",
+          "created_at": "2025-08-31T23:43:54.800000000+00:00",
+          "description": "Reduce water consumption per unit of production by 10%",
+          "id": "target_algonquin_il_2",
+          "deadline": "2025-12-31",
+          "status": "planning"
+        }
+      ],
+      "Equipment": [],
+      "Facility": [
+        {
+          "address": "789 Production Way, Mechanicsburg, CA 93011",
+          "name": "Apex Manufacturing - Plant A",
+          "id": "facility_apex_manufacturing___plant_a"
+        },
+        {
+          "employee_count": 250,
+          "address": "Demo Location",
+          "operational_status": "Active",
+          "industry_sector": "Chemical Manufacturing",
+          "name": "DEMO_FACILITY_001",
+          "id": "DEMO_FACILITY_001",
+          "established_date": "2020-01-01",
+          "type": "Manufacturing"
+        },
+        {
+          "address": "789 Production Way, Mechanicsburg, CA 93011",
+          "name": "Apex Manufacturing - Plant A",
+          "id": "facility_apex_manufacturing___plant_a"
+        }
+      ],
+      "Floor": [
+        {
+          "building_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:178",
+          "updated_at": "2025-08-30T15:07:36.170000000+00:00",
+          "level": 0,
+          "name": "Ground Level",
+          "created_at": "2025-08-30T15:07:36.170000000+00:00",
+          "source": "test_data",
+          "ceiling_height": 10,
+          "area_sqft": 50000
+        },
+        {
+          "building_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:92",
+          "updated_at": "2025-08-30T15:02:56.906000000+00:00",
+          "level": 0,
+          "name": "Ground Floor",
+          "created_at": "2025-08-30T15:02:56.906000000+00:00"
+        },
+        {
+          "building_id": "4:d7c9ada1-1dea-413c-b7d3-39b8ae6715fc:92",
+          "updated_at": "2025-08-30T15:02:57.104000000+00:00",
+          "level": 2,
+          "name": "Second Floor",
+          "created_at": "2025-08-30T15:02:57.104000000+00:00"
+        }
+      ],
+      "Goal": [
+        {
+          "unit": "tonnes CO2e",
+          "period": "yearly",
+          "updated_at": "2025-09-01T01:15:01.699000000+00:00",
+          "target_date": "2025-12-31",
+          "target_value": 15.0,
+          "baseline_year": 2024,
+          "site_id": "algonquin_il",
+          "target_year": 2025,
+          "created_at": "2025-09-01T01:15:01.699000000+00:00",
+          "description": "CO2 emissions reduction from electricity consumption",
+          "id": "goal_algonquin_il_electricity_2025",
+          "category": "electricity"
+        },
+        {
+          "unit": "gallons",
+          "period": "yearly",
+          "updated_at": "2025-09-01T01:15:01.756000000+00:00",
+          "target_date": "2025-12-31",
+          "target_value": 12.0,
+          "baseline_year": 2024,
+          "site_id": "algonquin_il",
+          "target_year": 2025,
+          "created_at": "2025-09-01T01:15:01.756000000+00:00",
+          "description": "Water consumption reduction",
+          "id": "goal_algonquin_il_water_2025",
+          "category": "water"
+        },
+        {
+          "unit": "pounds",
+          "period": "yearly",
+          "updated_at": "2025-09-01T01:15:01.771000000+00:00",
+          "target_date": "2025-12-31",
+          "target_value": 10.0,
+          "baseline_year": 2024,
+          "site_id": "algonquin_il",
+          "target_year": 2025,
+          "created_at": "2025-09-01T01:15:01.771000000+00:00",
+          "description": "Waste generation reduction",
+          "id": "goal_algonquin_il_waste_2025",
+          "category": "waste"
+        }
+      ],
+      "Incident": [
+        {
+          "reported_date": "2025-06-30T14:28:41.540000000+00:00",
+          "severity": "low",
+          "incident_id": "DEMO_FACILITY_001_incident_002",
+          "facility_id": "DEMO_FACILITY_001",
+          "description": "Temporary air quality reading spike",
+          "type": "environmental",
+          "status": "resolved"
+        },
+        {
+          "date": "2025-07-30",
+          "severity": "medium",
+          "description": "Minor equipment malfunction in production line 2",
+          "id": "DEMO_FACILITY_001_incident_001",
+          "type": "safety",
+          "status": "resolved"
+        },
+        {
+          "date": "2025-06-30",
+          "severity": "low",
+          "description": "Temporary air quality reading spike due to equipment calibration",
+          "id": "DEMO_FACILITY_001_incident_002",
+          "type": "environmental",
+          "status": "resolved"
+        }
+      ],
+      "Meter": [
+        {
+          "unit": "gallons",
+          "service_type": "Commercial",
+          "previous_reading": 8765400,
+          "usage": 250000,
+          "current_reading": 9015400,
+          "id": "WTR-MAIN-01",
+          "type": "water"
+        },
+        {
+          "previous_reading": 543210,
+          "service_type": "Commercial - Peak",
+          "unit": "kWh",
+          "usage": 70000,
+          "current_reading": 613210,
+          "id": "MTR-7743-A",
+          "type": "electricity"
+        },
+        {
+          "previous_reading": 891234,
+          "service_type": "Commercial - Off-Peak",
+          "unit": "kWh",
+          "usage": 60000,
+          "current_reading": 951234,
+          "id": "MTR-7743-B",
+          "type": "electricity"
+        }
+      ],
+      "Migration": [],
+      "MonthlyUsageAllocation": [],
+      "Permit": [],
+      "Recommendation": [
+        {
+          "site_id": "algonquin_il",
+          "description": "{'priorityLevel': 'High', 'actionDescription': 'Implement advanced lighting systems such as LED upgrades and smart controls', 'bestPracticeCategory': 'Energy Efficiency Measures', 'estimatedMonthlyImpact': '5% units reduction', 'implementationEffort': 'Medium', 'timeline': 'Short-term', 'resourceRequirements': 'Investment in LED lighting and smart control systems, technical expertise for installation and maintenance', 'supportingEvidence': 'General Motors achieved 35% energy reduction across facilities through comprehensive efficiency programs'}",
+          "estimated_impact": "TBD",
+          "created_date": "2025-09-05T22:35:46.254530000+00:00",
+          "id": "algonquin_il_electricity_rec_1_20250905_223546",
+          "category": "electricity",
+          "priority": "medium",
+          "title": "Recommendation 1"
+        },
+        {
+          "site_id": "algonquin_il",
+          "description": "{'priorityLevel': 'High', 'actionDescription': 'Convert combustion-based processes to electric alternatives', 'bestPracticeCategory': 'Process Electrification', 'estimatedMonthlyImpact': '10% units reduction', 'implementationEffort': 'High', 'timeline': 'Long-term', 'resourceRequirements': 'Investment in electric equipment, technical expertise for installation and maintenance, potential downtime during conversion', 'supportingEvidence': 'Cleveland-Cliffs implemented electric arc furnace technology, reducing CO2 emissions by 75% compared to traditional blast furnaces'}",
+          "estimated_impact": "TBD",
+          "created_date": "2025-09-05T22:35:46.262837000+00:00",
+          "id": "algonquin_il_electricity_rec_2_20250905_223546",
+          "category": "electricity",
+          "priority": "medium",
+          "title": "Recommendation 2"
+        },
+        {
+          "site_id": "algonquin_il",
+          "description": "{'priorityLevel': 'High', 'actionDescription': 'Procure renewable energy through on-site solar installations or Power Purchase Agreements (PPAs) with renewable energy providers', 'bestPracticeCategory': 'Renewable Energy Procurement', 'estimatedMonthlyImpact': '8% units reduction', 'implementationEffort': 'High', 'timeline': 'Long-term', 'resourceRequirements': 'Investment in solar installations or contracts with renewable energy providers, technical expertise for installation and maintenance', 'supportingEvidence': 'RMS Company achieved 100% renewable electricity through a combination of on-site solar and renewable energy contracts'}",
+          "estimated_impact": "TBD",
+          "created_date": "2025-09-05T22:35:46.265727000+00:00",
+          "id": "algonquin_il_electricity_rec_3_20250905_223546",
+          "category": "electricity",
+          "priority": "medium",
+          "title": "Recommendation 3"
+        }
+      ],
+      "RejectedDocument": [
+        {
+          "file_path": "/tmp/rejected_documents/20250905_233349_document-4_document-4.pdf",
+          "upload_timestamp": "",
+          "rejected_at": "2025-09-05T23:33:49.982092",
+          "attempted_type": "unknown",
+          "confidence": 0.8625,
+          "upload_source": "",
+          "file_size": 381709,
+          "original_filename": "document-4.pdf",
+          "key_terms": "[\"account\"]",
+          "rejection_reason": "Document type could not be determined (confidence: 0.863)",
+          "id": "document-4",
+          "tables_found": true,
+          "page_count": 1,
+          "content_length": 7523
+        }
+      ],
+      "RejectionRecord": [],
+      "RiskAssessment": [
+        {
+          "risk_level": "HIGH",
+          "confidence_score": 0.5,
+          "site_id": "algonquin_il",
+          "description": "{\n  \"1. Projected annual consumption based on current trend\": {\n    \"projected_annual_consumption\": \"10.7461 tonnes CO2e\"\n  },\n  \"2. Gap analysis\": {\n    \"absolute_difference\": \"-4.2539 tonnes CO2e\",\n    \"percentage_difference\": \"-28.36%\"\n  },\n  \"3. Risk level assignment with justification\": {\n    \"risk_level\": \"HIGH\",\n    \"justification\": \"Based on the current trend, there is a 28.36% deviation from the goal, which falls into the 'HIGH' risk category (25-50% deviation from goal).\"\n  },\n  \"4. Key risk factors considering baseline vs current performance\": {\n    \"key_risk_factors\": [\n      \"Increasing trend in electricity consumption\",\n      \"Seasonal patterns indicating higher consumption during summer months\",\n      \"Current performance already exceeding baseline consumption\"\n    ]\n  },\n  \"5. Assessment of whether goal is achievable given current trend\": {\n    \"goal_achievable\": \"No\",\n    \"justification\": \"Given the current increasing trend in electricity consumption and the fact that the current performance is already exceeding the baseline, it is unlikely that the annual goal of 15.0 tonnes CO2e will be met.\"\n  }\n}",
+          "id": "algonquin_il_electricity_20250905_223546",
+          "category": "electricity",
+          "factors": [
+            "Gap: 28.36%"
+          ],
+          "assessment_date": "2025-09-05T22:35:34.755670000+00:00"
+        },
+        {
+          "risk_level": "CRITICAL",
+          "confidence_score": 0.5,
+          "site_id": "houston_tx",
+          "description": "{\n  \"projected_annual_consumption\": {\n    \"amount\": 208.99,\n    \"unit\": \"tonnes CO2e\"\n  },\n  \"gap_analysis\": {\n    \"absolute_difference\": 190.99,\n    \"percentage_difference\": 1061.06\n  },\n  \"risk_level_assignment\": {\n    \"risk_level\": \"CRITICAL\",\n    \"justification\": \"The projected annual consumption is more than 50% above the goal, indicating a less than 10% chance of meeting the goal.\"\n  },\n  \"key_risk_factors\": {\n    \"increasing_trend\": \"The overall trend of electricity consumption, cost, and CO2e emissions is increasing, which could potentially impact the annual goal achievement if the trend continues.\",\n    \"baseline_vs_current_performance\": \"The current performance is significantly higher than the baseline consumption, indicating a high risk of not meeting the reduction goal.\"\n  },\n  \"goal_achievability_assessment\": {\n    \"is_goal_achievable\": false,\n    \"justification\": \"Given the current trend of increasing consumption and emissions, and the significant gap between the current performance and the goal, it is highly unlikely that the goal will be achieved.\"\n  }\n}",
+          "id": "houston_tx_electricity_20250905_224501",
+          "category": "electricity",
+          "factors": [
+            "Gap: 1061.06%"
+          ],
+          "assessment_date": "2025-09-05T22:44:45.615343000+00:00"
+        }
+      ],
+      "SeasonalDecomposition": [],
+      "Site": [
+        {
+          "established": "2018-03-15",
+          "code": "ALG001",
+          "address": "2350 Millennium Drive, Algonquin, IL 60102",
+          "updated_at": "2025-08-30T15:07:34.832000000+00:00",
+          "operating_hours": "24/7",
+          "name": "Algonquin Manufacturing Site",
+          "created_at": "2025-08-30T15:07:34.832000000+00:00",
+          "source": "test_data",
+          "certifications": [
+            "ISO 14001",
+            "OSHA VPP",
+            "ISO 45001"
+          ],
+          "employees": 485,
+          "type": "Manufacturing"
+        },
+        {
+          "established": "2020-01-10",
+          "code": "HOU001",
+          "address": "1200 Smith Street, Houston, TX 77002",
+          "updated_at": "2025-08-30T15:07:35.850000000+00:00",
+          "operating_hours": "8AM-6PM",
+          "name": "Houston Corporate Campus",
+          "created_at": "2025-08-30T15:07:35.850000000+00:00",
+          "source": "test_data",
+          "certifications": [
+            "LEED Gold",
+            "Energy Star"
+          ],
+          "type": "Corporate",
+          "employees": 280
+        },
+        {
+          "employee_count": 245,
+          "country": "USA",
+          "electricity_target_change": -0.15,
+          "risk_profile": "HIGH",
+          "recycling_target_rate": 0.5,
+          "created_at": "2025-08-31T23:47:53.676000000+00:00",
+          "water_baseline_gallons": 150000,
+          "waste_baseline_lbs": 8000,
+          "zip_code": "60102",
+          "updated_at": "2025-09-05T21:08:15.729000000+00:00",
+          "electricity_baseline_kwh": 45000,
+          "name": "Algonquin Manufacturing",
+          "operating_hours_per_day": 16,
+          "location": "Algonquin, IL",
+          "state": "Illinois",
+          "facility_type": "Manufacturing",
+          "id": "algonquin_il"
+        }
+      ],
+      "Transporter": [
+        {
+          "address": "",
+          "phone": "",
+          "name": "Evergreen Environmental",
+          "id": "transporter_evergreen_environmental",
+          "license_number": ""
+        },
+        {
+          "address": "",
+          "phone": "",
+          "name": "Evergreen Environmental",
+          "id": "transporter_evergreen_environmental",
+          "license_number": ""
+        }
+      ],
+      "TrendAnalysis": [],
+      "User": [],
+      "UtilityBill": [
+        {
+          "off_peak_kwh": 60000,
+          "peak_kwh": 70000,
+          "grid_infrastructure_fee": 182.39,
+          "total_cost": 15432.89,
+          "due_date": "2025-08-01",
+          "billing_period_end": "2025-06-30",
+          "base_service_charge": 250.0,
+          "state_environmental_surcharge": 875.5,
+          "billing_period_start": "2025-06-01",
+          "id": "bill_unknown_document_20250828_173333_450",
+          "total_kwh": 130000
+        },
+        {
+          "off_peak_kwh": 60000,
+          "peak_kwh": 70000,
+          "grid_infrastructure_fee": 182.39,
+          "total_cost": 15432.89,
+          "due_date": "2025-08-01",
+          "billing_period_end": "2025-06-30",
+          "base_service_charge": 250.0,
+          "state_environmental_surcharge": 875.5,
+          "billing_period_start": "2025-06-01",
+          "id": "bill_document-1",
+          "total_kwh": 130000
+        }
+      ],
+      "UtilityProvider": [
+        {
+          "website": "www.aquaflow.gov",
+          "address": "789 Reservoir Road, Clearwater, CA 90330",
+          "phone": "(800) 555-0211",
+          "name": "Aquaflow Municipal Water",
+          "id": "provider_aquaflow_municipal_water"
+        },
+        {
+          "website": "www.aquaflow.gov",
+          "address": "789 Reservoir Road, Clearwater, CA 90330",
+          "phone": "(800) 555-0211",
+          "name": "Aquaflow Municipal Water",
+          "id": "provider_aquaflow_municipal_water"
+        }
+      ],
+      "WasteGeneration": [
+        {
+          "date": "2025-07-31",
+          "contractor": "Waste Management Co. 1",
+          "disposal_cost_usd": 272.5,
+          "updated_at": "2025-08-30T18:13:29.973000000+00:00",
+          "disposal_method": "Incineration",
+          "created_at": "2025-08-30T18:13:29.973000000+00:00",
+          "waste_type": "Hazardous",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "amount_pounds": 109,
+          "id": "waste_facility_apex_manufacturing___plant_a_Hazardous_20250731"
+        },
+        {
+          "date": "2025-07-31",
+          "contractor": "Waste Management Co. 1",
+          "disposal_cost_usd": 74.0,
+          "updated_at": "2025-08-30T18:13:29.998000000+00:00",
+          "disposal_method": "Landfill",
+          "created_at": "2025-08-30T18:13:29.998000000+00:00",
+          "waste_type": "Non-Hazardous",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "amount_pounds": 148,
+          "id": "waste_facility_apex_manufacturing___plant_a_Non-Hazardous_20250731"
+        },
+        {
+          "date": "2025-07-31",
+          "contractor": "Waste Management Co. 1",
+          "disposal_cost_usd": 72.0,
+          "updated_at": "2025-08-30T18:13:30.018000000+00:00",
+          "disposal_method": "Landfill",
+          "created_at": "2025-08-30T18:13:30.018000000+00:00",
+          "waste_type": "Recyclable",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "amount_pounds": 144,
+          "id": "waste_facility_apex_manufacturing___plant_a_Recyclable_20250731"
+        }
+      ],
+      "WasteGenerator": [
+        {
+          "address": "789 Production Way, Mechanicsburg, CA 93011",
+          "epa_id": "CAL000123456",
+          "phone": "(555) 123-7890",
+          "contact": "John Doe, EHS Manager",
+          "name": "Apex Manufacturing Inc.",
+          "id": "generator_apex_manufacturing_inc."
+        },
+        {
+          "address": "789 Production Way, Mechanicsburg, CA 93011",
+          "epa_id": "CAL000123456",
+          "phone": "(555) 123-7890",
+          "contact": "John Doe, EHS Manager",
+          "name": "Apex Manufacturing Inc.",
+          "id": "generator_apex_manufacturing_inc."
+        }
+      ],
+      "WasteItem": [
+        {
+          "proper_shipping_name": "",
+          "quantity": 15,
+          "hazard_class": "",
+          "weight_unit": "tons",
+          "container_type": "Open Top Roll-off",
+          "waste_type": "Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)",
+          "description": "Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)",
+          "container_quantity": 1,
+          "id": "waste_item_unknown_document_20250828_173206_629_6",
+          "container_count": 0
+        },
+        {
+          "proper_shipping_name": "",
+          "quantity": 15,
+          "hazard_class": "",
+          "weight_unit": "tons",
+          "container_type": "Open Top Roll-off",
+          "waste_type": "Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)",
+          "description": "Industrial Solid Waste - Mixed non-recyclable production scrap (plastic, wood, fabric)",
+          "container_quantity": 1,
+          "id": "waste_item_document-2_6",
+          "container_count": 0
+        }
+      ],
+      "WasteManifest": [
+        {
+          "weight_unit": "tons",
+          "issue_date": "2025-07-15",
+          "manifest_tracking_number": "EES-2025-0715-A45",
+          "total_quantity": 15,
+          "id": "manifest_document-2",
+          "total_weight": 15,
+          "status": "Not specified"
+        },
+        {
+          "weight_unit": "tons",
+          "issue_date": "2025-07-15",
+          "manifest_tracking_number": "EES-2025-0715-A45",
+          "total_quantity": 15,
+          "id": "manifest_unknown_document_20250828_173206_629",
+          "total_weight": 15
+        }
+      ],
+      "WasteShipment": [
+        {
+          "weight_unit": "tons",
+          "transport_method": "truck",
+          "shipment_date": "2025-07-15",
+          "id": "shipment_document-2",
+          "total_weight": 15,
+          "status": "Not specified"
+        },
+        {
+          "weight_unit": "tons",
+          "transport_method": "truck",
+          "shipment_date": "2025-07-15",
+          "id": "shipment_unknown_document_20250828_173206_629",
+          "total_weight": 15
+        }
+      ],
+      "Wastemanifest": [
+        {
+          "batch_processing": true,
+          "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-2.pdf",
+          "original_filename": "document-2.pdf",
+          "file_hash": "1d5e08e6486995c0f0accd57613c4af5b1941f269f2f3dc80f674456087e23ce",
+          "uploaded_at": "2025-09-03T20:21:43.276265",
+          "recognition_confidence": 1.0,
+          "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+          "id": "document-2",
+          "type": "waste_manifest",
+          "document_type": "waste_manifest"
+        }
+      ],
+      "WaterBill": [
+        {
+          "stormwater_fee": 125.0,
+          "total_cost": 4891.5,
+          "sewer_service_charge": 950.0,
+          "due_date": "2025-08-05",
+          "billing_period_end": "2025-06-30",
+          "water_consumption_cost": 3750.0,
+          "total_gallons": 250000,
+          "billing_period_start": "2025-06-01",
+          "id": "water_bill_unknown_document_20250828_173247_463",
+          "infrastructure_surcharge": 5.0,
+          "conservation_tax": 61.5
+        },
+        {
+          "stormwater_fee": 125.0,
+          "total_cost": 4891.5,
+          "sewer_service_charge": 950.0,
+          "due_date": "2025-08-05",
+          "billing_period_end": "2025-06-30",
+          "water_consumption_cost": 3750.0,
+          "total_gallons": 250000,
+          "billing_period_start": "2025-06-01",
+          "id": "water_bill_document-3",
+          "infrastructure_surcharge": 5.0,
+          "conservation_tax": 61.5
+        }
+      ],
+      "WaterConsumption": [
+        {
+          "date": "2025-07-31",
+          "cost_usd": 1.5,
+          "updated_at": "2025-08-30T18:13:29.907000000+00:00",
+          "quality_rating": "A",
+          "created_at": "2025-08-30T18:13:29.907000000+00:00",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "source_type": "Municipal",
+          "id": "water_facility_apex_manufacturing___plant_a_20250731",
+          "consumption_gallons": 500
+        },
+        {
+          "date": "2025-08-01",
+          "cost_usd": 1.59,
+          "updated_at": "2025-08-30T18:13:29.925000000+00:00",
+          "quality_rating": "B",
+          "created_at": "2025-08-30T18:13:29.925000000+00:00",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "source_type": "Municipal",
+          "id": "water_facility_apex_manufacturing___plant_a_20250801",
+          "consumption_gallons": 530
+        },
+        {
+          "date": "2025-08-02",
+          "cost_usd": 1.68,
+          "updated_at": "2025-08-30T18:13:29.926000000+00:00",
+          "quality_rating": "B",
+          "created_at": "2025-08-30T18:13:29.926000000+00:00",
+          "facility_id": "facility_apex_manufacturing___plant_a",
+          "source_type": "Municipal",
+          "id": "water_facility_apex_manufacturing___plant_a_20250802",
+          "consumption_gallons": 560
+        }
+      ],
+      "Waterbill": [
+        {
+          "batch_processing": true,
+          "file_path": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data/document-3.pdf",
+          "original_filename": "document-3.pdf",
+          "file_hash": "503dbc341f96dcb27aa73c9390992d4095b322a3af85d458c145937a38504d69",
+          "uploaded_at": "2025-09-03T20:22:38.854464",
+          "recognition_confidence": 1.0,
+          "output_dir": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/backend/data/processed",
+          "id": "document-3",
+          "type": "water_bill",
+          "document_type": "water_bill"
+        }
+      ],
+      "__Entity__": [],
+      "__Node__": []
+    }
+  },
+  "relationship_types": {
+    "counts": {
+      "AFFECTS_CONSUMPTION": 0,
+      "APPLIES_TO": 12,
+      "BILLED_FOR": 22,
+      "BILLED_TO": 6,
+      "CONTAINS": 114,
+      "CONTAINS_WASTE": 4,
+      "DISPOSED_AT": 6,
+      "DOCUMENTS": 4,
+      "EXTRACTED_TO": 4,
+      "GENERATED_BY": 6,
+      "GENERATES_EMISSION": 118,
+      "GENERATES_WASTE": 496,
+      "HAS_COMPLIANCE_RECORD": 20,
+      "HAS_ELECTRICITY_CONSUMPTION": 500,
+      "HAS_EMISSION_FACTOR": 4,
+      "HAS_ENVIRONMENTAL_KPI": 40,
+      "HAS_ENVIRONMENTAL_RISK": 24,
+      "HAS_INCIDENT": 12,
+      "HAS_RECOMMENDATION": 54,
+      "HAS_RISK": 4,
+      "HAS_TARGET": 12,
+      "HAS_WATER_CONSUMPTION": 856,
+      "LOCATED_AT": 0,
+      "LOCATED_IN": 18,
+      "MEASURED_AT": 10062,
+      "MONITORS": 10,
+      "OCCURRED_AT": 220,
+      "PERMITS": 0,
+      "PROVIDED_BY": 6,
+      "RECORDED_IN": 18,
+      "RESULTED_IN": 12,
+      "TRACKS": 2,
+      "TRANSPORTED_BY": 6
+    },
+    "properties": {
+      "AFFECTS_CONSUMPTION": [],
+      "APPLIES_TO": [],
+      "BILLED_FOR": [],
+      "BILLED_TO": [],
+      "CONTAINS": [],
+      "CONTAINS_WASTE": [
+        "quantity",
+        "unit"
+      ],
+      "DISPOSED_AT": [
+        "disposal_method"
+      ],
+      "DOCUMENTS": [],
+      "EXTRACTED_TO": [
+        "extraction_date"
+      ],
+      "GENERATED_BY": [],
+      "GENERATES_EMISSION": [],
+      "GENERATES_WASTE": [],
+      "HAS_COMPLIANCE_RECORD": [],
+      "HAS_ELECTRICITY_CONSUMPTION": [],
+      "HAS_EMISSION_FACTOR": [],
+      "HAS_ENVIRONMENTAL_KPI": [],
+      "HAS_ENVIRONMENTAL_RISK": [],
+      "HAS_INCIDENT": [],
+      "HAS_RECOMMENDATION": [],
+      "HAS_RISK": [],
+      "HAS_TARGET": [],
+      "HAS_WATER_CONSUMPTION": [],
+      "LOCATED_AT": [],
+      "LOCATED_IN": [],
+      "MEASURED_AT": [],
+      "MONITORS": [],
+      "OCCURRED_AT": [],
+      "PERMITS": [],
+      "PROVIDED_BY": [],
+      "RECORDED_IN": [
+        "reading_date"
+      ],
+      "RESULTED_IN": [
+        "calculation_method"
+      ],
+      "TRACKS": [
+        "tracking_date"
+      ],
+      "TRANSPORTED_BY": [
+        "transport_date"
+      ]
+    },
+    "samples": {
+      "AFFECTS_CONSUMPTION": [],
+      "APPLIES_TO": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Goal"
+          ],
+          "end_labels": [
+            "Site"
+          ],
+          "start_id": 6413,
+          "end_id": 5461
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Goal"
+          ],
+          "end_labels": [
+            "Site"
+          ],
+          "start_id": 6414,
+          "end_id": 5461
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Goal"
+          ],
+          "end_labels": [
+            "Site"
+          ],
+          "start_id": 6415,
+          "end_id": 5461
+        }
+      ],
+      "BILLED_FOR": [
+        {
+          "properties": {},
+          "start_labels": [
+            "WaterBill"
+          ],
+          "end_labels": [
+            "Customer"
+          ],
+          "start_id": 65,
+          "end_id": 67
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "WaterBill"
+          ],
+          "end_labels": [
+            "Customer"
+          ],
+          "start_id": 65,
+          "end_id": 76
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "WaterBill"
+          ],
+          "end_labels": [
+            "Customer"
+          ],
+          "start_id": 59,
+          "end_id": 61
+        }
+      ],
+      "BILLED_TO": [
+        {
+          "properties": {},
+          "start_labels": [
+            "WaterBill"
+          ],
+          "end_labels": [
+            "Facility"
+          ],
+          "start_id": 59,
+          "end_id": 60
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "WaterBill"
+          ],
+          "end_labels": [
+            "Facility"
+          ],
+          "start_id": 65,
+          "end_id": 60
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "WaterBill"
+          ],
+          "end_labels": [
+            "Facility"
+          ],
+          "start_id": 65,
+          "end_id": 75
+        }
+      ],
+      "CONTAINS": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Site"
+          ],
+          "end_labels": [
+            "Building"
+          ],
+          "start_id": 91,
+          "end_id": 92
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Building"
+          ],
+          "end_labels": [
+            "Floor"
+          ],
+          "start_id": 92,
+          "end_id": 93
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Floor"
+          ],
+          "end_labels": [
+            "Area"
+          ],
+          "start_id": 93,
+          "end_id": 94
+        }
+      ],
+      "CONTAINS_WASTE": [
+        {
+          "properties": {
+            "unit": "tons",
+            "quantity": 15
+          },
+          "start_labels": [
+            "WasteShipment"
+          ],
+          "end_labels": [
+            "WasteItem"
+          ],
+          "start_id": 140,
+          "end_id": 56
+        },
+        {
+          "properties": {
+            "unit": "tons",
+            "quantity": 15
+          },
+          "start_labels": [
+            "WasteShipment"
+          ],
+          "end_labels": [
+            "WasteItem"
+          ],
+          "start_id": 80,
+          "end_id": 6437
+        }
+      ],
+      "DISPOSED_AT": [
+        {
+          "properties": {
+            "disposal_method": ""
+          },
+          "start_labels": [
+            "WasteShipment"
+          ],
+          "end_labels": [
+            "DisposalFacility"
+          ],
+          "start_id": 140,
+          "end_id": 55
+        },
+        {
+          "properties": {
+            "disposal_method": ""
+          },
+          "start_labels": [
+            "WasteShipment"
+          ],
+          "end_labels": [
+            "DisposalFacility"
+          ],
+          "start_id": 80,
+          "end_id": 55
+        },
+        {
+          "properties": {
+            "disposal_method": ""
+          },
+          "start_labels": [
+            "WasteShipment"
+          ],
+          "end_labels": [
+            "DisposalFacility"
+          ],
+          "start_id": 80,
+          "end_id": 6431
+        }
+      ],
+      "DOCUMENTS": [
+        {
+          "properties": {},
+          "start_labels": [
+            "WasteManifest"
+          ],
+          "end_labels": [
+            "WasteShipment"
+          ],
+          "start_id": 139,
+          "end_id": 140
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "WasteManifest"
+          ],
+          "end_labels": [
+            "WasteShipment"
+          ],
+          "start_id": 79,
+          "end_id": 80
+        }
+      ],
+      "EXTRACTED_TO": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Document",
+            "Waterbill"
+          ],
+          "end_labels": [
+            "WaterBill"
+          ],
+          "start_id": 58,
+          "end_id": 65
+        },
+        {
+          "properties": {
+            "extraction_date": "2025-09-03T20:23:47.257201"
+          },
+          "start_labels": [
+            "Document",
+            "Electricitybill"
+          ],
+          "end_labels": [
+            "UtilityBill"
+          ],
+          "start_id": 6433,
+          "end_id": 6440
+        }
+      ],
+      "GENERATED_BY": [
+        {
+          "properties": {},
+          "start_labels": [
+            "WasteShipment"
+          ],
+          "end_labels": [
+            "WasteGenerator"
+          ],
+          "start_id": 140,
+          "end_id": 179
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "WasteShipment"
+          ],
+          "end_labels": [
+            "WasteGenerator"
+          ],
+          "start_id": 80,
+          "end_id": 179
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "WasteShipment"
+          ],
+          "end_labels": [
+            "WasteGenerator"
+          ],
+          "start_id": 80,
+          "end_id": 6419
+        }
+      ],
+      "GENERATES_EMISSION": [
+        {
+          "properties": {},
+          "start_labels": [
+            "ElectricityConsumption"
+          ],
+          "end_labels": [
+            "Emission"
+          ],
+          "start_id": 85,
+          "end_id": 6505
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "ElectricityConsumption"
+          ],
+          "end_labels": [
+            "Emission"
+          ],
+          "start_id": 86,
+          "end_id": 6506
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "ElectricityConsumption"
+          ],
+          "end_labels": [
+            "Emission"
+          ],
+          "start_id": 6448,
+          "end_id": 6507
+        }
+      ],
+      "GENERATES_WASTE": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "WasteGeneration"
+          ],
+          "start_id": 60,
+          "end_id": 5371
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "WasteGeneration"
+          ],
+          "start_id": 60,
+          "end_id": 5372
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "WasteGeneration"
+          ],
+          "start_id": 60,
+          "end_id": 5373
+        }
+      ],
+      "HAS_COMPLIANCE_RECORD": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "ComplianceRecord"
+          ],
+          "start_id": 60,
+          "end_id": 5451
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "ComplianceRecord"
+          ],
+          "start_id": 60,
+          "end_id": 5452
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "ComplianceRecord"
+          ],
+          "start_id": 60,
+          "end_id": 5453
+        }
+      ],
+      "HAS_ELECTRICITY_CONSUMPTION": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "ElectricityConsumption"
+          ],
+          "start_id": 60,
+          "end_id": 5251
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "ElectricityConsumption"
+          ],
+          "start_id": 60,
+          "end_id": 5252
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "ElectricityConsumption"
+          ],
+          "start_id": 60,
+          "end_id": 5253
+        }
+      ],
+      "HAS_EMISSION_FACTOR": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Site"
+          ],
+          "end_labels": [
+            "EmissionFactor"
+          ],
+          "start_id": 91,
+          "end_id": 84
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Site"
+          ],
+          "end_labels": [
+            "EmissionFactor"
+          ],
+          "start_id": 5461,
+          "end_id": 84
+        }
+      ],
+      "HAS_ENVIRONMENTAL_KPI": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "EnvironmentalKPI"
+          ],
+          "start_id": 60,
+          "end_id": 5431
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "EnvironmentalKPI"
+          ],
+          "start_id": 60,
+          "end_id": 5432
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "EnvironmentalKPI"
+          ],
+          "start_id": 60,
+          "end_id": 5433
+        }
+      ],
+      "HAS_ENVIRONMENTAL_RISK": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "EnvironmentalRisk"
+          ],
+          "start_id": 60,
+          "end_id": 5411
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "EnvironmentalRisk"
+          ],
+          "start_id": 60,
+          "end_id": 5412
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "EnvironmentalRisk"
+          ],
+          "start_id": 60,
+          "end_id": 5413
+        }
+      ],
+      "HAS_INCIDENT": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "Incident"
+          ],
+          "start_id": 180,
+          "end_id": 187
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "Incident"
+          ],
+          "start_id": 180,
+          "end_id": 72
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "Incident"
+          ],
+          "start_id": 74,
+          "end_id": 77
+        }
+      ],
+      "HAS_RECOMMENDATION": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "EnvironmentalRecommendation"
+          ],
+          "start_id": 60,
+          "end_id": 5423
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "EnvironmentalRecommendation"
+          ],
+          "start_id": 60,
+          "end_id": 5424
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "EnvironmentalRecommendation"
+          ],
+          "start_id": 60,
+          "end_id": 5425
+        }
+      ],
+      "HAS_RISK": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Site"
+          ],
+          "end_labels": [
+            "RiskAssessment"
+          ],
+          "start_id": 5461,
+          "end_id": 5520
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Site"
+          ],
+          "end_labels": [
+            "RiskAssessment"
+          ],
+          "start_id": 5462,
+          "end_id": 5525
+        }
+      ],
+      "HAS_TARGET": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Site"
+          ],
+          "end_labels": [
+            "EnvironmentalTarget"
+          ],
+          "start_id": 5461,
+          "end_id": 6407
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Site"
+          ],
+          "end_labels": [
+            "EnvironmentalTarget"
+          ],
+          "start_id": 5461,
+          "end_id": 6408
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Site"
+          ],
+          "end_labels": [
+            "EnvironmentalTarget"
+          ],
+          "start_id": 5461,
+          "end_id": 6409
+        }
+      ],
+      "HAS_WATER_CONSUMPTION": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "WaterConsumption"
+          ],
+          "start_id": 60,
+          "end_id": 5311
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "WaterConsumption"
+          ],
+          "start_id": 60,
+          "end_id": 5312
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "WaterConsumption"
+          ],
+          "start_id": 60,
+          "end_id": 5313
+        }
+      ],
+      "LOCATED_AT": [],
+      "LOCATED_IN": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "Area"
+          ],
+          "start_id": 137,
+          "end_id": 129
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "Area"
+          ],
+          "start_id": 141,
+          "end_id": 138
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Facility"
+          ],
+          "end_labels": [
+            "Area"
+          ],
+          "start_id": 144,
+          "end_id": 143
+        }
+      ],
+      "MEASURED_AT": [
+        {
+          "properties": {},
+          "start_labels": [
+            "EHSMetric"
+          ],
+          "end_labels": [
+            "Area"
+          ],
+          "start_id": 130,
+          "end_id": 163
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "EHSMetric"
+          ],
+          "end_labels": [
+            "Area"
+          ],
+          "start_id": 131,
+          "end_id": 163
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "EHSMetric"
+          ],
+          "end_labels": [
+            "Area"
+          ],
+          "start_id": 132,
+          "end_id": 163
+        }
+      ],
+      "MONITORS": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Meter"
+          ],
+          "end_labels": [
+            "Facility"
+          ],
+          "start_id": 63,
+          "end_id": 60
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Meter"
+          ],
+          "end_labels": [
+            "Facility"
+          ],
+          "start_id": 63,
+          "end_id": 60
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Meter"
+          ],
+          "end_labels": [
+            "Facility"
+          ],
+          "start_id": 63,
+          "end_id": 75
+        }
+      ],
+      "OCCURRED_AT": [
+        {
+          "properties": {},
+          "start_labels": [
+            "Incident"
+          ],
+          "end_labels": [
+            "Area"
+          ],
+          "start_id": 5141,
+          "end_id": 163
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Incident"
+          ],
+          "end_labels": [
+            "Area"
+          ],
+          "start_id": 5142,
+          "end_id": 162
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "Incident"
+          ],
+          "end_labels": [
+            "Area"
+          ],
+          "start_id": 5143,
+          "end_id": 162
+        }
+      ],
+      "PERMITS": [],
+      "PROVIDED_BY": [
+        {
+          "properties": {},
+          "start_labels": [
+            "WaterBill"
+          ],
+          "end_labels": [
+            "UtilityProvider"
+          ],
+          "start_id": 59,
+          "end_id": 62
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "WaterBill"
+          ],
+          "end_labels": [
+            "UtilityProvider"
+          ],
+          "start_id": 65,
+          "end_id": 62
+        },
+        {
+          "properties": {},
+          "start_labels": [
+            "WaterBill"
+          ],
+          "end_labels": [
+            "UtilityProvider"
+          ],
+          "start_id": 65,
+          "end_id": 181
+        }
+      ],
+      "RECORDED_IN": [
+        {
+          "properties": {
+            "reading_date": "2025-06-30"
+          },
+          "start_labels": [
+            "Meter"
+          ],
+          "end_labels": [
+            "WaterBill"
+          ],
+          "start_id": 63,
+          "end_id": 59
+        },
+        {
+          "properties": {
+            "reading_date": "2025-06-30"
+          },
+          "start_labels": [
+            "Meter"
+          ],
+          "end_labels": [
+            "UtilityBill"
+          ],
+          "start_id": 68,
+          "end_id": 66
+        },
+        {
+          "properties": {
+            "reading_date": "2025-06-30"
+          },
+          "start_labels": [
+            "Meter"
+          ],
+          "end_labels": [
+            "UtilityBill"
+          ],
+          "start_id": 69,
+          "end_id": 66
+        }
+      ],
+      "RESULTED_IN": [
+        {
+          "properties": {
+            "calculation_method": "waste_disposal_landfill"
+          },
+          "start_labels": [
+            "WasteShipment"
+          ],
+          "end_labels": [
+            "Emission"
+          ],
+          "start_id": 140,
+          "end_id": 57
+        },
+        {
+          "properties": {
+            "calculation_method": "water_treatment_distribution"
+          },
+          "start_labels": [
+            "WaterBill"
+          ],
+          "end_labels": [
+            "Emission"
+          ],
+          "start_id": 59,
+          "end_id": 64
+        },
+        {
+          "properties": {
+            "calculation_method": "grid_average"
+          },
+          "start_labels": [
+            "UtilityBill"
+          ],
+          "end_labels": [
+            "Emission"
+          ],
+          "start_id": 66,
+          "end_id": 70
+        }
+      ],
+      "TRACKS": [
+        {
+          "properties": {
+            "tracking_date": "2025-09-03T20:21:43.276279"
+          },
+          "start_labels": [
+            "Document",
+            "Wastemanifest"
+          ],
+          "end_labels": [
+            "WasteManifest"
+          ],
+          "start_id": 6447,
+          "end_id": 79
+        }
+      ],
+      "TRANSPORTED_BY": [
+        {
+          "properties": {
+            "transport_date": "2025-07-15"
+          },
+          "start_labels": [
+            "WasteShipment"
+          ],
+          "end_labels": [
+            "Transporter"
+          ],
+          "start_id": 140,
+          "end_id": 54
+        },
+        {
+          "properties": {
+            "transport_date": "2025-07-15"
+          },
+          "start_labels": [
+            "WasteShipment"
+          ],
+          "end_labels": [
+            "Transporter"
+          ],
+          "start_id": 80,
+          "end_id": 54
+        },
+        {
+          "properties": {
+            "transport_date": "2025-07-15"
+          },
+          "start_labels": [
+            "WasteShipment"
+          ],
+          "end_labels": [
+            "Transporter"
+          ],
+          "start_id": 80,
+          "end_id": 6425
+        }
+      ]
+    }
+  },
+  "constraints_and_indexes": {
+    "constraints": [
+      {
+        "id": 71,
+        "name": "anomaly_id_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Anomaly"
+        ],
+        "properties": [
+          "anomaly_id"
+        ],
+        "ownedIndex": "anomaly_id_unique",
+        "propertyType": null
+      },
+      {
+        "id": 88,
+        "name": "approval_workflow_id_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "ApprovalWorkflow"
+        ],
+        "properties": [
+          "workflow_id"
+        ],
+        "ownedIndex": "approval_workflow_id_unique",
+        "propertyType": null
+      },
+      {
+        "id": 107,
+        "name": "area_floor_name_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Area"
+        ],
+        "properties": [
+          "floor_id",
+          "name"
+        ],
+        "ownedIndex": "area_floor_name_unique",
+        "propertyType": null
+      },
+      {
+        "id": 103,
+        "name": "building_site_name_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Building"
+        ],
+        "properties": [
+          "site_code",
+          "name"
+        ],
+        "ownedIndex": "building_site_name_unique",
+        "propertyType": null
+      },
+      {
+        "id": 75,
+        "name": "change_point_id_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "ChangePoint"
+        ],
+        "properties": [
+          "change_point_id"
+        ],
+        "ownedIndex": "change_point_id_unique",
+        "propertyType": null
+      },
+      {
+        "id": 124,
+        "name": "compliance_record_id",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "ComplianceRecord"
+        ],
+        "properties": [
+          "id"
+        ],
+        "ownedIndex": "compliance_record_id",
+        "propertyType": null
+      },
+      {
+        "id": 14,
+        "name": "constraint_907a464e",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "__Entity__"
+        ],
+        "properties": [
+          "id"
+        ],
+        "ownedIndex": "constraint_907a464e",
+        "propertyType": null
+      },
+      {
+        "id": 12,
+        "name": "constraint_ec67c859",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "__Node__"
+        ],
+        "properties": [
+          "id"
+        ],
+        "ownedIndex": "constraint_ec67c859",
+        "propertyType": null
+      },
+      {
+        "id": 73,
+        "name": "decomposition_id_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "SeasonalDecomposition"
+        ],
+        "properties": [
+          "decomposition_id"
+        ],
+        "ownedIndex": "decomposition_id_unique",
+        "propertyType": null
+      },
+      {
+        "id": 90,
+        "name": "effectiveness_measurement_id_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "EffectivenessMeasurement"
+        ],
+        "properties": [
+          "measurement_id"
+        ],
+        "ownedIndex": "effectiveness_measurement_id_unique",
+        "propertyType": null
+      },
+      {
+        "id": 112,
+        "name": "electricity_consumption_id",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "ElectricityConsumption"
+        ],
+        "properties": [
+          "id"
+        ],
+        "ownedIndex": "electricity_consumption_id",
+        "propertyType": null
+      },
+      {
+        "id": 122,
+        "name": "environmental_kpi_id",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "EnvironmentalKPI"
+        ],
+        "properties": [
+          "id"
+        ],
+        "ownedIndex": "environmental_kpi_id",
+        "propertyType": null
+      },
+      {
+        "id": 120,
+        "name": "environmental_recommendation_id",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "EnvironmentalRecommendation"
+        ],
+        "properties": [
+          "id"
+        ],
+        "ownedIndex": "environmental_recommendation_id",
+        "propertyType": null
+      },
+      {
+        "id": 118,
+        "name": "environmental_risk_id",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "EnvironmentalRisk"
+        ],
+        "properties": [
+          "id"
+        ],
+        "ownedIndex": "environmental_risk_id",
+        "propertyType": null
+      },
+      {
+        "id": 19,
+        "name": "equipment_id_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Equipment"
+        ],
+        "properties": [
+          "id"
+        ],
+        "ownedIndex": "equipment_id_unique",
+        "propertyType": null
+      },
+      {
+        "id": 105,
+        "name": "floor_building_name_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Floor"
+        ],
+        "properties": [
+          "building_id",
+          "name"
+        ],
+        "ownedIndex": "floor_building_name_unique",
+        "propertyType": null
+      },
+      {
+        "id": 136,
+        "name": "goal_id_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Goal"
+        ],
+        "properties": [
+          "id"
+        ],
+        "ownedIndex": "goal_id_unique",
+        "propertyType": null
+      },
+      {
+        "id": 18,
+        "name": "migration_name_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Migration"
+        ],
+        "properties": [
+          "name"
+        ],
+        "ownedIndex": "migration_name_unique",
+        "propertyType": null
+      },
+      {
+        "id": 24,
+        "name": "permit_id_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Permit"
+        ],
+        "properties": [
+          "id"
+        ],
+        "ownedIndex": "permit_id_unique",
+        "propertyType": null
+      },
+      {
+        "id": 86,
+        "name": "recommendation_id_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Recommendation"
+        ],
+        "properties": [
+          "recommendation_id"
+        ],
+        "ownedIndex": "recommendation_id_unique",
+        "propertyType": null
+      },
+      {
+        "id": 64,
+        "name": "rejection_id_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "RejectionRecord"
+        ],
+        "properties": [
+          "rejection_id"
+        ],
+        "ownedIndex": "rejection_id_unique",
+        "propertyType": null
+      },
+      {
+        "id": 101,
+        "name": "site_code_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Site"
+        ],
+        "properties": [
+          "code"
+        ],
+        "ownedIndex": "site_code_unique",
+        "propertyType": null
+      },
+      {
+        "id": 99,
+        "name": "site_name_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Site"
+        ],
+        "properties": [
+          "name"
+        ],
+        "ownedIndex": "site_name_unique",
+        "propertyType": null
+      },
+      {
+        "id": 69,
+        "name": "trend_analysis_id_unique",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "TrendAnalysis"
+        ],
+        "properties": [
+          "analysis_id"
+        ],
+        "ownedIndex": "trend_analysis_id_unique",
+        "propertyType": null
+      },
+      {
+        "id": 53,
+        "name": "unique_allocation_id",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "MonthlyUsageAllocation"
+        ],
+        "properties": [
+          "allocation_id"
+        ],
+        "ownedIndex": "unique_allocation_id",
+        "propertyType": null
+      },
+      {
+        "id": 50,
+        "name": "unique_original_filename",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Document"
+        ],
+        "properties": [
+          "original_filename"
+        ],
+        "ownedIndex": "unique_original_filename",
+        "propertyType": null
+      },
+      {
+        "id": 62,
+        "name": "unique_user_id",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "User"
+        ],
+        "properties": [
+          "user_id"
+        ],
+        "ownedIndex": "unique_user_id",
+        "propertyType": null
+      },
+      {
+        "id": 116,
+        "name": "waste_generation_id",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "WasteGeneration"
+        ],
+        "properties": [
+          "id"
+        ],
+        "ownedIndex": "waste_generation_id",
+        "propertyType": null
+      },
+      {
+        "id": 114,
+        "name": "water_consumption_id",
+        "type": "UNIQUENESS",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "WaterConsumption"
+        ],
+        "properties": [
+          "id"
+        ],
+        "ownedIndex": "water_consumption_id",
+        "propertyType": null
+      }
+    ],
+    "indexes": [
+      {
+        "id": 70,
+        "name": "anomaly_id_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Anomaly"
+        ],
+        "properties": [
+          "anomaly_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "anomaly_id_unique",
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 78,
+        "name": "anomaly_metric_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Anomaly"
+        ],
+        "properties": [
+          "metric_name"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 80,
+        "name": "anomaly_severity_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Anomaly"
+        ],
+        "properties": [
+          "severity"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 79,
+        "name": "anomaly_timestamp_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Anomaly"
+        ],
+        "properties": [
+          "timestamp"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-30T14:14:43.689000000+00:00",
+        "readCount": 37
+      },
+      {
+        "id": 87,
+        "name": "approval_workflow_id_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "ApprovalWorkflow"
+        ],
+        "properties": [
+          "workflow_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "approval_workflow_id_unique",
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 110,
+        "name": "area_floor_id_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Area"
+        ],
+        "properties": [
+          "floor_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 106,
+        "name": "area_floor_name_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Area"
+        ],
+        "properties": [
+          "floor_id",
+          "name"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "area_floor_name_unique",
+        "lastRead": "2025-08-30T15:07:36.261000000+00:00",
+        "readCount": 118
+      },
+      {
+        "id": 108,
+        "name": "building_site_code_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Building"
+        ],
+        "properties": [
+          "site_code"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-30T15:26:43.003000000+00:00",
+        "readCount": 19
+      },
+      {
+        "id": 102,
+        "name": "building_site_name_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Building"
+        ],
+        "properties": [
+          "site_code",
+          "name"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "building_site_name_unique",
+        "lastRead": "2025-08-30T15:07:36.261000000+00:00",
+        "readCount": 56
+      },
+      {
+        "id": 74,
+        "name": "change_point_id_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "ChangePoint"
+        ],
+        "properties": [
+          "change_point_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "change_point_id_unique",
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 81,
+        "name": "change_point_metric_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "ChangePoint"
+        ],
+        "properties": [
+          "metric_name"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 82,
+        "name": "change_point_timestamp_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "ChangePoint"
+        ],
+        "properties": [
+          "change_point_timestamp"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 123,
+        "name": "compliance_record_id",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "ComplianceRecord"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "compliance_record_id",
+        "lastRead": "2025-08-30T18:13:30.396000000+00:00",
+        "readCount": 30
+      },
+      {
+        "id": 132,
+        "name": "compliance_status_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "ComplianceRecord"
+        ],
+        "properties": [
+          "status"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 13,
+        "name": "constraint_907a464e",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "__Entity__"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "constraint_907a464e",
+        "lastRead": "2025-08-23T15:01:10.975000000+00:00",
+        "readCount": 1030
+      },
+      {
+        "id": 11,
+        "name": "constraint_ec67c859",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "__Node__"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "constraint_ec67c859",
+        "lastRead": "2025-08-23T15:01:11.008000000+00:00",
+        "readCount": 7213
+      },
+      {
+        "id": 84,
+        "name": "data_point_metric_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "DataPoint"
+        ],
+        "properties": [
+          "metric_name"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-30T14:14:43.688000000+00:00",
+        "readCount": 148
+      },
+      {
+        "id": 83,
+        "name": "data_point_timestamp_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "DataPoint"
+        ],
+        "properties": [
+          "timestamp"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 72,
+        "name": "decomposition_id_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "SeasonalDecomposition"
+        ],
+        "properties": [
+          "decomposition_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "decomposition_id_unique",
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 89,
+        "name": "effectiveness_measurement_id_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "EffectivenessMeasurement"
+        ],
+        "properties": [
+          "measurement_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "effectiveness_measurement_id_unique",
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 46,
+        "name": "ehs_chunk_content_fulltext_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "FULLTEXT",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "DocumentChunk"
+        ],
+        "properties": [
+          "content",
+          "section_title",
+          "chunk_type"
+        ],
+        "indexProvider": "fulltext-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-21T01:30:52.798000000+00:00",
+        "readCount": 5
+      },
+      {
+        "id": 34,
+        "name": "ehs_chunk_content_vector_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "VECTOR",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "DocumentChunk"
+        ],
+        "properties": [
+          "content_embedding"
+        ],
+        "indexProvider": "vector-2.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-21T01:31:26.126000000+00:00",
+        "readCount": 5
+      },
+      {
+        "id": 47,
+        "name": "ehs_compliance_terms_fulltext_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "FULLTEXT",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Permit",
+          "Document",
+          "Facility"
+        ],
+        "properties": [
+          "regulatory_authority",
+          "compliance_requirements",
+          "regulatory_references"
+        ],
+        "indexProvider": "fulltext-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 44,
+        "name": "ehs_document_content_fulltext_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "FULLTEXT",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Document"
+        ],
+        "properties": [
+          "title",
+          "content",
+          "summary"
+        ],
+        "indexProvider": "fulltext-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-21T01:30:52.583000000+00:00",
+        "readCount": 12
+      },
+      {
+        "id": 31,
+        "name": "ehs_document_content_vector_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "VECTOR",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Document"
+        ],
+        "properties": [
+          "content_embedding"
+        ],
+        "indexProvider": "vector-2.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 45,
+        "name": "ehs_document_metadata_fulltext_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "FULLTEXT",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Document"
+        ],
+        "properties": [
+          "document_type",
+          "source",
+          "author",
+          "keywords"
+        ],
+        "indexProvider": "fulltext-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 33,
+        "name": "ehs_document_summary_vector_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "VECTOR",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Document"
+        ],
+        "properties": [
+          "summary_embedding"
+        ],
+        "indexProvider": "vector-2.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 32,
+        "name": "ehs_document_title_vector_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "VECTOR",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Document"
+        ],
+        "properties": [
+          "title_embedding"
+        ],
+        "indexProvider": "vector-2.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 16,
+        "name": "ehs_documents",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "VECTOR",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "DocumentChunk"
+        ],
+        "properties": [
+          "embedding"
+        ],
+        "indexProvider": "vector-2.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 48,
+        "name": "ehs_environmental_terms_fulltext_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "FULLTEXT",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Equipment",
+          "Document",
+          "Permit"
+        ],
+        "properties": [
+          "environmental_impact",
+          "safety_features",
+          "emission_factors"
+        ],
+        "indexProvider": "fulltext-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 35,
+        "name": "ehs_equipment_desc_vector_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "VECTOR",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Equipment"
+        ],
+        "properties": [
+          "description_embedding"
+        ],
+        "indexProvider": "vector-2.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 42,
+        "name": "ehs_equipment_model_fulltext_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "FULLTEXT",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Equipment"
+        ],
+        "properties": [
+          "model",
+          "equipment_type",
+          "manufacturer"
+        ],
+        "indexProvider": "fulltext-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 43,
+        "name": "ehs_equipment_specs_fulltext_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "FULLTEXT",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Equipment"
+        ],
+        "properties": [
+          "specifications",
+          "description",
+          "serial_number"
+        ],
+        "indexProvider": "fulltext-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 37,
+        "name": "ehs_facility_desc_vector_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "VECTOR",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Facility"
+        ],
+        "properties": [
+          "description_embedding"
+        ],
+        "indexProvider": "vector-2.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 39,
+        "name": "ehs_facility_description_fulltext_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "FULLTEXT",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Facility"
+        ],
+        "properties": [
+          "description",
+          "facility_type",
+          "operational_status"
+        ],
+        "indexProvider": "fulltext-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 38,
+        "name": "ehs_facility_name_fulltext_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "FULLTEXT",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Facility"
+        ],
+        "properties": [
+          "name",
+          "address",
+          "city"
+        ],
+        "indexProvider": "fulltext-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 41,
+        "name": "ehs_permit_compliance_fulltext_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "FULLTEXT",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Permit"
+        ],
+        "properties": [
+          "compliance_requirements",
+          "conditions",
+          "limitations"
+        ],
+        "indexProvider": "fulltext-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 36,
+        "name": "ehs_permit_desc_vector_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "VECTOR",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Permit"
+        ],
+        "properties": [
+          "description_embedding"
+        ],
+        "indexProvider": "vector-2.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 40,
+        "name": "ehs_permit_description_fulltext_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "FULLTEXT",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Permit"
+        ],
+        "properties": [
+          "permit_type",
+          "description",
+          "regulatory_authority"
+        ],
+        "indexProvider": "fulltext-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 111,
+        "name": "electricity_consumption_id",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "ElectricityConsumption"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "electricity_consumption_id",
+        "lastRead": "2025-09-04T20:44:02.012000000+00:00",
+        "readCount": 1423
+      },
+      {
+        "id": 125,
+        "name": "electricity_date_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "ElectricityConsumption"
+        ],
+        "properties": [
+          "date"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-09-05T21:05:25.756000000+00:00",
+        "readCount": 158
+      },
+      {
+        "id": 128,
+        "name": "electricity_facility_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "ElectricityConsumption"
+        ],
+        "properties": [
+          "facility_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-09-04T20:51:23.088000000+00:00",
+        "readCount": 22
+      },
+      {
+        "id": 10,
+        "name": "emission_date",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Emission"
+        ],
+        "properties": [
+          "date"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-09-04T19:27:51.559000000+00:00",
+        "readCount": 5
+      },
+      {
+        "id": 8,
+        "name": "emission_id",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Emission"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-09-03T20:23:47.412000000+00:00",
+        "readCount": 7
+      },
+      {
+        "id": 15,
+        "name": "entity",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "VECTOR",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "__Entity__"
+        ],
+        "properties": [
+          "embedding"
+        ],
+        "indexProvider": "vector-2.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 121,
+        "name": "environmental_kpi_id",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "EnvironmentalKPI"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "environmental_kpi_id",
+        "lastRead": "2025-08-30T18:13:30.346000000+00:00",
+        "readCount": 76
+      },
+      {
+        "id": 119,
+        "name": "environmental_recommendation_id",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "EnvironmentalRecommendation"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "environmental_recommendation_id",
+        "lastRead": "2025-08-30T18:13:30.263000000+00:00",
+        "readCount": 48
+      },
+      {
+        "id": 117,
+        "name": "environmental_risk_id",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "EnvironmentalRisk"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "environmental_risk_id",
+        "lastRead": "2025-08-30T18:13:30.129000000+00:00",
+        "readCount": 72
+      },
+      {
+        "id": 29,
+        "name": "equipment_affects_consumption_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "RELATIONSHIP",
+        "labelsOrTypes": [
+          "AFFECTS_CONSUMPTION"
+        ],
+        "properties": [
+          "impact_factor"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-20T17:41:25.674000000+00:00",
+        "readCount": 2
+      },
+      {
+        "id": 7,
+        "name": "equipment_id_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Equipment"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "equipment_id_unique",
+        "lastRead": "2025-08-21T12:36:09.300000000+00:00",
+        "readCount": 65
+      },
+      {
+        "id": 22,
+        "name": "equipment_installation_date_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Equipment"
+        ],
+        "properties": [
+          "installation_date"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 6,
+        "name": "equipment_located_at_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "RELATIONSHIP",
+        "labelsOrTypes": [
+          "LOCATED_AT"
+        ],
+        "properties": [
+          "created_at"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-20T17:41:25.664000000+00:00",
+        "readCount": 2
+      },
+      {
+        "id": 21,
+        "name": "equipment_model_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Equipment"
+        ],
+        "properties": [
+          "model"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 20,
+        "name": "equipment_type_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Equipment"
+        ],
+        "properties": [
+          "equipment_type"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 3,
+        "name": "facility_id",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Facility"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-09-05T20:47:30.364000000+00:00",
+        "readCount": 64
+      },
+      {
+        "id": 4,
+        "name": "facility_name",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Facility"
+        ],
+        "properties": [
+          "name"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-09-05T20:47:30.483000000+00:00",
+        "readCount": 249
+      },
+      {
+        "id": 109,
+        "name": "floor_building_id_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Floor"
+        ],
+        "properties": [
+          "building_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-30T15:26:43.005000000+00:00",
+        "readCount": 6
+      },
+      {
+        "id": 104,
+        "name": "floor_building_name_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Floor"
+        ],
+        "properties": [
+          "building_id",
+          "name"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "floor_building_name_unique",
+        "lastRead": "2025-08-30T15:07:36.261000000+00:00",
+        "readCount": 77
+      },
+      {
+        "id": 137,
+        "name": "goal_category_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Goal"
+        ],
+        "properties": [
+          "category"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-09-06T03:44:30.129000000+00:00",
+        "readCount": 35
+      },
+      {
+        "id": 135,
+        "name": "goal_id_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Goal"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "goal_id_unique",
+        "lastRead": "2025-09-01T01:18:49.278000000+00:00",
+        "readCount": 18
+      },
+      {
+        "id": 139,
+        "name": "goal_period_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Goal"
+        ],
+        "properties": [
+          "period"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 138,
+        "name": "goal_target_date_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Goal"
+        ],
+        "properties": [
+          "target_date"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 56,
+        "name": "idx_allocated_usage",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "MonthlyUsageAllocation"
+        ],
+        "properties": [
+          "allocated_usage"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 55,
+        "name": "idx_allocation_percentage",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "MonthlyUsageAllocation"
+        ],
+        "properties": [
+          "allocation_percentage"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 54,
+        "name": "idx_allocation_year_month",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "MonthlyUsageAllocation"
+        ],
+        "properties": [
+          "usage_year",
+          "usage_month"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 57,
+        "name": "idx_document_status",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Document"
+        ],
+        "properties": [
+          "status"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-09-03T20:28:30.270000000+00:00",
+        "readCount": 1
+      },
+      {
+        "id": 59,
+        "name": "idx_rejected_at",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Document"
+        ],
+        "properties": [
+          "rejected_at"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 60,
+        "name": "idx_rejected_by_user_id",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Document"
+        ],
+        "properties": [
+          "rejected_by_user_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 58,
+        "name": "idx_rejection_reason",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Document"
+        ],
+        "properties": [
+          "rejection_reason"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 51,
+        "name": "idx_source_file_path",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Document"
+        ],
+        "properties": [
+          "source_file_path"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 1,
+        "name": "index_343aff4e",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "LOOKUP",
+        "entityType": "NODE",
+        "labelsOrTypes": null,
+        "properties": null,
+        "indexProvider": "token-lookup-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-09-08T18:49:16.929000000+00:00",
+        "readCount": 41601
+      },
+      {
+        "id": 2,
+        "name": "index_f7700477",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "LOOKUP",
+        "entityType": "RELATIONSHIP",
+        "labelsOrTypes": null,
+        "properties": null,
+        "indexProvider": "token-lookup-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-09-09T02:52:51.596000000+00:00",
+        "readCount": 4375
+      },
+      {
+        "id": 134,
+        "name": "kpi_date_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "EnvironmentalKPI"
+        ],
+        "properties": [
+          "date"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 133,
+        "name": "kpi_type_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "EnvironmentalKPI"
+        ],
+        "properties": [
+          "type"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 17,
+        "name": "migration_name_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Migration"
+        ],
+        "properties": [
+          "name"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "migration_name_unique",
+        "lastRead": "2025-08-20T17:41:25.933000000+00:00",
+        "readCount": 12
+      },
+      {
+        "id": 26,
+        "name": "permit_authority_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Permit"
+        ],
+        "properties": [
+          "regulatory_authority"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 27,
+        "name": "permit_expiration_date_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Permit"
+        ],
+        "properties": [
+          "expiration_date"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-21T12:37:08.134000000+00:00",
+        "readCount": 1
+      },
+      {
+        "id": 23,
+        "name": "permit_id_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Permit"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "permit_id_unique",
+        "lastRead": "2025-08-21T12:37:07.879000000+00:00",
+        "readCount": 34
+      },
+      {
+        "id": 30,
+        "name": "permit_permits_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "RELATIONSHIP",
+        "labelsOrTypes": [
+          "PERMITS"
+        ],
+        "properties": [
+          "effective_date"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-20T17:41:25.677000000+00:00",
+        "readCount": 2
+      },
+      {
+        "id": 25,
+        "name": "permit_type_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Permit"
+        ],
+        "properties": [
+          "permit_type"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 28,
+        "name": "permit_unit_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Permit"
+        ],
+        "properties": [
+          "unit"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 97,
+        "name": "recommendation_assigned_to_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Recommendation"
+        ],
+        "properties": [
+          "assigned_to"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 94,
+        "name": "recommendation_created_date_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Recommendation"
+        ],
+        "properties": [
+          "created_date"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-30T14:14:43.693000000+00:00",
+        "readCount": 148
+      },
+      {
+        "id": 96,
+        "name": "recommendation_department_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Recommendation"
+        ],
+        "properties": [
+          "department"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 95,
+        "name": "recommendation_due_date_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Recommendation"
+        ],
+        "properties": [
+          "due_date"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 85,
+        "name": "recommendation_id_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Recommendation"
+        ],
+        "properties": [
+          "recommendation_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "recommendation_id_unique",
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 92,
+        "name": "recommendation_priority_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Recommendation"
+        ],
+        "properties": [
+          "priority"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-30T14:14:43.690000000+00:00",
+        "readCount": 37
+      },
+      {
+        "id": 91,
+        "name": "recommendation_status_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Recommendation"
+        ],
+        "properties": [
+          "status"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-30T14:14:43.693000000+00:00",
+        "readCount": 185
+      },
+      {
+        "id": 93,
+        "name": "recommendation_type_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Recommendation"
+        ],
+        "properties": [
+          "recommendation_type"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 67,
+        "name": "rejection_created_at",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "RejectionRecord"
+        ],
+        "properties": [
+          "created_at"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 65,
+        "name": "rejection_document_id",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "RejectionRecord"
+        ],
+        "properties": [
+          "document_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 63,
+        "name": "rejection_id_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "RejectionRecord"
+        ],
+        "properties": [
+          "rejection_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "rejection_id_unique",
+        "lastRead": "2025-08-23T20:40:09.176000000+00:00",
+        "readCount": 8
+      },
+      {
+        "id": 66,
+        "name": "rejection_status",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "RejectionRecord"
+        ],
+        "properties": [
+          "rejection_status"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-24T18:48:27.901000000+00:00",
+        "readCount": 43
+      },
+      {
+        "id": 131,
+        "name": "risk_severity_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "EnvironmentalRisk"
+        ],
+        "properties": [
+          "severity"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 100,
+        "name": "site_code_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Site"
+        ],
+        "properties": [
+          "code"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "site_code_unique",
+        "lastRead": "2025-09-04T19:30:45.073000000+00:00",
+        "readCount": 21
+      },
+      {
+        "id": 98,
+        "name": "site_name_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Site"
+        ],
+        "properties": [
+          "name"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "site_name_unique",
+        "lastRead": "2025-09-04T21:17:39.383000000+00:00",
+        "readCount": 27
+      },
+      {
+        "id": 77,
+        "name": "trend_analysis_date_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "TrendAnalysis"
+        ],
+        "properties": [
+          "start_date",
+          "end_date"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 68,
+        "name": "trend_analysis_id_unique",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "TrendAnalysis"
+        ],
+        "properties": [
+          "analysis_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "trend_analysis_id_unique",
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 76,
+        "name": "trend_analysis_metric_index",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "TrendAnalysis"
+        ],
+        "properties": [
+          "metric_name"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 52,
+        "name": "unique_allocation_id",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "MonthlyUsageAllocation"
+        ],
+        "properties": [
+          "allocation_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "unique_allocation_id",
+        "lastRead": "2025-08-27T01:52:11.101000000+00:00",
+        "readCount": 35
+      },
+      {
+        "id": 49,
+        "name": "unique_original_filename",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "Document"
+        ],
+        "properties": [
+          "original_filename"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "unique_original_filename",
+        "lastRead": "2025-09-03T19:26:59.314000000+00:00",
+        "readCount": 3
+      },
+      {
+        "id": 61,
+        "name": "unique_user_id",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "User"
+        ],
+        "properties": [
+          "user_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "unique_user_id",
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 5,
+        "name": "utility_bill_id",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "UtilityBill"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-09-03T20:23:47.336000000+00:00",
+        "readCount": 7
+      },
+      {
+        "id": 9,
+        "name": "utility_bill_time",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "UtilityBill"
+        ],
+        "properties": [
+          "period_start",
+          "period_end"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 127,
+        "name": "waste_date_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "WasteGeneration"
+        ],
+        "properties": [
+          "date"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": null,
+        "readCount": 0
+      },
+      {
+        "id": 130,
+        "name": "waste_facility_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "WasteGeneration"
+        ],
+        "properties": [
+          "facility_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-30T18:13:30.461000000+00:00",
+        "readCount": 2
+      },
+      {
+        "id": 115,
+        "name": "waste_generation_id",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "WasteGeneration"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "waste_generation_id",
+        "lastRead": "2025-08-31T23:43:54.682000000+00:00",
+        "readCount": 656
+      },
+      {
+        "id": 113,
+        "name": "water_consumption_id",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "WaterConsumption"
+        ],
+        "properties": [
+          "id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": "water_consumption_id",
+        "lastRead": "2025-08-31T23:43:54.267000000+00:00",
+        "readCount": 1096
+      },
+      {
+        "id": 126,
+        "name": "water_date_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "WaterConsumption"
+        ],
+        "properties": [
+          "date"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-08-31T16:03:18.158000000+00:00",
+        "readCount": 1
+      },
+      {
+        "id": 129,
+        "name": "water_facility_idx",
+        "state": "ONLINE",
+        "populationPercent": 100.0,
+        "type": "RANGE",
+        "entityType": "NODE",
+        "labelsOrTypes": [
+          "WaterConsumption"
+        ],
+        "properties": [
+          "facility_id"
+        ],
+        "indexProvider": "range-1.0",
+        "owningConstraint": null,
+        "lastRead": "2025-09-04T20:49:53.688000000+00:00",
+        "readCount": 5
+      }
+    ]
+  }
+}

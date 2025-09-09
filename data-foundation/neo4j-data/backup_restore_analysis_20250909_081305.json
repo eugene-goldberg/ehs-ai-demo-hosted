@@ -1,0 +1,167 @@
+{
+  "file_analysis": {
+    "file_exists": true,
+    "file_size_bytes": 5268819,
+    "file_size_mb": 5.02,
+    "json_valid": true,
+    "load_successful": true
+  },
+  "metadata_analysis": {
+    "has_metadata": true,
+    "missing_required_fields": [],
+    "backup_timestamp": "2025-09-09T07:57:21.843471",
+    "backup_version": "2.1",
+    "validation_passed": true,
+    "validation_issues": [],
+    "catalog": {
+      "total_nodes": 6390,
+      "total_relationships": 6336,
+      "node_label_count": 53,
+      "relationship_type_count": 33,
+      "node_labels": 53,
+      "relationship_types": 33,
+      "has_node_label_counts": true,
+      "has_relationship_type_counts": true
+    }
+  },
+  "node_analysis": {
+    "total_nodes": 6390,
+    "sample_size": 100,
+    "nodes_with_ids": 100,
+    "nodes_with_labels": 100,
+    "nodes_with_properties": 100,
+    "unique_node_ids_in_sample": 100,
+    "total_unique_node_ids": 6390,
+    "expected_node_count": 6390,
+    "missing_node_ids": [
+      5463,
+      5464,
+      5465,
+      5466,
+      5467,
+      5468,
+      5469,
+      5470,
+      5471,
+      5472
+    ],
+    "missing_node_ids_count": 10,
+    "missing_node_ids_display": "10+",
+    "label_distribution_sample": {
+      "Floor": 3,
+      "Area": 7,
+      "EHSMetric": 54,
+      "Transporter": 1,
+      "DisposalFacility": 1,
+      "WasteItem": 1,
+      "Emission": 4,
+      "Document": 1,
+      "Waterbill": 1,
+      "WaterBill": 2,
+      "Facility": 4,
+      "Customer": 3,
+      "UtilityProvider": 1,
+      "Meter": 5,
+      "UtilityBill": 1,
+      "Incident": 3,
+      "WasteManifest": 1,
+      "WasteShipment": 1,
+      "RejectedDocument": 1,
+      "EmissionFactor": 1,
+      "ElectricityConsumption": 2,
+      "AssessmentReport": 1,
+      "Site": 1,
+      "Building": 1
+    }
+  },
+  "relationship_analysis": {
+    "total_relationships": 6336,
+    "rels_with_ids": 6336,
+    "rels_with_start_nodes": 6336,
+    "rels_with_end_nodes": 6336,
+    "rels_with_types": 6336,
+    "rels_with_properties": 6336,
+    "unique_rel_ids": 6336,
+    "valid_start_refs": 6336,
+    "valid_end_refs": 6336,
+    "invalid_start_refs": [],
+    "invalid_end_refs": [],
+    "missing_rel_ids": [
+      5632,
+      5633,
+      5634,
+      5635,
+      5636,
+      5637,
+      327,
+      328,
+      5454,
+      5455
+    ],
+    "missing_rel_ids_count": 169,
+    "type_distribution": {
+      "MEASURED_AT": 5031,
+      "BILLED_FOR": 11,
+      "DOCUMENTS": 2,
+      "GENERATED_BY": 3,
+      "TRANSPORTED_BY": 3,
+      "DISPOSED_AT": 3,
+      "CONTAINS_WASTE": 2,
+      "RESULTED_IN": 6,
+      "BILLED_TO": 3,
+      "PROVIDED_BY": 3,
+      "MONITORS": 5,
+      "RECORDED_IN": 9,
+      "HAS_INCIDENT": 6,
+      "EXTRACTED_TO": 2,
+      "CONTAINS": 57,
+      "LOCATED_IN": 9,
+      "OCCURRED_AT": 110,
+      "HAS_ELECTRICITY_CONSUMPTION": 250,
+      "HAS_WATER_CONSUMPTION": 428,
+      "GENERATES_WASTE": 248,
+      "HAS_ENVIRONMENTAL_RISK": 12,
+      "HAS_RECOMMENDATION": 27,
+      "HAS_ENVIRONMENTAL_KPI": 20,
+      "HAS_COMPLIANCE_RECORD": 10,
+      "HAS_RISK": 2,
+      "HAS_TARGET": 6,
+      "APPLIES_TO": 6,
+      "TRACKS": 1,
+      "HAS_EMISSION_FACTOR": 2,
+      "GENERATES_EMISSION": 59
+    }
+  },
+  "integrity_checks": {
+    "orphaned_relationships": 0,
+    "circular_references": [],
+    "data_consistency": true,
+    "structure_valid": true,
+    "metadata_consistency": true,
+    "expected_vs_actual_nodes": {
+      "expected": 6390,
+      "actual": 6390
+    },
+    "expected_vs_actual_rels": {
+      "expected": 6336,
+      "actual": 6336
+    }
+  },
+  "restore_capability": {
+    "can_restore": true,
+    "confidence": "MEDIUM",
+    "critical_issues": [],
+    "warnings": [
+      "Missing node IDs detected: 10+",
+      "Missing relationship IDs detected: 169"
+    ],
+    "recommendation": "RESTORE WITH CAUTION - Minor issues detected, monitor restoration process"
+  },
+  "validation_summary": {
+    "analysis_timestamp": "2025-09-09T08:13:05.043644",
+    "backup_file": "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/neo4j-data/neo4j_backup_20250909_075720.json",
+    "analyzer_version": "1.0.0",
+    "total_checks_performed": 5,
+    "overall_status": "PASSED"
+  }
+}

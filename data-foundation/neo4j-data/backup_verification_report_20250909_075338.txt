@@ -1,0 +1,73 @@
+================================================================================
+NEO4J BACKUP VERIFICATION REPORT
+================================================================================
+Generated: 2025-09-09T07:53:38.089657
+Catalog:   /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/neo4j-data/NEO4J_DATA_CATALOG.md
+Backup:    /Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/neo4j-data/neo4j_backup_20250908_220018.json
+Status:    ✗ VERIFICATION FAILED
+
+SUMMARY
+----------------------------------------
+Matches:       10
+Discrepancies: 33
+Warnings:      2
+
+DISCREPANCIES
+----------------------------------------
+✗ Total nodes mismatch - Catalog: 6,393, Backup: 6,390, Difference: 3
+✗ Total relationships mismatch - Catalog: 12,672, Backup: 6,336, Difference: 6,336
+✗ Relationship type 'APPLIES_TO' mismatch - Catalog: 12, Backup: 0
+✗ Relationship type 'BILLED_FOR' mismatch - Catalog: 22, Backup: 0
+✗ Relationship type 'BILLED_TO' mismatch - Catalog: 6, Backup: 0
+✗ Relationship type 'CONTAINS' mismatch - Catalog: 114, Backup: 0
+✗ Relationship type 'CONTAINS_WASTE' mismatch - Catalog: 4, Backup: 0
+✗ Relationship type 'DISPOSED_AT' mismatch - Catalog: 6, Backup: 0
+✗ Relationship type 'DOCUMENTS' mismatch - Catalog: 4, Backup: 0
+✗ Relationship type 'EXTRACTED_TO' mismatch - Catalog: 4, Backup: 0
+✗ Relationship type 'GENERATED_BY' mismatch - Catalog: 6, Backup: 0
+✗ Relationship type 'GENERATES_EMISSION' mismatch - Catalog: 118, Backup: 0
+✗ Relationship type 'GENERATES_WASTE' mismatch - Catalog: 496, Backup: 0
+✗ Relationship type 'HAS_COMPLIANCE_RECORD' mismatch - Catalog: 20, Backup: 0
+✗ Relationship type 'HAS_ELECTRICITY_CONSUMPTION' mismatch - Catalog: 500, Backup: 0
+✗ Relationship type 'HAS_EMISSION_FACTOR' mismatch - Catalog: 4, Backup: 0
+✗ Relationship type 'HAS_ENVIRONMENTAL_KPI' mismatch - Catalog: 40, Backup: 0
+✗ Relationship type 'HAS_ENVIRONMENTAL_RISK' mismatch - Catalog: 24, Backup: 0
+✗ Relationship type 'HAS_INCIDENT' mismatch - Catalog: 12, Backup: 0
+✗ Relationship type 'HAS_RECOMMENDATION' mismatch - Catalog: 54, Backup: 0
+✗ Relationship type 'HAS_RISK' mismatch - Catalog: 4, Backup: 0
+✗ Relationship type 'HAS_TARGET' mismatch - Catalog: 12, Backup: 0
+✗ Relationship type 'HAS_WATER_CONSUMPTION' mismatch - Catalog: 856, Backup: 0
+✗ Relationship type 'LOCATED_IN' mismatch - Catalog: 18, Backup: 0
+✗ Relationship type 'MEASURED_AT' mismatch - Catalog: 10062, Backup: 0
+✗ Relationship type 'MONITORS' mismatch - Catalog: 10, Backup: 0
+✗ Relationship type 'OCCURRED_AT' mismatch - Catalog: 220, Backup: 0
+✗ Relationship type 'PROVIDED_BY' mismatch - Catalog: 6, Backup: 0
+✗ Relationship type 'RECORDED_IN' mismatch - Catalog: 18, Backup: 0
+✗ Relationship type 'RESULTED_IN' mismatch - Catalog: 12, Backup: 0
+✗ Relationship type 'TRACKS' mismatch - Catalog: 2, Backup: 0
+✗ Relationship type 'TRANSPORTED_BY' mismatch - Catalog: 6, Backup: 0
+✗ Relationship type 'UNKNOWN' mismatch - Catalog: 0, Backup: 6336
+
+WARNINGS
+----------------------------------------
+⚠ Metadata node count differs from catalog: 6,390 vs 6,393
+⚠ Metadata relationship count differs from catalog: 6,336 vs 12,672
+
+MATCHES
+----------------------------------------
+✓ Node label 'EHSMetric' matches: 5031
+✓ Node label 'WaterConsumption' matches: 428
+✓ Node label 'ElectricityConsumption' matches: 309
+✓ Node label 'WasteGeneration' matches: 248
+✓ Node label 'Incident' matches: 116
+✓ Node label 'Emission' matches: 65
+✓ Node label 'Area' matches: 39
+✓ Node label 'EnvironmentalKPI' matches: 20
+✓ Node label 'Recommendation' matches: 19
+✓ Node label 'Facility' matches: 15
+
+CONCLUSION
+----------------------------------------
+The backup verification FAILED.
+Discrepancies found between catalog and backup.
+================================================================================
