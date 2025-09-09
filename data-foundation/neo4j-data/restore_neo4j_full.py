@@ -201,7 +201,7 @@ class Neo4jRestoreManager:
                     for node_data in batch:
                         labels = node_data.get('labels', [])
                         properties = node_data.get('properties', {})
-                        internal_id = node_data.get('internal_id')
+                        internal_id = node_data.get('node_id') or node_data.get('internal_id')
                         
                         # Create node with labels
                         if labels:
