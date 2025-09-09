@@ -214,13 +214,14 @@ class Neo4jRestoreManager:
                         params = {}
                         
                         if properties:
-                            # Set properties
-                            query += " SET n = $props"
+                            # Set properties and backup ID in a single SET operation
+                            query += " SET n = $props, n.__backup_id__ = $backup_id"
                             params['props'] = properties
-                        
-                        # Store original internal ID for relationship matching
-                        query += ", n.__backup_id__ = $backup_id"
-                        params['backup_id'] = internal_id
+                            params['backup_id'] = internal_id
+                        else:
+                            # Only set backup ID if no other properties
+                            query += " SET n.__backup_id__ = $backup_id"
+                            params['backup_id'] = internal_id
                         
                         session.run(query, params)
                         self.stats['nodes_restored'] += 1
