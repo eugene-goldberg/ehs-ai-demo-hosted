@@ -90,7 +90,6 @@ Here is the output schema:
 - Run ID: `65c6f113-29b2-4232-9ec3-7b4e7942ccce`
 - Session ID: `133b8879-3c32-4d23-882d-b35bbab722eb`
 - Status: `success`
-- Start Time: 2025-09-04T17:24:12.827764
 
 **Human Input:**
 
@@ -160,7 +159,6 @@ Here is the output schema:
 - Run ID: `7a05f63d-fda3-43a6-85fb-829a5be1cfa9`
 - Session ID: `133b8879-3c32-4d23-882d-b35bbab722eb`
 - Status: `success`
-- Start Time: 2025-09-04T17:23:52.388893
 
 **Human Input:**
 
@@ -232,7 +230,6 @@ Here is the output schema:
 - Run ID: `6a6c3e95-3feb-4a20-baa2-5a65521445be`
 - Session ID: `133b8879-3c32-4d23-882d-b35bbab722eb`
 - Status: `success`
-- Start Time: 2025-09-04T16:58:51.137046
 
 **Human Input:**
 

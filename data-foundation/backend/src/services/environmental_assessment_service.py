@@ -100,14 +100,14 @@ class EnvironmentalAssessmentService:
             # FIXED Query - Using Site relationships instead of facility_id and fixed date comparison
             query = """
             MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)
-            WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)
-            AND ($start_date IS NULL OR e.date >= date($start_date))
-            AND ($end_date IS NULL OR e.date <= date($end_date))
-            RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,
-                   e.cost_usd as cost, 
-                   COALESCE(e.source_type, 'Unknown') as source_type, 
-                   COALESCE(e.efficiency_rating, 0.0) as efficiency
-            ORDER BY e.date DESC
+  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)
+  AND ($start_date IS NULL OR e.date >= $start_date)
+  AND ($end_date IS NULL OR e.date <= $end_date)
+  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,
+         e.cost_usd as cost,
+         COALESCE(e.source_type, 'Unknown') as source_type,
+         COALESCE(e.efficiency_rating, 0.0) as efficiency
+  ORDER BY e.date DESC
             """
             
             records = self.neo4j_client.execute_query(
@@ -163,8 +163,8 @@ class EnvironmentalAssessmentService:
             query = """
             MATCH (s:Site)-[:HAS_WATER_CONSUMPTION]->(w:WaterConsumption)
             WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)
-            AND ($start_date IS NULL OR w.date >= date($start_date))
-            AND ($end_date IS NULL OR w.date <= date($end_date))
+            AND ($start_date IS NULL OR w.date >= $start_date)
+            AND ($end_date IS NULL OR w.date <= $end_date)
             RETURN s.id as location, s.name as site_name, w.date as date, w.consumption_gallons as consumption,
                    w.cost_usd as cost, 
                    COALESCE(w.source_type, 'Unknown') as source_type, 
@@ -223,10 +223,10 @@ class EnvironmentalAssessmentService:
         try:
             # FIXED Query - Using Site relationships instead of location property and fixed date comparison
             query = """
-            MATCH (s:Site)-[:HAS_WASTE_GENERATION]->(w:WasteGeneration)
+            MATCH (s:Site)-[:GENERATES_WASTE]->(w:WasteGeneration)
             WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)
-            AND ($start_date IS NULL OR w.date >= date($start_date))
-            AND ($end_date IS NULL OR w.date <= date($end_date))
+            AND ($start_date IS NULL OR w.date >= $start_date)
+            AND ($end_date IS NULL OR w.date <= $end_date)
             RETURN s.id as location, s.name as site_name, w.date as date, w.amount_pounds as amount,
                    w.disposal_cost_usd as cost, w.waste_type as waste_type, w.disposal_method as disposal_method,
                    0 as recycled

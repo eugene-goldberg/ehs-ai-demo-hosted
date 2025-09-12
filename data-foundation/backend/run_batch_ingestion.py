@@ -48,7 +48,7 @@ async def main():
     )
     
     # Define input and output directories
-    input_dir = Path('/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/data')
+    input_dir = Path('/home/azureuser/dev/ehs-ai-demo/data-foundation/data')
     output_dir = current_dir / 'data' / 'processed'
     
     # Create output directory if it doesn't exist

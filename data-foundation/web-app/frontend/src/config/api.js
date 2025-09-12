@@ -1,6 +1,6 @@
 // API Configuration
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-const DATA_API_BASE_URL = process.env.REACT_APP_DATA_API_URL || 'http://localhost:8001';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://10.136.0.4:8000';
+const DATA_API_BASE_URL = process.env.REACT_APP_DATA_API_URL || 'http://10.136.0.4:8001';
 
 export const API_ENDPOINTS = {
   // Data Management endpoints (port 8001)

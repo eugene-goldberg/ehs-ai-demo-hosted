@@ -365,7 +365,7 @@ const DataManagement = () => {
           
           // Fetch ingestion instructions and prepend to transcript
           try {
-            const instructionsResponse = await axios.get('http://localhost:8001/api/ingestion-instructions');
+            const instructionsResponse = await axios.get('http://10.136.0.4:8001/api/ingestion-instructions');
             if (instructionsResponse.data && instructionsResponse.data.content) {
               // Create system message with instructions
               const systemMessage = {

@@ -390,6 +390,15 @@ const AnalyticsExecutive = () => {
     const electricityEmissions = calculateCO2Emissions(electricityData);
     const waterEmissions = calculateCO2Emissions(waterData);
     const currentEmissions = electricityEmissions + waterEmissions;
+
+    // Add this check
+  if (currentEmissions === 0) {
+    return {
+      trend: 'stable',
+      percentage: 0
+    };
+  }
+ 
     
     // Simulate trend calculation - in real app this would use historical data
     const baselineEmissions = currentEmissions * 1.15; // Assume 15% higher baseline

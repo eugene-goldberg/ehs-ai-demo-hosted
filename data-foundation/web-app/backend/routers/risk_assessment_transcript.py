@@ -17,7 +17,7 @@ async def get_risk_assessment_transcript():
     """Get the Risk Assessment Agent Transcript markdown content"""
     try:
         # Path to the markdown file
-        markdown_path = "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/docs/RISK_ASSESSMENT_AGENT_TRANSCRIPT.md"
+        markdown_path = "/home/azureuser/dev/ehs-ai-demo/data-foundation/docs/RISK_ASSESSMENT_AGENT_TRANSCRIPT.md"
         
         # Check if file exists
         if not os.path.exists(markdown_path):

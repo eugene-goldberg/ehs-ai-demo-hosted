@@ -30,7 +30,7 @@ incidents_db = []
 compliance_db = []
 
 # File-based transcript storage with thread safety
-transcript_file_path = "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/web-app/backend/transcript_data.json"
+transcript_file_path = "/home/azureuser/dev/ehs-ai-demo/data-foundation/web-app/backend/transcript_data.json"
 transcript_lock = threading.Lock()
 
 def load_transcript() -> List[Dict[str, Any]]:

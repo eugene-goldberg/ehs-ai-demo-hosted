@@ -10,7 +10,7 @@ from fastapi.responses import JSONResponse
 router = APIRouter()
 
 # Constants
-CONVERSATIONS_OUTPUT_PATH = "/Users/eugene/dev/ai/agentos/ehs-ai-demo/data-foundation/traces_output/gpt4_conversations_extracted.md"
+CONVERSATIONS_OUTPUT_PATH = "/home/azureuser/dev/ehs-ai-demo/data-foundation/traces_output/gpt4_conversations_extracted.md"
 
 @router.get("/")
 async def get_conversations_markdown():
