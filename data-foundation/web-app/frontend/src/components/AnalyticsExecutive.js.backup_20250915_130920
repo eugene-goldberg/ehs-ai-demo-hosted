@@ -38,7 +38,6 @@ import {
 import { API_ENDPOINTS } from '../config/api';
 import apiConfig from '../config/api';
 import axios from 'axios';
-import Chatbot from './Chatbot';
 
 const AnalyticsExecutive = () => {
   const [selectedLocation, setSelectedLocation] = useState('algonquin_il');
@@ -1464,11 +1463,6 @@ const AnalyticsExecutive = () => {
           )}
         </Grid>
       </Grid>
-
-      {/* Chatbot Component */}
-      <Box sx={{ mt: 4 }}>
-        <Chatbot />
-      </Box>
     </Box>
   );
 };
