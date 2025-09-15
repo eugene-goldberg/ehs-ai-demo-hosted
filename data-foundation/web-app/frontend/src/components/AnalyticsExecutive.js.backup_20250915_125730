@@ -14,10 +14,7 @@ import {
   Button,
   ButtonGroup,
   Alert,
-  ListSubheader,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails
+  ListSubheader
 } from '@mui/material';
 import {
   TrendingUp,
@@ -32,8 +29,7 @@ import {
   Info,
   LightbulbOutlined,
   FlagOutlined,
-  ShowChart,
-  ExpandMore
+  ShowChart
 } from '@mui/icons-material';
 import { API_ENDPOINTS } from '../config/api';
 import apiConfig from '../config/api';
@@ -979,132 +975,113 @@ const AnalyticsExecutive = () => {
             )}
           </Box>
 
-          {/* Risk Analysis & Recommendations Accordion */}
-          {(risks.length > 0 || sortedRecommendations.length > 0) && (
-            <Accordion defaultExpanded={false} sx={{ mb: 3 }}>
-              <AccordionSummary 
-                expandIcon={<ExpandMore />}
-                sx={{ 
-                  backgroundColor: '#f8f9fa', 
-                  borderRadius: '4px 4px 0 0',
-                  '&:hover': { backgroundColor: '#e9ecef' }
-                }}
-              >
-                <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#495057' }}>
-                  Risk Analysis & Recommendations
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails sx={{ p: 0 }}>
-                {/* Risk Levels Section */}
-                {risks.length > 0 && (
-                  <Box sx={{ mb: 3, p: 2, backgroundColor: '#fff3e0', borderRadius: 1 }}>
-                    <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
-                      Risk Assessment
-                    </Typography>
-                    {risks.slice(0, 2).map((risk, index) => {
-                      // Handle both object and string risk formats
-                      let riskSeverity = '';
-                      let riskDescription = '';
-                      
-                      if (typeof risk === 'object' && risk !== null) {
-                        riskSeverity = risk.severity || '';
-                        // Apply parseRiskDescription to handle JSON descriptions
-                        riskDescription = parseRiskDescription(risk.description || '');
-                      } else if (typeof risk === 'string') {
-                        // If it's a string, use it as description and try to extract severity
-                        riskDescription = parseRiskDescription(risk);
-                        riskSeverity = risk.toLowerCase().includes('high') ? 'HIGH' :
-                                     risk.toLowerCase().includes('medium') ? 'MEDIUM' :
-                                     risk.toLowerCase().includes('low') ? 'LOW' : 'MEDIUM';
-                      }
+          {/* Risk Levels Section */}
+          {risks.length > 0 && (
+            <Box sx={{ mb: 3, p: 2, backgroundColor: '#fff3e0', borderRadius: 1 }}>
+              <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
+                Risk Assessment
+              </Typography>
+              {risks.slice(0, 2).map((risk, index) => {
+                // Handle both object and string risk formats
+                let riskSeverity = '';
+                let riskDescription = '';
+                
+                if (typeof risk === 'object' && risk !== null) {
+                  riskSeverity = risk.severity || '';
+                  // Apply parseRiskDescription to handle JSON descriptions
+                  riskDescription = parseRiskDescription(risk.description || '');
+                } else if (typeof risk === 'string') {
+                  // If it's a string, use it as description and try to extract severity
+                  riskDescription = parseRiskDescription(risk);
+                  riskSeverity = risk.toLowerCase().includes('high') ? 'HIGH' :
+                               risk.toLowerCase().includes('medium') ? 'MEDIUM' :
+                               risk.toLowerCase().includes('low') ? 'LOW' : 'MEDIUM';
+                }
 
-                      const chipColor = riskSeverity.toLowerCase() === 'low' ? 'success' :
-                                      riskSeverity.toLowerCase() === 'medium' ? 'warning' : 'error';
+                const chipColor = riskSeverity.toLowerCase() === 'low' ? 'success' :
+                                riskSeverity.toLowerCase() === 'medium' ? 'warning' : 'error';
 
-                      return (
-                        <Box key={index} sx={{ mb: 1 }}>
-                          <Chip 
-                            label={`${riskSeverity} Risk`}
-                            color={chipColor}
-                            variant="outlined"
-                            size="small"
-                            sx={{ mr: 1 }}
-                          />
-                          {riskDescription && (
-                            <Typography 
-                              variant="body2" 
-                              sx={{ 
-                                mt: 0.5, 
-                                color: 'text.secondary',
-                                whiteSpace: 'pre-line', // Allow line breaks in formatted text
-                                lineHeight: 1.6
-                              }}
-                            >
-                              {riskDescription}
-                            </Typography>
-                          )}
-                        </Box>
-                      );
-                    })}
-                  </Box>
-                )}
-                {/* Recommendations Section - FIXED to show all 3 with proper formatting */}
-                {sortedRecommendations.length > 0 && (
-                  <Box sx={{ p: 2, backgroundColor: '#e8f5e8', borderRadius: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <LightbulbOutlined sx={{ color: '#4caf50', mr: 1 }} />
-                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                        Recommendations ({sortedRecommendations.length})
+                return (
+                  <Box key={index} sx={{ mb: 1 }}>
+                    <Chip 
+                      label={`${riskSeverity} Risk`}
+                      color={chipColor}
+                      variant="outlined"
+                      size="small"
+                      sx={{ mr: 1 }}
+                    />
+                    {riskDescription && (
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
+                          mt: 0.5, 
+                          color: 'text.secondary',
+                          whiteSpace: 'pre-line', // Allow line breaks in formatted text
+                          lineHeight: 1.6
+                        }}
+                      >
+                        {riskDescription}
                       </Typography>
-                    </Box>
-                    
-                    {/* Display ALL recommendations, not just 2 */}
-                    {sortedRecommendations.map((recommendation, index) => (
-                      <Box key={recommendation.id} sx={{ 
-                        mb: 2, 
-                        p: 2, 
-                        backgroundColor: 'rgba(255, 255, 255, 0.7)', 
-                        borderRadius: 1,
-                        border: '1px solid #c8e6c9'
-                      }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
-                          <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#2e7d32' }}>
-                            Recommendation {recommendation.id}
-                          </Typography>
-                          <Chip 
-                            label={recommendation.priority}
-                            color={getPriorityColor(recommendation.priority)}
-                            size="small"
-                            variant="outlined"
-                          />
-                          {recommendation.category !== 'General' && (
-                            <Chip 
-                              label={recommendation.category}
-                              size="small"
-                              variant="outlined"
-                              sx={{ backgroundColor: '#f5f5f5' }}
-                            />
-                          )}
-                        </Box>
-                        
-                        <Typography variant="body2" sx={{ mb: 1, lineHeight: 1.6 }}>
-                          <strong>Description:</strong> {recommendation.description}
-                        </Typography>
-                        
-                        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                            <strong>Impact:</strong> {recommendation.impact}
-                          </Typography>
-                          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                            <strong>Effort:</strong> {recommendation.effort}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    ))}
+                    )}
                   </Box>
-                )}
-              </AccordionDetails>
-            </Accordion>
+                );
+              })}
+            </Box>
+          )}
+          {/* Recommendations Section - FIXED to show all 3 with proper formatting */}
+          {sortedRecommendations.length > 0 && (
+            <Box sx={{ p: 2, backgroundColor: '#e8f5e8', borderRadius: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <LightbulbOutlined sx={{ color: '#4caf50', mr: 1 }} />
+                <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                  Recommendations ({sortedRecommendations.length})
+                </Typography>
+              </Box>
+              
+              {/* Display ALL recommendations, not just 2 */}
+              {sortedRecommendations.map((recommendation, index) => (
+                <Box key={recommendation.id} sx={{ 
+                  mb: 2, 
+                  p: 2, 
+                  backgroundColor: 'rgba(255, 255, 255, 0.7)', 
+                  borderRadius: 1,
+                  border: '1px solid #c8e6c9'
+                }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#2e7d32' }}>
+                      Recommendation {recommendation.id}
+                    </Typography>
+                    <Chip 
+                      label={recommendation.priority}
+                      color={getPriorityColor(recommendation.priority)}
+                      size="small"
+                      variant="outlined"
+                    />
+                    {recommendation.category !== 'General' && (
+                      <Chip 
+                        label={recommendation.category}
+                        size="small"
+                        variant="outlined"
+                        sx={{ backgroundColor: '#f5f5f5' }}
+                      />
+                    )}
+                  </Box>
+                  
+                  <Typography variant="body2" sx={{ mb: 1, lineHeight: 1.6 }}>
+                    <strong>Description:</strong> {recommendation.description}
+                  </Typography>
+                  
+                  <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                      <strong>Impact:</strong> {recommendation.impact}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                      <strong>Effort:</strong> {recommendation.effort}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
           )}
         </CardContent>
       </Card>
