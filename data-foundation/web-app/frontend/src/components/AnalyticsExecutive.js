@@ -511,6 +511,111 @@ const AnalyticsExecutive = () => {
     }
   };
 
+
+  // Helper function to parse and format risk descriptions that contain JSON
+  const parseRiskDescription = (description) => {
+    if (!description || typeof description !== 'string') {
+      return description;
+    }
+
+    try {
+      // Try to parse as JSON if it looks like JSON
+      if (description.trim().startsWith('{') && description.trim().endsWith('}')) {
+        const parsed = JSON.parse(description);
+        
+        // Format the JSON into human-readable text
+        let formattedText = '';
+        
+        // Handle common JSON structures in risk descriptions
+        Object.entries(parsed).forEach(([key, value], index) => {
+          if (index > 0) formattedText += '\n\n';
+          
+          // Clean up key formatting
+          const cleanKey = key.replace(/^\d+\.\s*/, '').replace(/_/g, ' ').trim();
+          formattedText += cleanKey + ': ';
+          
+          if (typeof value === 'object' && value !== null) {
+            // Handle nested objects
+            Object.entries(value).forEach(([subKey, subValue], subIndex) => {
+              if (subIndex > 0) formattedText += ', ';
+              const cleanSubKey = subKey.replace(/_/g, ' ');
+              
+              // Format percentage values
+              if (typeof subValue === 'string' && subValue.includes('%')) {
+                formattedText += cleanSubKey + ': ' + subValue;
+              } else if (typeof subValue === 'number') {
+                formattedText += cleanSubKey + ': ' + subValue.toFixed(2);
+              } else {
+                formattedText += cleanSubKey + ': ' + subValue;
+              }
+            });
+          } else {
+            // Handle simple values
+            if (typeof value === 'number') {
+              formattedText += value.toFixed(2);
+            } else {
+              formattedText += String(value);
+            }
+          }
+        });
+        
+        return formattedText || description;
+      }
+    } catch (error) {
+      // If JSON parsing fails, return the original description
+      console.warn('Failed to parse risk description as JSON:', error);
+    }
+    
+    return description;
+  };
+
+  // Helper function to parse dictionary-style recommendation strings
+  const parseDictionaryString = (str) => {
+    if (!str || typeof str !== 'string') {
+      return null;
+    }
+
+    // Handle strings that start with "Recommendation X:" followed by dictionary-like content
+    const recMatch = str.match(/^Recommendation\s+\d+:\s*(.+)$/i);
+    if (recMatch) {
+      str = recMatch[1].trim();
+    }
+
+    // Try to parse dictionary-like strings: {'key': 'value', 'key2': 'value2'}
+    try {
+      // Handle Python dictionary-like syntax with single quotes
+      if (str.includes("'priorityLevel'") || str.includes("'actionDescription'")) {
+        // Convert single quotes to double quotes for JSON parsing
+        const jsonStr = str.replace(/'/g, '"').replace(/(\w+):/g, '"$1":');
+        const parsed = JSON.parse(jsonStr);
+        
+        return {
+          priority: parsed.priorityLevel || parsed.priority || 'Medium',
+          description: parsed.actionDescription || parsed.description || parsed.action || str,
+          impact: parsed.impact || 'Moderate',
+          effort: parsed.effort || 'Medium',
+          category: parsed.category || parsed.type || 'General'
+        };
+      }
+
+      // Try direct JSON parsing
+      if (str.trim().startsWith('{') && str.trim().endsWith('}')) {
+        const parsed = JSON.parse(str);
+        return {
+          priority: parsed.priorityLevel || parsed.priority || 'Medium',
+          description: parsed.actionDescription || parsed.description || parsed.action || str,
+          impact: parsed.impact || 'Moderate',
+          effort: parsed.effort || 'Medium',
+          category: parsed.category || parsed.type || 'General'
+        };
+      }
+    } catch (error) {
+      console.warn('Failed to parse dictionary string:', error);
+    }
+
+    return null;
+  };
+
   // Helper function to parse and format recommendations properly
   const parseRecommendations = (recommendations) => {
     if (!Array.isArray(recommendations)) return [];
@@ -518,14 +623,23 @@ const AnalyticsExecutive = () => {
     return recommendations.map((rec, index) => {
       // Handle string recommendations that might be JSON-like or structured text
       if (typeof rec === 'string') {
+        // First try to parse dictionary-style strings (new enhancement)
+        const dictResult = parseDictionaryString(rec);
+        if (dictResult) {
+          return {
+            id: index + 1,
+            ...dictResult
+          };
+        }
+        
         try {
           // Try to parse if it looks like JSON
           if (rec.trim().startsWith('{') || rec.trim().startsWith('[')) {
             const parsed = JSON.parse(rec);
             return {
               id: index + 1,
-              priority: parsed.priority || 'Medium',
-              description: parsed.text || parsed.description || parsed.title || rec,
+              priority: parsed.priorityLevel || parsed.priority || 'Medium',
+              description: parsed.actionDescription || parsed.text || parsed.description || parsed.title || rec,
               impact: parsed.impact || 'Moderate',
               effort: parsed.effort || 'Medium',
               category: parsed.category || 'General'
@@ -583,8 +697,8 @@ const AnalyticsExecutive = () => {
       if (typeof rec === 'object' && rec !== null) {
         return {
           id: index + 1,
-          priority: rec.priority || 'Medium',
-          description: rec.text || rec.description || rec.title || 'No description',
+          priority: rec.priorityLevel || rec.priority || 'Medium',
+          description: rec.actionDescription || rec.text || rec.description || rec.title || 'No description',
           impact: rec.impact || 'Moderate',
           effort: rec.effort || 'Medium',
           category: rec.category || 'General'
@@ -600,8 +714,8 @@ const AnalyticsExecutive = () => {
         category: 'General'
       };
     });
-  };
 
+  };
   // Helper function to sort recommendations by priority
   const sortRecommendationsByPriority = (recommendations) => {
     const priorityOrder = { 'High': 1, 'Medium': 2, 'Low': 3 };
@@ -874,10 +988,11 @@ const AnalyticsExecutive = () => {
                 
                 if (typeof risk === 'object' && risk !== null) {
                   riskSeverity = risk.severity || '';
-                  riskDescription = risk.description || '';
+                  // Apply parseRiskDescription to handle JSON descriptions
+                  riskDescription = parseRiskDescription(risk.description || '');
                 } else if (typeof risk === 'string') {
                   // If it's a string, use it as description and try to extract severity
-                  riskDescription = risk;
+                  riskDescription = parseRiskDescription(risk);
                   riskSeverity = risk.toLowerCase().includes('high') ? 'HIGH' :
                                risk.toLowerCase().includes('medium') ? 'MEDIUM' :
                                risk.toLowerCase().includes('low') ? 'LOW' : 'MEDIUM';
@@ -896,7 +1011,15 @@ const AnalyticsExecutive = () => {
                       sx={{ mr: 1 }}
                     />
                     {riskDescription && (
-                      <Typography variant="body2" sx={{ mt: 0.5, color: 'text.secondary' }}>
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
+                          mt: 0.5, 
+                          color: 'text.secondary',
+                          whiteSpace: 'pre-line', // Allow line breaks in formatted text
+                          lineHeight: 1.6
+                        }}
+                      >
                         {riskDescription}
                       </Typography>
                     )}
@@ -905,7 +1028,6 @@ const AnalyticsExecutive = () => {
               })}
             </Box>
           )}
-
           {/* Recommendations Section - FIXED to show all 3 with proper formatting */}
           {sortedRecommendations.length > 0 && (
             <Box sx={{ p: 2, backgroundColor: '#e8f5e8', borderRadius: 1 }}>
