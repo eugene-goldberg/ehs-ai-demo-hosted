@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import {
   Paper,
   Box,
@@ -7,12 +8,14 @@ import {
   Typography,
   Avatar,
   Divider,
-  CircularProgress
+  CircularProgress,
+  Chip
 } from '@mui/material';
 import {
   Send as SendIcon,
   SmartToy as SmartToyIcon,
-  Person as PersonIcon
+  Person as PersonIcon,
+  Clear as ClearIcon
 } from '@mui/icons-material';
 
 const Chatbot = () => {
@@ -26,7 +29,36 @@ const Chatbot = () => {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [sessionId, setSessionId] = useState('');
+  const [apiStatus, setApiStatus] = useState('checking'); // checking, online, offline
   const messagesEndRef = useRef(null);
+
+  // Generate session ID
+  const generateSessionId = () => {
+    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  };
+
+  // API health check
+  const checkApiHealth = async () => {
+    try {
+      const response = await axios.get('http://10.136.0.4:8000/api/chatbot/health', {
+        timeout: 5000
+      });
+      setApiStatus('online');
+      console.log('API health check successful:', response.data);
+    } catch (error) {
+      setApiStatus('offline');
+      console.error('API health check failed:', error);
+    }
+  };
+
+  // Initialize component
+  useEffect(() => {
+    const newSessionId = generateSessionId();
+    setSessionId(newSessionId);
+    checkApiHealth();
+    console.log('New session started:', newSessionId);
+  }, []);
 
   // Auto-scroll to latest message
   const scrollToBottom = () => {
@@ -49,35 +81,73 @@ const Chatbot = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentInput = inputValue;
     setInputValue('');
     setIsTyping(true);
 
-    // Mock bot response (replace with actual API call later)
-    setTimeout(() => {
-      const botResponse = {
+    try {
+      // Make API call to backend
+      const response = await axios.post('http://10.136.0.4:8000/api/chatbot/chat', {
+        message: currentInput,
+        session_id: sessionId
+      }, {
+        timeout: 30000, // 30 second timeout
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      // Add bot response
+      const botMessage = {
         id: Date.now() + 1,
-        text: generateMockResponse(inputValue),
+        text: response.data.response || 'I received your message but encountered an issue generating a response.',
         sender: 'bot',
         timestamp: new Date()
       };
+      setMessages(prev => [...prev, botMessage]);
       
-      setMessages(prev => [...prev, botResponse]);
+    } catch (error) {
+      console.error('API call failed:', error);
+      
+      // Handle different types of errors
+      let errorText = 'Sorry, I encountered an error. Please try again.';
+      
+      if (error.code === 'ECONNABORTED') {
+        errorText = 'Request timed out. Please try again with a shorter message.';
+      } else if (error.response) {
+        // Server responded with error status
+        errorText = `Server error (${error.response.status}): ${error.response.data?.detail || 'Please try again later.'}`;
+      } else if (error.request) {
+        // Network error
+        errorText = 'Unable to connect to the AI service. Please check your connection and try again.';
+        setApiStatus('offline');
+      }
+      
+      const errorMessage = {
+        id: Date.now() + 1,
+        text: errorText,
+        sender: 'bot',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
-  // Mock response generator (replace with actual API integration)
-  const generateMockResponse = (userInput) => {
-    const responses = [
-      "I understand your concern about safety protocols. Let me help you with that information.",
-      "That's a great question about environmental compliance. Here's what I can tell you...",
-      "For health and safety regulations, I recommend checking the latest OSHA guidelines.",
-      "Environmental impact assessments require careful consideration of several factors.",
-      "Safety training is crucial for workplace compliance. Would you like specific recommendations?",
-      "I can help you understand the requirements for incident reporting and documentation."
-    ];
-    
-    return responses[Math.floor(Math.random() * responses.length)];
+  // Clear session and start fresh
+  const handleClearSession = () => {
+    const newSessionId = generateSessionId();
+    setSessionId(newSessionId);
+    setMessages([
+      {
+        id: Date.now(),
+        text: "Hello! I'm your EHS AI Assistant. How can I help you with environmental, health, and safety matters today?",
+        sender: 'bot',
+        timestamp: new Date()
+      }
+    ]);
+    console.log('Session cleared, new session started:', newSessionId);
   };
 
   // Handle Enter key press
@@ -91,6 +161,26 @@ const Chatbot = () => {
   // Format timestamp
   const formatTime = (timestamp) => {
     return timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  // Get status color
+  const getStatusColor = () => {
+    switch (apiStatus) {
+      case 'online': return 'success';
+      case 'offline': return 'error';
+      case 'checking': return 'warning';
+      default: return 'default';
+    }
+  };
+
+  // Get status text
+  const getStatusText = () => {
+    switch (apiStatus) {
+      case 'online': return 'AI Online';
+      case 'offline': return 'AI Offline';
+      case 'checking': return 'Connecting...';
+      default: return 'Unknown';
+    }
   };
 
   return (
@@ -113,13 +203,36 @@ const Chatbot = () => {
           color: 'primary.contrastText',
           display: 'flex',
           alignItems: 'center',
-          gap: 1
+          justifyContent: 'space-between'
         }}
       >
-        <SmartToyIcon />
-        <Typography variant="h6" component="h2">
-          EHS AI Assistant
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <SmartToyIcon />
+          <Typography variant="h6" component="h2">
+            EHS AI Assistant
+          </Typography>
+        </Box>
+        
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Chip
+            label={getStatusText()}
+            color={getStatusColor()}
+            size="small"
+            variant="filled"
+            sx={{ 
+              color: 'white',
+              '& .MuiChip-label': { fontSize: '0.75rem' }
+            }}
+          />
+          <IconButton
+            onClick={handleClearSession}
+            sx={{ color: 'white' }}
+            title="Clear conversation"
+            size="small"
+          >
+            <ClearIcon />
+          </IconButton>
+        </Box>
       </Box>
 
       <Divider />
@@ -250,14 +363,14 @@ const Chatbot = () => {
         <TextField
           fullWidth
           variant="outlined"
-          placeholder="Type your EHS question here..."
+          placeholder={apiStatus === 'offline' ? 'AI service is offline...' : 'Type your EHS question here...'}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
           size="small"
           multiline
           maxRows={3}
-          disabled={isTyping}
+          disabled={isTyping || apiStatus === 'offline'}
           sx={{
             '& .MuiOutlinedInput-root': {
               borderRadius: 2
@@ -266,7 +379,7 @@ const Chatbot = () => {
         />
         <IconButton
           onClick={handleSendMessage}
-          disabled={!inputValue.trim() || isTyping}
+          disabled={!inputValue.trim() || isTyping || apiStatus === 'offline'}
           color="primary"
           sx={{
             bgcolor: 'primary.main',

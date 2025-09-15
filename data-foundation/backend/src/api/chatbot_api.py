@@ -1,0 +1,872 @@
+"""
+Chatbot API Router
+
+This module provides FastAPI endpoints for an intelligent EHS (Environmental, Health, Safety) 
+chatbot that can answer questions about electricity, water, and waste metrics. The chatbot
+provides contextual responses based on real-time data from Neo4j and offers recommendations
+and insights about environmental performance.
+
+Features:
+- POST /api/chatbot/chat - Main chat endpoint for interactive conversations
+- GET /api/chatbot/health - Health check endpoint
+- POST /api/chatbot/clear-session - Clear chat session and conversation history
+- Session management for conversation context
+- Integration with Neo4j for real-time EHS data
+- Intelligent responses about consumption metrics, trends, and recommendations
+- Support for questions about electricity, water, waste across different sites
+
+Created: 2025-09-15
+Version: 1.0.0
+"""
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+from datetime import datetime, timedelta
+from typing import Dict, List, Optional, Any, Union
+from fastapi import APIRouter, HTTPException, Query, Path, Depends
+from pydantic import BaseModel, Field, validator
+import logging
+import uuid
+import json
+
+from src.config.ehs_goals_config import (
+    EHSGoalsConfig, EHSGoal, SiteLocation, EHSCategory, 
+    ehs_goals_config, get_goal, get_reduction_percentage
+)
+from src.services.environmental_assessment_service import EnvironmentalAssessmentService
+from src.database.neo4j_client import Neo4jClient, ConnectionConfig
+
+logger = logging.getLogger(__name__)
+
+router = APIRouter(prefix="/api/chatbot", tags=["chatbot"])
+
+# Global session storage (in production, use Redis or database)
+chat_sessions: Dict[str, Dict[str, Any]] = {}
+
+# Pydantic Models
+
+class ChatMessage(BaseModel):
+    """Model for individual chat messages"""
+    role: str = Field(..., description="Message role: 'user' or 'assistant'")
+    content: str = Field(..., description="Message content")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Message timestamp")
+    
+    @validator('role')
+    def validate_role(cls, v):
+        if v not in ['user', 'assistant']:
+            raise ValueError('Role must be either "user" or "assistant"')
+        return v
+
+class ChatRequest(BaseModel):
+    """Model for chat request data"""
+    message: str = Field(..., description="User message content", min_length=1)
+    session_id: Optional[str] = Field(None, description="Optional session ID for conversation continuity")
+    context: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional context data")
+    site_filter: Optional[str] = Field(None, description="Filter responses for specific site (algonquin_il or houston_tx)")
+
+class ChatResponse(BaseModel):
+    """Model for chat response data"""
+    response: str = Field(..., description="Chatbot response content")
+    session_id: str = Field(..., description="Session ID for conversation continuity")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Response timestamp")
+    data_sources: Optional[List[str]] = Field(default_factory=list, description="Data sources used for response")
+    suggestions: Optional[List[str]] = Field(default_factory=list, description="Follow-up question suggestions")
+
+class HealthResponse(BaseModel):
+    """Model for health check response"""
+    status: str = Field("healthy", description="Service health status")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Health check timestamp")
+    version: str = Field("1.0.0", description="API version")
+    dependencies: Dict[str, str] = Field(default_factory=dict, description="Dependency status")
+
+class SessionClearResponse(BaseModel):
+    """Model for session clear response"""
+    message: str = Field(..., description="Confirmation message")
+    session_id: str = Field(..., description="Cleared session ID")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Clear timestamp")
+
+# Dependency Injection
+
+async def get_neo4j_client() -> Neo4jClient:
+    """Get Neo4j client instance"""
+    try:
+        connection_config = ConnectionConfig.from_env()
+        client = Neo4jClient(connection_config)
+        return client
+    except Exception as e:
+        logger.error(f"Failed to create Neo4j client: {e}")
+        raise HTTPException(status_code=500, detail="Database connection failed")
+
+async def get_environmental_service(neo4j_client: Neo4jClient = Depends(get_neo4j_client)) -> EnvironmentalAssessmentService:
+    """Get Environmental Assessment Service instance"""
+    return EnvironmentalAssessmentService(neo4j_client)
+
+# Chatbot Logic Functions
+
+def generate_session_id() -> str:
+    """Generate a unique session ID"""
+    return str(uuid.uuid4())
+
+def get_or_create_session(session_id: Optional[str]) -> str:
+    """Get existing session or create new one"""
+    if session_id and session_id in chat_sessions:
+        return session_id
+    
+    new_session_id = generate_session_id()
+    chat_sessions[new_session_id] = {
+        "messages": [],
+        "created_at": datetime.now(),
+        "last_activity": datetime.now(),
+        "context": {}
+    }
+    return new_session_id
+
+def add_message_to_session(session_id: str, message: ChatMessage):
+    """Add message to session history"""
+    if session_id in chat_sessions:
+        chat_sessions[session_id]["messages"].append(message.dict())
+        chat_sessions[session_id]["last_activity"] = datetime.now()
+
+def get_session_context(session_id: str) -> Dict[str, Any]:
+    """Get conversation context from session"""
+    if session_id in chat_sessions:
+        return chat_sessions[session_id].get("context", {})
+    return {}
+
+def update_session_context(session_id: str, context: Dict[str, Any]):
+    """Update session context"""
+    if session_id in chat_sessions:
+        chat_sessions[session_id]["context"].update(context)
+
+async def analyze_user_intent(message: str) -> Dict[str, Any]:
+    """Analyze user message to determine intent and extract entities"""
+    message_lower = message.lower()
+    
+    intent_mapping = {
+        "electricity_query": ["electricity", "electric", "power", "kWh", "kilowatt"],
+        "water_query": ["water", "H2O", "gallons", "liters", "consumption"],
+        "waste_query": ["waste", "garbage", "trash", "disposal", "recycling"],
+        "goals_query": ["goal", "target", "reduction", "achievement", "progress"],
+        "comparison_query": ["compare", "vs", "versus", "difference", "between"],
+        "trend_query": ["trend", "over time", "historical", "pattern", "change"],
+        "recommendation_query": ["recommend", "suggest", "improve", "optimize", "advice"]
+    }
+    
+    site_mapping = {
+        "algonquin_il": ["algonquin", "illinois", "il"],
+        "houston_tx": ["houston", "texas", "tx"]
+    }
+    
+    detected_intents = []
+    detected_sites = []
+    
+    for intent, keywords in intent_mapping.items():
+        if any(keyword in message_lower for keyword in keywords):
+            detected_intents.append(intent)
+    
+    for site, keywords in site_mapping.items():
+        if any(keyword in message_lower for keyword in keywords):
+            detected_sites.append(site)
+    
+    return {
+        "intents": detected_intents,
+        "sites": detected_sites,
+        "entities": {
+            "timeframe": extract_timeframe(message_lower),
+            "metrics": extract_metrics(message_lower)
+        }
+    }
+
+def extract_timeframe(message: str) -> Optional[str]:
+    """Extract timeframe from user message"""
+    timeframe_patterns = {
+        "last_month": ["last month", "previous month"],
+        "this_month": ["this month", "current month"],
+        "last_quarter": ["last quarter", "previous quarter"],
+        "this_year": ["this year", "current year"],
+        "last_year": ["last year", "previous year"]
+    }
+    
+    for timeframe, patterns in timeframe_patterns.items():
+        if any(pattern in message for pattern in patterns):
+            return timeframe
+    
+    return None
+
+def extract_metrics(message: str) -> List[str]:
+    """Extract specific metrics mentioned in message"""
+    metric_patterns = {
+        "total_consumption": ["total", "sum", "overall"],
+        "average_consumption": ["average", "avg", "mean"],
+        "peak_consumption": ["peak", "maximum", "highest"],
+        "minimum_consumption": ["minimum", "lowest", "min"]
+    }
+    
+    detected_metrics = []
+    for metric, patterns in metric_patterns.items():
+        if any(pattern in message for pattern in patterns):
+            detected_metrics.append(metric)
+    
+    return detected_metrics
+
+async def generate_ehs_response(
+    user_message: str, 
+    intent_analysis: Dict[str, Any],
+    session_context: Dict[str, Any],
+    site_filter: Optional[str],
+    env_service: EnvironmentalAssessmentService
+) -> Dict[str, Any]:
+    """Generate intelligent response based on user intent and EHS data"""
+    
+    try:
+        intents = intent_analysis.get("intents", [])
+        sites = intent_analysis.get("sites", [])
+        entities = intent_analysis.get("entities", {})
+        
+        # Determine target site
+        target_site = site_filter or (sites[0] if sites else None)
+        
+        response_data = {
+            "response": "",
+            "data_sources": [],
+            "suggestions": []
+        }
+        
+        # Handle different types of queries
+        if "electricity_query" in intents:
+            response_data = await handle_electricity_query(target_site, entities, env_service)
+        elif "water_query" in intents:
+            response_data = await handle_water_query(target_site, entities, env_service)
+        elif "waste_query" in intents:
+            response_data = await handle_waste_query(target_site, entities, env_service)
+        elif "goals_query" in intents:
+            response_data = await handle_goals_query(target_site, entities, env_service)
+        elif "comparison_query" in intents:
+            response_data = await handle_comparison_query(sites, entities, env_service)
+        elif "trend_query" in intents:
+            response_data = await handle_trend_query(target_site, entities, env_service)
+        elif "recommendation_query" in intents:
+            response_data = await handle_recommendation_query(target_site, entities, env_service)
+        else:
+            response_data = await handle_general_query(user_message, target_site, env_service)
+        
+        return response_data
+        
+    except Exception as e:
+        logger.error(f"Error generating EHS response: {e}")
+        return {
+            "response": "I apologize, but I encountered an issue processing your request. Please try again or rephrase your question.",
+            "data_sources": [],
+            "suggestions": ["Can you help me understand electricity consumption?", "What are our water usage trends?", "How are we performing against our EHS goals?"]
+        }
+
+async def handle_electricity_query(site: Optional[str], entities: Dict, env_service: EnvironmentalAssessmentService) -> Dict[str, Any]:
+    """Handle electricity-related queries"""
+    try:
+        # Get electricity consumption data
+        consumption_data = await get_consumption_data("electricity", site, env_service)
+        
+        if not consumption_data:
+            return {
+                "response": "I don't have electricity consumption data available for the specified timeframe and location.",
+                "data_sources": ["Neo4j Database"],
+                "suggestions": ["Try asking about a different time period", "Ask about water or waste consumption instead"]
+            }
+        
+        response = format_electricity_response(consumption_data, site, entities)
+        
+        return {
+            "response": response,
+            "data_sources": ["Neo4j Database", "EHS Goals Configuration"],
+            "suggestions": ["How does this compare to our electricity goals?", "What are the trends over the past year?", "Any recommendations to reduce electricity usage?"]
+        }
+        
+    except Exception as e:
+        logger.error(f"Error handling electricity query: {e}")
+        raise
+
+async def handle_water_query(site: Optional[str], entities: Dict, env_service: EnvironmentalAssessmentService) -> Dict[str, Any]:
+    """Handle water-related queries"""
+    try:
+        # Get water consumption data
+        consumption_data = await get_consumption_data("water", site, env_service)
+        
+        if not consumption_data:
+            return {
+                "response": "I don't have water consumption data available for the specified timeframe and location.",
+                "data_sources": ["Neo4j Database"],
+                "suggestions": ["Try asking about a different time period", "Ask about electricity or waste instead"]
+            }
+        
+        response = format_water_response(consumption_data, site, entities)
+        
+        return {
+            "response": response,
+            "data_sources": ["Neo4j Database", "EHS Goals Configuration"],
+            "suggestions": ["How does this compare to our water conservation goals?", "What are the seasonal patterns?", "Any water-saving recommendations?"]
+        }
+        
+    except Exception as e:
+        logger.error(f"Error handling water query: {e}")
+        raise
+
+async def handle_waste_query(site: Optional[str], entities: Dict, env_service: EnvironmentalAssessmentService) -> Dict[str, Any]:
+    """Handle waste-related queries"""
+    try:
+        # Get waste generation data
+        consumption_data = await get_consumption_data("waste", site, env_service)
+        
+        if not consumption_data:
+            return {
+                "response": "I don't have waste generation data available for the specified timeframe and location.",
+                "data_sources": ["Neo4j Database"],
+                "suggestions": ["Try asking about a different time period", "Ask about electricity or water instead"]
+            }
+        
+        response = format_waste_response(consumption_data, site, entities)
+        
+        return {
+            "response": response,
+            "data_sources": ["Neo4j Database", "EHS Goals Configuration"],
+            "suggestions": ["How does this compare to our waste reduction goals?", "What's our recycling rate?", "Any waste reduction recommendations?"]
+        }
+        
+    except Exception as e:
+        logger.error(f"Error handling waste query: {e}")
+        raise
+
+async def handle_goals_query(site: Optional[str], entities: Dict, env_service: EnvironmentalAssessmentService) -> Dict[str, Any]:
+    """Handle EHS goals-related queries"""
+    try:
+        # Get goals data from configuration
+        goals_summary = get_goals_summary(site)
+        
+        response = format_goals_response(goals_summary, site)
+        
+        return {
+            "response": response,
+            "data_sources": ["EHS Goals Configuration"],
+            "suggestions": ["How are we tracking against electricity goals?", "Show me water conservation progress", "What about waste reduction targets?"]
+        }
+        
+    except Exception as e:
+        logger.error(f"Error handling goals query: {e}")
+        raise
+
+async def handle_comparison_query(sites: List[str], entities: Dict, env_service: EnvironmentalAssessmentService) -> Dict[str, Any]:
+    """Handle comparison queries between sites or time periods"""
+    try:
+        if len(sites) >= 2:
+            # Compare between sites
+            comparison_data = await get_site_comparison_data(sites, env_service)
+            response = format_site_comparison_response(comparison_data, sites)
+        else:
+            # General comparison response
+            response = "To compare data, please specify which sites or time periods you'd like to compare. For example: 'Compare electricity usage between Algonquin and Houston' or 'Compare this month to last month'."        
+        return {
+            "response": response,
+            "data_sources": ["Neo4j Database"],
+            "suggestions": ["Compare Algonquin vs Houston electricity", "Show water usage trends over time", "Compare this year to last year"]
+        }
+        
+    except Exception as e:
+        logger.error(f"Error handling comparison query: {e}")
+        raise
+
+async def handle_trend_query(site: Optional[str], entities: Dict, env_service: EnvironmentalAssessmentService) -> Dict[str, Any]:
+    """Handle trend analysis queries"""
+    try:
+        # Get trend data for all categories
+        trend_data = await get_trend_data(site, env_service)
+        
+        response = format_trend_response(trend_data, site)
+        
+        return {
+            "response": response,
+            "data_sources": ["Neo4j Database"],
+            "suggestions": ["What's driving the electricity trend?", "How do seasonal patterns affect consumption?", "Show me yearly comparisons"]
+        }
+        
+    except Exception as e:
+        logger.error(f"Error handling trend query: {e}")
+        raise
+
+async def handle_recommendation_query(site: Optional[str], entities: Dict, env_service: EnvironmentalAssessmentService) -> Dict[str, Any]:
+    """Handle recommendation queries"""
+    try:
+        # Get current performance data
+        performance_data = await get_performance_summary(site, env_service)
+        
+        recommendations = generate_recommendations(performance_data, site)
+        
+        response = format_recommendations_response(recommendations, site)
+        
+        return {
+            "response": response,
+            "data_sources": ["Neo4j Database", "EHS Goals Configuration"],
+            "suggestions": ["What's the priority recommendation?", "Show me cost-saving opportunities", "How can we improve our environmental impact?"]
+        }
+        
+    except Exception as e:
+        logger.error(f"Error handling recommendation query: {e}")
+        raise
+
+async def handle_general_query(user_message: str, site: Optional[str], env_service: EnvironmentalAssessmentService) -> Dict[str, Any]:
+    """Handle general queries that don't fit specific categories"""
+    general_responses = [
+        "I'm here to help you with questions about electricity, water, and waste consumption at our facilities.",
+        "You can ask me about consumption trends, EHS goals, comparisons between sites, and recommendations for improvement.",
+        "I have access to real-time data from our Neo4j database and can provide insights based on your EHS goals.",
+        "Some example questions: 'How much electricity did we use last month?', 'Are we meeting our water conservation goals?', 'Compare waste generation between sites'.",
+    ]
+    
+    response = " ".join(general_responses)
+    
+    return {
+        "response": response,
+        "data_sources": [],
+        "suggestions": ["Show me electricity consumption trends", "What are our current EHS goals?", "Compare performance between sites", "Give me recommendations for improvement"]
+    }
+
+# Data Access Helper Functions
+
+async def get_consumption_data(category: str, site: Optional[str], env_service: EnvironmentalAssessmentService) -> Optional[Dict]:
+    """Get consumption data for specified category and site"""
+    try:
+        # Default to 6 months of data
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=180)
+        
+        if category == "electricity":
+            if site == "algonquin_il":
+                return await env_service.get_electricity_consumption_facts("algonquin_il", start_date, end_date)
+            elif site == "houston_tx":
+                return await env_service.get_electricity_consumption_facts("houston_tx", start_date, end_date)
+            else:
+                # Get data for both sites
+                algonquin_data = await env_service.get_electricity_consumption_facts("algonquin_il", start_date, end_date)
+                houston_data = await env_service.get_electricity_consumption_facts("houston_tx", start_date, end_date)
+                return {"algonquin_il": algonquin_data, "houston_tx": houston_data}
+        
+        elif category == "water":
+            if site == "algonquin_il":
+                return await env_service.get_water_consumption_facts("algonquin_il", start_date, end_date)
+            elif site == "houston_tx":
+                return await env_service.get_water_consumption_facts("houston_tx", start_date, end_date)
+            else:
+                algonquin_data = await env_service.get_water_consumption_facts("algonquin_il", start_date, end_date)
+                houston_data = await env_service.get_water_consumption_facts("houston_tx", start_date, end_date)
+                return {"algonquin_il": algonquin_data, "houston_tx": houston_data}
+        
+        elif category == "waste":
+            if site == "algonquin_il":
+                return await env_service.get_waste_generation_facts("algonquin_il", start_date, end_date)
+            elif site == "houston_tx":
+                return await env_service.get_waste_generation_facts("houston_tx", start_date, end_date)
+            else:
+                algonquin_data = await env_service.get_waste_generation_facts("algonquin_il", start_date, end_date)
+                houston_data = await env_service.get_waste_generation_facts("houston_tx", start_date, end_date)
+                return {"algonquin_il": algonquin_data, "houston_tx": houston_data}
+        
+        return None
+        
+    except Exception as e:
+        logger.error(f"Error getting consumption data for {category} at {site}: {e}")
+        return None
+
+def get_goals_summary(site: Optional[str]) -> Dict[str, Any]:
+    """Get EHS goals summary"""
+    try:
+        goals = {}
+        
+        # Get electricity goals
+        if site:
+            site_enum = SiteLocation.ALGONQUIN_IL if site == "algonquin_il" else SiteLocation.HOUSTON_TX
+            elec_goal = get_goal(EHSCategory.ELECTRICITY, site_enum)
+            water_goal = get_goal(EHSCategory.WATER, site_enum)
+            waste_goal = get_goal(EHSCategory.WASTE, site_enum)
+            
+            if elec_goal:
+                goals["electricity"] = {
+                    "reduction_percentage": elec_goal.reduction_percentage,
+                    "baseline_year": elec_goal.baseline_year,
+                    "target_year": elec_goal.target_year,
+                    "unit": elec_goal.unit,
+                    "description": elec_goal.description
+                }
+            
+            if water_goal:
+                goals["water"] = {
+                    "reduction_percentage": water_goal.reduction_percentage,
+                    "baseline_year": water_goal.baseline_year,
+                    "target_year": water_goal.target_year,
+                    "unit": water_goal.unit,
+                    "description": water_goal.description
+                }
+            
+            if waste_goal:
+                goals["waste"] = {
+                    "reduction_percentage": waste_goal.reduction_percentage,
+                    "baseline_year": waste_goal.baseline_year,
+                    "target_year": waste_goal.target_year,
+                    "unit": waste_goal.unit,
+                    "description": waste_goal.description
+                }
+        
+        return goals
+        
+    except Exception as e:
+        logger.error(f"Error getting goals summary: {e}")
+        return {}
+
+# Response Formatting Functions
+
+def format_electricity_response(data: Dict, site: Optional[str], entities: Dict) -> str:
+    """Format electricity consumption response"""
+    if not data:
+        return "No electricity consumption data available."
+    
+    try:
+        if isinstance(data, dict) and "algonquin_il" in data:
+            # Multi-site data
+            response_parts = ["Here's the electricity consumption data for both sites:"]
+            
+            for site_key, site_data in data.items():
+                if site_data and "total_sum" in site_data:
+                    site_name = "Algonquin, IL" if site_key == "algonquin_il" else "Houston, TX"
+                    response_parts.append(f"\n{site_name}: {site_data['total_sum']:.2f} kWh total consumption")
+                    response_parts.append(f"  Average: {site_data.get('average', 0):.2f} kWh")
+                    response_parts.append(f"  Peak: {site_data.get('max_value', 0):.2f} kWh")
+        else:
+            # Single site data
+            site_name = "Algonquin, IL" if site == "algonquin_il" else "Houston, TX" if site == "houston_tx" else "All sites"
+            response_parts = [f"Electricity consumption data for {site_name}:"]
+            response_parts.append(f"Total consumption: {data.get('total_sum', 0):.2f} kWh")
+            response_parts.append(f"Average consumption: {data.get('average', 0):.2f} kWh")
+            response_parts.append(f"Peak consumption: {data.get('max_value', 0):.2f} kWh")
+            response_parts.append(f"Minimum consumption: {data.get('min_value', 0):.2f} kWh")
+        
+        return " ".join(response_parts)
+        
+    except Exception as e:
+        logger.error(f"Error formatting electricity response: {e}")
+        return "Error formatting electricity consumption data."
+
+def format_water_response(data: Dict, site: Optional[str], entities: Dict) -> str:
+    """Format water consumption response"""
+    if not data:
+        return "No water consumption data available."
+    
+    try:
+        if isinstance(data, dict) and "algonquin_il" in data:
+            # Multi-site data
+            response_parts = ["Here's the water consumption data for both sites:"]
+            
+            for site_key, site_data in data.items():
+                if site_data and "total_sum" in site_data:
+                    site_name = "Algonquin, IL" if site_key == "algonquin_il" else "Houston, TX"
+                    response_parts.append(f"\n{site_name}: {site_data['total_sum']:.2f} gallons total consumption")
+                    response_parts.append(f"  Average: {site_data.get('average', 0):.2f} gallons")
+                    response_parts.append(f"  Peak: {site_data.get('max_value', 0):.2f} gallons")
+        else:
+            # Single site data
+            site_name = "Algonquin, IL" if site == "algonquin_il" else "Houston, TX" if site == "houston_tx" else "All sites"
+            response_parts = [f"Water consumption data for {site_name}:"]
+            response_parts.append(f"Total consumption: {data.get('total_sum', 0):.2f} gallons")
+            response_parts.append(f"Average consumption: {data.get('average', 0):.2f} gallons")
+            response_parts.append(f"Peak consumption: {data.get('max_value', 0):.2f} gallons")
+            response_parts.append(f"Minimum consumption: {data.get('min_value', 0):.2f} gallons")
+        
+        return " ".join(response_parts)
+        
+    except Exception as e:
+        logger.error(f"Error formatting water response: {e}")
+        return "Error formatting water consumption data."
+
+def format_waste_response(data: Dict, site: Optional[str], entities: Dict) -> str:
+    """Format waste generation response"""
+    if not data:
+        return "No waste generation data available."
+    
+    try:
+        if isinstance(data, dict) and "algonquin_il" in data:
+            # Multi-site data
+            response_parts = ["Here's the waste generation data for both sites:"]
+            
+            for site_key, site_data in data.items():
+                if site_data and "total_sum" in site_data:
+                    site_name = "Algonquin, IL" if site_key == "algonquin_il" else "Houston, TX"
+                    response_parts.append(f"\n{site_name}: {site_data['total_sum']:.2f} tons total waste generated")
+                    response_parts.append(f"  Average: {site_data.get('average', 0):.2f} tons")
+                    response_parts.append(f"  Peak: {site_data.get('max_value', 0):.2f} tons")
+        else:
+            # Single site data
+            site_name = "Algonquin, IL" if site == "algonquin_il" else "Houston, TX" if site == "houston_tx" else "All sites"
+            response_parts = [f"Waste generation data for {site_name}:"]
+            response_parts.append(f"Total waste generated: {data.get('total_sum', 0):.2f} tons")
+            response_parts.append(f"Average generation: {data.get('average', 0):.2f} tons")
+            response_parts.append(f"Peak generation: {data.get('max_value', 0):.2f} tons")
+            response_parts.append(f"Minimum generation: {data.get('min_value', 0):.2f} tons")
+        
+        return " ".join(response_parts)
+        
+    except Exception as e:
+        logger.error(f"Error formatting waste response: {e}")
+        return "Error formatting waste generation data."
+
+def format_goals_response(goals: Dict[str, Any], site: Optional[str]) -> str:
+    """Format EHS goals response"""
+    if not goals:
+        return "No EHS goals configured for the specified site."
+    
+    try:
+        site_name = "Algonquin, IL" if site == "algonquin_il" else "Houston, TX" if site == "houston_tx" else "our facilities"
+        response_parts = [f"Here are the EHS goals for {site_name}:"]
+        
+        for category, goal_data in goals.items():
+            category_name = category.capitalize()
+            response_parts.append(f"\n{category_name}:")
+            response_parts.append(f"  Target: {goal_data['reduction_percentage']}% reduction by {goal_data['target_year']}")
+            response_parts.append(f"  Baseline: {goal_data['baseline_year']}")
+            response_parts.append(f"  Unit: {goal_data['unit']}")
+            response_parts.append(f"  Description: {goal_data['description']}")
+        
+        return " ".join(response_parts)
+        
+    except Exception as e:
+        logger.error(f"Error formatting goals response: {e}")
+        return "Error formatting EHS goals data."
+
+async def get_site_comparison_data(sites: List[str], env_service: EnvironmentalAssessmentService) -> Dict:
+    """Get comparison data between sites"""
+    # Implementation would get data for specified sites and return comparison
+    return {"comparison": "Site comparison data would be implemented here"}
+
+def format_site_comparison_response(data: Dict, sites: List[str]) -> str:
+    """Format site comparison response"""
+    return f"Site comparison between {' and '.join(sites)} would be shown here with actual data."
+
+async def get_trend_data(site: Optional[str], env_service: EnvironmentalAssessmentService) -> Dict:
+    """Get trend analysis data"""
+    # Implementation would analyze trends over time
+    return {"trends": "Trend analysis data would be implemented here"}
+
+def format_trend_response(data: Dict, site: Optional[str]) -> str:
+    """Format trend analysis response"""
+    site_name = "Algonquin, IL" if site == "algonquin_il" else "Houston, TX" if site == "houston_tx" else "our facilities"
+    return f"Trend analysis for {site_name} would be shown here with actual data."
+
+async def get_performance_summary(site: Optional[str], env_service: EnvironmentalAssessmentService) -> Dict:
+    """Get performance summary for recommendations"""
+    # Implementation would get current performance vs goals
+    return {"performance": "Performance summary would be implemented here"}
+
+def generate_recommendations(data: Dict, site: Optional[str]) -> List[str]:
+    """Generate recommendations based on performance data"""
+    # Sample recommendations
+    return [
+        "Consider implementing LED lighting to reduce electricity consumption",
+        "Install low-flow fixtures to decrease water usage",
+        "Enhance recycling programs to reduce waste generation",
+        "Implement energy management systems for better monitoring"
+    ]
+
+def format_recommendations_response(recommendations: List[str], site: Optional[str]) -> str:
+    """Format recommendations response"""
+    site_name = "Algonquin, IL" if site == "algonquin_il" else "Houston, TX" if site == "houston_tx" else "your facilities"
+    
+    response_parts = [f"Here are my recommendations for {site_name}:"]
+    for i, rec in enumerate(recommendations, 1):
+        response_parts.append(f"\n{i}. {rec}")
+    
+    return " ".join(response_parts)
+
+# API Endpoints
+
+@router.get("/health", response_model=HealthResponse)
+async def health_check(neo4j_client: Neo4jClient = Depends(get_neo4j_client)):
+    """
+    Health check endpoint for the chatbot service.
+    
+    Returns:
+        HealthResponse: Service health status and dependency information
+    """
+    dependencies = {}
+    
+    try:
+        # Test Neo4j connection
+        test_result = neo4j_client.execute_query("RETURN 1 as test")
+        dependencies["neo4j"] = "healthy"
+    except Exception as e:
+        logger.error(f"Neo4j health check failed: {e}")
+        dependencies["neo4j"] = "unhealthy"
+    
+    # Test EHS Goals Config
+    try:
+        test_goal = get_goal(EHSCategory.ELECTRICITY, SiteLocation.ALGONQUIN_IL)
+        dependencies["ehs_goals_config"] = "healthy"
+    except Exception as e:
+        logger.error(f"EHS Goals config health check failed: {e}")
+        dependencies["ehs_goals_config"] = "unhealthy"
+    
+    overall_status = "healthy" if all(status == "healthy" for status in dependencies.values()) else "unhealthy"
+    
+    return HealthResponse(
+        status=overall_status,
+        dependencies=dependencies
+    )
+
+@router.post("/chat", response_model=ChatResponse)
+async def chat(
+    request: ChatRequest,
+    env_service: EnvironmentalAssessmentService = Depends(get_environmental_service)
+):
+    """
+    Main chat endpoint for EHS chatbot interactions.
+    
+    Args:
+        request: ChatRequest containing user message and optional context
+        env_service: Environmental Assessment Service dependency
+    
+    Returns:
+        ChatResponse: Chatbot response with session information
+    """
+    try:
+        # Get or create session
+        session_id = get_or_create_session(request.session_id)
+        session_context = get_session_context(session_id)
+        
+        # Add user message to session
+        user_message = ChatMessage(role="user", content=request.message)
+        add_message_to_session(session_id, user_message)
+        
+        # Analyze user intent
+        intent_analysis = await analyze_user_intent(request.message)
+        
+        # Update session context with new information
+        if request.context:
+            update_session_context(session_id, request.context)
+        
+        # Generate response based on intent and data
+        response_data = await generate_ehs_response(
+            request.message,
+            intent_analysis,
+            session_context,
+            request.site_filter,
+            env_service
+        )
+        
+        # Create assistant message
+        assistant_message = ChatMessage(role="assistant", content=response_data["response"])
+        add_message_to_session(session_id, assistant_message)
+        
+        # Update session context with intent analysis
+        update_session_context(session_id, {"last_intent": intent_analysis})
+        
+        return ChatResponse(
+            response=response_data["response"],
+            session_id=session_id,
+            data_sources=response_data.get("data_sources", []),
+            suggestions=response_data.get("suggestions", [])
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in chat endpoint: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error during chat processing")
+
+@router.post("/clear-session", response_model=SessionClearResponse)
+async def clear_session(session_id: str = Query(..., description="Session ID to clear")):
+    """
+    Clear chat session and conversation history.
+    
+    Args:
+        session_id: Session ID to clear
+    
+    Returns:
+        SessionClearResponse: Confirmation of session clearing
+    """
+    try:
+        if session_id in chat_sessions:
+            del chat_sessions[session_id]
+            message = f"Session {session_id} has been successfully cleared."
+        else:
+            message = f"Session {session_id} was not found or already cleared."
+        
+        return SessionClearResponse(
+            message=message,
+            session_id=session_id
+        )
+        
+    except Exception as e:
+        logger.error(f"Error clearing session {session_id}: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error during session clearing")
+
+# Session management endpoints
+
+@router.get("/sessions")
+async def list_active_sessions():
+    """
+    List all active chat sessions (for debugging/admin purposes).
+    
+    Returns:
+        Dict containing active session information
+    """
+    try:
+        session_info = {}
+        current_time = datetime.now()
+        
+        for session_id, session_data in chat_sessions.items():
+            last_activity = session_data.get("last_activity", current_time)
+            message_count = len(session_data.get("messages", []))
+            
+            session_info[session_id] = {
+                "created_at": session_data.get("created_at"),
+                "last_activity": last_activity,
+                "message_count": message_count,
+                "active_for": str(current_time - last_activity)
+            }
+        
+        return {
+            "active_sessions": len(chat_sessions),
+            "sessions": session_info
+        }
+        
+    except Exception as e:
+        logger.error(f"Error listing sessions: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error during session listing")
+
+@router.get("/sessions/{session_id}/history")
+async def get_session_history(session_id: str = Path(..., description="Session ID")):
+    """
+    Get conversation history for a specific session.
+    
+    Args:
+        session_id: Session ID to get history for
+    
+    Returns:
+        Dict containing session history
+    """
+    try:
+        if session_id not in chat_sessions:
+            raise HTTPException(status_code=404, detail="Session not found")
+        
+        session_data = chat_sessions[session_id]
+        
+        return {
+            "session_id": session_id,
+            "created_at": session_data.get("created_at"),
+            "last_activity": session_data.get("last_activity"),
+            "message_count": len(session_data.get("messages", [])),
+            "messages": session_data.get("messages", []),
+            "context": session_data.get("context", {})
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting session history for {session_id}: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error during history retrieval")
