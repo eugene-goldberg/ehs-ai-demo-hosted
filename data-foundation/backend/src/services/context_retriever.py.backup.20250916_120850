@@ -1,0 +1,192 @@
+"""
+Context Retriever Service - Fetches relevant context from Neo4j
+"""
+
+import logging
+from typing import Dict, Optional, Any
+from dataclasses import dataclass
+from enum import Enum
+import json
+
+logger = logging.getLogger(__name__)
+
+class IntentType(Enum):
+    ELECTRICITY_CONSUMPTION = "electricity_consumption"
+    WATER_CONSUMPTION = "water_consumption" 
+    WASTE_GENERATION = "waste_generation"
+    CO2_GOALS = "co2_goals"
+    RISK_ASSESSMENT = "risk_assessment"
+    RECOMMENDATIONS = "recommendations"
+
+class ContextRetriever:
+    def __init__(self, neo4j_client=None):
+        """Initialize ContextRetriever with Neo4j client.
+        
+        Args:
+            neo4j_client: Neo4j client instance. If None, will create own connection.
+        """
+        self.neo4j_client = neo4j_client
+        self.driver = None
+        
+        # If no client provided, create own connection (fallback)
+        if self.neo4j_client is None:
+            from neo4j import GraphDatabase
+            self.driver = GraphDatabase.driver(
+                "bolt://localhost:7687",
+                auth=("neo4j", "EhsAI2024!")
+            )
+    
+    def close(self):
+        """Close connection if we own the driver"""
+        if self.driver:
+            self.driver.close()
+            self.driver = None
+    
+    def _execute_query(self, query: str, parameters: Dict[str, Any] = None):
+        """Execute query using Neo4j client or fallback driver"""
+        if parameters is None:
+            parameters = {}
+            
+        if self.neo4j_client:
+            # Use shared Neo4j client
+            try:
+                return self.neo4j_client.execute_read_query(query, parameters)
+            except Exception as e:
+                logger.error(f"Error executing query with Neo4j client: {e}")
+                raise
+        else:
+            # Use fallback driver
+            with self.driver.session() as session:
+                result = session.run(query, **parameters)
+                return list(result)
+    
+    def get_electricity_context(self, site: Optional[str], 
+                               start_date: Optional[str] = None,
+                               end_date: Optional[str] = None) -> Dict[str, Any]:
+        """Fetch electricity consumption data from Neo4j"""
+        
+        # Map site names to Neo4j site IDs
+        site_mapping = {
+            'houston_texas': 'houston_texas',
+            'houston_tx': 'houston_texas',
+            'houston': 'houston_texas',
+            'algonquin_illinois': 'algonquin_il',
+            'algonquin_il': 'algonquin_il',
+            'algonquin': 'algonquin_il'
+        }
+        
+        if site and site.lower() in site_mapping:
+            site = site_mapping[site.lower()]
+        
+        # Build query based on available parameters
+        if start_date and end_date:
+            query = """
+            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)
+            WHERE s.id = $site AND e.date >= $start_date AND e.date <= $end_date
+            RETURN s.id as site_id, s.name as site_name, e.date as date,
+                   e.consumption_kwh as consumption, e.cost_usd as cost,
+                   e.co2_emissions as co2_emissions, e.peak_demand_kw as peak_demand
+            ORDER BY e.date DESC
+            LIMIT 100
+            """
+            params = {"site": site, "start_date": start_date, "end_date": end_date}
+        elif start_date:
+            query = """
+            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)
+            WHERE s.id = $site AND e.date >= $start_date
+            RETURN s.id as site_id, s.name as site_name, e.date as date,
+                   e.consumption_kwh as consumption, e.cost_usd as cost,
+                   e.co2_emissions as co2_emissions, e.peak_demand_kw as peak_demand
+            ORDER BY e.date DESC
+            LIMIT 100
+            """
+            params = {"site": site, "start_date": start_date}
+        else:
+            query = """
+            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)
+            WHERE s.id = $site
+            RETURN s.id as site_id, s.name as site_name, e.date as date,
+                   e.consumption_kwh as consumption, e.cost_usd as cost,
+                   e.co2_emissions as co2_emissions, e.peak_demand_kw as peak_demand
+            ORDER BY e.date DESC
+            LIMIT 100
+            """
+            params = {"site": site}
+        
+        try:
+            records = self._execute_query(query, params)
+            
+            if not records:
+                return {
+                    "site": site,
+                    "period": {"start": start_date, "end": end_date},
+                    "message": "No electricity consumption data found",
+                    "record_count": 0
+                }
+            
+            # Convert records to dictionaries if needed
+            if hasattr(records[0], 'data'):
+                # Neo4j Record objects
+                record_data = [record.data() for record in records]
+            else:
+                # Already dictionaries from Neo4j client
+                record_data = records
+            
+            # Calculate aggregates
+            consumption_values = [r.get('consumption', 0) for r in record_data if r.get('consumption')]
+            cost_values = [r.get('cost', 0) for r in record_data if r.get('cost')]
+            co2_values = [r.get('co2_emissions', 0) for r in record_data if r.get('co2_emissions')]
+            
+            return {
+                "site": record_data[0]['site_name'] if record_data else site,
+                "site_id": record_data[0]['site_id'] if record_data else site,
+                "period": {
+                    "start": start_date or (min(r['date'] for r in record_data) if record_data else None),
+                    "end": end_date or (max(r['date'] for r in record_data) if record_data else None)
+                },
+                "record_count": len(record_data),
+                "aggregates": {
+                    "total": sum(consumption_values),
+                    "average": sum(consumption_values) / len(consumption_values) if consumption_values else 0,
+                    "min": min(consumption_values) if consumption_values else 0,
+                    "max": max(consumption_values) if consumption_values else 0,
+                    "total_cost": sum(cost_values),
+                    "total_co2": sum(co2_values),
+                    "avg_cost_per_kwh": sum(cost_values) / sum(consumption_values) if consumption_values and sum(consumption_values) > 0 else 0
+                },
+                "recent_data": [
+                    {
+                        "date": r['date'],
+                        "consumption": r['consumption'],
+                        "cost": r['cost'],
+                        "co2": r['co2_emissions'],
+                        "peak_demand": r['peak_demand']
+                    }
+                    for r in record_data[:5]
+                ]
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching electricity context: {e}")
+            return {
+                "site": site,
+                "period": {"start": start_date, "end": end_date},
+                "error": str(e),
+                "record_count": 0
+            }
+
+def get_context_for_intent(intent_type: str, site_filter: str = None,
+                          start_date: str = None, end_date: str = None, 
+                          neo4j_client=None) -> str:
+    """Convenience function to get context as JSON string"""
+    
+    retriever = ContextRetriever(neo4j_client)
+    try:
+        if intent_type.lower() == 'electricity_consumption':
+            context = retriever.get_electricity_context(site_filter, start_date, end_date)
+        else:
+            context = {"error": f"Intent type {intent_type} not yet implemented"}
+        
+        return json.dumps(context, indent=2)
+    finally:
+        retriever.close()

@@ -44,9 +44,6 @@ from api.ehs_goals_api import router as ehs_goals_router
 
 # Dashboard Category API Import
 from api.dashboard_category_api import router as dashboard_category_router
-# Chatbot API Import
-from api.chatbot_api import router as chatbot_router
-
 
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -110,9 +107,6 @@ app.include_router(ehs_goals_router)
 
 # Include the Dashboard Category API router
 app.include_router(dashboard_category_router)
-# Include the Chatbot API router
-app.include_router(chatbot_router)
-
 
 # Pydantic models for request/response validation
 class FacilityFilter(BaseModel):

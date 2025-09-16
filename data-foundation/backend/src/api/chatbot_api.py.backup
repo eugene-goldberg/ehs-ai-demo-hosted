@@ -38,16 +38,7 @@ from src.config.ehs_goals_config import (
 from src.services.environmental_assessment_service import EnvironmentalAssessmentService
 from src.database.neo4j_client import Neo4jClient, ConnectionConfig
 
-# RAG Component Imports
-from src.services.intent_classifier import IntentClassifier
-from src.services.context_retriever import ContextRetriever
-from src.services.prompt_augmenter import PromptAugmenter
-
 logger = logging.getLogger(__name__)
-
-# Configure RAG logging
-rag_logger = logging.getLogger("rag_pipeline")
-rag_logger.setLevel(logging.INFO)
 
 router = APIRouter(prefix="/api/chatbot", tags=["chatbot"])
 
@@ -111,50 +102,6 @@ async def get_neo4j_client() -> Neo4jClient:
 async def get_environmental_service(neo4j_client: Neo4jClient = Depends(get_neo4j_client)) -> EnvironmentalAssessmentService:
     """Get Environmental Assessment Service instance"""
     return EnvironmentalAssessmentService(neo4j_client)
-
-# ========== RAG Service Dependency Injection ==========
-
-def get_rag_neo4j_client():
-    """Get or create Neo4j client instance for RAG"""
-    if not hasattr(get_rag_neo4j_client, "_instance"):
-        get_rag_neo4j_client._instance = Neo4jClient()
-        try:
-            get_rag_neo4j_client._instance.connect()
-            rag_logger.info("Neo4j client connected successfully")
-        except Exception as e:
-            rag_logger.error(f"Failed to connect Neo4j: {e}")
-            get_rag_neo4j_client._instance = None
-    return get_rag_neo4j_client._instance
-
-def get_intent_classifier():
-    """Get or create IntentClassifier instance"""
-    if not hasattr(get_intent_classifier, "_instance"):
-        try:
-            get_intent_classifier._instance = IntentClassifier()
-            rag_logger.info("IntentClassifier initialized successfully")
-        except Exception as e:
-            rag_logger.error(f"Failed to initialize IntentClassifier: {e}")
-            get_intent_classifier._instance = None
-    return get_intent_classifier._instance
-
-def get_context_retriever():
-    """Get or create ContextRetriever instance"""
-    if not hasattr(get_context_retriever, "_instance"):
-        neo4j_client = get_rag_neo4j_client()
-        if neo4j_client:
-            get_context_retriever._instance = ContextRetriever(neo4j_client)
-            rag_logger.info("ContextRetriever initialized successfully")
-        else:
-            rag_logger.error("Cannot create ContextRetriever without Neo4j client")
-            get_context_retriever._instance = None
-    return get_context_retriever._instance
-
-def get_prompt_augmenter():
-    """Get or create PromptAugmenter instance"""
-    if not hasattr(get_prompt_augmenter, "_instance"):
-        get_prompt_augmenter._instance = PromptAugmenter()
-        rag_logger.info("PromptAugmenter initialized successfully")
-    return get_prompt_augmenter._instance
 
 # Chatbot Logic Functions
 
@@ -314,90 +261,6 @@ async def generate_ehs_response(
             "data_sources": [],
             "suggestions": ["Can you help me understand electricity consumption?", "What are our water usage trends?", "How are we performing against our EHS goals?"]
         }
-
-# ========== RAG Pipeline Implementation ==========
-
-async def execute_rag_pipeline(user_message: str, session_context: dict = None) -> dict:
-    """
-    Execute the complete RAG pipeline for a user message.
-    
-    Args:
-        user_message: The user's query
-        session_context: Optional session context
-        
-    Returns:
-        dict: RAG pipeline results including intent, context, and augmented prompt
-    """
-    pipeline_result = {
-        "intent": None,
-        "context": None,
-        "augmented_prompt": None,
-        "error": None
-    }
-    
-    try:
-        # Step 1: Classify Intent
-        rag_logger.info(f"RAG Pipeline - Classifying intent for: {user_message[:100]}...")
-        intent_classifier = get_intent_classifier()
-        
-        if intent_classifier:
-            intent_result = intent_classifier.classify(user_message)
-            pipeline_result["intent"] = intent_result
-            rag_logger.info(f"Intent classified: {intent_result.get('intent', 'UNKNOWN')}")
-            
-            # Step 2: Retrieve Context (if intent is data-related)
-            context_retriever = get_context_retriever()
-            if context_retriever and intent_result.get("intent") != "GENERAL":
-                rag_logger.info("Retrieving context from Neo4j...")
-                
-                # Extract metadata from intent
-                site = intent_result.get("metadata", {}).get("site")
-                start_date = intent_result.get("metadata", {}).get("start_date")
-                end_date = intent_result.get("metadata", {}).get("end_date")
-                
-                # Map intent to retrieval method
-                intent_type = intent_result.get("intent", "").upper()
-                
-                if intent_type == "ELECTRICITY_CONSUMPTION":
-                    context = context_retriever.get_electricity_context(
-                        site=site,
-                        start_date=start_date,
-                        end_date=end_date
-                    )
-                elif intent_type == "WATER_CONSUMPTION":
-                    # TODO: Implement water consumption retrieval
-                    context = {"message": "Water consumption data retrieval coming soon"}
-                elif intent_type == "WASTE_GENERATION":
-                    # TODO: Implement waste generation retrieval
-                    context = {"message": "Waste generation data retrieval coming soon"}
-                else:
-                    context = {"message": f"Context retrieval for {intent_type} not yet implemented"}
-                
-                pipeline_result["context"] = context
-                rag_logger.info(f"Context retrieved: {context.get('record_count', 0)} records")
-                
-                # Step 3: Augment Prompt
-                prompt_augmenter = get_prompt_augmenter()
-                if prompt_augmenter and context:
-                    rag_logger.info("Augmenting prompt with context...")
-                    augmented_prompt = prompt_augmenter.augment(
-                        user_query=user_message,
-                        intent=intent_result,
-                        context=context
-                    )
-                    pipeline_result["augmented_prompt"] = augmented_prompt
-                    rag_logger.info("Prompt augmented successfully")
-            else:
-                rag_logger.info("General query - no context retrieval needed")
-        else:
-            rag_logger.error("IntentClassifier not available")
-            pipeline_result["error"] = "Intent classification service unavailable"
-            
-    except Exception as e:
-        rag_logger.error(f"RAG Pipeline error: {e}")
-        pipeline_result["error"] = str(e)
-    
-    return pipeline_result
 
 async def handle_electricity_query(site: Optional[str], entities: Dict, env_service: EnvironmentalAssessmentService) -> Dict[str, Any]:
     """Handle electricity-related queries"""
@@ -620,8 +483,8 @@ def get_goals_summary(site: Optional[str]) -> Dict[str, Any]:
         
         # Get electricity goals
         if site:
-            site_enum = SiteLocation.ALGONQUIN if site == "algonquin_il" else SiteLocation.HOUSTON
-            elec_goal = get_goal(EHSCategory.CO2, site_enum)
+            site_enum = SiteLocation.ALGONQUIN_IL if site == "algonquin_il" else SiteLocation.HOUSTON_TX
+            elec_goal = get_goal(EHSCategory.ELECTRICITY, site_enum)
             water_goal = get_goal(EHSCategory.WATER, site_enum)
             waste_goal = get_goal(EHSCategory.WASTE, site_enum)
             
@@ -842,7 +705,7 @@ async def health_check(neo4j_client: Neo4jClient = Depends(get_neo4j_client)):
     
     # Test EHS Goals Config
     try:
-        test_goal = get_goal(EHSCategory.CO2, SiteLocation.ALGONQUIN)
+        test_goal = get_goal(EHSCategory.ELECTRICITY, SiteLocation.ALGONQUIN_IL)
         dependencies["ehs_goals_config"] = "healthy"
     except Exception as e:
         logger.error(f"EHS Goals config health check failed: {e}")
@@ -861,14 +724,14 @@ async def chat(
     env_service: EnvironmentalAssessmentService = Depends(get_environmental_service)
 ):
     """
-    Enhanced chat endpoint with RAG integration for EHS chatbot interactions.
+    Main chat endpoint for EHS chatbot interactions.
     
     Args:
         request: ChatRequest containing user message and optional context
         env_service: Environmental Assessment Service dependency
     
     Returns:
-        ChatResponse: Chatbot response with session information and RAG metadata
+        ChatResponse: Chatbot response with session information
     """
     try:
         # Get or create session
@@ -879,99 +742,28 @@ async def chat(
         user_message = ChatMessage(role="user", content=request.message)
         add_message_to_session(session_id, user_message)
         
-        # Execute RAG Pipeline first
-        rag_logger.info(f"Processing chat request with RAG for session: {session_id}")
-        rag_result = await execute_rag_pipeline(
-            user_message=request.message,
-            session_context=session_context
-        )
-        
-        # Check if RAG pipeline provided an augmented prompt
-        if rag_result.get("augmented_prompt") and not rag_result.get("error"):
-            # Use RAG-enhanced response
-            rag_logger.info("Using RAG-augmented response")
-            
-            # For now, use the augmented prompt as the response
-            # In the future, this could be sent to an LLM for final generation
-            response_text = rag_result["augmented_prompt"]
-            
-            # Prepare data sources based on RAG context
-            data_sources = []
-            if rag_result.get("context"):
-                data_sources.append("Neo4j EHS Database")
-                if rag_result["context"].get("record_count", 0) > 0:
-                    data_sources.append(f"{rag_result['context']['record_count']} records")
-            
-            # Generate intent-based suggestions
-            suggestions = []
-            intent_type = rag_result.get("intent", {}).get("intent", "GENERAL")
-            if intent_type == "ELECTRICITY_CONSUMPTION":
-                suggestions = [
-                    "Show electricity trends over time",
-                    "Compare electricity usage between sites",
-                    "Calculate CO2 emissions from electricity"
-                ]
-            elif intent_type == "WATER_CONSUMPTION":
-                suggestions = [
-                    "Show water usage patterns",
-                    "Identify peak consumption periods",
-                    "Compare water usage between facilities"
-                ]
-            elif intent_type == "WASTE_GENERATION":
-                suggestions = [
-                    "Show waste generation trends",
-                    "Compare waste types",
-                    "Analyze recycling efficiency"
-                ]
-            else:
-                suggestions = [
-                    "Ask about electricity consumption",
-                    "Inquire about water usage",
-                    "Check waste generation data"
-                ]
-            
-            response_data = {
-                "response": response_text,
-                "data_sources": data_sources,
-                "suggestions": suggestions
-            }
-            
-        else:
-            # Fallback to existing intent analysis and response generation
-            rag_logger.info("Falling back to existing response generation")
-            
-            # Analyze user intent using existing method
-            intent_analysis = await analyze_user_intent(request.message)
-            
-            # Generate response based on intent and data
-            response_data = await generate_ehs_response(
-                request.message,
-                intent_analysis,
-                session_context,
-                request.site_filter,
-                env_service
-            )
-            
-            # Update session context with intent analysis
-            update_session_context(session_id, {"last_intent": intent_analysis})
+        # Analyze user intent
+        intent_analysis = await analyze_user_intent(request.message)
         
         # Update session context with new information
         if request.context:
             update_session_context(session_id, request.context)
         
-        # Add RAG metadata to session context
-        if rag_result:
-            update_session_context(session_id, {
-                "last_rag_result": {
-                    "intent": rag_result.get("intent"),
-                    "has_context": bool(rag_result.get("context")),
-                    "error": rag_result.get("error")
-                }
-            })
+        # Generate response based on intent and data
+        response_data = await generate_ehs_response(
+            request.message,
+            intent_analysis,
+            session_context,
+            request.site_filter,
+            env_service
+        )
         
         # Create assistant message
         assistant_message = ChatMessage(role="assistant", content=response_data["response"])
         add_message_to_session(session_id, assistant_message)
+        
+        # Update session context with intent analysis
+        update_session_context(session_id, {"last_intent": intent_analysis})
         
         return ChatResponse(
             response=response_data["response"],
@@ -984,14 +776,7 @@ async def chat(
         raise
     except Exception as e:
         logger.error(f"Error in chat endpoint: {e}")
-        # Provide fallback response
-        session_id = get_or_create_session(request.session_id)
-        return ChatResponse(
-            response="I apologize, but I encountered an error processing your request. Please try again.",
-            session_id=session_id,
-            data_sources=["Error Handler"],
-            suggestions=["Try rephrasing your question", "Ask about electricity, water, or waste data"]
-        )
+        raise HTTPException(status_code=500, detail="Internal server error during chat processing")
 
 @router.post("/clear-session", response_model=SessionClearResponse)
 async def clear_session(session_id: str = Query(..., description="Session ID to clear")):

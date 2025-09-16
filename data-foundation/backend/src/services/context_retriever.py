@@ -1,0 +1,1038 @@
+"""
+Context Retriever Service - Fetches relevant context from Neo4j
+"""
+
+import logging
+from typing import Dict, Optional, Any
+from dataclasses import dataclass
+from enum import Enum
+import json
+
+logger = logging.getLogger(__name__)
+
+class IntentType(Enum):
+    ELECTRICITY_CONSUMPTION = "electricity_consumption"
+    WATER_CONSUMPTION = "water_consumption" 
+    WASTE_GENERATION = "waste_generation"
+    CO2_GOALS = "co2_goals"
+    RISK_ASSESSMENT = "risk_assessment"
+    RECOMMENDATIONS = "recommendations"
+
+class ContextRetriever:
+    def __init__(self, neo4j_client=None):
+        """Initialize ContextRetriever with Neo4j client.
+        
+        Args:
+            neo4j_client: Neo4j client instance. If None, will create own connection.
+        """
+        self.neo4j_client = neo4j_client
+        self.driver = None
+        
+        # If no client provided, create own connection (fallback)
+        if self.neo4j_client is None:
+            from neo4j import GraphDatabase
+            self.driver = GraphDatabase.driver(
+                "bolt://localhost:7687",
+                auth=("neo4j", "EhsAI2024!")
+            )
+    
+    def close(self):
+        """Close connection if we own the driver"""
+        if self.driver:
+            self.driver.close()
+            self.driver = None
+    
+    def _execute_query(self, query: str, parameters: Dict[str, Any] = None):
+        """Execute query using Neo4j client or fallback driver"""
+        if parameters is None:
+            parameters = {}
+            
+        if self.neo4j_client:
+            # Use shared Neo4j client
+            try:
+                return self.neo4j_client.execute_read_query(query, parameters)
+            except Exception as e:
+                logger.error(f"Error executing query with Neo4j client: {e}")
+                raise
+        else:
+            # Use fallback driver
+            with self.driver.session() as session:
+                result = session.run(query, **parameters)
+                return list(result)
+    
+    def get_electricity_context(self, site: Optional[str], 
+                               start_date: Optional[str] = None,
+                               end_date: Optional[str] = None) -> Dict[str, Any]:
+        """Fetch electricity consumption data from Neo4j"""
+        
+        # Map site names to Neo4j site IDs
+        site_mapping = {
+            'houston_texas': 'houston_texas',
+            'houston_tx': 'houston_texas',
+            'houston': 'houston_texas',
+            'algonquin_illinois': 'algonquin_il',
+            'algonquin_il': 'algonquin_il',
+            'algonquin': 'algonquin_il'
+        }
+        
+        if site and site.lower() in site_mapping:
+            site = site_mapping[site.lower()]
+        
+        # Build query based on available parameters
+        if start_date and end_date:
+            query = """
+            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)
+            WHERE s.id = $site AND e.date >= $start_date AND e.date <= $end_date
+            RETURN s.id as site_id, s.name as site_name, e.date as date,
+                   e.consumption_kwh as consumption, e.cost_usd as cost,
+                   e.co2_emissions as co2_emissions, e.peak_demand_kw as peak_demand
+            ORDER BY e.date DESC
+            LIMIT 100
+            """
+            params = {"site": site, "start_date": start_date, "end_date": end_date}
+        elif start_date:
+            query = """
+            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)
+            WHERE s.id = $site AND e.date >= $start_date
+            RETURN s.id as site_id, s.name as site_name, e.date as date,
+                   e.consumption_kwh as consumption, e.cost_usd as cost,
+                   e.co2_emissions as co2_emissions, e.peak_demand_kw as peak_demand
+            ORDER BY e.date DESC
+            LIMIT 100
+            """
+            params = {"site": site, "start_date": start_date}
+        else:
+            query = """
+            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)
+            WHERE s.id = $site
+            RETURN s.id as site_id, s.name as site_name, e.date as date,
+                   e.consumption_kwh as consumption, e.cost_usd as cost,
+                   e.co2_emissions as co2_emissions, e.peak_demand_kw as peak_demand
+            ORDER BY e.date DESC
+            LIMIT 100
+            """
+            params = {"site": site}
+        
+        try:
+            records = self._execute_query(query, params)
+            
+            if not records:
+                return {
+                    "site": site,
+                    "period": {"start": start_date, "end": end_date},
+                    "message": "No electricity consumption data found",
+                    "record_count": 0
+                }
+            
+            # Convert records to dictionaries if needed
+            if hasattr(records[0], 'data'):
+                # Neo4j Record objects
+                record_data = [record.data() for record in records]
+            else:
+                # Already dictionaries from Neo4j client
+                record_data = records
+            
+            # Calculate aggregates
+            consumption_values = [r.get('consumption', 0) for r in record_data if r.get('consumption')]
+            cost_values = [r.get('cost', 0) for r in record_data if r.get('cost')]
+            co2_values = [r.get('co2_emissions', 0) for r in record_data if r.get('co2_emissions')]
+            
+            return {
+                "site": record_data[0]['site_name'] if record_data else site,
+                "site_id": record_data[0]['site_id'] if record_data else site,
+                "period": {
+                    "start": start_date or (min(r['date'] for r in record_data) if record_data else None),
+                    "end": end_date or (max(r['date'] for r in record_data) if record_data else None)
+                },
+                "record_count": len(record_data),
+                "aggregates": {
+                    "total": sum(consumption_values),
+                    "average": sum(consumption_values) / len(consumption_values) if consumption_values else 0,
+                    "min": min(consumption_values) if consumption_values else 0,
+                    "max": max(consumption_values) if consumption_values else 0,
+                    "total_cost": sum(cost_values),
+                    "total_co2": sum(co2_values),
+                    "avg_cost_per_kwh": sum(cost_values) / sum(consumption_values) if consumption_values and sum(consumption_values) > 0 else 0
+                },
+                "recent_data": [
+                    {
+                        "date": r['date'],
+                        "consumption": r['consumption'],
+                        "cost": r['cost'],
+                        "co2": r['co2_emissions'],
+                        "peak_demand": r['peak_demand']
+                    }
+                    for r in record_data[:5]
+                ]
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching electricity context: {e}")
+            return {
+                "site": site,
+                "period": {"start": start_date, "end": end_date},
+                "error": str(e),
+                "record_count": 0
+            }
+
+    def get_water_context(self, site: Optional[str], 
+                         start_date: Optional[str] = None,
+                         end_date: Optional[str] = None) -> Dict[str, Any]:
+        """Fetch water consumption data from Neo4j"""
+        
+        # Map site names to Neo4j site IDs
+        site_mapping = {
+            'houston_texas': 'houston_texas',
+            'houston_tx': 'houston_texas',
+            'houston': 'houston_texas',
+            'algonquin_illinois': 'algonquin_il',
+            'algonquin_il': 'algonquin_il',
+            'algonquin': 'algonquin_il'
+        }
+        
+        if site and site.lower() in site_mapping:
+            site = site_mapping[site.lower()]
+        
+        # Build query based on available parameters
+        if start_date and end_date:
+            query = """
+            MATCH (wc:WaterConsumption)
+            WHERE wc.site_id = $site AND wc.date >= $start_date AND wc.date <= $end_date
+            RETURN wc.site_id as site_id, wc.date as date,
+                   wc.consumption_gallons as consumption_gallons, 
+                   wc.cost_usd as cost_usd,
+                   wc.cost_per_gallon as cost_per_gallon,
+                   wc.cooling_usage_gallons as cooling_usage,
+                   wc.domestic_usage_gallons as domestic_usage,
+                   wc.process_usage_gallons as process_usage,
+                   wc.source_type as source_type,
+                   wc.quality_rating as quality_rating,
+                   wc.seasonal_notes as seasonal_notes
+            ORDER BY wc.date DESC
+            LIMIT 100
+            """
+            params = {"site": site, "start_date": start_date, "end_date": end_date}
+        elif start_date:
+            query = """
+            MATCH (wc:WaterConsumption)
+            WHERE wc.site_id = $site AND wc.date >= $start_date
+            RETURN wc.site_id as site_id, wc.date as date,
+                   wc.consumption_gallons as consumption_gallons, 
+                   wc.cost_usd as cost_usd,
+                   wc.cost_per_gallon as cost_per_gallon,
+                   wc.cooling_usage_gallons as cooling_usage,
+                   wc.domestic_usage_gallons as domestic_usage,
+                   wc.process_usage_gallons as process_usage,
+                   wc.source_type as source_type,
+                   wc.quality_rating as quality_rating,
+                   wc.seasonal_notes as seasonal_notes
+            ORDER BY wc.date DESC
+            LIMIT 100
+            """
+            params = {"site": site, "start_date": start_date}
+        else:
+            query = """
+            MATCH (wc:WaterConsumption)
+            WHERE wc.site_id = $site
+            RETURN wc.site_id as site_id, wc.date as date,
+                   wc.consumption_gallons as consumption_gallons, 
+                   wc.cost_usd as cost_usd,
+                   wc.cost_per_gallon as cost_per_gallon,
+                   wc.cooling_usage_gallons as cooling_usage,
+                   wc.domestic_usage_gallons as domestic_usage,
+                   wc.process_usage_gallons as process_usage,
+                   wc.source_type as source_type,
+                   wc.quality_rating as quality_rating,
+                   wc.seasonal_notes as seasonal_notes
+            ORDER BY wc.date DESC
+            LIMIT 100
+            """
+            params = {"site": site}
+        
+        try:
+            records = self._execute_query(query, params)
+            
+            if not records:
+                return {
+                    "site": site,
+                    "period": {"start": start_date, "end": end_date},
+                    "message": "No water consumption data found",
+                    "record_count": 0
+                }
+            
+            # Convert records to dictionaries if needed
+            if hasattr(records[0], 'data'):
+                # Neo4j Record objects
+                record_data = [record.data() for record in records]
+            else:
+                # Already dictionaries from Neo4j client
+                record_data = records
+            
+            # Calculate aggregates
+            consumption_values = [r.get('consumption_gallons', 0) for r in record_data if r.get('consumption_gallons')]
+            cost_values = [r.get('cost_usd', 0) for r in record_data if r.get('cost_usd')]
+            cooling_values = [r.get('cooling_usage', 0) for r in record_data if r.get('cooling_usage')]
+            domestic_values = [r.get('domestic_usage', 0) for r in record_data if r.get('domestic_usage')]
+            process_values = [r.get('process_usage', 0) for r in record_data if r.get('process_usage')]
+            
+            return {
+                "site": site,
+                "site_id": site,
+                "period": {
+                    "start": start_date or (min(r.get('date') for r in record_data if r.get('date')) if record_data else None),
+                    "end": end_date or (max(r.get('date') for r in record_data if r.get('date')) if record_data else None)
+                },
+                "record_count": len(record_data),
+                "aggregates": {
+                    "total_gallons": sum(consumption_values),
+                    "average_gallons": sum(consumption_values) / len(consumption_values) if consumption_values else 0,
+                    "min_gallons": min(consumption_values) if consumption_values else 0,
+                    "max_gallons": max(consumption_values) if consumption_values else 0,
+                    "total_cost": sum(cost_values),
+                    "avg_cost_per_gallon": sum(cost_values) / sum(consumption_values) if consumption_values and sum(consumption_values) > 0 else 0,
+                    "total_cooling_usage": sum(cooling_values),
+                    "total_domestic_usage": sum(domestic_values),
+                    "total_process_usage": sum(process_values)
+                },
+                "recent_data": [
+                    {
+                        "date": r.get('date'),
+                        "consumption_gallons": r.get('consumption_gallons'),
+                        "cost_usd": r.get('cost_usd'),
+                        "cost_per_gallon": r.get('cost_per_gallon'),
+                        "cooling_usage": r.get('cooling_usage'),
+                        "domestic_usage": r.get('domestic_usage'),
+                        "process_usage": r.get('process_usage'),
+                        "source_type": r.get('source_type'),
+                        "quality_rating": r.get('quality_rating'),
+                        "seasonal_notes": r.get('seasonal_notes')
+                    }
+                    for r in record_data[:5]
+                ]
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching water context: {e}")
+            return {
+                "site": site,
+                "period": {"start": start_date, "end": end_date},
+                "error": str(e),
+                "record_count": 0
+            }
+
+    def get_waste_context(self, site: Optional[str], 
+                         start_date: Optional[str] = None,
+                         end_date: Optional[str] = None) -> Dict[str, Any]:
+        """Fetch waste generation data from Neo4j"""
+        
+        # Map site names to Neo4j site IDs - only support Algonquin IL and Houston TX
+        site_mapping = {
+            'houston_texas': 'houston_tx',
+            'houston_tx': 'houston_tx', 
+            'houston': 'houston_tx',
+            'algonquin_illinois': 'algonquin_il',
+            'algonquin_il': 'algonquin_il',
+            'algonquin': 'algonquin_il'
+        }
+        
+        if site and site.lower() in site_mapping:
+            site = site_mapping[site.lower()]
+        
+        # Only allow supported sites
+        if site not in ['algonquin_il', 'houston_tx']:
+            return {
+                "site": site,
+                "period": {"start": start_date, "end": end_date},
+                "error": f"Waste generation data only available for Algonquin IL and Houston TX. Requested site: {site}",
+                "record_count": 0
+            }
+        
+        # Build query based on available parameters
+        if start_date and end_date:
+            query = """
+            MATCH (wg:WasteGeneration)
+            WHERE wg.site_id = $site AND wg.date >= $start_date AND wg.date <= $end_date
+            RETURN wg.site_id as site_id, wg.date as date,
+                   wg.amount_pounds as amount_pounds, wg.disposal_cost_usd as disposal_cost,
+                   wg.waste_type as waste_type, wg.disposal_method as disposal_method,
+                   wg.contractor as contractor, wg.recycling_rate_achieved as recycling_rate,
+                   wg.recycling_target as recycling_target, wg.performance_notes as notes
+            ORDER BY wg.date DESC
+            LIMIT 100
+            """
+            params = {"site": site, "start_date": start_date, "end_date": end_date}
+        elif start_date:
+            query = """
+            MATCH (wg:WasteGeneration)
+            WHERE wg.site_id = $site AND wg.date >= $start_date
+            RETURN wg.site_id as site_id, wg.date as date,
+                   wg.amount_pounds as amount_pounds, wg.disposal_cost_usd as disposal_cost,
+                   wg.waste_type as waste_type, wg.disposal_method as disposal_method,
+                   wg.contractor as contractor, wg.recycling_rate_achieved as recycling_rate,
+                   wg.recycling_target as recycling_target, wg.performance_notes as notes
+            ORDER BY wg.date DESC
+            LIMIT 100
+            """
+            params = {"site": site, "start_date": start_date}
+        else:
+            query = """
+            MATCH (wg:WasteGeneration)
+            WHERE wg.site_id = $site
+            RETURN wg.site_id as site_id, wg.date as date,
+                   wg.amount_pounds as amount_pounds, wg.disposal_cost_usd as disposal_cost,
+                   wg.waste_type as waste_type, wg.disposal_method as disposal_method,
+                   wg.contractor as contractor, wg.recycling_rate_achieved as recycling_rate,
+                   wg.recycling_target as recycling_target, wg.performance_notes as notes
+            ORDER BY wg.date DESC
+            LIMIT 100
+            """
+            params = {"site": site}
+        
+        try:
+            records = self._execute_query(query, params)
+            
+            if not records:
+                return {
+                    "site": site,
+                    "period": {"start": start_date, "end": end_date},
+                    "message": "No waste generation data found",
+                    "record_count": 0
+                }
+            
+            # Convert records to dictionaries if needed
+            if hasattr(records[0], 'data'):
+                # Neo4j Record objects
+                record_data = [record.data() for record in records]
+            else:
+                # Already dictionaries from Neo4j client
+                record_data = records
+            
+            # Calculate aggregates
+            amount_values = [r.get('amount_pounds', 0) for r in record_data if r.get('amount_pounds')]
+            cost_values = [r.get('disposal_cost', 0) for r in record_data if r.get('disposal_cost')]
+            recycling_rates = [r.get('recycling_rate', 0) for r in record_data if r.get('recycling_rate') is not None]
+            
+            # Group by waste type
+            waste_types = {}
+            for r in record_data:
+                wtype = r.get('waste_type', 'Unknown')
+                if wtype not in waste_types:
+                    waste_types[wtype] = {'amount': 0, 'cost': 0, 'count': 0}
+                waste_types[wtype]['amount'] += r.get('amount_pounds', 0)
+                waste_types[wtype]['cost'] += r.get('disposal_cost', 0)
+                waste_types[wtype]['count'] += 1
+            
+            return {
+                "site": site,
+                "site_id": site,
+                "period": {
+                    "start": start_date or (min(r.get('date') for r in record_data if r.get('date')) if record_data else None),
+                    "end": end_date or (max(r.get('date') for r in record_data if r.get('date')) if record_data else None)
+                },
+                "record_count": len(record_data),
+                "aggregates": {
+                    "total_pounds": sum(amount_values),
+                    "average_pounds": sum(amount_values) / len(amount_values) if amount_values else 0,
+                    "min_pounds": min(amount_values) if amount_values else 0,
+                    "max_pounds": max(amount_values) if amount_values else 0,
+                    "total_cost": sum(cost_values),
+                    "average_cost_per_pound": sum(cost_values) / sum(amount_values) if amount_values and sum(amount_values) > 0 else 0,
+                    "average_recycling_rate": sum(recycling_rates) / len(recycling_rates) if recycling_rates else 0,
+                    "waste_types_breakdown": waste_types
+                },
+                "recent_data": [
+                    {
+                        "date": r.get('date'),
+                        "amount_pounds": r.get('amount_pounds'),
+                        "disposal_cost": r.get('disposal_cost'),
+                        "waste_type": r.get('waste_type'),
+                        "disposal_method": r.get('disposal_method'),
+                        "contractor": r.get('contractor'),
+                        "recycling_rate": r.get('recycling_rate'),
+                        "recycling_target": r.get('recycling_target'),
+                        "notes": r.get('notes')
+                    }
+                    for r in record_data[:5]
+                ]
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching waste context: {e}")
+            return {
+                "site": site,
+                "period": {"start": start_date, "end": end_date},
+                "error": str(e),
+                "record_count": 0
+            }
+
+    def get_co2_goals_context(self, site: Optional[str], 
+                            start_date: Optional[str] = None,
+                            end_date: Optional[str] = None) -> Dict[str, Any]:
+        """Fetch CO2 goals and emissions data from Neo4j for Algonquin IL and Houston TX only"""
+        
+        # Map site names to Neo4j site IDs - only support Algonquin IL and Houston TX
+        site_mapping = {
+            'houston_texas': 'houston_tx',
+            'houston_tx': 'houston_tx', 
+            'houston': 'houston_tx',
+            'algonquin_illinois': 'algonquin_il',
+            'algonquin_il': 'algonquin_il',
+            'algonquin': 'algonquin_il'
+        }
+        
+        if site and site.lower() in site_mapping:
+            site = site_mapping[site.lower()]
+        
+        # Only allow supported sites
+        if site not in ['algonquin_il', 'houston_tx']:
+            return {
+                "site": site,
+                "period": {"start": start_date, "end": end_date},
+                "error": f"CO2 goals data only available for Algonquin IL and Houston TX. Requested site: {site}",
+                "record_count": 0
+            }
+        
+        try:
+            # Query for all Goal nodes for the site (including CO2-related ones)
+            goals_query = """
+            MATCH (g:Goal)
+            WHERE g.site_id = 
+            RETURN g.id as goal_id, g.category as category, g.description as description,
+                   g.target_value as target_value, g.unit as unit, g.target_date as target_date,
+                   g.baseline_year as baseline_year, g.target_year as target_year,
+                   g.period as period, g.created_at as created_at, g.updated_at as updated_at
+            ORDER BY g.target_date DESC
+            """
+            
+            # Query for all Environmental Targets for the site
+            targets_query = """
+            MATCH (et:EnvironmentalTarget)
+            WHERE et.site_id = 
+            RETURN et.id as target_id, et.target_type as target_type, et.description as description,
+                   et.target_value as target_value, et.target_unit as target_unit, 
+                   et.deadline as deadline, et.status as status,
+                   et.created_at as created_at, et.updated_at as updated_at
+            ORDER BY et.deadline DESC
+            """
+            
+            params = {"site": site}
+            
+            # Execute queries
+            goals = self._execute_query(goals_query, params)
+            targets = self._execute_query(targets_query, params)
+            
+            # Convert records to dictionaries if needed
+            if goals and hasattr(goals[0], 'data'):
+                goals_data = [record.data() for record in goals]
+            else:
+                goals_data = goals if goals else []
+                
+            if targets and hasattr(targets[0], 'data'):
+                targets_data = [record.data() for record in targets]
+            else:
+                targets_data = targets if targets else []
+            
+            # Filter for CO2-related goals and targets
+            co2_goals = []
+            for goal in goals_data:
+                desc = goal.get('description', '').lower()
+                unit = goal.get('unit', '').lower()
+                category = goal.get('category', '').lower()
+                if ('co2' in desc or 'carbon' in desc or 'emission' in desc or 
+                    'co2' in unit or category == 'electricity'):
+                    co2_goals.append(goal)
+            
+            co2_targets = []
+            for target in targets_data:
+                desc = target.get('description', '').lower()
+                ttype = target.get('target_type', '').lower()
+                if ('co2' in desc or 'carbon' in desc or 'emission' in desc or 
+                    'emission' in ttype):
+                    co2_targets.append(target)
+            
+            # Filter by date range if provided
+            if start_date or end_date:
+                filtered_goals = []
+                for goal in co2_goals:
+                    goal_date = goal.get('target_date')
+                    if goal_date:
+                        if start_date and goal_date < start_date:
+                            continue
+                        if end_date and goal_date > end_date:
+                            continue
+                    filtered_goals.append(goal)
+                co2_goals = filtered_goals
+                
+                filtered_targets = []
+                for target in co2_targets:
+                    target_date = target.get('deadline')
+                    if target_date:
+                        if start_date and target_date < start_date:
+                            continue
+                        if end_date and target_date > end_date:
+                            continue
+                    filtered_targets.append(target)
+                co2_targets = filtered_targets
+            
+            if not co2_goals and not co2_targets:
+                return {
+                    "site": site,
+                    "period": {"start": start_date, "end": end_date},
+                    "message": "No CO2 goals or targets found",
+                    "record_count": 0
+                }
+            
+            # Calculate aggregates
+            co2_reduction_targets = []
+            electricity_reduction_targets = []
+            
+            for goal in co2_goals:
+                if goal.get('unit') == 'tonnes CO2e':
+                    co2_reduction_targets.append(goal.get('target_value', 0))
+                elif goal.get('category') == 'electricity':
+                    electricity_reduction_targets.append(goal.get('target_value', 0))
+            
+            # Group targets by type
+            target_types = {}
+            for target in co2_targets:
+                ttype = target.get('target_type', 'Unknown')
+                if ttype not in target_types:
+                    target_types[ttype] = {'count': 0, 'in_progress': 0, 'completed': 0, 'planning': 0}
+                target_types[ttype]['count'] += 1
+                status = target.get('status', 'unknown')
+                if status in target_types[ttype]:
+                    target_types[ttype][status] += 1
+            
+            return {
+                "site": site,
+                "site_id": site,
+                "period": {
+                    "start": start_date,
+                    "end": end_date
+                },
+                "record_count": len(co2_goals) + len(co2_targets),
+                "summary": {
+                    "co2_goals_count": len([g for g in co2_goals if g.get('unit') == 'tonnes CO2e']),
+                    "electricity_goals_count": len([g for g in co2_goals if g.get('category') == 'electricity']),
+                    "environmental_targets_count": len(co2_targets),
+                    "total_co2_reduction_target": sum(co2_reduction_targets),
+                    "total_electricity_reduction_target": sum(electricity_reduction_targets),
+                    "target_types_breakdown": target_types
+                },
+                "co2_goals": [
+                    {
+                        "goal_id": g.get('goal_id'),
+                        "category": g.get('category'),
+                        "description": g.get('description'),
+                        "target_value": g.get('target_value'),
+                        "unit": g.get('unit'),
+                        "target_date": g.get('target_date'),
+                        "baseline_year": g.get('baseline_year'),
+                        "target_year": g.get('target_year'),
+                        "period": g.get('period'),
+                        "created_at": g.get('created_at'),
+                        "updated_at": g.get('updated_at')
+                    }
+                    for g in co2_goals
+                ],
+                "environmental_targets": [
+                    {
+                        "target_id": t.get('target_id'),
+                        "target_type": t.get('target_type'),
+                        "description": t.get('description'),
+                        "target_value": t.get('target_value'),
+                        "target_unit": t.get('target_unit'),
+                        "deadline": t.get('deadline'),
+                        "status": t.get('status'),
+                        "created_at": t.get('created_at'),
+                        "updated_at": t.get('updated_at')
+                    }
+                    for t in co2_targets
+                ]
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching CO2 goals context: {e}")
+            return {
+                "site": site,
+                "period": {"start": start_date, "end": end_date},
+                "error": str(e),
+                "record_count": 0
+            }
+
+    def get_risk_assessment_context(self, site: Optional[str], 
+                                  start_date: Optional[str] = None,
+                                  end_date: Optional[str] = None) -> Dict[str, Any]:
+        """Fetch risk assessment data from Neo4j for Algonquin IL and Houston TX only"""
+        
+        # Map site names to Neo4j site IDs - only support Algonquin IL and Houston TX
+        site_mapping = {
+            'houston_texas': 'houston_tx',
+            'houston_tx': 'houston_tx', 
+            'houston': 'houston_tx',
+            'algonquin_illinois': 'algonquin_il',
+            'algonquin_il': 'algonquin_il',
+            'algonquin': 'algonquin_il'
+        }
+        
+        if site and site.lower() in site_mapping:
+            site = site_mapping[site.lower()]
+        
+        # Only allow supported sites
+        if site not in ['algonquin_il', 'houston_tx']:
+            return {
+                "site": site,
+                "period": {"start": start_date, "end": end_date},
+                "error": f"Risk assessment data only available for Algonquin IL and Houston TX. Requested site: {site}",
+                "record_count": 0
+            }
+        
+        # Build query based on available parameters
+        if start_date and end_date:
+            query = """
+            MATCH (ra:RiskAssessment)
+            WHERE ra.site_id = $site AND ra.assessment_date >= $start_date AND ra.assessment_date <= $end_date
+            RETURN ra.id as assessment_id, ra.site_id as site_id, ra.assessment_date as assessment_date,
+                   ra.risk_level as risk_level, ra.confidence_score as confidence_score,
+                   ra.category as category, ra.description as description, ra.factors as factors,
+                   ra.percentage_difference as percentage_difference, ra.consumption_gap as consumption_gap,
+                   ra.projected_annual_consumption as projected_annual_consumption,
+                   ra.absolute_difference as absolute_difference, ra.updated_at as updated_at
+            ORDER BY ra.assessment_date DESC
+            LIMIT 100
+            """
+            params = {"site": site, "start_date": start_date, "end_date": end_date}
+        elif start_date:
+            query = """
+            MATCH (ra:RiskAssessment)
+            WHERE ra.site_id = $site AND ra.assessment_date >= $start_date
+            RETURN ra.id as assessment_id, ra.site_id as site_id, ra.assessment_date as assessment_date,
+                   ra.risk_level as risk_level, ra.confidence_score as confidence_score,
+                   ra.category as category, ra.description as description, ra.factors as factors,
+                   ra.percentage_difference as percentage_difference, ra.consumption_gap as consumption_gap,
+                   ra.projected_annual_consumption as projected_annual_consumption,
+                   ra.absolute_difference as absolute_difference, ra.updated_at as updated_at
+            ORDER BY ra.assessment_date DESC
+            LIMIT 100
+            """
+            params = {"site": site, "start_date": start_date}
+        else:
+            query = """
+            MATCH (ra:RiskAssessment)
+            WHERE ra.site_id = $site
+            RETURN ra.id as assessment_id, ra.site_id as site_id, ra.assessment_date as assessment_date,
+                   ra.risk_level as risk_level, ra.confidence_score as confidence_score,
+                   ra.category as category, ra.description as description, ra.factors as factors,
+                   ra.percentage_difference as percentage_difference, ra.consumption_gap as consumption_gap,
+                   ra.projected_annual_consumption as projected_annual_consumption,
+                   ra.absolute_difference as absolute_difference, ra.updated_at as updated_at
+            ORDER BY ra.assessment_date DESC
+            LIMIT 100
+            """
+            params = {"site": site}
+        
+        def _convert_datetime_to_string(value):
+            """Convert Neo4j DateTime objects to strings"""
+            if hasattr(value, 'isoformat'):
+                return value.isoformat()
+            elif hasattr(value, '__str__'):
+                return str(value)
+            return value
+        
+        try:
+            records = self._execute_query(query, params)
+            
+            if not records:
+                return {
+                    "site": site,
+                    "period": {"start": start_date, "end": end_date},
+                    "message": "No risk assessment data found",
+                    "record_count": 0
+                }
+            
+            # Convert records to dictionaries if needed
+            if hasattr(records[0], 'data'):
+                # Neo4j Record objects
+                record_data = [record.data() for record in records]
+            else:
+                # Already dictionaries from Neo4j client
+                record_data = records
+            
+            # Convert DateTime objects to strings in all records
+            for record in record_data:
+                for key, value in record.items():
+                    if hasattr(value, 'isoformat') or str(type(value)).find('DateTime') != -1:
+                        record[key] = _convert_datetime_to_string(value)
+            
+            # Calculate aggregates and analyze risk levels
+            risk_levels = [r.get('risk_level', 'UNKNOWN') for r in record_data]
+            confidence_scores = [r.get('confidence_score', 0) for r in record_data if r.get('confidence_score') is not None]
+            projected_consumptions = [r.get('projected_annual_consumption', 0) for r in record_data if r.get('projected_annual_consumption') is not None]
+            
+            # Group by risk level
+            risk_level_breakdown = {}
+            for level in risk_levels:
+                risk_level_breakdown[level] = risk_level_breakdown.get(level, 0) + 1
+            
+            # Group by category
+            category_breakdown = {}
+            for r in record_data:
+                cat = r.get('category', 'Unknown')
+                if cat not in category_breakdown:
+                    category_breakdown[cat] = {'count': 0, 'high_risk': 0, 'moderate_risk': 0, 'low_risk': 0}
+                category_breakdown[cat]['count'] += 1
+                risk_level = r.get('risk_level', '').upper()
+                if risk_level == 'HIGH':
+                    category_breakdown[cat]['high_risk'] += 1
+                elif risk_level == 'MODERATE':
+                    category_breakdown[cat]['moderate_risk'] += 1
+                elif risk_level == 'LOW':
+                    category_breakdown[cat]['low_risk'] += 1
+            
+            return {
+                "site": site,
+                "site_id": site,
+                "period": {
+                    "start": start_date or (min(_convert_datetime_to_string(r.get('assessment_date')) for r in record_data if r.get('assessment_date')) if record_data else None),
+                    "end": end_date or (max(_convert_datetime_to_string(r.get('assessment_date')) for r in record_data if r.get('assessment_date')) if record_data else None)
+                },
+                "record_count": len(record_data),
+                "risk_summary": {
+                    "total_assessments": len(record_data),
+                    "risk_level_breakdown": risk_level_breakdown,
+                    "category_breakdown": category_breakdown,
+                    "average_confidence": sum(confidence_scores) / len(confidence_scores) if confidence_scores else 0,
+                    "highest_risk_level": "HIGH" if "HIGH" in risk_levels else ("MODERATE" if "MODERATE" in risk_levels else "LOW"),
+                    "total_projected_consumption": sum(projected_consumptions) if projected_consumptions else 0
+                },
+                "assessments": [
+                    {
+                        "assessment_id": r.get('assessment_id'),
+                        "assessment_date": _convert_datetime_to_string(r.get('assessment_date')),
+                        "risk_level": r.get('risk_level'),
+                        "confidence_score": r.get('confidence_score'),
+                        "category": r.get('category'),
+                        "description": r.get('description'),
+                        "factors": r.get('factors'),
+                        "percentage_difference": r.get('percentage_difference'),
+                        "consumption_gap": r.get('consumption_gap'),
+                        "projected_annual_consumption": r.get('projected_annual_consumption'),
+                        "absolute_difference": r.get('absolute_difference'),
+                        "updated_at": _convert_datetime_to_string(r.get('updated_at'))
+                    }
+                    for r in record_data
+                ]
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching risk assessment context: {e}")
+            return {
+                "site": site,
+                "period": {"start": start_date, "end": end_date},
+                "error": str(e),
+                "record_count": 0
+            }
+
+
+
+    def get_recommendations_context(self, site: Optional[str], 
+                                  category: Optional[str] = None,
+                                  priority: Optional[str] = None) -> Dict[str, Any]:
+        """Fetch recommendations data from Neo4j for Algonquin IL and Houston TX only"""
+        
+        # Map site names to Neo4j site IDs - only support Algonquin IL and Houston TX
+        site_mapping = {
+            'houston_texas': 'houston_tx',
+            'houston_tx': 'houston_tx', 
+            'houston': 'houston_tx',
+            'algonquin_illinois': 'algonquin_il',
+            'algonquin_il': 'algonquin_il',
+            'algonquin': 'algonquin_il'
+        }
+        
+        if site and site.lower() in site_mapping:
+            site = site_mapping[site.lower()]
+        
+        # Only allow supported sites
+        if site not in ['algonquin_il', 'houston_tx']:
+            return {
+                "site": site,
+                "filters": {"category": category, "priority": priority},
+                "error": f"Recommendations data only available for Algonquin IL and Houston TX. Requested site: {site}",
+                "record_count": 0
+            }
+        
+        # Build base query
+        where_conditions = ["r.site_id = $site"]
+        params = {"site": site}
+        
+        # Add optional filters
+        if category:
+            where_conditions.append("r.category = $category")
+            params["category"] = category.lower()
+        
+        if priority:
+            where_conditions.append("r.priority = $priority")
+            params["priority"] = priority.lower()
+        
+        where_clause = " AND ".join(where_conditions)
+        
+        query = f"""
+        MATCH (r:Recommendation)
+        WHERE {where_clause}
+        RETURN r.id as recommendation_id, r.site_id as site_id, r.title as title,
+               r.description as description, r.category as category, 
+               r.priority as priority, r.estimated_impact as estimated_impact,
+               r.created_date as created_date
+        ORDER BY 
+            CASE r.priority 
+                WHEN 'high' THEN 1 
+                WHEN 'medium' THEN 2 
+                WHEN 'low' THEN 3 
+                ELSE 4 
+            END,
+            r.created_date DESC
+        LIMIT 100
+        """
+        
+        try:
+            records = self._execute_query(query, params)
+            
+            if not records:
+                return {
+                    "site": site,
+                    "site_id": site,
+                    "filters": {"category": category, "priority": priority},
+                    "message": "No recommendations found",
+                    "record_count": 0
+                }
+            
+            # Convert records to dictionaries if needed
+            if hasattr(records[0], 'data'):
+                # Neo4j Record objects
+                record_data = [record.data() for record in records]
+            else:
+                # Already dictionaries from Neo4j client
+                record_data = records
+            
+            # Process description field (it contains JSON-like string data)
+            for record in record_data:
+                if record.get('description'):
+                    try:
+                        # The description field contains a string representation of a dict
+                        # Convert it to a proper dict for easier processing
+                        import ast
+                        desc_str = record['description']
+                        if desc_str.startswith('{') and desc_str.endswith('}'):
+                            desc_dict = ast.literal_eval(desc_str)
+                            record['description_details'] = desc_dict
+                            record['action_description'] = desc_dict.get('actionDescription', '')
+                            record['priority_level'] = desc_dict.get('priorityLevel', '')
+                            record['best_practice_category'] = desc_dict.get('bestPracticeCategory', '')
+                            record['estimated_monthly_impact'] = desc_dict.get('estimatedMonthlyImpact', '')
+                            record['implementation_effort'] = desc_dict.get('implementationEffort', '')
+                            record['timeline'] = desc_dict.get('timeline', '')
+                            record['resource_requirements'] = desc_dict.get('resourceRequirements', '')
+                            record['supporting_evidence'] = desc_dict.get('supportingEvidence', '')
+                    except (ValueError, SyntaxError) as e:
+                        logger.warning(f"Could not parse description as dict: {e}")
+                        record['description_details'] = {}
+            
+            # Calculate aggregates and analyze priorities
+            priorities = [r.get('priority', 'unknown') for r in record_data]
+            categories = [r.get('category', 'unknown') for r in record_data]
+            
+            # Group by priority
+            priority_breakdown = {}
+            for priority in priorities:
+                priority_breakdown[priority] = priority_breakdown.get(priority, 0) + 1
+            
+            # Group by category
+            category_breakdown = {}
+            for category in categories:
+                category_breakdown[category] = category_breakdown.get(category, 0) + 1
+            
+            # Group by timeline (from description details)
+            timeline_breakdown = {}
+            effort_breakdown = {}
+            for r in record_data:
+                timeline = r.get('timeline', 'unknown')
+                effort = r.get('implementation_effort', 'unknown')
+                timeline_breakdown[timeline] = timeline_breakdown.get(timeline, 0) + 1
+                effort_breakdown[effort] = effort_breakdown.get(effort, 0) + 1
+            
+            return {
+                "site": site,
+                "site_id": site,
+                "filters": {
+                    "category": category,
+                    "priority": priority
+                },
+                "record_count": len(record_data),
+                "summary": {
+                    "total_recommendations": len(record_data),
+                    "priority_breakdown": priority_breakdown,
+                    "category_breakdown": category_breakdown,
+                    "timeline_breakdown": timeline_breakdown,
+                    "implementation_effort_breakdown": effort_breakdown,
+                    "high_priority_count": priority_breakdown.get('high', 0),
+                    "medium_priority_count": priority_breakdown.get('medium', 0),
+                    "low_priority_count": priority_breakdown.get('low', 0)
+                },
+                "recommendations": [
+                    {
+                        "recommendation_id": r.get('recommendation_id'),
+                        "title": r.get('title'),
+                        "category": r.get('category'),
+                        "priority": r.get('priority'),
+                        "estimated_impact": r.get('estimated_impact'),
+                        "created_date": r.get('created_date'),
+                        "action_description": r.get('action_description'),
+                        "priority_level": r.get('priority_level'),
+                        "best_practice_category": r.get('best_practice_category'),
+                        "estimated_monthly_impact": r.get('estimated_monthly_impact'),
+                        "implementation_effort": r.get('implementation_effort'),
+                        "timeline": r.get('timeline'),
+                        "resource_requirements": r.get('resource_requirements'),
+                        "supporting_evidence": r.get('supporting_evidence'),
+                        "raw_description": r.get('description')
+                    }
+                    for r in record_data
+                ]
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching recommendations context: {e}")
+            return {
+                "site": site,
+                "filters": {"category": category, "priority": priority},
+                "error": str(e),
+                "record_count": 0
+            }
+
+
+def get_context_for_intent(intent_type: str, site_filter: str = None,
+                          start_date: str = None, end_date: str = None, 
+                          neo4j_client=None) -> str:
+    """Convenience function to get context as JSON string"""
+    
+    retriever = ContextRetriever(neo4j_client)
+    try:
+        if intent_type.lower() == 'electricity_consumption':
+            context = retriever.get_electricity_context(site_filter, start_date, end_date)
+        elif intent_type.lower() == 'water_consumption':
+            context = retriever.get_water_context(site_filter, start_date, end_date)
+        elif intent_type.lower() == 'waste_generation':
+            context = retriever.get_waste_context(site_filter, start_date, end_date)
+        elif intent_type.lower() == 'co2_goals':
+            context = retriever.get_co2_goals_context(site_filter, start_date, end_date)
+        elif intent_type.lower() == 'risk_assessment':
+            context = retriever.get_risk_assessment_context(site_filter, start_date, end_date)
+        elif intent_type.lower() == "recommendations":
+            context = retriever.get_recommendations_context(site_filter)
+        else:
+            context = {"error": f"Intent type {intent_type} not yet implemented"}
+        
+        return json.dumps(context, indent=2)
+    finally:
+        retriever.close()

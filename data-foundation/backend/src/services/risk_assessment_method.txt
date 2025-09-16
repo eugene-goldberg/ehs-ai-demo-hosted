@@ -1,0 +1,31 @@
+
+    def get_risk_assessment_context(self, site: Optional[str], 
+                                  start_date: Optional[str] = None,
+                                  end_date: Optional[str] = None) -> Dict[str, Any]:
+        Fetch risk assessment data from Neo4j for Algonquin IL and Houston TX only
+        
+        # Map site names to Neo4j site IDs - only support Algonquin IL and Houston TX
+        site_mapping = {
+            'houston_texas': 'houston_tx',
+            'houston_tx': 'houston_tx', 
+            'houston': 'houston_tx',
+            'algonquin_illinois': 'algonquin_il',
+            'algonquin_il': 'algonquin_il',
+            'algonquin': 'algonquin_il'
+        }
+        
+        if site and site.lower() in site_mapping:
+            site = site_mapping[site.lower()]
+        
+        # Only allow supported sites
+        if site not in ['algonquin_il', 'houston_tx']:
+            return {
+                site: site,
+                period: {start: start_date, end: end_date},
+                error: fRisk assessment data only available for Algonquin IL and Houston TX. Requested site: {site},
+                record_count: 0
+            }
+        
+        # Build query based on available parameters
+        if start_date and end_date:
+            query = 

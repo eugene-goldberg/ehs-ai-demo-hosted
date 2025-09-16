@@ -1,0 +1,6 @@
+        elif intent_type.lower() == 'waste_generation':
+            context = retriever.get_waste_context(site_filter, start_date, end_date)
+        elif intent_type.lower() == 'co2_goals':
+            context = retriever.get_co2_goals_context(site_filter, start_date, end_date)
+        else:
+            context = {"error": f"Intent type {intent_type} not yet implemented"}

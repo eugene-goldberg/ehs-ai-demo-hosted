@@ -14,11 +14,21 @@ try:
     if parent_dir not in sys.path:
         sys.path.insert(0, parent_dir)
     
-    from llm import get_llm, get_llm_model_name, get_combined_chunks
+    # Import from the llm.py file in the parent directory
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("llm", os.path.join(parent_dir, "llm.py"))
+    llm_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(llm_module)
     
-    __all__ = ['get_llm', 'get_llm_model_name', 'get_combined_chunks']
+    get_llm = llm_module.get_llm
+    get_llm_model_name = llm_module.get_llm_model_name
+    get_combined_chunks = llm_module.get_combined_chunks
+    get_graph_from_llm = llm_module.get_graph_from_llm
     
-except ImportError:
+    __all__ = ['get_llm', 'get_llm_model_name', 'get_combined_chunks', 'get_graph_from_llm']
+    
+except ImportError as e:
+    print(f"Import error: {e}")
     # If import fails, create placeholder functions to avoid import errors
     def get_llm(*args, **kwargs):
         raise ImportError("LLM functions not available. Import directly from src.llm")
@@ -27,6 +37,9 @@ except ImportError:
         raise ImportError("LLM functions not available. Import directly from src.llm")
     
     def get_combined_chunks(*args, **kwargs):
+        raise ImportError("LLM functions not available. Import directly from src.llm")
+    
+    def get_graph_from_llm(*args, **kwargs):
         raise ImportError("LLM functions not available. Import directly from src.llm")
     
     __all__ = []
