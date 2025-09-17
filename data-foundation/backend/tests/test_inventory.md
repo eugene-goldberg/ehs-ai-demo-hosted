@@ -1039,3 +1039,100 @@ The Intent Classifier service is FULLY IMPLEMENTED and READY FOR PRODUCTION with
 
 **Demonstration Results (2025-09-16)**: 10 queries tested with 100% classification success rate.
 
+
+## RAG Pipeline API Testing (NEW - September 2025)
+
+### Question 5: Electricity Usage Comparison Test
+- **Location**: 
+- **Type**: API Integration Test
+- **Purpose**: Test comparison of electricity usage between Houston and Algonquin locations
+- **API Endpoint**: 
+- **Test Query**: "Compare electricity usage between Houston and Algonquin"
+- **Test Date**: September 17, 2025
+- **Status**: COMPLETED - Revealed missing data issue
+
+#### Test Coverage:
+1. **API Functionality Testing**:
+   - HTTP POST request handling
+   - JSON response structure validation
+   - API health check verification
+   - Session ID generation
+   - Timestamp accuracy
+   - Data sources attribution
+
+2. **Response Content Analysis**:
+   - Location mention validation (Houston and Algonquin)
+   - Comparison language detection
+   - Units consistency check (kWh expected)
+   - Numerical data presence verification
+
+3. **Data Availability Testing**:
+   - Database connectivity through API
+   - Neo4j query execution
+   - Missing data handling
+   - Error message clarity
+
+#### Test Results Summary:
+- **API Health**: ✓ HEALTHY - Server responding correctly
+- **HTTP Status**: ✓ 200 OK - Request processed successfully  
+- **Response Structure**: ✓ Valid JSON with required fields
+- **Location References**: ✓ PASS - Both Houston and Algonquin mentioned
+- **Comparison Language**: ✓ PASS - Comparison indicators detected
+- **Units (kWh)**: ✗ FAIL - No units mentioned (due to missing data)
+- **Numerical Data**: ✗ FAIL - No numerical data available (due to missing data)
+
+#### Root Cause Analysis:
+- **Primary Issue**: Missing electricity consumption data in Neo4j database
+- **Secondary Issue**: No Houston or Algonquin location data loaded
+- **API Behavior**: ✓ Correctly reports "No electricity consumption data found"
+- **Error Handling**: ✓ Appropriate response to missing data scenario
+
+#### Recommendations:
+1. Load electricity consumption data for Houston and Algonquin into Neo4j database
+2. Verify location node creation in database
+3. Re-run test after data loading
+4. Consider creating sample data loading script for testing purposes
+
+#### Log Files Generated:
+-  - Initial test execution
+-  - Detailed analysis
+
+#### Test Scripts:
+- **Primary Test**:  - Main test execution
+- **Comprehensive Report**:  - Detailed analysis and reporting
+- **Data Check**:  - Database content verification
+
+
+
+## RAG Pipeline API Testing (NEW - September 2025)
+
+### Question 5: Electricity Usage Comparison Test
+- **Location**: /tmp/test_question_5.py
+- **Type**: API Integration Test  
+- **Purpose**: Test comparison of electricity usage between Houston and Algonquin locations
+- **API Endpoint**: POST http://localhost:8000/api/chatbot/chat
+- **Test Query**: Compare electricity usage between Houston and Algonquin
+- **Test Date**: September 17, 2025
+- **Status**: COMPLETED - Revealed missing data issue
+
+#### Test Coverage:
+1. API functionality, response validation, data availability testing
+2. Location mention validation, comparison language detection  
+3. Units consistency check, numerical data verification
+
+#### Test Results Summary:
+- API Health: HEALTHY - Server responding correctly
+- HTTP Status: 200 OK - Request processed successfully
+- Response Structure: Valid JSON with required fields
+- Location References: PASS - Both Houston and Algonquin mentioned
+- Comparison Language: PASS - Comparison indicators detected  
+- Units (kWh): FAIL - No units mentioned (due to missing data)
+- Numerical Data: FAIL - No numerical data available (due to missing data)
+
+#### Root Cause: Missing electricity consumption data in Neo4j database
+#### Recommendation: Load electricity consumption data for Houston and Algonquin
+
+#### Log Files Generated:
+- test_question_5_20250917_072346.log - Initial test execution
+- test_question_5_comprehensive_20250917_072947.log - Detailed analysis
+

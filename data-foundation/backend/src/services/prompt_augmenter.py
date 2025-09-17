@@ -7,6 +7,7 @@ import json
 import logging
 from typing import Dict, Any, Optional
 from datetime import datetime
+import calendar
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +15,19 @@ class PromptAugmenter:
     """Creates augmented prompts for RAG-based responses"""
     
     def __init__(self):
-        self.base_instructions = """You are an EHS (Environmental, Health, and Safety) AI Assistant with access to real-time data from our facilities.
+        # Get current date context for temporal understanding
+        now = datetime.now()
+        current_date_context = f"""
+Current Date: {now.strftime("%B %d, %Y")} ({now.strftime("%Y-%m-%d")})
+Current Month: {now.strftime("%B %Y")}
+Current Year: {now.year}
+
+When users ask about relative time periods like "last month", "this month", etc., interpret them relative to the current date above.
+"""
+        
+        self.base_instructions = f"""You are an EHS (Environmental, Health, and Safety) AI Assistant with access to real-time data from our facilities.
+
+{current_date_context}
 
 IMPORTANT INSTRUCTIONS:
 1. Answer based ONLY on the provided context data
@@ -23,7 +36,8 @@ IMPORTANT INSTRUCTIONS:
 4. Be concise and professional
 5. Use units consistently (kWh for electricity, $ for costs, tons for CO2)
 6. Round numbers appropriately for readability
-7. If asked about data outside the provided context, say you don't have that information"""
+7. If asked about data outside the provided context, say you dont have that information
+8. When interpreting relative time references ("last month", "this quarter", etc.), use the current date context provided above"""
 
     def create_augmented_prompt(self, 
                                user_query: str,
@@ -42,17 +56,17 @@ IMPORTANT INSTRUCTIONS:
         """
         
         # Format context based on intent type
-        if intent_type == 'electricity_consumption':
+        if intent_type == "electricity_consumption":
             formatted_context = self._format_electricity_context(context_data)
-        elif intent_type == 'water_consumption':
+        elif intent_type == "water_consumption":
             formatted_context = self._format_water_context(context_data)
-        elif intent_type == 'waste_generation':
+        elif intent_type == "waste_generation":
             formatted_context = self._format_waste_context(context_data)
-        elif intent_type == 'co2_goals':
+        elif intent_type == "co2_goals":
             formatted_context = self._format_goals_context(context_data)
-        elif intent_type == 'risk_assessment':
+        elif intent_type == "risk_assessment":
             formatted_context = self._format_risk_context(context_data)
-        elif intent_type == 'recommendations':
+        elif intent_type == "recommendations":
             formatted_context = self._format_recommendations_context(context_data)
         else:
             formatted_context = self._format_general_context(context_data)
@@ -72,39 +86,39 @@ Please provide a clear, data-driven response based on the context above."""
     def _format_electricity_context(self, context: Dict[str, Any]) -> str:
         """Format electricity consumption context"""
         
-        if context.get('record_count', 0) == 0:
+        if context.get("record_count", 0) == 0:
             return "No electricity consumption data available for the specified criteria."
         
         lines = []
         
         # Basic information
-        lines.append(f"Site: {context.get('site', 'Unknown')}")
+        lines.append(f"Site: {context.get(site, Unknown)}")
         
         # Period information
-        period = context.get('period', {})
-        if period.get('start') and period.get('end'):
-            lines.append(f"Period: {period['start']} to {period['end']}")
+        period = context.get("period", {})
+        if period.get("start") and period.get("end"):
+            lines.append(f"Period: {period[start]} to {period[end]}")
         
-        lines.append(f"Number of records: {context.get('record_count', 0)}")
+        lines.append(f"Number of records: {context.get(record_count, 0)}")
         
         # Aggregated data
-        if 'aggregates' in context:
-            agg = context['aggregates']
+        if "aggregates" in context:
+            agg = context["aggregates"]
             lines.append("\nAGGREGATED METRICS:")
-            lines.append(f"- Total consumption: {agg.get('total', 0):,.0f} kWh")
-            lines.append(f"- Average daily consumption: {agg.get('average', 0):,.0f} kWh")
-            lines.append(f"- Minimum daily: {agg.get('min', 0):,.0f} kWh")
-            lines.append(f"- Maximum daily: {agg.get('max', 0):,.0f} kWh")
-            lines.append(f"- Total cost: ${agg.get('total_cost', 0):,.2f}")
-            lines.append(f"- Total CO2 emissions: {agg.get('total_co2', 0):,.2f} tons")
-            if agg.get('avg_cost_per_kwh', 0) > 0:
-                lines.append(f"- Average cost per kWh: ${agg['avg_cost_per_kwh']:.3f}")
+            lines.append(f"- Total consumption: {agg.get(total, 0):,.0f} kWh")
+            lines.append(f"- Average daily consumption: {agg.get(average, 0):,.0f} kWh")
+            lines.append(f"- Minimum daily: {agg.get(min, 0):,.0f} kWh")
+            lines.append(f"- Maximum daily: {agg.get(max, 0):,.0f} kWh")
+            lines.append(f"- Total cost: ${agg.get(total_cost, 0):,.2f}")
+            lines.append(f"- Total CO2 emissions: {agg.get(total_co2, 0):,.2f} tons")
+            if agg.get("avg_cost_per_kwh", 0) > 0:
+                lines.append(f"- Average cost per kWh: ${agg[avg_cost_per_kwh]:.3f}")
         
         # Recent data samples
-        if 'recent_data' in context and context['recent_data']:
+        if "recent_data" in context and context["recent_data"]:
             lines.append("\nRECENT DAILY DATA:")
-            for i, record in enumerate(context['recent_data'][:5], 1):
-                lines.append(f"{i}. {record['date']}: {record['consumption']:,.0f} kWh, Cost: ${record['cost']:,.2f}")
+            for i, record in enumerate(context["recent_data"][:5], 1):
+                lines.append(f"{i}. {record[date]}: {record[consumption]:,.0f} kWh, Cost: ${record[cost]:,.2f}")
         
         return "\n".join(lines)
     
@@ -137,7 +151,7 @@ Please provide a clear, data-driven response based on the context above."""
         Convenience method that takes JSON string context
         
         Args:
-            user_query: The user's question
+            user_query: The users question
             context_json: Context data as JSON string
             intent_type: Optional intent type
             
@@ -147,6 +161,6 @@ Please provide a clear, data-driven response based on the context above."""
         try:
             context_data = json.loads(context_json) if isinstance(context_json, str) else context_json
         except json.JSONDecodeError:
-            context_data = {'error': 'Failed to parse context data'}
+            context_data = {"error": "Failed to parse context data"}
         
-        return self.create_augmented_prompt(user_query, context_data, intent_type or 'general')
+        return self.create_augmented_prompt(user_query, context_data, intent_type or "general")

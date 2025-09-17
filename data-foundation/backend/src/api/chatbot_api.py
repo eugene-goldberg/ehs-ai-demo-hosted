@@ -368,8 +368,11 @@ async def execute_rag_pipeline(user_message: str, session_context: dict = None) 
                         end_date=end_date
                     )
                 elif intent_type == "WATER_CONSUMPTION":
-                    # TODO: Implement water consumption retrieval
-                    context = {"message": "Water consumption data retrieval coming soon"}
+                    context = context_retriever.get_water_context(
+                        site=site,
+                        start_date=start_date,
+                        end_date=end_date
+                    )
                 elif intent_type == "WASTE_GENERATION":
                     # TODO: Implement waste generation retrieval
                     context = {"message": "Waste generation data retrieval coming soon"}

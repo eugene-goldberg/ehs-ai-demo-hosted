@@ -8,6 +8,7 @@ This service:
 - Classifies queries into predefined EHS categories
 - Extracts site information and time period data
 - Returns structured classification results
+- Provides explicit current date context for temporal interpretation
 
 Categories:
 - ELECTRICITY_CONSUMPTION
@@ -28,6 +29,7 @@ import importlib.util
 from typing import Dict, List, Optional, Any, Union
 from datetime import datetime, timedelta
 from dataclasses import dataclass
+import calendar
 
 # Import the LLM module directly from the file path
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -136,10 +138,56 @@ class IntentClassifier:
                 extracted_entities={"error": str(e)}
             )
     
+    def _get_current_date_context(self) -> str:
+        """Generate current date context for temporal interpretation."""
+        now = datetime.now()
+        
+        # Calculate last month
+        if now.month == 1:
+            last_month = now.replace(year=now.year - 1, month=12, day=1)
+        else:
+            last_month = now.replace(month=now.month - 1, day=1)
+        
+        # Get last day of last month
+        last_day_of_last_month = calendar.monthrange(last_month.year, last_month.month)[1]
+        last_month_end = last_month.replace(day=last_day_of_last_month)
+        
+        # Calculate current quarter
+        current_quarter = (now.month - 1) // 3 + 1
+        
+        # Calculate last quarter
+        if current_quarter == 1:
+            last_quarter = 4
+            last_quarter_year = now.year - 1
+        else:
+            last_quarter = current_quarter - 1
+            last_quarter_year = now.year
+        
+        return f"""
+CURRENT DATE AND TIME CONTEXT:
+- Today's date: {now.strftime('%B %d, %Y')} ({now.strftime('%Y-%m-%d')})
+- Current month: {now.strftime('%B %Y')}
+- Current year: {now.year}
+- Current quarter: Q{current_quarter} {now.year}
+
+TEMPORAL INTERPRETATION GUIDELINES:
+- "last month" = {last_month.strftime('%B %Y')} (specifically: {last_month.strftime('%Y-%m-%d')} to {last_month_end.strftime('%Y-%m-%d')})
+- "this month" = {now.strftime('%B %Y')} (specifically: {now.strftime('%Y-%m')}-01 to {now.strftime('%Y-%m')}-{calendar.monthrange(now.year, now.month)[1]})
+- "last quarter" = Q{last_quarter} {last_quarter_year}
+- "this year" = {now.year}
+- "last year" = {now.year - 1}
+
+When interpreting relative time phrases, use the current date context above to calculate the exact date ranges.
+"""
+    
     def _create_classification_prompt(self, query: str) -> str:
         """Create the classification prompt for the LLM."""
+        date_context = self._get_current_date_context()
+        
         prompt = f"""You are an expert EHS (Environmental, Health, and Safety) data analyst. 
 Classify the following user query into one of these categories and extract relevant metadata.
+
+{date_context}
 
 CATEGORIES:
 1. ELECTRICITY_CONSUMPTION - Questions about electrical energy usage, power consumption, kilowatt hours
@@ -156,10 +204,12 @@ SITES (extract if mentioned):
 
 TIME PERIODS (extract if mentioned):
 - Specific dates, months, years
-- Relative time phrases (last month, this year, Q1, etc.)
+- Relative time phrases (last month, this year, Q1, etc.) - ALWAYS interpret these using the current date context above
 - Date ranges
 
 USER QUERY: "{query}"
+
+IMPORTANT: When you encounter relative time phrases like "last month", "this month", "last quarter", etc., use the CURRENT DATE CONTEXT provided above to calculate the exact start_date and end_date values in YYYY-MM-DD format.
 
 Respond with a JSON object in this exact format:
 {{
@@ -311,10 +361,30 @@ Be precise and confident in your classification. If uncertain between categories
         elif "algonquin" in query_lower or "illinois" in query_lower:
             site = "algonquin_illinois"
         
+        # Basic temporal handling for fallback
+        time_period = None
+        if "last month" in query_lower:
+            now = datetime.now()
+            if now.month == 1:
+                last_month = now.replace(year=now.year - 1, month=12, day=1)
+            else:
+                last_month = now.replace(month=now.month - 1, day=1)
+            
+            last_day_of_last_month = calendar.monthrange(last_month.year, last_month.month)[1]
+            last_month_end = last_month.replace(day=last_day_of_last_month)
+            
+            time_period = {
+                "type": "relative",
+                "value": "last month",
+                "start_date": last_month.strftime('%Y-%m-%d'),
+                "end_date": last_month_end.strftime('%Y-%m-%d')
+            }
+        
         return ClassificationResult(
             intent=intent,
             confidence=confidence,
             site=site,
+            time_period=time_period,
             raw_query=query,
             extracted_entities={"fallback": True}
         )
