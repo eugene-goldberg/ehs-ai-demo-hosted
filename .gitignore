@@ -1,1 +1,2 @@
 ehs-neo4j-snapshot-*.tar
+.env.backup

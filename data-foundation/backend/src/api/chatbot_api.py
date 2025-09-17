@@ -103,6 +103,7 @@ async def get_neo4j_client() -> Neo4jClient:
     try:
         connection_config = ConnectionConfig.from_env()
         client = Neo4jClient(connection_config)
+        client.connect()
         return client
     except Exception as e:
         logger.error(f"Failed to create Neo4j client: {e}")
@@ -117,7 +118,8 @@ async def get_environmental_service(neo4j_client: Neo4jClient = Depends(get_neo4
 def get_rag_neo4j_client():
     """Get or create Neo4j client instance for RAG"""
     if not hasattr(get_rag_neo4j_client, "_instance"):
-        get_rag_neo4j_client._instance = Neo4jClient()
+        connection_config = ConnectionConfig.from_env()
+        get_rag_neo4j_client._instance = Neo4jClient(connection_config)
         try:
             get_rag_neo4j_client._instance.connect()
             rag_logger.info("Neo4j client connected successfully")
@@ -343,20 +345,20 @@ async def execute_rag_pipeline(user_message: str, session_context: dict = None) 
         if intent_classifier:
             intent_result = intent_classifier.classify(user_message)
             pipeline_result["intent"] = intent_result
-            rag_logger.info(f"Intent classified: {intent_result.get('intent', 'UNKNOWN')}")
+            rag_logger.info(f"Intent classified: {intent_result.intent if intent_result else 'UNKNOWN'}")
             
             # Step 2: Retrieve Context (if intent is data-related)
             context_retriever = get_context_retriever()
-            if context_retriever and intent_result.get("intent") != "GENERAL":
+            if context_retriever and intent_result.intent != "GENERAL" if intent_result else False:
                 rag_logger.info("Retrieving context from Neo4j...")
                 
                 # Extract metadata from intent
-                site = intent_result.get("metadata", {}).get("site")
-                start_date = intent_result.get("metadata", {}).get("start_date")
-                end_date = intent_result.get("metadata", {}).get("end_date")
+                site = intent_result.site if intent_result else None
+                start_date = intent_result.time_period.get("start_date") if intent_result and intent_result.time_period else None
+                end_date = intent_result.time_period.get("end_date") if intent_result and intent_result.time_period else None
                 
                 # Map intent to retrieval method
-                intent_type = intent_result.get("intent", "").upper()
+                intent_type = intent_result.intent.upper() if intent_result and intent_result.intent else ""
                 
                 if intent_type == "ELECTRICITY_CONSUMPTION":
                     context = context_retriever.get_electricity_context(
@@ -380,10 +382,10 @@ async def execute_rag_pipeline(user_message: str, session_context: dict = None) 
                 prompt_augmenter = get_prompt_augmenter()
                 if prompt_augmenter and context:
                     rag_logger.info("Augmenting prompt with context...")
-                    augmented_prompt = prompt_augmenter.augment(
+                    augmented_prompt = prompt_augmenter.create_augmented_prompt(
                         user_query=user_message,
-                        intent=intent_result,
-                        context=context
+                        intent_type=intent_result.intent if intent_result else "GENERAL",
+                        context_data=context
                     )
                     pipeline_result["augmented_prompt"] = augmented_prompt
                     rag_logger.info("Prompt augmented successfully")
@@ -578,33 +580,33 @@ async def get_consumption_data(category: str, site: Optional[str], env_service: 
         
         if category == "electricity":
             if site == "algonquin_il":
-                return await env_service.get_electricity_consumption_facts("algonquin_il", start_date, end_date)
+                return env_service.get_llm_context_data("algonquin_il", start_date, end_date)
             elif site == "houston_tx":
-                return await env_service.get_electricity_consumption_facts("houston_tx", start_date, end_date)
+                return env_service.get_llm_context_data("houston_tx", start_date, end_date)
             else:
                 # Get data for both sites
-                algonquin_data = await env_service.get_electricity_consumption_facts("algonquin_il", start_date, end_date)
-                houston_data = await env_service.get_electricity_consumption_facts("houston_tx", start_date, end_date)
+                algonquin_data = env_service.get_llm_context_data("algonquin_il", start_date, end_date)
+                houston_data = env_service.get_llm_context_data("houston_tx", start_date, end_date)
                 return {"algonquin_il": algonquin_data, "houston_tx": houston_data}
         
         elif category == "water":
             if site == "algonquin_il":
-                return await env_service.get_water_consumption_facts("algonquin_il", start_date, end_date)
+                return env_service.get_llm_context_data("algonquin_il", start_date, end_date)
             elif site == "houston_tx":
-                return await env_service.get_water_consumption_facts("houston_tx", start_date, end_date)
+                return env_service.get_llm_context_data("houston_tx", start_date, end_date)
             else:
-                algonquin_data = await env_service.get_water_consumption_facts("algonquin_il", start_date, end_date)
-                houston_data = await env_service.get_water_consumption_facts("houston_tx", start_date, end_date)
+                algonquin_data = env_service.get_llm_context_data("algonquin_il", start_date, end_date)
+                houston_data = env_service.get_llm_context_data("houston_tx", start_date, end_date)
                 return {"algonquin_il": algonquin_data, "houston_tx": houston_data}
         
         elif category == "waste":
             if site == "algonquin_il":
-                return await env_service.get_waste_generation_facts("algonquin_il", start_date, end_date)
+                return env_service.get_llm_context_data("algonquin_il", start_date, end_date)
             elif site == "houston_tx":
-                return await env_service.get_waste_generation_facts("houston_tx", start_date, end_date)
+                return env_service.get_llm_context_data("houston_tx", start_date, end_date)
             else:
-                algonquin_data = await env_service.get_waste_generation_facts("algonquin_il", start_date, end_date)
-                houston_data = await env_service.get_waste_generation_facts("houston_tx", start_date, end_date)
+                algonquin_data = env_service.get_llm_context_data("algonquin_il", start_date, end_date)
+                houston_data = env_service.get_llm_context_data("houston_tx", start_date, end_date)
                 return {"algonquin_il": algonquin_data, "houston_tx": houston_data}
         
         return None
@@ -904,7 +906,8 @@ async def chat(
             
             # Generate intent-based suggestions
             suggestions = []
-            intent_type = rag_result.get("intent", {}).get("intent", "GENERAL")
+            intent_obj = rag_result.get("intent")
+            intent_type = intent_obj.intent if intent_obj else "GENERAL"
             if intent_type == "ELECTRICITY_CONSUMPTION":
                 suggestions = [
                     "Show electricity trends over time",
@@ -961,9 +964,10 @@ async def chat(
         
         # Add RAG metadata to session context
         if rag_result:
+            intent_obj = rag_result.get("intent")
             update_session_context(session_id, {
                 "last_rag_result": {
-                    "intent": rag_result.get("intent"),
+                    "intent": intent_obj.intent if intent_obj else None,
                     "has_context": bool(rag_result.get("context")),
                     "error": rag_result.get("error")
                 }
