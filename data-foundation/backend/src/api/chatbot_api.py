@@ -373,6 +373,12 @@ async def execute_rag_pipeline(user_message: str, session_context: dict = None) 
                         start_date=start_date,
                         end_date=end_date
                     )
+                elif intent_type == "CO2_GOALS":
+                    context = context_retriever.get_co2_goals_context(
+                        site=site,
+                        start_date=start_date,
+                        end_date=end_date
+                    )
                 elif intent_type == "WASTE_GENERATION":
                     # TODO: Implement waste generation retrieval
                     context = {"message": "Waste generation data retrieval coming soon"}
@@ -936,6 +942,12 @@ async def chat(
                     "Show water usage patterns",
                     "Identify peak consumption periods",
                     "Compare water usage between facilities"
+                ]
+            elif intent_type == "CO2_GOALS":
+                suggestions = [
+                    "Show CO2 reduction targets and goals",
+                    "Compare CO2 emissions by site",
+                    "Track progress towards environmental targets"
                 ]
             elif intent_type == "WASTE_GENERATION":
                 suggestions = [

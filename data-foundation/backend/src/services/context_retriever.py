@@ -496,7 +496,7 @@ class ContextRetriever:
             # Query for all Goal nodes for the site (including CO2-related ones)
             goals_query = """
             MATCH (g:Goal)
-            WHERE g.site_id = 
+            WHERE g.site_id = $site
             RETURN g.id as goal_id, g.category as category, g.description as description,
                    g.target_value as target_value, g.unit as unit, g.target_date as target_date,
                    g.baseline_year as baseline_year, g.target_year as target_year,
@@ -507,7 +507,7 @@ class ContextRetriever:
             # Query for all Environmental Targets for the site
             targets_query = """
             MATCH (et:EnvironmentalTarget)
-            WHERE et.site_id = 
+            WHERE et.site_id = $site
             RETURN et.id as target_id, et.target_type as target_type, et.description as description,
                    et.target_value as target_value, et.target_unit as target_unit, 
                    et.deadline as deadline, et.status as status,
