@@ -380,8 +380,8 @@ async def execute_rag_pipeline(user_message: str, session_context: dict = None) 
                     context = {"message": f"Context retrieval for {intent_type} not yet implemented"}
                 
                 pipeline_result["context"] = context
-                rag_logger.info(f"Context retrieved: {context.get('record_count', 0)} records")
-                
+                record_count = context.get("record_count", 0) if isinstance(context, dict) else "N/A"
+                rag_logger.info(f"Context retrieved: {record_count} records")
                 # Step 3: Augment Prompt
                 prompt_augmenter = get_prompt_augmenter()
                 if prompt_augmenter and context:
@@ -697,18 +697,25 @@ def format_electricity_response(data: Dict, site: Optional[str], entities: Dict)
         logger.error(f"Error formatting electricity response: {e}")
         return "Error formatting electricity consumption data."
 
-def format_water_response(data: Dict, site: Optional[str], entities: Dict) -> str:
+def format_water_response(data, site: Optional[str], entities: Dict) -> str:
     """Format water consumption response"""
     if not data:
         return "No water consumption data available."
     
+    # Handle string responses (e.g., water quality ratings)
+    if isinstance(data, str):
+        return data
+    
+    # Handle non-dict responses
+    if not isinstance(data, dict):
+        return str(data)
     try:
-        if isinstance(data, dict) and "algonquin_il" in data:
+        if "algonquin_il" in data:
             # Multi-site data
             response_parts = ["Here's the water consumption data for both sites:"]
             
             for site_key, site_data in data.items():
-                if site_data and "total_sum" in site_data:
+                if site_data and isinstance(site_data, dict) and "total_sum" in site_data:
                     site_name = "Algonquin, IL" if site_key == "algonquin_il" else "Houston, TX"
                     response_parts.append(f"\n{site_name}: {site_data['total_sum']:.2f} gallons total consumption")
                     response_parts.append(f"  Average: {site_data.get('average', 0):.2f} gallons")
