@@ -862,38 +862,19 @@ class ContextRetriever:
                 "record_count": 0
             }
         
-        # Build base query
-        where_conditions = ["r.site_id = $site"]
-        params = {"site": site}
-        
-        # Add optional filters
-        if category:
-            where_conditions.append("r.category = $category")
-            params["category"] = category.lower()
-        
-        if priority:
-            where_conditions.append("r.priority = $priority")
-            params["priority"] = priority.lower()
-        
-        where_clause = " AND ".join(where_conditions)
-        
-        query = f"""
+        # Updated query to retrieve the correct fields from Neo4j
+        query = """
         MATCH (r:Recommendation)
-        WHERE {where_clause}
-        RETURN r.id as recommendation_id, r.site_id as site_id, r.title as title,
-               r.description as description, r.category as category, 
-               r.priority as priority, r.estimated_impact as estimated_impact,
-               r.created_date as created_date
-        ORDER BY 
-            CASE r.priority 
-                WHEN 'high' THEN 1 
-                WHEN 'medium' THEN 2 
-                WHEN 'low' THEN 3 
-                ELSE 4 
-            END,
-            r.created_date DESC
-        LIMIT 100
+        WHERE r.site_id = $site
+        RETURN r.recommendations as recommendations, 
+               r.total_recommendations as total_recommendations,
+               r.created_date as created_date, 
+               r.site_id as site_id
+        ORDER BY r.created_date DESC
+        LIMIT 1
         """
+        
+        params = {"site": site}
         
         try:
             records = self._execute_query(query, params)
@@ -910,56 +891,82 @@ class ContextRetriever:
             # Convert records to dictionaries if needed
             if hasattr(records[0], 'data'):
                 # Neo4j Record objects
-                record_data = [record.data() for record in records]
+                record_data = records[0].data()
             else:
                 # Already dictionaries from Neo4j client
-                record_data = records
+                record_data = records[0]
             
-            # Process description field (it contains JSON-like string data)
-            for record in record_data:
-                if record.get('description'):
-                    try:
-                        # The description field contains a string representation of a dict
-                        # Convert it to a proper dict for easier processing
-                        import ast
-                        desc_str = record['description']
-                        if desc_str.startswith('{') and desc_str.endswith('}'):
-                            desc_dict = ast.literal_eval(desc_str)
-                            record['description_details'] = desc_dict
-                            record['action_description'] = desc_dict.get('actionDescription', '')
-                            record['priority_level'] = desc_dict.get('priorityLevel', '')
-                            record['best_practice_category'] = desc_dict.get('bestPracticeCategory', '')
-                            record['estimated_monthly_impact'] = desc_dict.get('estimatedMonthlyImpact', '')
-                            record['implementation_effort'] = desc_dict.get('implementationEffort', '')
-                            record['timeline'] = desc_dict.get('timeline', '')
-                            record['resource_requirements'] = desc_dict.get('resourceRequirements', '')
-                            record['supporting_evidence'] = desc_dict.get('supportingEvidence', '')
-                    except (ValueError, SyntaxError) as e:
-                        logger.warning(f"Could not parse description as dict: {e}")
-                        record['description_details'] = {}
+            # Parse the JSON string to get the recommendations array
+            recommendations_json = record_data.get('recommendations', '[]')
+            try:
+                recommendations_list = json.loads(recommendations_json)
+                if not isinstance(recommendations_list, list):
+                    logger.warning(f"Expected list but got {type(recommendations_list)}: {recommendations_list}")
+                    recommendations_list = []
+            except json.JSONDecodeError as e:
+                logger.error(f"Failed to parse recommendations JSON: {e}")
+                logger.error(f"Raw JSON string: {recommendations_json}")
+                return {
+                    "site": site,
+                    "site_id": site,
+                    "filters": {"category": category, "priority": priority},
+                    "error": f"Failed to parse recommendations data: {str(e)}",
+                    "record_count": 0
+                }
             
-            # Calculate aggregates and analyze priorities
-            priorities = [r.get('priority', 'unknown') for r in record_data]
-            categories = [r.get('category', 'unknown') for r in record_data]
+            # Apply filters to the recommendations
+            filtered_recommendations = []
+            for rec in recommendations_list:
+                # Apply category filter if specified
+                if category and rec.get('category', '').lower() != category.lower():
+                    continue
+                
+                # Apply priority filter if specified  
+                if priority and rec.get('priority', '').lower() != priority.lower():
+                    continue
+                
+                filtered_recommendations.append(rec)
             
-            # Group by priority
-            priority_breakdown = {}
-            for priority in priorities:
-                priority_breakdown[priority] = priority_breakdown.get(priority, 0) + 1
+            # Calculate summary statistics
+            all_categories = [rec.get('category', 'unknown') for rec in filtered_recommendations]
+            all_priorities = [rec.get('priority', 'unknown') for rec in filtered_recommendations]
+            all_timelines = [rec.get('timeline', rec.get('implementation_timeline', 'unknown')) for rec in filtered_recommendations]
+            all_efforts = [rec.get('effort_level', 'unknown') for rec in filtered_recommendations]
             
-            # Group by category
+            # Group by various attributes
             category_breakdown = {}
-            for category in categories:
-                category_breakdown[category] = category_breakdown.get(category, 0) + 1
+            for cat in all_categories:
+                category_breakdown[cat] = category_breakdown.get(cat, 0) + 1
             
-            # Group by timeline (from description details)
+            priority_breakdown = {}
+            for pri in all_priorities:
+                priority_breakdown[pri] = priority_breakdown.get(pri, 0) + 1
+            
             timeline_breakdown = {}
-            effort_breakdown = {}
-            for r in record_data:
-                timeline = r.get('timeline', 'unknown')
-                effort = r.get('implementation_effort', 'unknown')
+            for timeline in all_timelines:
                 timeline_breakdown[timeline] = timeline_breakdown.get(timeline, 0) + 1
+            
+            effort_breakdown = {}
+            for effort in all_efforts:
                 effort_breakdown[effort] = effort_breakdown.get(effort, 0) + 1
+            
+            # Format recommendations for output
+            formatted_recommendations = []
+            for rec in filtered_recommendations:
+                formatted_rec = {
+                    "id": rec.get('id'),
+                    "title": rec.get('title'),
+                    "description": rec.get('description'),
+                    "category": rec.get('category'),
+                    "expected_impact": rec.get('expected_impact'),
+                    "timeline": rec.get('timeline', rec.get('implementation_timeline')),
+                    "effort_level": rec.get('effort_level'),
+                    "priority": rec.get('priority'),
+                    "estimated_cost": rec.get('estimated_cost'),
+                    "roi_timeframe": rec.get('roi_timeframe'),
+                    "industry_citation": rec.get('industry_citation', rec.get('citation'))
+                }
+                formatted_recommendations.append(formatted_rec)
             
             return {
                 "site": site,
@@ -968,37 +975,20 @@ class ContextRetriever:
                     "category": category,
                     "priority": priority
                 },
-                "record_count": len(record_data),
+                "record_count": len(filtered_recommendations),
+                "total_recommendations": record_data.get('total_recommendations', len(recommendations_list)),
+                "created_date": record_data.get('created_date'),
                 "summary": {
-                    "total_recommendations": len(record_data),
-                    "priority_breakdown": priority_breakdown,
+                    "total_recommendations": len(filtered_recommendations),
                     "category_breakdown": category_breakdown,
+                    "priority_breakdown": priority_breakdown,
                     "timeline_breakdown": timeline_breakdown,
-                    "implementation_effort_breakdown": effort_breakdown,
-                    "high_priority_count": priority_breakdown.get('high', 0),
-                    "medium_priority_count": priority_breakdown.get('medium', 0),
-                    "low_priority_count": priority_breakdown.get('low', 0)
+                    "effort_breakdown": effort_breakdown,
+                    "high_priority_count": priority_breakdown.get('High', priority_breakdown.get('high', 0)),
+                    "medium_priority_count": priority_breakdown.get('Medium', priority_breakdown.get('medium', 0)),
+                    "low_priority_count": priority_breakdown.get('Low', priority_breakdown.get('low', 0))
                 },
-                "recommendations": [
-                    {
-                        "recommendation_id": r.get('recommendation_id'),
-                        "title": r.get('title'),
-                        "category": r.get('category'),
-                        "priority": r.get('priority'),
-                        "estimated_impact": r.get('estimated_impact'),
-                        "created_date": r.get('created_date'),
-                        "action_description": r.get('action_description'),
-                        "priority_level": r.get('priority_level'),
-                        "best_practice_category": r.get('best_practice_category'),
-                        "estimated_monthly_impact": r.get('estimated_monthly_impact'),
-                        "implementation_effort": r.get('implementation_effort'),
-                        "timeline": r.get('timeline'),
-                        "resource_requirements": r.get('resource_requirements'),
-                        "supporting_evidence": r.get('supporting_evidence'),
-                        "raw_description": r.get('description')
-                    }
-                    for r in record_data
-                ]
+                "recommendations": formatted_recommendations
             }
             
         except Exception as e:
@@ -1009,7 +999,6 @@ class ContextRetriever:
                 "error": str(e),
                 "record_count": 0
             }
-
 
 def get_context_for_intent(intent_type: str, site_filter: str = None,
                           start_date: str = None, end_date: str = None, 

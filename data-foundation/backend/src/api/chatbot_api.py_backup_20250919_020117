@@ -385,10 +385,6 @@ async def execute_rag_pipeline(user_message: str, session_context: dict = None) 
                         start_date=start_date,
                         end_date=end_date
                     )
-                elif intent_type == "RECOMMENDATIONS":
-                    context = context_retriever.get_recommendations_context(
-                        site=site
-                    )
                 elif intent_type == "WASTE_GENERATION":
                     # TODO: Implement waste generation retrieval
                     context = {"message": "Waste generation data retrieval coming soon"}
@@ -826,281 +822,28 @@ def format_trend_response(data: Dict, site: Optional[str]) -> str:
 
 async def get_performance_summary(site: Optional[str], env_service: EnvironmentalAssessmentService) -> Dict:
     """Get performance summary for recommendations"""
-    try:
-        # Default to 6 months of data for performance analysis
-        end_date = datetime.now().date()
-        start_date = end_date - timedelta(days=180)
-        
-        performance_data = {
-            "sites": [],
-            "electricity": {},
-            "water": {},
-            "waste": {},
-            "goals": {},
-            "recommendations_context": {}
-        }
-        
-        # Determine sites to analyze
-        sites_to_analyze = [site] if site else ["algonquin_il", "houston_tx"]
-        
-        for target_site in sites_to_analyze:
-            site_data = {
-                "site": target_site,
-                "site_name": "Algonquin, IL" if target_site == "algonquin_il" else "Houston, TX"
-            }
-            
-            # Get comprehensive assessment data
-            try:
-                llm_context = env_service.get_llm_context_data(target_site, start_date, end_date)
-                
-                # Extract electricity performance
-                electricity_data = llm_context.get("electricity", {})
-                if electricity_data:
-                    site_data["electricity"] = {
-                        "total_consumption": electricity_data.get("total_consumption", 0),
-                        "average_monthly": electricity_data.get("average_monthly", 0),
-                        "trend": electricity_data.get("trend", "stable"),
-                        "last_month": electricity_data.get("recent_monthly", {}).get("value", 0) if electricity_data.get("recent_monthly") else 0
-                    }
-                
-                # Extract water performance
-                water_data = llm_context.get("water", {})
-                if water_data:
-                    site_data["water"] = {
-                        "total_consumption": water_data.get("total_consumption", 0),
-                        "average_monthly": water_data.get("average_monthly", 0),
-                        "trend": water_data.get("trend", "stable"),
-                        "last_month": water_data.get("recent_monthly", {}).get("value", 0) if water_data.get("recent_monthly") else 0
-                    }
-                
-                # Extract waste performance
-                waste_data = llm_context.get("waste", {})
-                if waste_data:
-                    site_data["waste"] = {
-                        "total_generation": waste_data.get("total_generation", 0),
-                        "average_monthly": waste_data.get("average_monthly", 0),
-                        "trend": waste_data.get("trend", "stable"),
-                        "last_month": waste_data.get("recent_monthly", {}).get("value", 0) if waste_data.get("recent_monthly") else 0
-                    }
-                
-            except Exception as e:
-                logger.error(f"Error getting LLM context data for {target_site}: {e}")
-                # Set default values if data retrieval fails
-                site_data.update({
-                    "electricity": {"total_consumption": 0, "average_monthly": 0, "trend": "unknown", "last_month": 0},
-                    "water": {"total_consumption": 0, "average_monthly": 0, "trend": "unknown", "last_month": 0},
-                    "waste": {"total_generation": 0, "average_monthly": 0, "trend": "unknown", "last_month": 0}
-                })
-            
-            # Get goals for this site
-            try:
-                site_enum = SiteLocation.ALGONQUIN if target_site == "algonquin_il" else SiteLocation.HOUSTON
-                
-                # Get CO2/Electricity goal
-                co2_goal = get_goal(EHSCategory.CO2, site_enum)
-                water_goal = get_goal(EHSCategory.WATER, site_enum)
-                waste_goal = get_goal(EHSCategory.WASTE, site_enum)
-                
-                site_data["goals"] = {
-                    "co2_reduction": co2_goal.reduction_percentage if co2_goal else 0,
-                    "water_reduction": water_goal.reduction_percentage if water_goal else 0,
-                    "waste_reduction": waste_goal.reduction_percentage if waste_goal else 0,
-                    "baseline_year": co2_goal.baseline_year if co2_goal else 2023,
-                    "target_year": co2_goal.target_year if co2_goal else 2030
-                }
-                
-            except Exception as e:
-                logger.error(f"Error getting goals for {target_site}: {e}")
-                site_data["goals"] = {
-                    "co2_reduction": 0,
-                    "water_reduction": 0, 
-                    "waste_reduction": 0,
-                    "baseline_year": 2023,
-                    "target_year": 2030
-                }
-            
-            performance_data["sites"].append(site_data)
-            
-            # Aggregate data for overall analysis
-            if "total_electricity" not in performance_data["electricity"]:
-                performance_data["electricity"]["total_electricity"] = 0
-                performance_data["water"]["total_water"] = 0
-                performance_data["waste"]["total_waste"] = 0
-            
-            performance_data["electricity"]["total_electricity"] += site_data.get("electricity", {}).get("total_consumption", 0)
-            performance_data["water"]["total_water"] += site_data.get("water", {}).get("total_consumption", 0)
-            performance_data["waste"]["total_waste"] += site_data.get("waste", {}).get("total_generation", 0)
-        
-        # Add recommendations context
-        performance_data["recommendations_context"] = {
-            "analysis_period": f"{start_date} to {end_date}",
-            "sites_analyzed": len(sites_to_analyze),
-            "data_availability": "partial" if any(s.get("electricity", {}).get("total_consumption", 0) == 0 for s in performance_data["sites"]) else "complete"
-        }
-        
-        return performance_data
-        
-    except Exception as e:
-        logger.error(f"Error generating performance summary: {e}")
-        return {
-            "sites": [],
-            "electricity": {"total_electricity": 0},
-            "water": {"total_water": 0},
-            "waste": {"total_waste": 0},
-            "goals": {},
-            "recommendations_context": {"error": str(e)}
-        }
+    # Implementation would get current performance vs goals
+    return {"performance": "Performance summary would be implemented here"}
 
-
-def generate_recommendations(performance_data: Dict, site: Optional[str]) -> List[str]:
-    """Generate data-driven recommendations based on performance data"""
-    recommendations = []
-    
-    try:
-        sites_data = performance_data.get("sites", [])
-        if not sites_data:
-            return [
-                "Unable to generate specific recommendations due to limited data availability",
-                "Consider reviewing data collection processes for better insights",
-                "Implement regular monitoring and reporting systems"
-            ]
-        
-        # Analyze each site's performance
-        for site_data in sites_data:
-            site_name = site_data.get("site_name", "Unknown Site")
-            electricity = site_data.get("electricity", {})
-            water = site_data.get("water", {})
-            waste = site_data.get("waste", {})
-            goals = site_data.get("goals", {})
-            
-            # Electricity recommendations
-            if electricity.get("trend") == "increasing":
-                recommendations.append(f"🔌 {site_name}: Electricity consumption is increasing. Consider energy-efficient LED lighting and smart HVAC systems")
-            elif electricity.get("total_consumption", 0) > 10000:  # High consumption threshold
-                recommendations.append(f"⚡ {site_name}: High electricity usage detected. Implement energy monitoring systems and consider renewable energy sources")
-            
-            # Water recommendations  
-            if water.get("trend") == "increasing":
-                recommendations.append(f"💧 {site_name}: Water consumption is rising. Install low-flow fixtures and implement water recycling systems")
-            elif water.get("total_consumption", 0) > 5000:  # High water usage threshold
-                recommendations.append(f"🚰 {site_name}: Significant water usage detected. Consider rainwater harvesting and greywater systems")
-            
-            # Waste recommendations
-            if waste.get("trend") == "increasing":
-                recommendations.append(f"♻️ {site_name}: Waste generation is increasing. Enhance recycling programs and implement waste reduction initiatives")
-            elif waste.get("total_generation", 0) > 1000:  # High waste threshold  
-                recommendations.append(f"🗂️ {site_name}: High waste generation detected. Consider composting programs and supplier packaging reduction")
-            
-            # Goal-based recommendations
-            co2_target = goals.get("co2_reduction", 0)
-            water_target = goals.get("water_reduction", 0)
-            waste_target = goals.get("waste_reduction", 0)
-            
-            if co2_target > 20:  # Ambitious CO2 reduction goal
-                recommendations.append(f"🎯 {site_name}: With {co2_target}% CO2 reduction target, prioritize renewable energy and energy efficiency upgrades")
-            
-            if water_target > 15:  # Ambitious water reduction goal
-                recommendations.append(f"🎯 {site_name}: To achieve {water_target}% water reduction, implement advanced water management and conservation technologies")
-            
-            if waste_target > 15:  # Ambitious waste reduction goal
-                recommendations.append(f"🎯 {site_name}: For {waste_target}% waste reduction, establish comprehensive recycling and circular economy practices")
-        
-        # Cross-site recommendations if multiple sites
-        if len(sites_data) > 1:
-            total_electricity = performance_data.get("electricity", {}).get("total_electricity", 0)
-            total_water = performance_data.get("water", {}).get("total_water", 0)
-            total_waste = performance_data.get("waste", {}).get("total_waste", 0)
-            
-            if total_electricity > 20000:
-                recommendations.append("🏢 Multi-site: Consider centralized energy management platform for better coordination and optimization")
-            
-            if total_water > 10000:
-                recommendations.append("🌊 Multi-site: Implement standardized water conservation practices across all facilities")
-            
-            if total_waste > 2000:
-                recommendations.append("♻️ Multi-site: Develop unified waste management strategy with shared best practices")
-        
-        # Priority recommendations based on data trends
-        high_priority_items = []
-        for site_data in sites_data:
-            electricity = site_data.get("electricity", {})
-            water = site_data.get("water", {})
-            waste = site_data.get("waste", {})
-            
-            # Check for rapidly increasing trends that need immediate attention
-            if electricity.get("trend") == "increasing" and electricity.get("last_month", 0) > electricity.get("average_monthly", 0) * 1.2:
-                high_priority_items.append(f"🚨 PRIORITY: {site_data.get('site_name')}: Urgent attention needed for rapidly increasing electricity consumption")
-            
-            if water.get("trend") == "increasing" and water.get("last_month", 0) > water.get("average_monthly", 0) * 1.2:
-                high_priority_items.append(f"🚨 PRIORITY: {site_data.get('site_name')}: Immediate action required for accelerating water usage")
-        
-        # Add priority items at the beginning
-        recommendations = high_priority_items + recommendations
-        
-        # If no specific recommendations generated, provide general ones
-        if not recommendations:
-            recommendations = [
-                "Continue monitoring consumption patterns for trend identification",
-                "Regular audits of energy, water, and waste systems are recommended",
-                "Consider implementing IoT sensors for real-time monitoring",
-                "Establish employee awareness programs for resource conservation",
-                "Review and update EHS policies based on current performance data"
-            ]
-        
-        # Limit to top 8 recommendations to avoid overwhelming users
-        return recommendations[:8]
-        
-    except Exception as e:
-        logger.error(f"Error generating recommendations: {e}")
-        return [
-            "Unable to generate specific recommendations due to a technical issue",
-            "Please try again or contact support for assistance",
-            "Consider reviewing basic energy, water, and waste conservation practices"
-        ]
-
+def generate_recommendations(data: Dict, site: Optional[str]) -> List[str]:
+    """Generate recommendations based on performance data"""
+    # Sample recommendations
+    return [
+        "Consider implementing LED lighting to reduce electricity consumption",
+        "Install low-flow fixtures to decrease water usage",
+        "Enhance recycling programs to reduce waste generation",
+        "Implement energy management systems for better monitoring"
+    ]
 
 def format_recommendations_response(recommendations: List[str], site: Optional[str]) -> str:
-    """Format recommendations response with better structure"""
-    if not recommendations:
-        return "I'm sorry, but I couldn't generate specific recommendations at this time. Please try again or provide more specific information about what you'd like recommendations for."
+    """Format recommendations response"""
+    site_name = "Algonquin, IL" if site == "algonquin_il" else "Houston, TX" if site == "houston_tx" else "your facilities"
     
-    # Determine site context
-    if site:
-        site_name = "Algonquin, IL" if site == "algonquin_il" else "Houston, TX" if site == "houston_tx" else site
-        intro = f"Based on my analysis of performance data for {site_name}, here are my recommendations:"
-    else:
-        intro = "Based on my analysis of your environmental performance data across all facilities, here are my recommendations:"
+    response_parts = [f"Here are my recommendations for {site_name}:"]
+    for i, rec in enumerate(recommendations, 1):
+        response_parts.append(f"\n{i}. {rec}")
     
-    # Separate priority items from regular recommendations
-    priority_recs = [rec for rec in recommendations if "PRIORITY" in rec or "🚨" in rec]
-    regular_recs = [rec for rec in recommendations if "PRIORITY" not in rec and "🚨" not in rec]
-    
-    response_parts = [intro]
-    
-    # Add priority recommendations first
-    if priority_recs:
-        response_parts.append("\n\n🚨 HIGH PRIORITY ACTIONS:")
-        for i, rec in enumerate(priority_recs, 1):
-            # Remove the priority marker from display since we're in the priority section
-            clean_rec = rec.replace("🚨 PRIORITY: ", "").replace("🚨", "")
-            response_parts.append(f"\n{i}. {clean_rec}")
-    
-    # Add regular recommendations
-    if regular_recs:
-        if priority_recs:
-            response_parts.append("\n\n📋 ADDITIONAL RECOMMENDATIONS:")
-            start_num = len(priority_recs) + 1
-        else:
-            response_parts.append("\n")
-            start_num = 1
-            
-        for i, rec in enumerate(regular_recs, start_num):
-            response_parts.append(f"\n{i}. {rec}")
-    
-    # Add helpful footer
-    response_parts.append("\n\n💡 TIP: You can ask me for more details about any specific recommendation, or request analysis for different time periods or sites.")
-    
-    return "".join(response_parts)
+    return " ".join(response_parts)
 
 # API Endpoints
 

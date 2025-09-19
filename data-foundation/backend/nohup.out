@@ -5503,3 +5503,22 @@ INFO:ehs_extraction_api:Phase 1 integration cleaned up
 INFO:     Application shutdown complete.
 INFO:     Finished server process [69520]
 INFO:     Stopping reloader process [61879]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+/home/azureuser/dev/ehs-ai-demo/data-foundation/backend/src/ehs_extraction_api.py:517: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("startup")
+/home/azureuser/dev/ehs-ai-demo/data-foundation/backend/src/ehs_extraction_api.py:544: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("shutdown")
+INFO:     Will watch for changes in these directories: ['/home/azureuser/dev/ehs-ai-demo/data-foundation/backend']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [1161091] using StatReload
