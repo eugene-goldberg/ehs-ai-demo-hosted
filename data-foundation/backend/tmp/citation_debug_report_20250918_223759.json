@@ -1,0 +1,39 @@
+{
+  "timestamp": "20250918_223759",
+  "neo4j_raw_data": {
+    "found": true,
+    "citations_count": 0,
+    "citations": []
+  },
+  "context_retriever": {
+    "found": true,
+    "citations_count": 3,
+    "citations": [
+      [
+        1,
+        "industry_citations",
+        "Based on General Motors Bay City, Michigan plant achieving 11.5% energy intensity reduction and Bell's Brewery in Comstock, Michigan achieving 10.35% reduction through ENERGY STAR programs. Chrome Deposit Corporation achieved 12% natural gas reduction through boiler optimization and leak repairs."
+      ],
+      [
+        2,
+        "industry_citations",
+        "Following Cleveland-Cliffs Steel Corporation's model in Middletown, Ohio, installing electric melting furnaces and hydrogen-ready direct reduced iron (DRI) plant. American steel sector has demonstrated significant energy intensity reductions through electric arc furnace adoption."
+      ],
+      [
+        3,
+        "industry_citations",
+        "Based on successful Illinois implementations including Thelen Sand & Gravel's 2-megawatt ground-mounted system and Minnesota's RMS Company's 968 kWdc rooftop system providing 50% facility power. Complement with utility green tariff programs similar to General Motors' Michigan facilities achieving 100% wind power matching."
+      ]
+    ]
+  },
+  "prompt_augmenter": {
+    "found": true,
+    "citations_count": 4,
+    "citations": [
+      "Cleveland-Cliffs",
+      "General Motors",
+      "citations",
+      "references"
+    ]
+  }
+}

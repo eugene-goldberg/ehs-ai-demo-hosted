@@ -145,7 +145,7 @@ def get_context_retriever():
     if not hasattr(get_context_retriever, "_instance"):
         neo4j_client = get_rag_neo4j_client()
         if neo4j_client:
-            get_context_retriever._instance = ContextRetriever(neo4j_client)
+            get_context_retriever._instance = ContextRetriever()
             rag_logger.info("ContextRetriever initialized successfully")
         else:
             rag_logger.error("Cannot create ContextRetriever without Neo4j client")
@@ -379,12 +379,24 @@ async def execute_rag_pipeline(user_message: str, session_context: dict = None) 
                         start_date=start_date,
                         end_date=end_date
                     )
-                elif intent_type == "RISK_ASSESSMENT":                    context = context_retriever.get_risk_assessment_context(                        site=site,                        start_date=start_date,                        end_date=end_date                    )
+                elif intent_type == "RISK_ASSESSMENT":
+                    context = context_retriever.get_risk_assessment_context(
+                        site=site,
+                        start_date=start_date,
+                        end_date=end_date
+                    )
+                elif intent_type == "WASTE_GENERATION":
+                    # TODO: Implement waste generation retrieval
+                    context = {"message": "Waste generation data retrieval coming soon"}
+                elif intent_type == "RECOMMENDATIONS":
+                    context = context_retriever.get_recommendations_context(
+                        site=site,
+                        start_date=start_date,
+                        end_date=end_date
+                    )
+                else:
                     context = {"message": f"Context retrieval for {intent_type} not yet implemented"}
-                
-                pipeline_result["context"] = context
-                record_count = context.get("record_count", 0) if isinstance(context, dict) else "N/A"
-                rag_logger.info(f"Context retrieved: {record_count} records")
+                rag_logger.info(f"Context retrieved for {intent_type}")
                 # Step 3: Augment Prompt
                 prompt_augmenter = get_prompt_augmenter()
                 if prompt_augmenter and context:
@@ -542,16 +554,37 @@ async def handle_trend_query(site: Optional[str], entities: Dict, env_service: E
 async def handle_recommendation_query(site: Optional[str], entities: Dict, env_service: EnvironmentalAssessmentService) -> Dict[str, Any]:
     """Handle recommendation queries"""
     try:
-        # Get current performance data
-        performance_data = await get_performance_summary(site, env_service)
+        # Get recommendations context from RAG pipeline
+        context_retriever = get_context_retriever()
+        if not context_retriever:
+            logger.error("Context retriever not available")
+            raise HTTPException(status_code=500, detail="Context retriever service unavailable")
         
-        recommendations = generate_recommendations(performance_data, site)
+        # Get recommendations context for the site
+        context = context_retriever.get_recommendations_context(site)
         
-        response = format_recommendations_response(recommendations, site)
+        # Format the context using prompt augmenter
+        prompt_augmenter = get_prompt_augmenter()
+        if not prompt_augmenter:
+            logger.error("Prompt augmenter not available")
+            raise HTTPException(status_code=500, detail="Prompt augmenter service unavailable")
+        
+        # Create query for recommendations
+        user_query = f"What are the recommended energy efficiency and environmental improvements for {site or 'our facilities'}?"
+        augmented_prompt = prompt_augmenter.create_augmented_prompt(user_query, context)
+        
+        # Get LLM response
+        llm = get_llm()
+        if not llm:
+            logger.error("LLM service not available")
+            raise HTTPException(status_code=500, detail="LLM service unavailable")
+        
+        # Generate response with site-specific recommendations
+        llm_response = llm.invoke(augmented_prompt)
         
         return {
-            "response": response,
-            "data_sources": ["Neo4j Database", "EHS Goals Configuration"],
+            "response": llm_response.content if hasattr(llm_response, 'content') else str(llm_response),
+            "data_sources": ["Neo4j Database", "EHS Goals Configuration", "RAG Knowledge Base"],
             "suggestions": ["What's the priority recommendation?", "Show me cost-saving opportunities", "How can we improve our environmental impact?"]
         }
         

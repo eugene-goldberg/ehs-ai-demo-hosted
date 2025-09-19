@@ -1,0 +1,567 @@
+"""
+FastAPI service for EHS data extraction using the DataExtractionWorkflow.
+Provides REST API endpoints for extracting electrical consumption, water consumption, 
+and waste generation data from Neo4j database.
+"""
+
+import os
+import sys
+import logging
+import json
+from datetime import datetime, date
+from typing import Dict, List, Any, Optional
+from pathlib import Path
+import subprocess
+
+# Add the src directory to Python path to enable imports when running from backend directory
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+src_dir = os.path.join(parent_dir, 'src')
+if src_dir not in sys.path:
+    sys.path.insert(0, src_dir)
+
+# Phase 1 Enhancement Imports
+from phase1_enhancements.phase1_integration import create_phase1_integration
+from phase1_enhancements.prorating_api import router as prorating_router
+
+# Simple Rejection API Import
+from api.simple_rejection_api import simple_rejection_router
+
+# Transcript API Import
+from api.transcript_api import router as transcript_router
+
+# Executive Dashboard V2 API Import
+from api.executive_dashboard_v2 import router as executive_dashboard_v2_router
+
+# Executive Dashboard API Import
+from api.executive_dashboard_api import router as executive_dashboard_router
+
+# Environmental Assessment API Import
+from api.environmental_assessment_api import router as environmental_assessment_router
+
+# EHS Goals API Import
+from api.ehs_goals_api import router as ehs_goals_router
+
+# Dashboard Category API Import
+from api.dashboard_category_api import router as dashboard_category_router
+# Chatbot API Import
+from api.chatbot_api import router as chatbot_router
+
+
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field, validator
+from dotenv import load_dotenv
+import uvicorn
+
+from ehs_workflows.extraction_workflow import DataExtractionWorkflow, QueryType
+from api_response import create_api_response
+from langsmith_config import create_ingestion_session, is_langsmith_available
+
+# Load environment variables
+load_dotenv()
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# FastAPI app configuration
+app = FastAPI(
+    title="EHS Data Extraction API",
+    description="API service for extracting EHS (Environmental, Health, Safety) data",
+    version="1.0.0",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc"
+)
+
+# Phase 1 Integration
+phase1_integration = None
+
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure appropriately for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include the Simple Rejection API router
+app.include_router(simple_rejection_router)
+
+# Include the Prorating API router
+app.include_router(prorating_router)
+
+# Include the Transcript API router
+app.include_router(transcript_router)
+
+# Include the Executive Dashboard V2 API router
+app.include_router(executive_dashboard_v2_router, prefix="/api/v2")
+
+# Include the Executive Dashboard API router
+app.include_router(executive_dashboard_router)
+
+# Include the Environmental Assessment API router
+app.include_router(environmental_assessment_router)
+
+# Include the EHS Goals API router
+app.include_router(ehs_goals_router)
+
+# Include the Dashboard Category API router
+app.include_router(dashboard_category_router)
+# Include the Chatbot API router
+app.include_router(chatbot_router)
+
+
+# Pydantic models for request/response validation
+class FacilityFilter(BaseModel):
+    """Filter for facility-based queries."""
+    facility_id: Optional[str] = Field(None, description="Specific facility ID")
+    facility_name: Optional[str] = Field(None, description="Facility name pattern")
+
+class LocationFilter(BaseModel):
+    """Filter for location-based queries."""
+    location: Optional[str] = Field(None, description="Location name or pattern")
+    city: Optional[str] = Field(None, description="City name")
+    state: Optional[str] = Field(None, description="State name")
+    country: Optional[str] = Field(None, description="Country name")
+
+class DateFilter(BaseModel):
+    """Filter for date-based queries."""
+    start_date: Optional[date] = Field(None, description="Start date (YYYY-MM-DD)")
+    end_date: Optional[date] = Field(None, description="End date (YYYY-MM-DD)")
+
+class ExtractionRequest(BaseModel):
+    """Request model for data extraction."""
+    query_type: QueryType = Field(..., description="Type of query to execute")
+    facility_filter: Optional[FacilityFilter] = Field(None, description="Facility filtering options")
+    location_filter: Optional[LocationFilter] = Field(None, description="Location filtering options") 
+    date_filter: Optional[DateFilter] = Field(None, description="Date filtering options")
+    limit: Optional[int] = Field(None, ge=1, le=10000, description="Maximum number of records to return")
+    langsmith_session: Optional[str] = Field(None, description="LangSmith session name for tracing")
+
+class BatchIngestionRequest(BaseModel):
+    """Request model for batch ingestion."""
+    langsmith_session: Optional[str] = Field(None, description="LangSmith session name for tracing")
+
+class ExtractionResponse(BaseModel):
+    """Response model for extraction results."""
+    query_type: str
+    total_records: int
+    processing_time_seconds: float
+    data: List[Dict[str, Any]]
+    filters_applied: Dict[str, Any]
+    langsmith_session: Optional[str] = None
+    timestamp: str
+
+class BatchIngestionResponse(BaseModel):
+    """Response model for batch ingestion results."""
+    ingestion_id: str
+    status: str
+    processing_time_seconds: float
+    successful_ingestions: int
+    total_nodes: int
+    total_relationships: int
+    documents_processed: List[Dict[str, Any]]
+    langsmith_session: Optional[str] = None
+    langsmith_traces: Optional[Dict[str, Any]] = None
+    output: str
+    error_output: str
+    timestamp: str
+
+# Dependency to get workflow instance
+async def get_workflow():
+    """Dependency to get workflow instance."""
+    try:
+        return DataExtractionWorkflow()
+    except Exception as e:
+        logger.error(f"Failed to initialize workflow: {e}")
+        raise HTTPException(status_code=500, detail="Workflow initialization failed")
+
+# Helper function to convert date to string
+def date_to_string(date_obj: Optional[date]) -> Optional[str]:
+    """Convert date object to string for workflow."""
+    return date_obj.isoformat() if date_obj else None
+
+@app.get("/")
+async def root():
+    """Root endpoint providing API information."""
+    return {
+        "message": "EHS Data Extraction API",
+        "version": "1.0.0",
+        "endpoints": {
+            "docs": "/api/docs",
+            "redoc": "/api/redoc",
+            "extract": "/api/extract",
+            "batch-ingest": "/api/batch-ingest",
+            "health": "/api/health"
+        }
+    }
+
+@app.get("/api/health")
+async def health_check():
+    """Health check endpoint."""
+    try:
+        # Test workflow initialization
+        workflow = DataExtractionWorkflow()
+        neo4j_status = "connected" if hasattr(workflow, '_neo4j_client') else "unknown"
+        
+        return {
+            "status": "healthy",
+            "timestamp": datetime.utcnow().isoformat(),
+            "neo4j": neo4j_status,
+            "langsmith": "available" if is_langsmith_available() else "unavailable"
+        }
+    except Exception as e:
+        logger.error(f"Health check failed: {e}")
+        raise HTTPException(status_code=503, detail=f"Service unhealthy: {str(e)}")
+
+@app.post("/api/extract", response_model=ExtractionResponse)
+async def extract_data(
+    request: ExtractionRequest,
+    workflow: DataExtractionWorkflow = Depends(get_workflow)
+):
+    """
+    Extract EHS data based on query type and filters.
+    
+    Supports extraction of electrical consumption, water consumption, 
+    and waste generation data with flexible filtering options.
+    """
+    start_time = datetime.utcnow()
+    
+    # Create LangSmith session if requested
+    langsmith_session = None
+    if request.langsmith_session and is_langsmith_available():
+        try:
+            langsmith_session = create_ingestion_session(
+                session_name=request.langsmith_session,
+                query_type=request.query_type.value
+            )
+            logger.info(f"Created LangSmith session: {langsmith_session}")
+        except Exception as e:
+            logger.warning(f"Failed to create LangSmith session: {e}")
+    
+    try:
+        logger.info(f"Processing extraction request: {request.query_type}")
+        
+        # Prepare filters for workflow
+        filters = {}
+        
+        if request.facility_filter:
+            if request.facility_filter.facility_id:
+                filters['facility_id'] = request.facility_filter.facility_id
+            if request.facility_filter.facility_name:
+                filters['facility_name'] = request.facility_filter.facility_name
+        
+        if request.location_filter:
+            if request.location_filter.location:
+                filters['location'] = request.location_filter.location
+            if request.location_filter.city:
+                filters['city'] = request.location_filter.city
+            if request.location_filter.state:
+                filters['state'] = request.location_filter.state
+            if request.location_filter.country:
+                filters['country'] = request.location_filter.country
+        
+        if request.date_filter:
+            if request.date_filter.start_date:
+                filters['start_date'] = date_to_string(request.date_filter.start_date)
+            if request.date_filter.end_date:
+                filters['end_date'] = date_to_string(request.date_filter.end_date)
+        
+        if request.limit:
+            filters['limit'] = request.limit
+        
+        # Execute query
+        result = await workflow.execute_query(request.query_type, **filters)
+        
+        end_time = datetime.utcnow()
+        processing_time = (end_time - start_time).total_seconds()
+        
+        # Prepare response
+        response_data = ExtractionResponse(
+            query_type=request.query_type.value,
+            total_records=len(result.get('data', [])),
+            processing_time_seconds=processing_time,
+            data=result.get('data', []),
+            filters_applied=filters,
+            langsmith_session=langsmith_session,
+            timestamp=end_time.isoformat()
+        )
+        
+        logger.info(f"Extraction completed successfully: {len(result.get('data', []))} records")
+        return response_data
+        
+    except Exception as e:
+        logger.error(f"Extraction failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Extraction failed: {str(e)}")
+
+@app.post("/api/batch-ingest", response_model=BatchIngestionResponse)
+async def batch_ingest(request: BatchIngestionRequest):
+    """
+    Trigger batch ingestion of EHS data using the external ingestion script.
+    
+    This endpoint executes the run_batch_ingestion.py script which processes
+    electrical bills, water bills, and waste manifests in batch.
+    """
+    start_time = datetime.utcnow()
+    ingestion_id = f"batch-{int(start_time.timestamp())}"
+    
+    # Create LangSmith session if requested
+    langsmith_session = None
+    if request.langsmith_session and is_langsmith_available():
+        try:
+            langsmith_session = create_ingestion_session(
+                session_name=request.langsmith_session,
+                query_type="batch_ingestion"
+            )
+            logger.info(f"Created LangSmith session: {langsmith_session}")
+        except Exception as e:
+            logger.warning(f"Failed to create LangSmith session: {e}")
+    
+    try:
+        logger.info(f"Starting batch ingestion: {ingestion_id}")
+        
+        # Path to the batch ingestion script
+        script_path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            "run_batch_ingestion.py"
+        )
+        
+        # Verify script exists
+        if not os.path.exists(script_path):
+            raise HTTPException(
+                status_code=500,
+                detail=f"Ingestion script not found at: {script_path}"
+            )
+        
+        # Run the ingestion script
+        logger.info(f"Executing ingestion script: {script_path}")
+        
+        # Create environment with correct PYTHONPATH
+        env = {**os.environ}
+        # Clear PYTHONPATH to avoid conflicts between our workflows and llama_index.workflows
+        # The script will handle its own path setup
+        env.pop('PYTHONPATH', None)
+        
+        # Pass ingestion ID to the script for LangSmith tracing
+        if langsmith_session:
+            env['LANGSMITH_INGESTION_ID'] = ingestion_id
+        
+        # Execute the script and capture output
+        result = subprocess.run(
+            [sys.executable, script_path],
+            capture_output=True,
+            text=True,
+            env=env
+        )
+        
+        end_time = datetime.utcnow()
+        processing_time = (end_time - start_time).total_seconds()
+        
+        # Parse the output to extract results
+        output_lines = result.stdout.split('\n')
+        stderr_lines = result.stderr.split('\n')
+        
+        # Extract summary information from output
+        successful_ingestions = 0
+        total_nodes = 0
+        total_relationships = 0
+        documents_results = []
+        
+        # Parse output for results
+        for line in output_lines:
+            if "Successful Ingestions:" in line:
+                try:
+                    successful_ingestions = int(line.split(":")[1].strip())
+                except:
+                    pass
+            elif "Nodes Created:" in line:
+                try:
+                    total_nodes = int(line.split(":")[1].strip())
+                except:
+                    pass
+            elif "Relationships Created:" in line:
+                try:
+                    total_relationships = int(line.split(":")[1].strip())
+                except:
+                    pass
+            elif "PROCESSED SUCCESSFULLY" in line or "PROCESSING FAILED" in line:
+                # Extract document processing results
+                doc_type = None
+                if "ELECTRIC_BILL" in line:
+                    doc_type = "electric_bill"
+                elif "WATER_BILL" in line:
+                    doc_type = "water_bill"
+                elif "WASTE_MANIFEST" in line:
+                    doc_type = "waste_manifest"
+                
+                if doc_type:
+                    documents_results.append({
+                        "document_type": doc_type,
+                        "status": "success" if "SUCCESSFULLY" in line else "failed"
+                    })
+        
+        # Check if script executed successfully
+        if result.returncode == 0:
+            # Fetch LangSmith traces if available
+            langsmith_traces = None
+            if langsmith_session and is_langsmith_available():
+                try:
+                    logger.info(f"Fetching LangSmith traces for session: {langsmith_session}")
+                    
+                    # Run the trace download script
+                    traces_script_path = os.path.join(
+                        os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+                        "scripts",
+                        "download_langsmith_traces.py"
+                    )
+                    
+                    # Create traces output directory
+                    traces_output_dir = os.path.join(
+                        os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+                        "traces_output"
+                    )
+                    os.makedirs(traces_output_dir, exist_ok=True)
+                    
+                    # Execute traces download with timeout
+                    traces_result = subprocess.run(
+                        [sys.executable, traces_script_path, langsmith_session, traces_output_dir],
+                        capture_output=True,
+                        text=True,
+                        timeout=60  # 60 second timeout for trace download
+                    )
+                    
+                    if traces_result.returncode == 0:
+                        # Look for trace files
+                        trace_file_pattern = f"{langsmith_session}_traces.json"
+                        trace_file_path = os.path.join(traces_output_dir, trace_file_pattern)
+                        
+                        if os.path.exists(trace_file_path):
+                            with open(trace_file_path, 'r') as f:
+                                langsmith_traces = json.load(f)
+                            logger.info(f"Successfully loaded LangSmith traces: {len(langsmith_traces.get('traces', []))} traces")
+                        else:
+                            logger.warning(f"Trace file not found: {trace_file_path}")
+                    else:
+                        logger.warning(f"Failed to download traces: {traces_result.stderr}")
+                        
+                except subprocess.TimeoutExpired:
+                    logger.warning("Trace download timed out")
+                except Exception as e:
+                    logger.warning(f"Error fetching LangSmith traces: {e}")
+            
+            response_data = BatchIngestionResponse(
+                ingestion_id=ingestion_id,
+                status="completed",
+                processing_time_seconds=processing_time,
+                successful_ingestions=successful_ingestions,
+                total_nodes=total_nodes,
+                total_relationships=total_relationships,
+                documents_processed=documents_results,
+                langsmith_session=langsmith_session,
+                langsmith_traces=langsmith_traces,
+                output=result.stdout,
+                error_output=result.stderr,
+                timestamp=end_time.isoformat()
+            )
+            
+            logger.info(f"Batch ingestion completed successfully: {ingestion_id}")
+            return response_data
+        else:
+            # Script failed
+            error_msg = f"Batch ingestion script failed with return code {result.returncode}"
+            logger.error(f"{error_msg}. STDOUT: {result.stdout}. STDERR: {result.stderr}")
+            
+            response_data = BatchIngestionResponse(
+                ingestion_id=ingestion_id,
+                status="failed",
+                processing_time_seconds=processing_time,
+                successful_ingestions=successful_ingestions,
+                total_nodes=total_nodes,
+                total_relationships=total_relationships,
+                documents_processed=documents_results,
+                langsmith_session=langsmith_session,
+                langsmith_traces=None,
+                output=result.stdout,
+                error_output=result.stderr,
+                timestamp=end_time.isoformat()
+            )
+            
+            return response_data
+            
+    except Exception as e:
+        end_time = datetime.utcnow()
+        processing_time = (end_time - start_time).total_seconds()
+        logger.error(f"Batch ingestion failed: {e}")
+        
+        # Return error response
+        response_data = BatchIngestionResponse(
+            ingestion_id=ingestion_id,
+            status="error",
+            processing_time_seconds=processing_time,
+            successful_ingestions=0,
+            total_nodes=0,
+            total_relationships=0,
+            documents_processed=[],
+            langsmith_session=langsmith_session,
+            langsmith_traces=None,
+            output="",
+            error_output=str(e),
+            timestamp=end_time.isoformat()
+        )
+        
+        return response_data
+
+@app.on_event("startup")
+async def startup_event():
+    """Application startup event."""
+    global phase1_integration
+    logger.info("Starting EHS Data Extraction API...")
+    
+    try:
+        # Initialize Phase 1 Integration
+        phase1_integration = create_phase1_integration()
+        if phase1_integration:
+            logger.info("Phase 1 integration initialized successfully")
+        else:
+            logger.warning("Phase 1 integration initialization failed")
+            
+        # Log available API routers
+        logger.info("Dashboard Category API is available")
+        logger.info("Simple Rejection API is available")
+        logger.info("Prorating API is available")
+        logger.info("Transcript API is available")
+        logger.info("Executive Dashboard V2 API is available at /api/v2")
+        logger.info("Executive Dashboard API is available")
+        logger.info("Environmental Assessment API is available")
+        logger.info("EHS Goals API is available")
+        
+    except Exception as e:
+        logger.error(f"Error during startup: {e}")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Application shutdown event."""
+    logger.info("Shutting down EHS Data Extraction API...")
+    
+    # Clean up resources if needed
+    global phase1_integration
+    if phase1_integration:
+        try:
+            # Cleanup phase1 integration if it has cleanup methods
+            phase1_integration = None
+            logger.info("Phase 1 integration cleaned up")
+        except Exception as e:
+            logger.error(f"Error during cleanup: {e}")
+
+if __name__ == "__main__":
+    # Development server configuration
+    uvicorn.run(
+        "ehs_extraction_api:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True,
+        log_level="info"
+    )

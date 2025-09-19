@@ -1,0 +1,20 @@
+{
+  "timestamp": "20250918_220007",
+  "neo4j_raw_data": {
+    "found": false,
+    "citations_count": 0,
+    "citations": []
+  },
+  "context_retriever": {
+    "found": true,
+    "citations_count": 0,
+    "citations": []
+  },
+  "prompt_augmenter": {
+    "found": true,
+    "citations_count": 1,
+    "citations": [
+      "references"
+    ]
+  }
+}

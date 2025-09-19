@@ -379,7 +379,10 @@ async def execute_rag_pipeline(user_message: str, session_context: dict = None) 
                         start_date=start_date,
                         end_date=end_date
                     )
-                elif intent_type == "RISK_ASSESSMENT":                    context = context_retriever.get_risk_assessment_context(                        site=site,                        start_date=start_date,                        end_date=end_date                    )
+                elif intent_type == "WASTE_GENERATION":
+                    # TODO: Implement waste generation retrieval
+                    context = {"message": "Waste generation data retrieval coming soon"}
+                else:
                     context = {"message": f"Context retrieval for {intent_type} not yet implemented"}
                 
                 pipeline_result["context"] = context
