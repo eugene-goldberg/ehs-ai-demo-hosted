@@ -8137,3 +8137,968 @@ INFO:     10.66.152.102:52242 - "GET /api/chatbot/health HTTP/1.1" 200 OK
 2025-09-19 18:31:14,739 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
 INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
 INFO:     10.66.152.102:52245 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.102:52364 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.102:52364 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+2025-09-19 18:33:10,250 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:     10.66.152.102:52370 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:33:10,264 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:33:10,271 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:52369 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:33:10,289 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:33:10,293 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:52371 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:33:10,322 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:33:10,329 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:52372 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:33:10,719 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52370 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:33:10,728 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:33:10,734 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:52374 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:33:10,748 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:33:10,752 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:52375 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:33:10,779 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:33:10,783 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:52369 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:33:11,179 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52370 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:33:11,421 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52369 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:33:28,015 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:33:28,021 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved water data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated water dashboard for houston_tx
+INFO:     10.66.152.102:52398 - "GET /api/dashboard/water?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:33:28,046 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:33:28,050 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved waste data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for houston_tx
+INFO:     10.66.152.102:52397 - "GET /api/dashboard/waste?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:33:28,069 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:33:28,073 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: houston_tx
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for houston_tx
+INFO:     10.66.152.102:52399 - "GET /api/dashboard/electricity?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:33:28,566 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52399 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:33:28,806 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.102:52397 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:33:34,467 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:33:34,471 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:52407 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:33:34,490 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:33:34,494 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:52409 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:33:34,506 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:33:34,510 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:52408 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:33:35,023 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52408 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:33:35,278 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52409 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:34:18,916 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:34:18,921 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: houston_tx
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for houston_tx
+INFO:     10.66.152.102:52430 - "GET /api/dashboard/electricity?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:34:18,940 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:34:18,945 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved water data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated water dashboard for houston_tx
+INFO:     10.66.152.102:52432 - "GET /api/dashboard/water?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:34:18,969 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:34:18,973 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved waste data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for houston_tx
+INFO:     10.66.152.102:52431 - "GET /api/dashboard/waste?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:34:19,485 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52431 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:34:19,725 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52432 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:34:30,492 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:34:30,496 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:52435 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:34:30,508 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:34:30,512 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:52436 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:34:30,533 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:34:30,537 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:52434 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:34:31,077 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52434 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:34:31,349 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52436 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:34:54,602 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:34:54,607 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved waste data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for houston_tx
+INFO:     10.66.152.102:52442 - "GET /api/dashboard/waste?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:34:54,629 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:34:54,634 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved water data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated water dashboard for houston_tx
+INFO:     10.66.152.102:52441 - "GET /api/dashboard/water?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:34:54,661 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:34:54,666 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: houston_tx
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for houston_tx
+INFO:     10.66.152.102:52440 - "GET /api/dashboard/electricity?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:34:55,166 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52440 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:34:55,398 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52442 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:40:17,955 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:40:17,960 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: houston_tx
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for houston_tx
+INFO:     10.66.152.102:52801 - "GET /api/dashboard/electricity?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:40:17,981 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:40:17,986 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved water data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated water dashboard for houston_tx
+INFO:     10.66.152.102:52800 - "GET /api/dashboard/water?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:40:18,010 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:40:18,014 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved waste data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for houston_tx
+INFO:     10.66.152.102:52802 - "GET /api/dashboard/waste?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:40:18,470 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52802 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:40:18,680 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52800 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.102:52805 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.102:52806 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+2025-09-19 18:40:30,887 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:40:30,891 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:52816 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:40:30,901 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:     10.66.152.102:52818 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:40:30,907 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:40:30,911 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:52817 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:40:30,937 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:40:30,941 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:52819 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:40:31,398 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:40:31,402 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:52819 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:40:31,421 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:40:31,425 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:52816 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:40:31,436 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:40:31,440 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:52817 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:40:31,456 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:     10.66.152.102:52821 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:40:31,671 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52818 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:40:31,885 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.102:52821 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:40:39,660 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:40:39,664 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: houston_tx
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for houston_tx
+INFO:     10.66.152.102:52843 - "GET /api/dashboard/electricity?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:40:39,688 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:40:39,693 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved water data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated water dashboard for houston_tx
+INFO:     10.66.152.102:52845 - "GET /api/dashboard/water?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:40:39,712 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:40:39,715 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved waste data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for houston_tx
+INFO:     10.66.152.102:52844 - "GET /api/dashboard/waste?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:40:40,222 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52844 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:40:40,461 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52845 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.102:52881 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.102:52883 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+2025-09-19 18:41:15,400 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.016s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.016s)
+INFO:     10.66.152.102:52905 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:41:15,408 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:41:15,412 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:52907 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:41:15,429 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:41:15,433 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:52906 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:41:15,443 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:41:15,447 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:52908 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:41:15,816 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52905 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:41:15,823 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:41:15,827 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:52912 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:41:15,845 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:41:15,849 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:52907 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:41:15,858 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:41:15,861 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:52913 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:41:16,022 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52908 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:41:16,235 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52905 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:41:23,261 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:41:23,266 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: houston_tx
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for houston_tx
+INFO:     10.66.152.102:52944 - "GET /api/dashboard/electricity?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:41:23,286 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:41:23,290 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved water data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated water dashboard for houston_tx
+INFO:     10.66.152.102:52943 - "GET /api/dashboard/water?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:41:23,310 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:41:23,314 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved waste data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for houston_tx
+INFO:     10.66.152.102:52945 - "GET /api/dashboard/waste?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:41:23,768 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.102:52945 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:41:23,980 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:52943 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:42:33,768 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:42:33,773 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:53038 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:42:33,792 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:42:33,796 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:53039 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:42:33,807 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:42:33,811 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:53040 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:42:34,271 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53040 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:42:34,523 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:     10.66.152.102:53039 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:42:45,472 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:42:45,476 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved water data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated water dashboard for houston_tx
+INFO:     10.66.152.102:53056 - "GET /api/dashboard/water?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:42:45,494 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:42:45,498 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved waste data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for houston_tx
+INFO:     10.66.152.102:53057 - "GET /api/dashboard/waste?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:42:45,513 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:42:45,516 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: houston_tx
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for houston_tx
+INFO:     10.66.152.102:53055 - "GET /api/dashboard/electricity?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:42:45,999 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53055 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:42:46,238 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53057 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:42:51,280 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:42:51,284 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:53070 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:42:51,303 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:42:51,307 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:53071 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:42:51,318 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:42:51,322 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:53072 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:42:51,755 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53072 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:42:52,165 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53073 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:47:00,171 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:47:00,175 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:53319 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:47:00,186 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:47:00,189 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:53317 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:47:00,203 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:47:00,207 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:53318 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:47:00,624 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:47:00,628 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: houston_tx
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for houston_tx
+INFO:     10.66.152.102:53320 - "GET /api/dashboard/electricity?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:47:00,647 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:47:00,650 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved water data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated water dashboard for houston_tx
+INFO:     10.66.152.102:53321 - "GET /api/dashboard/water?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:47:00,668 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:     10.66.152.102:53318 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:47:00,675 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:47:00,679 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved waste data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for houston_tx
+INFO:     10.66.152.102:53322 - "GET /api/dashboard/waste?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:47:00,879 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.102:53317 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:47:01,123 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53322 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:47:01,337 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:     10.66.152.102:53321 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.102:53359 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.102:53359 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+2025-09-19 18:47:23,765 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:47:23,769 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:53373 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:47:23,789 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:     10.66.152.102:53371 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:47:23,795 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:47:23,800 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:53372 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:47:23,810 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:47:23,814 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:53374 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:47:24,194 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.102:53373 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:47:24,203 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:47:24,208 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:53375 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:47:24,230 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:47:24,235 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:53371 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:47:24,253 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:47:24,258 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:53376 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:47:24,409 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53374 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:47:24,624 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53375 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:48:06,737 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.010s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.010s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:48:06,741 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: houston_tx
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for houston_tx
+INFO:     10.66.152.102:53434 - "GET /api/dashboard/electricity?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:48:06,762 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:48:06,766 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved waste data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for houston_tx
+INFO:     10.66.152.102:53435 - "GET /api/dashboard/waste?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:48:06,781 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:48:06,784 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved water data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated water dashboard for houston_tx
+INFO:     10.66.152.102:53433 - "GET /api/dashboard/water?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:48:07,292 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53433 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:48:07,532 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53435 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:59:11,306 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:59:11,310 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:53817 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:59:11,319 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:59:11,323 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:53818 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:59:11,349 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:59:11,353 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:53819 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:59:11,797 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.102:53819 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:59:12,214 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53819 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:59:20,831 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:59:20,835 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved waste data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for houston_tx
+INFO:     10.66.152.102:53838 - "GET /api/dashboard/waste?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:59:20,850 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:59:20,854 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved water data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated water dashboard for houston_tx
+INFO:     10.66.152.102:53837 - "GET /api/dashboard/water?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:59:20,872 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:59:20,876 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.003s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: houston_tx
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for houston_tx
+INFO:     10.66.152.102:53839 - "GET /api/dashboard/electricity?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:59:21,364 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53839 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:59:21,622 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53837 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:59:26,946 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:59:26,952 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:53842 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:59:26,972 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:59:26,976 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:53843 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:59:27,098 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 18:59:27,103 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:53844 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 18:59:27,582 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53844 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 18:59:27,802 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:53843 - "GET /api/chatbot/health HTTP/1.1" 200 OK
