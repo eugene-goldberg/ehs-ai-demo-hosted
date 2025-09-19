@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
 import {
   Paper,
   Box,
@@ -287,8 +288,8 @@ const Chatbot = () => {
                   borderTopRightRadius: message.sender === 'user' ? 0.5 : 2
                 }}
               >
-                <Typography variant="body2" sx={{ wordBreak: 'break-word' }}>
-                  {message.text}
+                <Typography variant="body2" sx={{ wordBreak: 'break-word', ml: 2 }}>
+                  <ReactMarkdown>{message.text}</ReactMarkdown>
                 </Typography>
                 <Typography
                   variant="caption"

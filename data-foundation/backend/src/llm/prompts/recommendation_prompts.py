@@ -79,10 +79,50 @@ class RecommendationContext:
 class RecommendationPromptTemplates:
     """
     Comprehensive prompt templates for environmental recommendation generation.
-    
+
     This class provides structured prompt templates for generating actionable
     sustainability recommendations across electricity, water, and waste domains.
     """
+
+    # Standard formatting instructions for consistent output formatting
+    FORMATTING_INSTRUCTIONS = """
+FORMAT YOUR RESPONSE USING PROFESSIONAL MARKDOWN STRUCTURE:
+
+### Main Headers
+Use ### for primary sections (Summary, Key Recommendations, Implementation Plan)
+
+#### Subheaders
+Use #### for subsections within main categories
+
+**Bold Emphasis**
+Use **bold text** for:
+- Key metrics and quantified savings
+- Important deadlines and targets
+- Critical action items
+- Cost figures and ROI percentages
+
+*Bullet Points and Lists*
+- Use bullet points (-) for recommendation lists
+- Use numbered lists (1., 2., 3.) for sequential steps
+- Indent sub-items with spaces for hierarchy
+
+
+*Clear Section Spacing*
+- Leave blank lines between major sections
+- Use horizontal rules (---) to separate distinct topics when needed
+- Group related information logically
+
+*Citation and Reference Format*
+- Include relevant standards: [ENERGY STAR], [ISO 14001], [LEED Guidelines]
+- Reference industry benchmarks where applicable
+- Link to specific regulations or compliance requirements
+
+ENSURE ALL RESPONSES ARE:
+- Well-structured with clear visual hierarchy
+- Easy to scan with bold emphasis on key points
+- Professional and actionable with specific implementation guidance
+- Consistently formatted across all recommendation types
+"""
 
     # System prompts that establish AI expertise as a sustainability consultant
     SYSTEM_PROMPTS = {
@@ -108,6 +148,16 @@ Your recommendations should be:
 - Measurable with specific KPIs and success metrics
 - Risk-assessed with mitigation strategies for implementation challenges
 
+FORMATTING REQUIREMENTS:
+Structure your response using professional markdown formatting:
+- ### for main section headers (Executive Summary, Key Recommendations, Implementation Plan)
+- #### for subsections within each main category
+- **Bold text** for key metrics, cost savings, and critical action items
+- Bullet points (-) for recommendation lists and action items
+- Use bullet points for comparing metrics, costs, and timelines
+- Clear spacing between sections for readability
+- Include specific quantified benefits with **bold emphasis** on savings figures
+
 Always provide evidence-based recommendations with clear business cases and quantified benefits.""",
 
         "energy_efficiency_expert": """You are a Certified Energy Manager (CEM) and Energy Efficiency Expert specializing in:
@@ -124,7 +174,17 @@ Always provide evidence-based recommendations with clear business cases and quan
 - ENERGY STAR certification and green building standards
 - Demand response programs and grid interaction
 
-Focus on energy cost reduction, demand management, and carbon footprint minimization while maintaining operational requirements.""",
+Focus on energy cost reduction, demand management, and carbon footprint minimization while maintaining operational requirements.
+
+ENERGY-SPECIFIC FORMATTING REQUIREMENTS:
+Structure your energy recommendations using:
+- ### Energy Analysis Summary with **total kWh savings** and **cost reductions**
+- #### Equipment-Specific Recommendations (HVAC, Lighting, Motors, etc.)
+- **Bold emphasis** on energy savings (kWh, kW demand reduction, % efficiency gains)
+- Use bullet points for energy metrics comparison with clear formatting
+- #### Implementation Phases with timeline and **payback periods**
+- Reference relevant standards: [ENERGY STAR], [ASHRAE 90.1], [IEEE 519]
+- Include utility rate impact analysis with **demand charge savings**""",
 
         "water_conservation_expert": """You are a Water Conservation Specialist and Water Systems Engineer with expertise in:
 - Water audit methodologies and leak detection systems
@@ -140,7 +200,17 @@ Focus on energy cost reduction, demand management, and carbon footprint minimiza
 - Smart meter implementation and water analytics
 - Regulatory compliance (Clean Water Act, local water ordinances)
 
-Emphasize water conservation, quality maintenance, cost reduction, and sustainable water use practices.""",
+Emphasize water conservation, quality maintenance, cost reduction, and sustainable water use practices.
+
+WATER-SPECIFIC FORMATTING REQUIREMENTS:
+Structure your water conservation recommendations using:
+- ### Water Usage Analysis with **total gallons saved** and **cost reductions**
+- #### Conservation Strategy Categories (Fixtures, Systems, Behavioral)
+- **Bold emphasis** on water savings (gallons/day, % reduction, leak elimination)
+- Use bullet points for water consumption data with clear categorization
+- #### Implementation Timeline with **payback periods** for efficiency upgrades
+- Reference compliance standards: [Clean Water Act], [Local Water Ordinances], [EPA WaterSense]
+- Include water quality parameters and **maintenance cost reductions**""",
 
         "waste_optimization_expert": """You are a Waste Management Optimization Specialist and Circular Economy Expert with expertise in:
 - Waste stream analysis and characterization studies
@@ -156,7 +226,17 @@ Emphasize water conservation, quality maintenance, cost reduction, and sustainab
 - Employee training and behavior change programs
 - Regulatory compliance and waste auditing
 
-Focus on waste minimization, diversion rate improvement, cost reduction, and circular economy opportunities.""",
+Focus on waste minimization, diversion rate improvement, cost reduction, and circular economy opportunities.
+
+WASTE-SPECIFIC FORMATTING REQUIREMENTS:
+Structure your waste management recommendations using:
+- ### Waste Stream Analysis with **total waste diverted** and **disposal cost savings**
+- #### Waste Category Strategies (Recyclables, Organics, Hazardous, General)
+- **Bold emphasis** on diversion rates (%, tons diverted, cost per ton savings)
+- Use bullet points for waste disposal data and cost comparisons
+- #### Implementation Methods with **ROI calculations** and disposal alternatives
+- Reference regulations: [RCRA], [Local Waste Ordinances], [Zero Waste Standards]
+- Include contamination reduction strategies and **vendor cost optimizations**""",
 
         "technology_integration_expert": """You are a Sustainability Technology Integration Expert specializing in:
 - IoT sensor networks for environmental monitoring
@@ -172,7 +252,17 @@ Focus on waste minimization, diversion rate improvement, cost reduction, and cir
 - ROI analysis for technology investments
 - Change management for technology adoption
 
-Focus on technology solutions that provide measurable environmental and financial benefits with clear implementation pathways."""
+Focus on technology solutions that provide measurable environmental and financial benefits with clear implementation pathways.
+
+TECHNOLOGY-SPECIFIC FORMATTING REQUIREMENTS:
+Structure your technology recommendations using:
+- ### Technology Assessment Summary with **total implementation costs** and **projected savings**
+- #### Technology Categories (Monitoring, Analytics, Automation, Integration)
+- **Bold emphasis** on system specifications, data accuracy improvements, and **cost-benefit ratios**
+- Use bullet points for technology comparison and cost analysis
+- #### Integration Requirements with **compatibility assessments** and **security considerations**
+- Reference standards: [IoT Security], [Data Privacy], [System Interoperability]
+- Include vendor evaluation criteria and **ongoing maintenance costs**"""
     }
 
     # JSON Schema templates for structured recommendation outputs
@@ -488,6 +578,21 @@ RECOMMENDATION REQUIREMENTS:
 - Include technology recommendations with vendor considerations
 - Ensure compliance with electrical codes and utility requirements
 
+REQUIRED RESPONSE STRUCTURE:
+### Energy Efficiency Analysis Summary
+- **Total potential kWh savings** and **annual cost reductions**
+- **Peak demand reduction** opportunities and **utility rate optimization**
+
+#### Quick Win Opportunities (0-6 months)
+- Equipment adjustments and **immediate savings** potential
+- **Low-cost improvements** with high ROI
+
+#### Strategic Initiatives (6+ months)
+- Major equipment upgrades and **long-term savings**
+- **Capital investment** requirements and **payback analysis**
+
+#### Implementation Timeline
+
 {output_format_instruction}
 
 Focus on measurable energy cost reduction and sustainability improvements with proven implementation strategies.""",
@@ -518,6 +623,21 @@ RECOMMENDATION REQUIREMENTS:
 - Include technology recommendations for monitoring and control
 - Ensure compliance with water regulations and local ordinances
 
+REQUIRED RESPONSE STRUCTURE:
+### Water Conservation Analysis Summary
+- **Total potential gallons saved** per month/year and **annual cost reductions**
+- **Peak usage reduction** opportunities and **utility rate optimization**
+
+#### Immediate Conservation Measures (0-3 months)
+- Fixture upgrades and **immediate water savings** potential
+- **Low-cost efficiency improvements** with quick ROI
+
+#### System Improvements (3-12 months)
+- Infrastructure upgrades and **long-term water savings**
+- **Capital investment** requirements and **payback analysis**
+
+#### Water Usage Optimization
+
 {output_format_instruction}
 
 Focus on measurable water reduction, cost savings, and sustainable water management practices.""",
@@ -547,6 +667,21 @@ RECOMMENDATION REQUIREMENTS:
 - Address regulatory compliance and reporting requirements
 - Include technology recommendations for tracking and monitoring
 - Ensure alignment with circular economy principles
+
+REQUIRED RESPONSE STRUCTURE:
+### Waste Stream Analysis Summary
+- **Total waste diverted** from landfill and **annual disposal cost savings**
+- **Diversion rate improvements** and **contamination reduction** targets
+
+#### Source Reduction Opportunities (0-6 months)
+- Process improvements and **immediate waste reduction** potential
+- **Low-cost prevention strategies** with high impact
+
+#### Diversion Programs (3-12 months)
+- Recycling and composting programs with **long-term savings**
+- **Capital investment** requirements and **payback analysis**
+
+#### Waste Management Optimization
 
 {output_format_instruction}
 
@@ -858,11 +993,11 @@ Provide a strategically optimized implementation plan that maximizes sustainabil
     def get_output_format_instruction(self, output_format: str, schema_name: str = None) -> str:
         """
         Get output format instructions for prompts.
-        
+
         Args:
             output_format: Desired output format ('json', 'structured_text', 'markdown')
             schema_name: Name of JSON schema to use if JSON format
-            
+
         Returns:
             Format instruction string
         """
@@ -871,30 +1006,39 @@ Provide a strategically optimized implementation plan that maximizes sustainabil
                 return f"""OUTPUT FORMAT: Provide your recommendations as valid JSON following this exact schema:
 {self.JSON_SCHEMAS[schema_name]}
 
-Ensure all required fields are included and data types match the schema."""
+Ensure all required fields are included and data types match the schema.
+
+{self.FORMATTING_INSTRUCTIONS}"""
             else:
-                return """OUTPUT FORMAT: Provide your recommendations as structured JSON with clear sections for analysis, recommendations, costs, and implementation details."""
-        
+                return f"""OUTPUT FORMAT: Provide your recommendations as structured JSON with clear sections for analysis, recommendations, costs, and implementation details.
+
+{self.FORMATTING_INSTRUCTIONS}"""
+
         elif output_format == "structured_text":
-            return """OUTPUT FORMAT: Provide your recommendations in structured text format with clear headers:
-## EXECUTIVE SUMMARY
-## QUICK WIN OPPORTUNITIES
-## STRATEGIC RECOMMENDATIONS
-## TECHNOLOGY SOLUTIONS
-## COST-BENEFIT ANALYSIS
-## IMPLEMENTATION ROADMAP
-## SUCCESS METRICS"""
-        
+            return f"""OUTPUT FORMAT: Provide your recommendations in structured text format with clear headers:
+### EXECUTIVE SUMMARY
+### QUICK WIN OPPORTUNITIES
+### STRATEGIC RECOMMENDATIONS
+### TECHNOLOGY SOLUTIONS
+### COST-BENEFIT ANALYSIS
+### IMPLEMENTATION ROADMAP
+### SUCCESS METRICS
+
+{self.FORMATTING_INSTRUCTIONS}"""
+
         elif output_format == "markdown":
-            return """OUTPUT FORMAT: Provide your recommendations in well-formatted Markdown with:
-- Clear section headers and subsections
-- Bullet points for recommendation lists
-- Tables for cost-benefit comparisons
-- Bold text for important metrics and savings
-- Action items and implementation steps clearly highlighted
-- Links to relevant standards and resources where applicable"""
-        
-        return ""
+            return f"""OUTPUT FORMAT: Provide your recommendations in well-formatted Markdown with:
+- ### for main section headers (Executive Summary, Key Recommendations, Implementation Plan)
+- #### for subsections within each main category
+- **Bold text** for key metrics, cost savings, and critical action items
+- Bullet points (-) for recommendation lists and action items
+- Use bullet points for cost-benefit comparisons and metrics
+- Clear spacing between sections for readability
+- Links to relevant standards and resources where applicable
+
+{self.FORMATTING_INSTRUCTIONS}"""
+
+        return f"{self.FORMATTING_INSTRUCTIONS}"
 
     def create_comprehensive_recommendation_prompt(
         self,

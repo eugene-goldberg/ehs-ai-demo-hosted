@@ -5522,3 +5522,1862 @@ INFO:langsmith_config:LangSmith client initialized successfully
 INFO:     Will watch for changes in these directories: ['/home/azureuser/dev/ehs-ai-demo/data-foundation/backend']
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 INFO:     Started reloader process [1161091] using StatReload
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1161186]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+2025-09-19 02:44:47,400 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.008s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.008s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 1cbd2dc0-f758-4567-bb5f-2d457d4dc12b
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What was Houston's electricity consumption in August 2025?...
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:src.services.intent_classifier:Intent Classifier initialized with model: openai_gpt_4o
+INFO:rag_pipeline:IntentClassifier initialized successfully
+INFO:src.services.intent_classifier:Classifying query: What was Houston's electricity consumption in August 2025?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: ELECTRICITY_CONSUMPTION (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: ELECTRICITY_CONSUMPTION
+2025-09-19 02:44:48,881 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.010s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.010s)
+INFO:rag_pipeline:Neo4j client connected successfully
+INFO:rag_pipeline:ContextRetriever initialized successfully
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 31 records
+INFO:rag_pipeline:PromptAugmenter initialized successfully
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:51850 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 02:45:00,539 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:rag_pipeline:Processing chat request with RAG for session: d6004bec-0964-465d-8bde-b8b64c453e1c
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: How much did Algonquin spend on electricity last month?...
+INFO:src.services.intent_classifier:Classifying query: How much did Algonquin spend on electricity last month?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: ELECTRICITY_CONSUMPTION (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: ELECTRICITY_CONSUMPTION
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:51851 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 02:45:16,610 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 941567e3-c59c-4402-8723-3aa3a3c27632
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What's the peak electricity demand for Houston?...
+INFO:src.services.intent_classifier:Classifying query: What's the peak electricity demand for Houston?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: ELECTRICITY_CONSUMPTION (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: ELECTRICITY_CONSUMPTION
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 100 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:51855 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 02:45:28,629 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 92f2eb32-f098-45a6-b3d5-fce32fe9ffb7
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: How much water did Algonquin use in July 2025?...
+INFO:src.services.intent_classifier:Classifying query: How much water did Algonquin use in July 2025?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: WATER_CONSUMPTION (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: WATER_CONSUMPTION
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 31 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:51856 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 02:45:46,484 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.009s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.009s)
+INFO:rag_pipeline:Processing chat request with RAG for session: face7a61-58e3-458f-bb9e-024c1a9f5e22
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What are our CO2 reduction targets for the Algonquin IL site?...
+INFO:src.services.intent_classifier:Classifying query: What are our CO2 reduction targets for the Algonquin IL site?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: CO2_GOALS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: CO2_GOALS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:51858 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 02:45:59,625 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 6f371521-318c-4de1-b733-f85e9c3cca11
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: Are we on track to meet our emissions reduction goals?...
+INFO:src.services.intent_classifier:Classifying query: Are we on track to meet our emissions reduction goals?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: CO2_GOALS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: CO2_GOALS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 0 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:51861 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 02:46:47,483 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.014s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.014s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 806c6477-cc89-4ce8-b43e-c51dc291b42a
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: How much water did Algonquin use in July 2025?...
+INFO:src.services.intent_classifier:Classifying query: How much water did Algonquin use in July 2025?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: WATER_CONSUMPTION (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: WATER_CONSUMPTION
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 31 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:51863 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 02:47:04,715 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 9764ab5a-3c48-4680-83b9-2a4ff503329b
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What are our CO2 reduction targets for the Algonquin IL site?...
+INFO:src.services.intent_classifier:Classifying query: What are our CO2 reduction targets for the Algonquin IL site?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: CO2_GOALS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: CO2_GOALS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:51868 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 02:47:17,703 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: eddf5dcc-3cd6-4eeb-a5ad-6b6557a6d0e6
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What's the progress on Houston's CO2 reduction target?...
+INFO:src.services.intent_classifier:Classifying query: What's the progress on Houston's CO2 reduction target?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: CO2_GOALS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: CO2_GOALS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:51887 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 02:47:33,885 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:rag_pipeline:Processing chat request with RAG for session: ec8ead16-5adb-4f63-a8e2-72dad679d519
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What's the risk level for Houston?...
+INFO:src.services.intent_classifier:Classifying query: What's the risk level for Houston?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RISK_ASSESSMENT (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RISK_ASSESSMENT
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:51895 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 02:47:48,277 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 486f260c-fa77-4b40-b929-e5fc2383ec73
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What is the risk assessment for Algonquin?...
+INFO:src.services.intent_classifier:Classifying query: What is the risk assessment for Algonquin?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RISK_ASSESSMENT (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RISK_ASSESSMENT
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:51897 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+INFO:     10.66.152.102:51900 - "OPTIONS /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 02:48:05,536 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: e3ae624e-fc8d-4e64-b254-284953d8c346
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What recommendations do you have for the Houston site?...
+INFO:src.services.intent_classifier:Classifying query: What recommendations do you have for the Houston site?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RECOMMENDATIONS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RECOMMENDATIONS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 3 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:51900 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.123:52932 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.123:52932 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+INFO:     10.66.152.123:53065 - "OPTIONS /api/batch-ingest HTTP/1.1" 200 OK
+INFO:ehs_extraction_api:Starting batch ingestion: batch-1758278265
+INFO:ehs_extraction_api:Executing ingestion script: /home/azureuser/dev/ehs-ai-demo/data-foundation/backend/run_batch_ingestion.py
+INFO:ehs_extraction_api:Batch ingestion completed successfully: batch-1758278265
+INFO:     10.66.152.123:53069 - "POST /api/batch-ingest HTTP/1.1" 200 OK
+2025-09-19 10:39:21,506 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.008s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.008s)
+INFO:     10.66.152.123:53119 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 10:39:21,515 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 10:39:21,520 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.123:53120 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 10:39:21,539 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 10:39:21,546 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.123:53118 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 10:39:21,582 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 10:39:21,587 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.123:53117 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 10:39:21,612 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 10:39:21,618 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.123:53133 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 10:39:21,631 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 10:39:21,636 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.123:53154 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 10:39:21,883 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 10:39:21,888 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.123:53069 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.123:53120 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+2025-09-19 10:39:22,036 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:     10.66.152.123:53154 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 10:39:22,201 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:     10.66.152.123:53133 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+INFO:     10.66.152.123:53313 - "OPTIONS /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 10:40:44,776 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 19c95dc3-90df-4067-aad1-334db4be80f4
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What was Houston's electricity consumption in August 2025?...
+INFO:src.services.intent_classifier:Classifying query: What was Houston's electricity consumption in August 2025?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: ELECTRICITY_CONSUMPTION (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: ELECTRICITY_CONSUMPTION
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 31 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.123:53317 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 10:41:02,416 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 6e6a0097-70f7-4239-b625-3009bc511731
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: How much did Algonquin spend on electricity last month...
+INFO:src.services.intent_classifier:Classifying query: How much did Algonquin spend on electricity last month...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: ELECTRICITY_CONSUMPTION (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: ELECTRICITY_CONSUMPTION
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.123:53318 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 10:41:14,444 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 11c46a60-13ca-4e21-9d1d-7241a10bdff7
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What's the peak electricity demand for Houston?...
+INFO:src.services.intent_classifier:Classifying query: What's the peak electricity demand for Houston?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: ELECTRICITY_CONSUMPTION (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: ELECTRICITY_CONSUMPTION
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 100 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.123:53329 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 10:41:31,630 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 12b50d8c-c367-40ff-8351-89db9ee66a6c
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: How much water did Algonquin use...
+INFO:src.services.intent_classifier:Classifying query: How much water did Algonquin use...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: WATER_CONSUMPTION (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: WATER_CONSUMPTION
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 100 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.123:53335 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 10:42:01,488 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:rag_pipeline:Processing chat request with RAG for session: a5b54ae2-ba64-49c6-8459-ee5242a1f590
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What are our CO2 reduction targets for the Algonquin IL site?...
+INFO:src.services.intent_classifier:Classifying query: What are our CO2 reduction targets for the Algonquin IL site?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: CO2_GOALS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: CO2_GOALS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.123:53353 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 10:42:36,960 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 1a4eb9d9-6827-45c2-8907-e6d8b670ec1a
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What's the progress on Houston's CO2 reduction target?...
+INFO:src.services.intent_classifier:Classifying query: What's the progress on Houston's CO2 reduction target?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: CO2_GOALS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: CO2_GOALS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.123:53376 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 10:42:46,693 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 3c0044f5-3a7b-48a5-bc2d-42d619313382
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What's the risk level for Houston...
+INFO:src.services.intent_classifier:Classifying query: What's the risk level for Houston...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RISK_ASSESSMENT (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RISK_ASSESSMENT
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.123:53389 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 10:42:53,741 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 0e77beaf-e216-4b9b-a206-c4ffbde3cf19
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What is the risk assessment for Algonquin...
+INFO:src.services.intent_classifier:Classifying query: What is the risk assessment for Algonquin...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RISK_ASSESSMENT (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RISK_ASSESSMENT
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.123:53389 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 10:43:05,484 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 6534c2a1-8dbc-4a2e-9ebc-bc1bc145d328
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What are your energy efficiency recommendations for Houston, TX?...
+INFO:src.services.intent_classifier:Classifying query: What are your energy efficiency recommendations for Houston, TX?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RECOMMENDATIONS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RECOMMENDATIONS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 3 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.123:53392 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 10:44:20,856 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.009s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.009s)
+INFO:     10.66.152.123:53450 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 10:44:20,864 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 10:44:20,871 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.123:53452 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 10:44:20,895 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 10:44:20,900 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.123:53451 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 10:44:20,913 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 10:44:20,918 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.123:53453 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 10:44:21,132 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 10:44:21,138 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.123:53450 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 10:44:21,169 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.123:53454 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 10:44:21,178 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 10:44:21,191 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.013s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.013s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.123:53452 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 10:44:21,218 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 10:44:21,224 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.123:53455 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 10:44:21,310 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.123:53453 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 10:44:21,452 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.123:53454 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+WARNING:  StatReload detected changes in 'src/services/prompt_augmenter.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1161186]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1165589]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1165589]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1166731]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+INFO:     10.66.152.102:58798 - "OPTIONS /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 13:35:14,188 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.012s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.012s)
+INFO:rag_pipeline:Processing chat request with RAG for session: bfc267c3-044b-4446-86eb-d69b38f58798
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What recommendations do you have for the Houston site?...
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:src.services.intent_classifier:Intent Classifier initialized with model: openai_gpt_4o
+INFO:rag_pipeline:IntentClassifier initialized successfully
+INFO:src.services.intent_classifier:Classifying query: What recommendations do you have for the Houston site?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RECOMMENDATIONS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RECOMMENDATIONS
+2025-09-19 13:35:17,078 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:rag_pipeline:Neo4j client connected successfully
+INFO:rag_pipeline:ContextRetriever initialized successfully
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 3 records
+INFO:rag_pipeline:PromptAugmenter initialized successfully
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:58802 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 13:37:33,613 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:rag_pipeline:Processing chat request with RAG for session: c5cf7c53-9a14-44e1-bb96-7491e3c1753f
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What recommendations do you have for the Houston site?...
+INFO:src.services.intent_classifier:Classifying query: What recommendations do you have for the Houston site?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RECOMMENDATIONS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RECOMMENDATIONS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 3 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     127.0.0.1:52804 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 13:38:12,767 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 8645a359-43d2-4009-8246-a1fd0a262743
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What recommendations do you have for Houston?...
+INFO:src.services.intent_classifier:Classifying query: What recommendations do you have for Houston?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RECOMMENDATIONS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RECOMMENDATIONS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 3 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     127.0.0.1:41524 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.102:59676 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.102:59675 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+2025-09-19 13:54:20,515 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:     10.66.152.102:59675 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 13:54:20,526 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 13:54:20,531 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:59676 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 13:54:20,780 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 13:54:20,786 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:59689 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 13:54:20,818 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 13:54:20,825 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:59688 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 13:54:20,940 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.102:59675 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 13:54:20,968 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 13:54:20,973 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:59697 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 13:54:21,027 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.008s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.008s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 13:54:21,033 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:59676 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 13:54:21,071 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 13:54:21,077 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:59698 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 13:54:21,302 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.102:59688 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 13:54:21,534 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.102:59698 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+INFO:     10.66.152.102:59704 - "OPTIONS /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 13:54:40,818 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: d9f3a747-361e-45e7-9169-8981baeaea25
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What recommendations do you have for the Houston site?...
+INFO:src.services.intent_classifier:Classifying query: What recommendations do you have for the Houston site?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RECOMMENDATIONS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RECOMMENDATIONS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 3 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:59704 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 13:58:29,347 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:     10.66.152.102:59824 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 13:59:30,682 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 1ef75c30-31bc-4353-b671-4aa369a99813
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What recommendations do you have for the Houston site?...
+INFO:src.services.intent_classifier:Classifying query: What recommendations do you have for the Houston site?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RECOMMENDATIONS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RECOMMENDATIONS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 3 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:59878 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 13:59:59,864 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 25309a5e-534d-4847-9195-586e8432a194
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What's the progress on Houston's CO2 reduction target?...
+INFO:src.services.intent_classifier:Classifying query: What's the progress on Houston's CO2 reduction target?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: CO2_GOALS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: CO2_GOALS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:59879 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.123:61532 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.123:61532 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+2025-09-19 14:03:15,387 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.123:61576 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 14:03:15,394 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 14:03:15,399 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.123:61577 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 14:03:15,412 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 14:03:15,417 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.123:61579 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 14:03:15,439 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 14:03:15,444 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.123:61578 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 14:03:15,663 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.123:61576 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 14:03:15,674 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 14:03:15,679 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.123:61586 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 14:03:15,695 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 14:03:15,701 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.123:61577 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 14:03:15,723 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 14:03:15,728 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.123:61587 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 14:03:15,805 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.123:61578 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 14:03:15,948 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.123:61576 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+INFO:     10.66.152.123:61593 - "OPTIONS /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 14:03:33,967 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 02128f0c-f37e-41d3-b031-7076ea9b440a
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What recommendations do you have for the Houston site?...
+INFO:src.services.intent_classifier:Classifying query: What recommendations do you have for the Houston site?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RECOMMENDATIONS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RECOMMENDATIONS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 3 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.123:61597 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.167:64483 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.167:64484 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+2025-09-19 14:14:19,640 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 14:14:19,645 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: houston_tx
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for houston_tx
+INFO:     10.66.152.123:61777 - "GET /api/dashboard/electricity?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 14:14:19,680 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 14:14:19,686 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved water data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated water dashboard for houston_tx
+INFO:     10.66.152.123:61779 - "GET /api/dashboard/water?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 14:14:19,723 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 14:14:19,728 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved waste data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for houston_tx
+INFO:     10.66.152.123:61778 - "GET /api/dashboard/waste?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 14:14:20,095 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.008s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.008s)
+INFO:     10.66.152.123:61778 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 14:14:20,270 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.009s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.009s)
+INFO:     10.66.152.123:61779 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+INFO:     10.66.152.102:60178 - "OPTIONS /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 14:29:17,382 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 5818dbcc-6e6c-4321-9aee-b09ebad8999d
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What's the peak electricity demand for Houston?...
+INFO:src.services.intent_classifier:Classifying query: What's the peak electricity demand for Houston?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: ELECTRICITY_CONSUMPTION (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: ELECTRICITY_CONSUMPTION
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 100 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:60179 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 14:30:09,686 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: d0966c21-31e5-439a-b628-31e04d54bdbf
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What is the risk assessment for Algonquin?...
+INFO:src.services.intent_classifier:Classifying query: What is the risk assessment for Algonquin?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RISK_ASSESSMENT (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RISK_ASSESSMENT
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:60184 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+WARNING:  StatReload detected changes in 'src/services/prompt_augmenter.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1166731]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1170332]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/services/prompt_augmenter.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1170332]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1170514]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/services/prompt_augmenter.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1170514]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1170856]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/services/prompt_augmenter.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1170856]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1171164]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/services/prompt_augmenter.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1171164]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1171462]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/services/prompt_augmenter.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1171462]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1171754]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/services/prompt_augmenter.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1171754]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1172061]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.119:54664 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.119:54666 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+2025-09-19 15:03:43,731 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:03:43,737 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.119:54687 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:03:43,763 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:03:43,768 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.119:54682 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:03:43,799 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:03:43,804 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.119:54683 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:03:43,828 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:03:43,833 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.119:54681 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:03:43,848 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.119:54680 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 15:03:43,856 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.119:54684 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 15:03:43,866 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:03:43,872 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.119:54685 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:03:43,966 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:03:43,972 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.119:54696 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:03:44,249 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:     10.66.152.119:54683 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 15:03:44,258 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.119:54687 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 15:03:51,311 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:03:51,317 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: houston_tx
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for houston_tx
+INFO:     10.66.152.119:54699 - "GET /api/dashboard/electricity?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:03:51,349 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:03:51,355 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved water data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated water dashboard for houston_tx
+INFO:     10.66.152.119:54700 - "GET /api/dashboard/water?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:03:51,392 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.012s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.012s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:03:51,398 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: houston_tx
+INFO:api.dashboard_category_api:Successfully retrieved waste data for houston_texas
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for houston_tx
+INFO:     10.66.152.119:54701 - "GET /api/dashboard/waste?site_id=houston_tx&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:03:51,760 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.119:54699 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 15:03:51,768 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.119:54701 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+INFO:     10.66.152.102:61159 - "OPTIONS /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 15:04:31,691 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 1e672016-33e7-4cab-ae40-5e86e55f560f
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What is the risk assessment for Algonquin?...
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:src.services.intent_classifier:Intent Classifier initialized with model: openai_gpt_4o
+INFO:rag_pipeline:IntentClassifier initialized successfully
+INFO:src.services.intent_classifier:Classifying query: What is the risk assessment for Algonquin?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RISK_ASSESSMENT (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RISK_ASSESSMENT
+2025-09-19 15:04:34,171 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:rag_pipeline:Neo4j client connected successfully
+INFO:rag_pipeline:ContextRetriever initialized successfully
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:PromptAugmenter initialized successfully
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:61159 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 15:07:17,675 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:07:17,680 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.119:62820 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:07:17,704 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:07:17,709 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.119:62819 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:07:17,721 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:07:17,725 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.119:62821 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:07:18,119 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.119:62821 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 15:07:18,126 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.004s)
+INFO:     10.66.152.119:62819 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.119:62821 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.119:62819 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+WARNING:  StatReload detected changes in 'src/services/prompt_augmenter.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1172061]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1174425]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1174425]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1174558]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1174558]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1174749]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1174749]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1174881]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1174881]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1174964]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1174964]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1175146]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1175146]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1175230]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1175230]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1175412]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1175412]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1175495]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1175495]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1175679]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1175679]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1175762]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1175762]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1175903]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1175903]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1176184]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1176184]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1176328]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'src/llm/prompts/recommendation_prompts.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:ehs_extraction_api:Shutting down EHS Data Extraction API...
+INFO:ehs_extraction_api:Phase 1 integration cleaned up
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1176328]
+INFO:langsmith_config:LangSmith is available and configured
+INFO:langsmith_config:LangSmith client initialized successfully
+INFO:     Started server process [1176460]
+INFO:     Waiting for application startup.
+INFO:ehs_extraction_api:Starting EHS Data Extraction API...
+INFO:phase1_enhancements.phase1_integration:Phase1Integration initialized
+INFO:ehs_extraction_api:Phase 1 integration initialized successfully
+INFO:ehs_extraction_api:Dashboard Category API is available
+INFO:ehs_extraction_api:Simple Rejection API is available
+INFO:ehs_extraction_api:Prorating API is available
+INFO:ehs_extraction_api:Transcript API is available
+INFO:ehs_extraction_api:Executive Dashboard V2 API is available at /api/v2
+INFO:ehs_extraction_api:Executive Dashboard API is available
+INFO:ehs_extraction_api:Environmental Assessment API is available
+INFO:ehs_extraction_api:EHS Goals API is available
+INFO:     Application startup complete.
+INFO:     10.66.152.102:61921 - "OPTIONS /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 15:17:40,677 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 0b985e56-0218-4cb5-b583-16fa0dbd8243
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What is the risk assessment for Algonquin?...
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:src.services.intent_classifier:Intent Classifier initialized with model: openai_gpt_4o
+INFO:rag_pipeline:IntentClassifier initialized successfully
+INFO:src.services.intent_classifier:Classifying query: What is the risk assessment for Algonquin?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RISK_ASSESSMENT (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RISK_ASSESSMENT
+2025-09-19 15:17:42,844 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Neo4j client connected successfully
+INFO:rag_pipeline:ContextRetriever initialized successfully
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 1 records
+INFO:rag_pipeline:PromptAugmenter initialized successfully
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:61921 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 15:18:15,501 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 79b42769-3aff-462a-9561-789eeb4601d7
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What was Houston's electricity consumption in August 2025?...
+INFO:src.services.intent_classifier:Classifying query: What was Houston's electricity consumption in August 2025?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: ELECTRICITY_CONSUMPTION (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: ELECTRICITY_CONSUMPTION
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 31 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:61925 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+2025-09-19 15:18:39,235 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:rag_pipeline:Processing chat request with RAG for session: 8197127d-d0b0-476e-bff2-181ecde07c38
+INFO:rag_pipeline:RAG Pipeline - Classifying intent for: What recommendations do you have for the Houston site?...
+INFO:src.services.intent_classifier:Classifying query: What recommendations do you have for the Houston site?...
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:src.services.intent_classifier:Classification result: RECOMMENDATIONS (confidence: 0.95)
+INFO:rag_pipeline:Intent classified: RECOMMENDATIONS
+INFO:rag_pipeline:Retrieving context from Neo4j...
+INFO:rag_pipeline:Context retrieved: 3 records
+INFO:rag_pipeline:Augmenting prompt with context...
+INFO:rag_pipeline:Prompt augmented successfully
+INFO:rag_pipeline:Using RAG-augmented response
+INFO:root:Model: LLM_MODEL_CONFIG_openai_gpt_4o
+INFO:root:Model created - Model Version: openai_gpt_4o
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:rag_pipeline:Generated LLM response using openai_gpt_4o
+INFO:     10.66.152.102:61942 - "POST /api/chatbot/chat HTTP/1.1" 200 OK
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:root:Attempting to connect to the Neo4j database at bolt://localhost:7687
+INFO:root:Connection successful
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.102:61964 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+INFO:api.simple_rejection_api:Retrieving rejected documents with limit=50, offset=0
+INFO:api.simple_rejection_api:Successfully retrieved 1 rejected documents (total: 1)
+INFO:     10.66.152.102:61965 - "GET /api/v1/simple-rejected-documents HTTP/1.1" 200 OK
+2025-09-19 15:19:27,607 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.102:61965 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 15:19:27,618 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.007s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:19:27,624 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:61964 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:19:27,832 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:19:27,842 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.009s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.009s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:61975 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:19:27,864 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:19:27,869 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:61976 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:19:28,071 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.102:61965 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 15:19:28,080 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:19:28,085 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting electricity dashboard for site: algonquin_il
+WARNING:neo4j.notifications:Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: efficiency_rating)} {position: line: 9, column: 21, offset: 480} for query: "\n            MATCH (s:Site)-[:HAS_ELECTRICITY_CONSUMPTION]->(e:ElectricityConsumption)\n  WHERE ($location IS NULL OR s.id CONTAINS $location OR s.name CONTAINS $location)\n  AND ($start_date IS NULL OR e.date >= $start_date)\n  AND ($end_date IS NULL OR e.date <= $end_date)\n  RETURN s.id as location, s.name as site_name, e.date as date, e.consumption_kwh as consumption,\n         e.cost_usd as cost,\n         COALESCE(e.source_type, 'Unknown') as source_type,\n         COALESCE(e.efficiency_rating, 0.0) as efficiency\n  ORDER BY e.date DESC\n            "
+INFO:api.dashboard_category_api:Successfully retrieved electricity data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated electricity dashboard for algonquin_il
+INFO:     10.66.152.102:61983 - "GET /api/dashboard/electricity?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:19:28,108 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:19:28,113 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting waste dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved waste data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated waste dashboard for algonquin_il
+INFO:     10.66.152.102:61964 - "GET /api/dashboard/waste?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:19:28,133 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for dashboard category service
+2025-09-19 15:19:28,138 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:api.dashboard_category_api:Successfully connected to Neo4j database for direct access
+INFO:api.dashboard_category_api:Getting water dashboard for site: algonquin_il
+INFO:api.dashboard_category_api:Successfully retrieved water data for algonquin_illinois
+INFO:api.dashboard_category_api:Successfully generated water dashboard for algonquin_il
+INFO:     10.66.152.102:61984 - "GET /api/dashboard/water?site_id=algonquin_il&date_range=180days HTTP/1.1" 200 OK
+2025-09-19 15:19:28,381 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.006s)
+INFO:     10.66.152.102:61976 - "GET /api/chatbot/health HTTP/1.1" 200 OK
+2025-09-19 15:19:28,629 - src.database.neo4j_client - INFO - Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:src.database.neo4j_client:Successfully connected to Neo4j at bolt://localhost:7687 (attempt 1, time: 0.005s)
+INFO:     10.66.152.102:61984 - "GET /api/chatbot/health HTTP/1.1" 200 OK
