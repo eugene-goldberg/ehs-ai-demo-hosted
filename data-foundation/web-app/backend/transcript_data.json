@@ -13393,5 +13393,317 @@
       "timestamp": ""
     },
     "timestamp": "2025-09-19T10:39:20.418365"
+  },
+  {
+    "id": "19b87fa7-acb6-427d-8a91-a955ea82bc64",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-3.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-3.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:11:55.290937"
+  },
+  {
+    "id": "654f51c7-2075-450b-bb8e-14c5708fe0ab",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage     ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:12:13.563112"
+  },
+  {
+    "id": "7146db60-c6e3-4389-9c5a-e855a54896dc",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-2.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-2.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:12:37.328934"
+  },
+  {
+    "id": "4aed7111-e60b-441e-8f53-9a383cdba74b",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                            ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:12:49.799953"
+  },
+  {
+    "id": "15b04fde-279a-4ba0-a29a-d0c85e17e13f",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-1.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-1.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:13:10.985377"
+  },
+  {
+    "id": "a3c50103-8f2e-48ff-bf6d-e036515a1a84",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Rea...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:13:28.238184"
+  },
+  {
+    "id": "fa41899a-8bff-427a-8e60-7a0c83ce099c",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-4.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-4.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:13:46.489154"
+  },
+  {
+    "id": "ff457327-d295-4dac-863e-d16ae3ee8f9c",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount (without VAT) | Quantity | Total Amount |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:14:23.105706"
+  },
+  {
+    "id": "dfff231a-bf54-4e24-bd87-d94bd0b479d2",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-3.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-3.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:43:02.502778"
+  },
+  {
+    "id": "700c929c-cd96-46f1-a8b0-aa0466ce7c24",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage     ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:43:19.389352"
+  },
+  {
+    "id": "44c93a8d-eb7c-4979-9aa0-55da60f5339a",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-2.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-2.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:43:30.154946"
+  },
+  {
+    "id": "379fbc2a-def9-4404-9c86-a6e191b9c563",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                            ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:43:42.047663"
+  },
+  {
+    "id": "81632251-f25a-4198-bcd4-26533fee5d6c",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-1.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-1.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:43:48.539138"
+  },
+  {
+    "id": "5d67dad8-0fe7-41bf-9086-baf162d2cc1a",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Rea...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:44:05.501651"
+  },
+  {
+    "id": "4a48f974-d3a5-40b4-9142-0c6cb703b4da",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-4.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-4.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:44:17.556775"
+  },
+  {
+    "id": "50df6ee8-f330-4312-8011-4f2e89f59b83",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount (without VAT) | Quantity | Total Amount |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:44:39.475052"
+  },
+  {
+    "id": "c6e79424-f463-4d34-ac95-f5bc24d8a60d",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-3.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-3.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:49:13.468799"
+  },
+  {
+    "id": "c6bda9d0-a098-49b4-8ffb-cdb22b84b998",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n1. **Water Usage Details**\n| Meter ID      | Service Type | Previous Read   | Current Read    | Usage     ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:49:30.171331"
+  },
+  {
+    "id": "c98a0c56-1c88-485b-82fd-ae942289816f",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-2.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-2.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:49:39.226960"
+  },
+  {
+    "id": "37895bc6-d965-4b93-a8ed-d64a0c62ab3a",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Line Item | Container Type          | Quantity | Description                                            ...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:49:50.641244"
+  },
+  {
+    "id": "365701fa-3c34-4ebd-913d-0582a2ff3f40",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-1.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-1.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:49:58.270527"
+  },
+  {
+    "id": "bec39b02-c9d3-4970-84cc-aa961d3b3370",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n\n**Electricity Usage Details**\n| Meter ID     | Service Type              | Previous Reading | Current Rea...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:50:14.892370"
+  },
+  {
+    "id": "c090dbfd-ebe2-4805-b9cb-ee7993f17e0d",
+    "role": "user",
+    "content": "LlamaParse Document Request:\nFile: /home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-4.pdf\nDocument Type: default\nParsing Instructions: \n                Extract all structured data including:\n                - Tables with numerical data\n                - Dates and time periods\n                - Quantities and measurements\n                - Costs and financial information\n                - Compliance-related information\n                - Environmental metrics\n            ... (truncated)",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "file_path": "/home/azureuser/dev/ehs-ai-demo/data-foundation/data/document-4.pdf",
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:50:24.072169"
+  },
+  {
+    "id": "94805292-a697-43a1-81a2-6e921ce45f1b",
+    "role": "assistant",
+    "content": "Parsed 1 pages from default document\nFirst page preview: Here is the structured data extracted from the provided text:\n\n### Tables with Numerical Data\n| Service Description                                   | Amount (without VAT) | Quantity | Total Amount |...",
+    "context": {
+      "component": "llama_parser",
+      "function": "parse_document",
+      "document_type": "default",
+      "page_count": 1,
+      "timestamp": ""
+    },
+    "timestamp": "2025-09-19T17:50:45.823997"
   }
 ]

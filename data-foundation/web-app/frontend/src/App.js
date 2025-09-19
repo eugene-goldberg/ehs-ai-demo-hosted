@@ -27,7 +27,7 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>EHS AI Assistant</h1>
+        <h1>Sphera AI Assistant</h1>
       </header>
       
       <div className="main-content">

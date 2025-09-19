@@ -1,13 +1,15 @@
+/* Sphera-inspired sidebar design */
 .sidebar {
-  width: 280px;
-  background-color: #f5f5f5;
-  border-right: 1px solid #e0e0e0;
-  padding: 20px 0;
+  width: 240px;
+  background-color: #FFFFFF;
+  border-right: 1px solid #E2E8F0;
+  padding: 0;
   min-height: calc(100vh - 70px);
+  box-shadow: none;
 }
 
 .sidebar-nav {
-  padding: 0 20px;
+  padding: 0;
 }
 
 .nav-list {
@@ -17,9 +19,23 @@
 }
 
 .nav-item {
-  margin-bottom: 8px;
+  margin-bottom: 0;
 }
 
+/* Section headers (like "Corporate Sustainability") */
+.nav-section-header {
+  padding: 12px 16px 8px;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #718096;
+  letter-spacing: 0.05em;
+  background: transparent;
+  border: none;
+  margin: 0;
+}
+
+/* Main navigation links */
 .nav-link {
   display: flex;
   align-items: center;
@@ -27,49 +43,60 @@
   width: 100%;
   border: none;
   background: none;
-  border-radius: 8px;
+  border-radius: 0;
   text-decoration: none;
-  color: #555;
+  color: #2D3748;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 200ms ease;
+  border-left: 3px solid transparent;
+  position: relative;
+}
+
+/* Nested navigation items */
+.nav-link.nested {
+  padding-left: 40px;
+  font-size: 13px;
 }
 
 .nav-link:hover {
-  background-color: #e8f4f8;
-  color: #007bff;
+  background-color: #F7F8FA;
+  color: #2D3748;
+  text-decoration: none;
 }
 
 .nav-link.active {
-  background-color: #007bff;
-  color: white;
+  background-color: #E6F7FF;
+  color: #2D3748;
+  border-left: 3px solid #1890FF;
 }
 
 .nav-link.active .nav-count {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #1890FF;
   color: white;
 }
 
 .nav-icon {
-  font-size: 18px;
+  font-size: 20px;
   margin-right: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
+  color: inherit;
 }
 
 .nav-label {
   flex: 1;
   text-align: left;
-  font-weight: 500;
+  font-weight: inherit;
 }
 
 .nav-count {
-  background-color: #007bff;
-  color: white;
+  background-color: #E2E8F0;
+  color: #4A5568;
   font-size: 12px;
   font-weight: 600;
   padding: 2px 8px;
@@ -79,28 +106,42 @@
   line-height: 1.4;
 }
 
+/* Responsive design maintaining Sphera principles */
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
     min-height: auto;
     border-right: none;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 10px 0;
+    border-bottom: 1px solid #E2E8F0;
+    padding: 0;
   }
-  
+
   .nav-list {
     display: flex;
     overflow-x: auto;
+    padding: 8px 0;
   }
-  
+
   .nav-item {
     margin-bottom: 0;
-    margin-right: 8px;
+    margin-right: 0;
     flex-shrink: 0;
   }
-  
+
   .nav-link {
     white-space: nowrap;
     min-width: auto;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+  }
+
+  .nav-link.active {
+    border-left: none;
+    border-bottom: 3px solid #1890FF;
+    background-color: #E6F7FF;
+  }
+
+  .nav-section-header {
+    display: none;
   }
 }

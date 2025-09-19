@@ -40,7 +40,7 @@
 }
 
 .stage.active .stage-icon {
-  background: #252C63;
+  background: #3498db;
   color: white;
   animation: pulse 1.5s infinite;
 }
@@ -51,7 +51,7 @@
 }
 
 .stage.active {
-  color: #252C63;
+  color: #3498db;
   font-weight: 600;
 }
 
@@ -74,7 +74,7 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #27ae60 0%, #252C63 100%);
+  background: linear-gradient(90deg, #27ae60 0%, #3498db 100%);
   transition: width 0.5s ease;
   position: relative;
 }

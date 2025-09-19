@@ -202,7 +202,7 @@ const Chatbot = () => {
       <Box
         sx={{
           p: 2,
-          bgcolor: '#252C63',
+          bgcolor: '#48416D',
           color: 'white',
           display: 'flex',
           alignItems: 'center',
@@ -267,7 +267,7 @@ const Chatbot = () => {
               sx={{
                 width: 32,
                 height: 32,
-                bgcolor: message.sender === 'user' ? '#252C63' : '#252C63'
+                bgcolor: message.sender === 'user' ? '#48416D' : '#252C63'
               }}
             >
               {message.sender === 'user' ? <PersonIcon /> : <SmartToyIcon />}
@@ -283,7 +283,7 @@ const Chatbot = () => {
                 elevation={0}
                 sx={{
                   p: 1.5,
-                  bgcolor: message.sender === 'user' ? '#252C63' : '#F7F8FA',
+                  bgcolor: message.sender === 'user' ? '#48416D' : '#F7F8FA',
                   color: message.sender === 'user' ? 'white' : '#2D3748',
                   borderRadius: 2,
                   borderTopLeftRadius: message.sender === 'user' ? 2 : 0.5,
@@ -386,7 +386,7 @@ const Chatbot = () => {
                 borderColor: '#E2E8F0'
               },
               '&.Mui-focused fieldset': {
-                borderColor: '#252C63'
+                borderColor: '#48416D'
               }
             }
           }}
@@ -395,7 +395,7 @@ const Chatbot = () => {
           onClick={handleSendMessage}
           disabled={!inputValue.trim() || isTyping || apiStatus === 'offline'}
           sx={{
-            bgcolor: '#252C63',
+            bgcolor: '#48416D',
             color: 'white',
             '&:hover': {
               bgcolor: '#3d3558'
